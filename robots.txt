@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /_model/
+Disallow: /_plugins/
+Disallow: /_view/
+Disallow: /admin/
+Disallow: /installer/
+Disallow: /lib/
+Disallow: /log/
+Disallow: /unit_tests/
+Disallow: /_config.php

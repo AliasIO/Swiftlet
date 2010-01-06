@@ -1,0 +1,5 @@
+Options +FollowSymlinks
+RewriteEngine on
+
+# Pages
+RewriteRule ^p/([a-z0-9_-]+) page/?permalink=$1 [NC,QSA]
