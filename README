@@ -1,95 +1,33 @@
-#        _____         _  __ _   _      _    
-#       / ____|       (_)/ _| | | |    | |   
-#      | (_____      ___| |_| |_| | ___| |_  
-#       \___ \ \ /\ / / |  _| __| |/ _ \ __| 
-#       ____) \ V  V /| | | | |_| |  __/ |_  
-#      |_____/ \_/\_/ |_|_|  \__|_|\___|\__|
-#
-#      http://swiftlet.org/
-#
-#
-#  1.  INTRODUCTION
-#
-#      Swiftlet is a light-weight framework written in PHP.
-#
-#
-#  2.  SERVER REQUIREMENTS
-#
-#      PHP 5.1
-#
-#
-#  3.  INSTALLATION
-#
-#      Upload the contents of this folder to your server. That's it. Navigate to the folder
-#      on your server to view the website.
-#
-#
-#  4.  GETTING STARTED
-#
-#      View the documentation on http://swiftlet.org/.
-#
-#      To change the welcome page, replace or modify /index.php and /_view/index.php.
-#    
-#      To change global settings, modify /_config.php.
-#
-#
-#  5.  STRUCTURE
-#
-#     / (root)
-#     |
-#     +-- _model/
-#     |
-#     +-- _classes/
-#     |
-#     +-- _plugins/
-#     |   |
-#     |   +-- classes/
-#     |   |
-#     |   +-- disabled/
-#     |
-#     +-- _view/
-#         |
-#         +-- images/
-#         |
-#         +-- scripts/
-#		
-#    The root and custom directories contain Controllers. The root directory also contains
-#    the configuration file (_config.php).
-#
-#       css.php                        CSS parser (enables using variables in CSS)
-#       index.php                      The website's home page
-#       installer/index.php            Plug-in installer
-#
-#    The "_model" directory contains the core files:
-#
-#       controller.class.php           Class to handle controllers
-#       init.php                       Included at the start of every controller
-#       model.class.php                Core class where most of the magic happens
-#       plugin.class.php               Class to handle plug-ins
-#       view.class.php                 Class to handle presentation (layout)
-#		
-#   The "_view" directoy contains the layout of the website.
-#
-#
-#   6.  GLOSSARY
-#
-#   Controller                     Page requests are handled by Controllers. Controllers
-#                                  contain the page logic (code) and communicate directly
-#                                  with the Model and the View.
-#   Hook                           A point in the code where plug-ins can be included.
-#   Model                          The Model is the backbone of the framework.
-#   Plug-in                        Code the extend the Model without modifying the code.
-#   View                           All presentation (layout) is handled by the View.
-#
-#
-#   +--------------+        +--------------+        +--------------+
-#   |     User     | -----> |  Controller  |        |   Plug-ins   |
-#   +--------------+        +--------------+        +--------------+
-#                ^              /        \              /
-#                 \            /          \            /  Hook
-#                  \          V            V          V
-#                +--------------+        +--------------+
-#                |     View     | <----- |    Model     |
-#                +--------------+        +--------------+
-#
-#
+SWIFTLET
+
+  http://swiftlet.org
+
+	Light-weight framework written in PHP.
+
+  Swiftlet doesn't try to be everything to everyone. It provides you with the bare
+	essentials to built a powerful and secure website in PHP.
+
+
+SERVER REQUIREMENTS
+
+  - PHP 5.1
+	- MySQL 5 (optional but required for some plug-ins)
+
+
+INSTALLATION
+
+  Upload the contents of this folder to your server. That's it. Navigate to the
+	folder on your server to view the website.
+
+
+GETTING STARTED
+
+  - Read the documentation on http://swiftlet.org/docs.
+  - To change the landing page, replace or modify /index.php and /_view/index.php.
+  - To change global settings, modify /_config.php.
+
+
+SUPPORT
+
+	- Join the community at http://swiftlet.org/community.
+	- File bug reports at http://github.com/ElbertF/Swiftlet/issues.
