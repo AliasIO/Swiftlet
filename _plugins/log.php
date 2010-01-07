@@ -9,25 +9,16 @@ if ( !isset($model) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
-	case 'load':
-		$pluginVersion = '1.0.0';
+	case 'info':
+		$info = array(
+			'name'       => 'log',
+			'version'    => '1.0.0',
+			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'hooks'      => array('init' => 1, 'end' => 1)
+			);
 
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*');
-
-		$model->hook_register($plugin, array('init' => 1, 'unit_tests' => 1));
-
-		break;	
+		break;
 	case 'init':
-		if ( !is_dir($contr->rootPath . 'log') )
-		{
-			$this->model->error(FALSE, 'Directory "/log" does not exist.', __FILE__, __LINE__);
-		}
-
-		if ( !is_writable($contr->rootPath . 'log') )
-		{
-			$this->model->error(FALSE, 'Directory "/log" is not writable.', __FILE__, __LINE__);
-		}
-
 		require($contr->classPath . 'log.php');
 
 		$model->log = new log($model);

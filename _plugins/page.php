@@ -9,34 +9,34 @@ if ( !isset($model) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
-	case 'load':
-		$pluginVersion = '1.0.0';
+	case 'info':
+		$info = array(
+			'name'         => 'page',
+			'version'      => '1.0.0',
+			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'dependencies' => array('db', 'node'),
+			'hooks'        => array('admin' => 1, 'header' => 1, 'init' => 5, 'install' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
+			);
 
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*');
-
-		$dependencies = array('db', 'node');
-
-		$model->hook_register($plugin, array('admin' => 1, 'header' => 1, 'init' => 5, 'unit_tests' => 1, 'url_rewrite' => 1));
-
-		break;	
+		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'pages', $model->db->tables) )
-		{
-			$description = '';
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'pages` (
+				`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`node_id`   INT(10) UNSIGNED NOT NULL,
+				`title`     VARCHAR(255)     NOT NULL,
+				`body`      TEXT             NOT NULL,
+				`lang`      VARCHAR(255)     NOT NULL,
+				`date`      DATETIME         NOT NULL,
+				`date_edit` DATETIME         NOT NULL,
+				INDEX (`node_id`),
+				PRIMARY KEY (`id`)
+				)
+			;');
 
-			$sql = '
-				CREATE TABLE `' . $model->db->prefix . 'pages` (
-					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`node_id`   INT(10) UNSIGNED NOT NULL,
-					`title`     VARCHAR(255)     NOT NULL,
-					`body`      TEXT             NOT NULL,
-					`lang`      VARCHAR(255)     NOT NULL,
-					`date`      DATETIME         NOT NULL,
-					`date_edit` DATETIME         NOT NULL,
-					INDEX (`node_id`),
-					PRIMARY KEY (`id`)
-					);
-				';
+		if ( !empty($model->node->ready) )
+		{
+			$model->node->create('Pages', 'pages', node::rootId);
 		}
 
 		break;

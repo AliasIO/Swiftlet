@@ -91,11 +91,11 @@ class model
 
 		if ( $handle = opendir($dir = $contr->pluginPath) )
 		{
-			while ( ( $plugin = readdir($handle) ) !== FALSE )
+			while ( ( $file = readdir($handle) ) !== FALSE )
 			{
-				if ( is_file($dir . $plugin) && preg_match('/\.php$/', $plugin) )
+				if ( is_file($dir . $file) && preg_match('/\.php$/', $file) )
 				{
-					$this->plugin_load($plugin);
+					$this->plugin_load($file);
 				}
 			}
 
@@ -111,9 +111,11 @@ class model
 	 * Initialize plugin
 	 * @param string plugin
 	 */
-	private function plugin_load($plugin)
+	private function plugin_load($file)
 	{
-		$this->pluginsLoaded[$plugin] = new plugin($this, $plugin);
+		$plugin = new plugin($this, $file);
+
+		$this->pluginsLoaded[$plugin->info['name']] = $plugin;
 	}
 
 	/**
@@ -128,7 +130,7 @@ class model
 
 			foreach ( $this->hooksRegistered[$hook] as $plugin )
 			{
-				$this->pluginsLoaded[$plugin['plugin']]->hook($hook, $plugin['order'], $params);
+				$this->pluginsLoaded[$plugin['name']]->hook($hook, $plugin['order'], $params);
 			}
 		}
 	}
@@ -146,15 +148,15 @@ class model
 
 	/**
 	 * Register a hook
-	 * @param string $plugin
+	 * @param string $name
 	 * @param array $hooks
 	 * @param array $params
 	 */
-	function hook_register($plugin, $hooks)
+	function hook_register($pluginName, $hooks)
 	{
 		foreach ( $hooks as $hook => $order )
 		{
-			$this->hooksRegistered[$hook][] = array('plugin' => $plugin, 'order' => $order);
+			$this->hooksRegistered[$hook][] = array('name' => $pluginName, 'order' => $order);
 		}
 	}
 

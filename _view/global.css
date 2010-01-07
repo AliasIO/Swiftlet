@@ -131,6 +131,11 @@ dd {
 	margin-left: 1em;
 }
 
+	dd p {
+		display: inline;
+		padding: 0;
+	}
+
 input, textarea, select, button {
 	border-radius: 3px;
 	-moz-border-radius: 3px;

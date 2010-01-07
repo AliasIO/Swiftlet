@@ -16,9 +16,11 @@ class plugin
 	private
 		$model,
 		$view,
-		$contr,
-
-		$plugin
+		$contr
+		;
+	
+	public
+		$info = array()
 		;
 
 	/**
@@ -26,7 +28,7 @@ class plugin
 	 * @param object $model
 	 * @param string $plugin
 	 */
-	function __construct($model, $plugin)
+	function __construct($model, $file)
 	{
 		$this->model = $model;
 		$this->view  = $model->view;
@@ -35,35 +37,54 @@ class plugin
 		$view  = $model->view;
 		$contr = $model->contr;
 
-		$hook = 'load';
+		$hook = 'info';
 
-		$pluginVersion = '';
-		$compatible    = array('from' => '', 'to' => '');
-		$dependencies  = array();
+		require($contr->pluginPath . $file);
 
-		require($contr->pluginPath . $plugin);
+		if ( empty($info) )
+		{
+			$model->error(FALSE, 'No plug-in info provided in ' . $contr->pluginPath . $file . '.', __FILE__, __LINE__);
+		}
+
+		$info = array_merge(array(
+			'name'         => '',
+			'file'         => $file,
+			'description'  => '',
+			'version'      => '',
+			'compatible'   => array('from' => '', 'to' => ''),
+			'dependencies' => array(),
+			'hooks'        => array()
+			), $info);
+
+		if ( !$info['name'] )
+		{
+			$model->error(FALSE, 'No plug-in name provided in ' . $contr->pluginPath . $file . '.', __FILE__, __LINE__);
+		}
+
+		if ( !$info['version'] )
+		{
+			$model->error(FALSE, 'No version number provided for plug-in "' . $info['name'] . '" (' . $contr->pluginPath . $file . ').', __FILE__, __LINE__);
+		}
 
 		/**
 		 * Check if the plug-in is compatible with this version of Swiftlet
 		 */
-		if ( !$pluginVersion )
+		if ( !$info['compatible']['from'] || !$info['compatible']['to'] )
 		{
-			$model->error(FALSE, 'No version number provided for plug-in "' . $plugin . '"', __FILE__, __LINE__);
+			$model->error(FALSE, 'No compatibility information provided for plug-in "' . $info['name'] . '" in ' . $contr->pluginPath . $file . '', __FILE__, __LINE__);
 		}
 
-		if ( !$compatible['from'] || !$compatible['to'] )
+		if ( version_compare(model::version, str_replace('*', '99999', $info['compatible']['from']), '<') || version_compare(model::version, str_replace('*', '99999', $info['compatible']['to']), '>') )
 		{
-			$model->error(FALSE, 'No compatibility information provided for plug-in "' . $plugin . '"', __FILE__, __LINE__);
+			$model->error(FALSE, 'Plug-in "' . $info['name'] . '" (/' . $contr->pluginPath . $file . ') is designed for ' . ( $info['compatible']['from'] == $info['compatible']['to'] ? 'version ' . $info['compatible']['from'] : 'versions ' . $info['compatible']['from'] . ' to ' . $info['compatible']['to'] ) . ' of Swiftlet (running version ' . model::version . ')', __FILE__, __LINE__);
 		}
 
-		if ( version_compare(model::version, str_replace('*', '99999', $compatible['from']), '<') || version_compare(model::version, str_replace('*', '99999', $compatible['to']), '>') )
+		if ( $info['hooks'] )
 		{
-			$model->error(FALSE, 'Plug-in "' . $plugin . '" is designed for ' . ( $compatible['from'] == $compatible['to'] ? 'version ' . $compatible['from'] : 'versions ' . $compatible['from'] . ' to ' . $compatible['to'] ) . ' of Swiftlet (running version ' . model::version . ')', __FILE__, __LINE__);
+			$model->hook_register($info['name'], $info['hooks']);
 		}
 
-		$this->plugin             = $plugin;
-		$this->pluginVersion      = $pluginVersion;
-		$this->pluginDependencies = $dependencies;
+		$this->info = $info;
 	}
 
 	/**
@@ -77,20 +98,20 @@ class plugin
 		$contr = $this->contr;
 
 		$timerStart = $model->timer_start();
-
-		require($contr->pluginPath . $this->plugin);
+		
+		require($contr->pluginPath . $this->info['file']);
 
 		$model->debugOutput['plugins hooked']['hook: ' . $hook][] =	array(
 			'order'          => $order,
-			'plugin'         => $this->plugin,
+			'plugin'         => $this->info['name'] . ' (' . $contr->pluginPath . $this->info['file'] . ')',
 			'execution time' => $model->timer_end($timerStart)
 			);
 	}
-	
+
 	/**
-	 * Check if a plug-in needs installation
+	 * Install a plug-in
 	 */
-	function check_install()
+	function install()
 	{
 		$model = $this->model;
 		$view  = $this->view;
@@ -98,23 +119,13 @@ class plugin
 
 		$hook = 'install';
 
-		$sql          = '';
-		$description  = '';
-
-		if ( !empty($model->db->ready) )
-		{
-			require($contr->pluginPath . $this->plugin);
-		}
-
-		$installedVersion = $this->get_version();
-
-		return array('sql' => $sql, 'description' => $description, 'dependencies' => $this->pluginDependencies, 'installable' => empty($installedVersion), 'version' => $this->pluginVersion);
+		require($contr->pluginPath . $this->info['file']);		
 	}
 
 	/**
-	 * Check if a plug-in needs upgrading
+	 * Upgrade a plug-in
 	 */
-	function check_upgrade()
+	function upgrade()
 	{
 		$model = $this->model;
 		$view  = $this->view;
@@ -122,36 +133,12 @@ class plugin
 
 		$hook = 'upgrade';
 
-		$sql        = '';
-		$upgradable = array('from' => '', 'to' => '');
-
-		$isOutdated       = FALSE;
-		$isUpgradable     = FALSE;
-		$installedVersion = FALSE;
-
-		if ( !empty($model->db->ready) )
-		{
-			$installedVersion = $this->get_version();
-
-			if ( $installedVersion && version_compare($installedVersion, $this->pluginVersion, '<') )
-			{
-				$isOutdated = TRUE;
-			}
-
-			if ( $isOutdated )
-			{
-				require($contr->pluginPath . $this->plugin);
-
-				if ( version_compare($installedVersion, str_replace('*', '99999', $upgradable['from']), '>=') && version_compare($installedVersion, str_replace('*', '99999', $upgradable['to']), '<=') )
-				{
-					$isUpgradable = TRUE;
-				}
-			}
-		}
-
-		return array('sql' => $sql, 'outdated' => $isOutdated, 'upgradable' => $isUpgradable, 'version' => $this->pluginVersion, 'installed_version' => $installedVersion);
+		require($contr->pluginPath . $this->info['file']);		
 	}
-	
+
+	/**
+	 * Get version number of a plug-in
+	 */
 	function get_version()
 	{
 		$model = $this->model;
@@ -163,7 +150,7 @@ class plugin
 					`version`
 				FROM `' . $model->db->prefix . 'versions`
 				WHERE
-					`plugin` = "' . $this->plugin . '"
+					`plugin` = "' . $this->info['name'] . '"
 				LIMIT 1
 				;');
 

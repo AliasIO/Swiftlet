@@ -9,14 +9,14 @@ if ( !isset($model) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
-	case 'load':
-		$pluginVersion = '1.0.0';
-
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*');
-
-		$dependencies = array('db', 'session');
-
-		$model->hook_register($plugin, array('init' => 3, 'unit_tests' => 1));
+	case 'info':
+		$info = array(
+			'name'         => 'admin',
+			'version'      => '1.0.0',
+			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'dependencies' => array('db', 'session'),
+			'hooks'        => array('init' => 3, 'unit_tests' => 1)
+			);
 
 		break;
 	case 'init':

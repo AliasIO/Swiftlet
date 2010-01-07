@@ -22,27 +22,22 @@
 		<dl>
 			<dt>
 				<label for="plugin_<?php echo $plugin ?>">
-					<?php echo $plugin ?>
+					<?php echo $plugin ?> (<?php echo $v['file'] ?>)
 					<em>v<?php echo $v['version'] ?></em>
 					<em><?php echo $v['description'] ?></em>
 				</label>
 			</dt>
 			<dd>
-				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['is_ready']) ? '' : ' disabled="disabled"' ) ?>/>
-				<em>(<a href="javascript: void(0);" onclick="
-					e = document.getElementById('sql_<?php echo $plugin ?>');
-					e.style.display = e.style.display == 'none' ? 'block' : 'none';
-					"><?php echo t('View SQL') ?></a>)</em>
-				<?php if ( $v['is_ready'] ): ?>
+				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? '' : ' disabled="disabled"' ) ?>/>
+				<?php if ( $v['dependency_status'] ): ?>
 				<em><?php echo t('Depends on') ?>:
-				<?php foreach ( $v['is_ready'] as $dependency => $ready ): ?>
+				<?php foreach ( $v['dependency_status'] as $dependency => $ready ): ?>
 				<?php echo ( $ready ? '<span class="dependency-ok" title="' . t('Ready') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . t('Not ready') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
 				<?php endforeach ?>
 				</em>
 				<?php endif ?>
 			</dd>
 		</dl>
-		<p id="sql_<?php echo $plugin ?>" style="display: none;"><code><?php echo $v['sql'] ?></code></p>
 		<?php endforeach; ?>
 	</fieldset>
 	<fieldset>

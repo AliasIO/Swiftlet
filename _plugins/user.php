@@ -9,69 +9,71 @@ if ( !isset($model) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
-	case 'load':
-		$pluginVersion = '1.0.0';
-
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*');
-		
-		$dependencies = array('db', 'session');
-
-		$model->hook_register($plugin, array('admin' => 1, 'init' => 3, 'unit_tests' => 1));
+	case 'info':
+		$info = array(
+			'name'         => 'user',
+			'description'  => 'A user will be created with username "Admin" and system password.',
+			'version'      => '1.0.0',
+			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'dependencies' => array('db', 'session'),
+			'hooks'        => array('admin' => 2, 'init' => 3, 'install' => 1, 'unit_tests' => 1)
+			);
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'users', $model->db->tables) )
-		{
-			$description = 'A user will be created with username "Admin" and system password.';
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'users` (
+				`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`username`  VARCHAR(255)     NOT NULL,
+				`pass_hash` VARCHAR(40)      NOT NULL,
+				`email`     VARCHAR(255)     NULL,
+				`auth`      INT(1)           NOT NULL,
+				`date`      DATETIME         NOT NULL,
+				`date_edit` DATETIME         NOT NULL,
+				UNIQUE `username` (`username`),
+				PRIMARY KEY (`id`)
+				)
+			;');
 
-			$sql = array('
-				CREATE TABLE `' . $model->db->prefix . 'users` (
-					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`username`  VARCHAR(255)     NOT NULL,
-					`pass_hash` VARCHAR(40)      NOT NULL,
-					`email`     VARCHAR(255)     NULL,
-					`auth`      INT(1)           NOT NULL,
-					`date`      DATETIME         NOT NULL,
-					`date_edit` DATETIME         NOT NULL,
-					INDEX `username` (`username`),
-					PRIMARY KEY (`id`)
-					);
-				', '
-				INSERT INTO `' . $model->db->prefix . 'users` (
-					`username`,
-					`pass_hash`,
-					`auth`,
-					`date`,
-					`date_edit`
-					)
-				VALUES (
-					"Admin",
-					"' . sha1('swiftlet' . strtolower('Admin') . $model->sysPassword) . '",
-					4,
-					NOW(),
-					NOW()
-					);
-				', '
-				CREATE TABLE `' . $model->db->prefix . 'user_prefs` (
-					`id`     INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`pref`   VARCHAR(255)     NOT NULL,
-					`type`   VARCHAR(255)     NOT NULL,
-					`match`  VARCHAR(255)     NOT NULL,
-					`values` VARCHAR(255)     NOT NULL,
-					UNIQUE `pref` (`pref`),
-					PRIMARY KEY (`id`)
-					);
-				', '
-				CREATE TABLE `' . $model->db->prefix . 'user_prefs_xref` (
-					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`user_id` INT(10)          NOT NULL,
-					`pref_id` INT(10)          NOT NULL,
-					`value`   VARCHAR(255)     NOT NULL,
-					UNIQUE `user_pref_id` (`user_id`, `pref_id`),
-					PRIMARY KEY (`id`)
-					);
-				');
-		}
+		$model->db->sql('
+			INSERT INTO `' . $model->db->prefix . 'users` (
+				`username`,
+				`pass_hash`,
+				`auth`,
+				`date`,
+				`date_edit`
+				)
+			VALUES (
+				"Admin",
+				"' . sha1('swiftlet' . strtolower('Admin') . $model->sysPassword) . '",
+				4,
+				NOW(),
+				NOW()
+				)
+			;');
+
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'user_prefs` (
+				`id`     INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`pref`   VARCHAR(255)     NOT NULL,
+				`type`   VARCHAR(255)     NOT NULL,
+				`match`  VARCHAR(255)     NOT NULL,
+				`values` VARCHAR(255)     NOT NULL,
+				UNIQUE `pref` (`pref`),
+				PRIMARY KEY (`id`)
+				)
+			;');
+
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'user_prefs_xref` (
+				`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`user_id` INT(10)          NOT NULL,
+				`pref_id` INT(10)          NOT NULL,
+				`value`   VARCHAR(255)     NOT NULL,
+				UNIQUE `user_pref_id` (`user_id`, `pref_id`),
+				PRIMARY KEY (`id`)
+				)
+			;');
 
 		break;
 	case 'init':

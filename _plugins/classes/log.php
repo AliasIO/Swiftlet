@@ -40,7 +40,17 @@ class log
 	function write($filename, $contents)
 	{
 		$contr = $this->contr;
-		
+
+		if ( !is_dir($contr->rootPath . 'log') )
+		{
+			$this->model->error(FALSE, 'Directory "/log" does not exist.', __FILE__, __LINE__);
+		}
+
+		if ( !is_writable($contr->rootPath . 'log') )
+		{
+			$this->model->error(FALSE, 'Directory "/log" is not writable.', __FILE__, __LINE__);
+		}
+
 		$contents = date('M d H:i:s') . "\t" . $contents . "\n";
 
 		if ( !$handle = fopen($contr->rootPath . 'log/' . $filename, 'a+') )

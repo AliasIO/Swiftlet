@@ -9,31 +9,28 @@ if ( !isset($model) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
-	case 'load':
-		$pluginVersion = '1.0.0';
-
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*');
-
-		$dependencies = array('db');
-
-		$model->hook_register($plugin, array('init' => 2, 'end' => 1));
+	case 'info':
+		$info = array(
+			'name'         => 'session',
+			'version'      => '1.0.0',
+			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'dependencies' => array('db'),
+			'hooks'        => array('init' => 2, 'install' => 1, 'end' => 1)
+			);
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'sessions', $model->db->tables) )
-		{
-			$sql = '
-				CREATE TABLE `' . $model->db->prefix . 'sessions` (
-					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`hash`        VARCHAR(40)      NOT NULL,
-					`contents`    TEXT             NOT NULL,
-					`date`        DATETIME         NOT NULL,
-					`date_expire` DATETIME         NOT NULL,
-					PRIMARY KEY (`id`),
-					UNIQUE KEY `hash` (`hash`)
-					);
-				';
-		}
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'sessions` (
+				`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`hash`        VARCHAR(40)      NOT NULL,
+				`contents`    TEXT             NOT NULL,
+				`date`        DATETIME         NOT NULL,
+				`date_expire` DATETIME         NOT NULL,
+				PRIMARY KEY (`id`),
+				UNIQUE KEY `hash` (`hash`)
+				)
+			;');
 
 		break;
 	case 'init':

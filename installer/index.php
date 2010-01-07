@@ -12,6 +12,8 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
+$model->check_dependencies(array('buffer', 'form'));
+
 $model->form->validate(array(
 	'plugin'          => 'bool',
 	'system_password' => '/^' . preg_quote($model->sysPassword, '/') . '$/',
@@ -24,28 +26,33 @@ $view->outdated_plugins = array();
 
 if ( isset($model->db) )
 {
-	foreach ( $model->pluginsLoaded as $pluginFile => $plugin )
+	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
 	{
-		if ( $v = $plugin->check_install() )
+		$version = $plugin->get_version();
+		
+		if ( !$version )
 		{
-			$v['is_ready'] = array();
-
-			foreach ( $v['dependencies'] as $dependency )
+			if ( isset($plugin->info['hooks']['install']) )
 			{
-				$v['is_ready'][$dependency] = !empty($model->{$dependency}->ready) ? 1 : 0;
-			}
+				$dependencyStatus = array();
 
-			if ( $v['installable'] && $v['sql'] )
-			{
-				$view->new_plugins[$pluginFile] = $v;
+				foreach ( $plugin->info['dependencies'] as $dependency )
+				{
+					$dependencyStatus[$dependency] = !empty($model->{$dependency}->ready) ? 1 : 0;
+				}
+
+				$view->new_plugins[$pluginName]                      = $plugin->info;
+				$view->new_plugins[$pluginName]['dependency_status'] = $dependencyStatus;
 			}
 		}
-
-		if ( $v = $plugin->check_upgrade() )
+		else
 		{
-			if ( $v['outdated'] )
+			if ( isset($plugin->info['hook']['upgrade']) )
 			{
-				$view->outdated_plugins[$pluginFile] = $v;
+				if ( version_compare($version, str_replace('*', '99999', $plugin->info['upgradable']['from']), '>=') && version_compare($version, str_replace('*', '99999', $plugin->info['upgradable']['to']), '<=') )
+				{
+					$view->outdated_plugins[$pluginName] = $plugin->info;
+				}
 			}
 		}
 	}
@@ -90,24 +97,11 @@ else
 
 				$plugins_installed = array();
 
-				foreach ( $model->POST_valid['plugin'] as $plugin => $v )
+				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
 				{
-					if ( isset($view->new_plugins[$plugin]) )
+					if ( isset($view->new_plugins[$pluginName]) && !in_array(0, $view->new_plugins[$pluginName]['dependency_status']) )
 					{
-						$queries = $view->new_plugins[$plugin]['sql'];
-
-						if ( !is_array($queries) )
-						{
-							$queries = array($queries);
-						}
-
-						foreach ( $queries as $sql )
-						{
-							if ( trim($sql) )
-							{
-								$model->db->sql($sql);
-							}
-						}
+						$model->pluginsLoaded[$pluginName]->install();
 
 						$model->db->sql('
 							INSERT INTO `' . $model->db->prefix . 'versions` (
@@ -115,52 +109,53 @@ else
 								`version`
 								)
 							VALUES (
-								"' . $model->db->escape($plugin) . '",
-								"' . $view->new_plugins[$plugin]['version'] . '"
+								"' . $model->db->escape($pluginName) . '",
+								"' . $view->new_plugins[$pluginName]['version'] . '"
 								);
 							');
 
-						$plugins_installed[] = $plugin;
+						$plugins_installed[] = $pluginName;
 
-						unset($view->new_plugins[$plugin]);
+						unset($view->new_plugins[$pluginName]);
 					}
 				}
 
 				if ( $plugins_installed )
 				{
 					header('Location: ?notice=installed&plugins=' . implode('|', $plugins_installed));
+
+					$model->end();
 				}
 			}
 			elseif ( $model->POST_raw['mode'] == 'upgrade' )
 			{
 				$plugins_upgraded = array();
 
-				foreach ( $model->POST_valid['plugin'] as $plugin => $v )
+				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
 				{
-					if ( isset($view->outdated_plugins[$plugin]) )
+					if ( isset($view->outdated_plugins[$pluginName]) )
 					{
-						foreach ( explode(';', $view->outdated_plugins[$plugin]['sql']) as $sql )
-						{
-							if ( trim($sql) ) $model->db->sql($sql);
-						}
+						$model->pluginsLoaded[$pluginName]->upgrade();
 
 						$model->db->sql('
 							UPDATE `' . $model->db->prefix . 'versions` SET
-								`version` = "' . $view->outdated_plugins[$plugin]['version'] . '"
+								`version` = "' . $view->outdated_plugins[$pluginName]['version'] . '"
 							WHERE
-								`plugin` = "' . $plugin . '"
+								`plugin` = "' . $pluginName . '"
 							LIMIT 1
 							;');
 
-						$plugins_upgraded[] = $plugin;
+						$plugins_upgraded[] = $pluginName;
 
-						unset($view->outdated_plugins[$plugin]);
+						unset($view->outdated_plugins[$pluginName]);
 					}
 				}
 
 				if ( $plugins_upgraded )
 				{
 					header('Location: ?notice=upgraded&plugins=' . implode('|', $plugins_upgraded));
+
+					$model->end();
 				}
 			}			
 		}

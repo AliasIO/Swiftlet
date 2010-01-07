@@ -16,13 +16,15 @@ $new_plugins = array();
 
 if ( isset($model->db) )
 {
-	foreach ( $model->pluginsLoaded as $pluginFile => $plugin )
+	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
 	{
-		if ( $v = $plugin->check_install() )
+		$version = $plugin->get_version();
+		
+		if ( !$version )
 		{
-			if ( $v['installable'] && $v['sql'] )
+			if ( isset($plugin->info['hooks']['install']) )
 			{
-				$new_plugins[] = $pluginFile;
+				$new_plugins[] = TRUE;
 			}
 		}
 	}

@@ -35,9 +35,9 @@ class admin
 		$pages = array();
 
 		$model->hook('admin', $pages);
-		
+
 		usort($pages, array($this, 'page_sort'));
-		
+
 		foreach ( $pages as $page )
 		{
 			if ( $page['auth'] <= $model->session->get('user auth') )
@@ -62,6 +62,6 @@ class admin
 	 */
 	private function page_sort($a, $b)
 	{
-		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? 1 : - 1;
+		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? - 1 : 1;
 	}
 }
