@@ -1,7 +1,9 @@
 <h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
 <?php if ( $view->action != 'upload' ): ?>
-<a href="?action=upload">Upload new files</a>
+<p>
+	<a href="?action=upload">Upload new files</a>
+</p>
 <?php endif ?>
 
 <?php if ( !empty($view->error) ): ?>
@@ -44,6 +46,8 @@
 		<dl>
 			<dt><br/></dt>
 			<dd>
+				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+
 				<input type="submit" class="button" id="form-submit" value="<?php echo $model->t('Upload') ?>"/>
 
 				<p>
@@ -63,3 +67,15 @@
 	});
 	/* ]]> */ -->
 </script>
+
+<h2>Files</h2>
+
+<?php if ( $view->files ): ?>
+<?php foreach ( $view->files as $file ): ?>
+<?php echo print_r($file) ?>
+<?php endforeach ?>
+<?php else: ?>
+<p>
+	<em><?php echo t('No files') ?></em>
+</p>
+<?php endif ?>

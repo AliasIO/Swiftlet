@@ -312,10 +312,10 @@ if ( $r = $model->db->result )
 
 	$nodes = $model->node->get_children($nodePages['id']);
 
-	$model->page->nodes_to_list($nodes['children'], $list);
-	
+	$model->node->nodes_to_array($nodes['children'], $list);
+
 	$listParents = $list;
-	
+
 	// Remove the main pages node from the editable pages dropdown
 	array_shift($list);
 	

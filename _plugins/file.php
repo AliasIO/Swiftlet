@@ -51,7 +51,7 @@ switch ( $hook )
 		{
 			require($contr->classPath . 'file.php');
 
-			$model->file = new page($model);
+			$model->file = new file($model);
 		}
 
 		break;

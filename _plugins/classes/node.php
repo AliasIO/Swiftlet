@@ -446,4 +446,32 @@ class node
 
 		return $stack[0];
 	}
+
+	/**
+	 * Turn an array of nodes into a flat list
+	 * @param array $nodes
+	 * @param array $list
+	 */
+	function nodes_to_array($nodes, &$list)
+	{
+		if ( $nodes )
+		{
+			foreach ( $nodes as $node )
+			{
+				$list[] = array(
+					'id'        => $node['id'],
+					'left_id'   => $node['left_id'],
+					'right_id'  => $node['right_id'],
+					'title'     => $node['title'],
+					'permalink' => $node['permalink'],
+					'level'     => $node['level']
+					);
+
+				if ( !empty($node['children']) )
+				{
+					$this->nodes_to_list($node['children'], $list);
+				}
+			}
+		}
+	}
 }

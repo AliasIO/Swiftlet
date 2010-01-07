@@ -261,9 +261,13 @@ td {
 		font-size: 1.2em;
 	}
 
-	#content ul {
+	#content ul, #content ol {
 		margin-bottom: 1em;
 	}
+	
+		#content ul ul, #content ol ol, #content ul ol, #content ol ul {
+			margin-bottom: 0;
+		}
 	
 	#content li {
 		list-style: outside square;

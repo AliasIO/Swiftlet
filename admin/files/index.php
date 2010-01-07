@@ -31,8 +31,31 @@ if ( $model->session->get('user auth') < user::admin )
 	$model->end();
 }
 
+// Create a list of all files
+$files = '';
+
+$model->db->sql('
+	SELECT
+		`id`,
+		`left_id`,
+		`right_id`,
+		`title`
+	FROM      `' . $model->db->prefix . 'nodes`
+	WHERE
+		`permalink` = "files"
+	LIMIT 1
+	;');
+
+if ( $r = $model->db->result )
+{
+	$nodeFiles = $r[0];
+
+	$files = $model->node->get_children($nodeFiles['id']);
+}
+
 $view->id     = $id;
 $view->action = $action;
+$view->files  = $files;
 
 $view->load('admin/files.html.php');
 
