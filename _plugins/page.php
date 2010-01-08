@@ -99,8 +99,8 @@ switch ( $hook )
 
 		foreach ( $languages as $language )
 		{
-			$post['title[' . $model->h($language) . ']'] = 'Unit Test';
-			$post['body[' . $model->h($language) . ']']  = 'Unit Test - Create';
+			$post['title[' . $model->h($language) . ']'] = 'Unit Test Page';
+			$post['body[' . $model->h($language) . ']']  = 'Unit Test Page - Create';
 		}
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/', $post);
@@ -111,7 +111,8 @@ switch ( $hook )
 			FROM      `' . $model->db->prefix . 'nodes` AS n
 			LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 			WHERE
-				n.`title` = "Unit Test"
+				n.`title` = "Unit Test Page" AND
+				p.`lang`  = "English US"
 			LIMIT 1
 			;', FALSE);
 
@@ -135,8 +136,8 @@ switch ( $hook )
 
 			foreach ( $languages as $language )
 			{
-				$post['title[' . $model->h($language) . ']'] = 'Unit Test';
-				$post['body[' . $model->h($language) . ']']  = 'Unit Test - Edit';
+				$post['title[' . $model->h($language) . ']'] = 'Unit Test Page';
+				$post['body[' . $model->h($language) . ']']  = 'Unit Test Page - Edit';
 			}
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=edit', $post);
@@ -155,11 +156,11 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Editing a page in <code>/admin/pages/</code>.',
-			'pass' => $body == 'Unit Test - Edit'
+			'pass' => $body == 'Unit Test Page - Edit'
 			);
 
 		/**
-		 * Deleting a user account
+		 * Deleting a page
 		 */
 		if ( $page['node_id'] )
 		{

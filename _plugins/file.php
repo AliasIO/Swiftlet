@@ -79,7 +79,7 @@ switch ( $hook )
 		 * Uploading a file
 		 */
 		$post = array(
-			'title[0]'    => 'Unit test',
+			'title[0]'    => 'Unit Test File',
 			'file[0]'     => '@' . $contr->rootPath . 'favicon.ico',
 			'form-submit' => 'Submit',
 			'auth_token'  => $model->authToken
@@ -93,7 +93,7 @@ switch ( $hook )
 			FROM      `' . $model->db->prefix . 'nodes` AS n
 			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
 			WHERE
-				n.`title` = "Unit Test"
+				n.`title` = "Unit Test File"
 			LIMIT 1
 			;', FALSE);
 

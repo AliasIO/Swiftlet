@@ -256,18 +256,28 @@ class node
 
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
-					`left_id`   = `left_id`  - 1,
-					`right_id`  = `right_id` - 1,
+					`right_id`  = `right_id` - 2,
 					`date_edit` = NOW()
 				WHERE
-					`left_id` > ' . $leftId . '
+					`right_id` > ' . $rightId . '
 				;');
 
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
-					`right_id`  = `right_id` - 2,
+					`left_id`   = `left_id`  - 1,
+					`right_id`  = `right_id` - 1,
 					`date_edit` = NOW()
 				WHERE
+					`left_id`  > ' . $leftId  . ' AND
+					`right_id` < ' . $rightId . '
+				;');
+
+			$model->db->sql('
+				UPDATE `' . $model->db->prefix . 'nodes` SET
+					`left_id`  = `left_id` - 2,
+					`date_edit` = NOW()
+				WHERE
+					`left_id`  > ' . $leftId  . ' AND
 					`right_id` > ' . $rightId . '
 				;');
 
@@ -475,7 +485,7 @@ class node
 
 				if ( !empty($node['children']) )
 				{
-					$this->nodes_to_list($node['children'], $list);
+					$this->nodes_to_array($node['children'], $list);
 				}
 			}
 		}

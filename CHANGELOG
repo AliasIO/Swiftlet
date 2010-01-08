@@ -9,6 +9,7 @@
 # Added format_date hook
 # Added file plug-in for secure file uploads
 # Rewrote plug-in installer and /_model/plugin.class.php
+# Fixed a bug in node plugin that when deleting a node
 #
 #
 # 1.1.0.RC3 - 1.1.0

@@ -82,11 +82,11 @@ if ( $model->POST_valid['form-submit'] )
 							}
 
 							$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
-							
+
 							$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
-							
+
 							$permalink = $model->node->permalink($title);
-							
+
 							$nodeId = $model->node->create($title, $permalink, $filesNodeId);
 
 							if ( $nodeId )
@@ -172,55 +172,58 @@ else if ( isset($model->GET_raw['notice']) )
 	}
 }
 
-switch ( $action )
+if ( ( int ) $id )
 {
-	case 'delete':
-		if ( !$model->POST_valid['confirm'] )
-		{
-			$model->confirm('Are you sure you wish to delete this file?');
-		}
-		else
-		{
-			// Delete file
-			if ( $model->node->delete($id) )
+	switch ( $action )
+	{
+		case 'delete':
+			if ( !$model->POST_valid['confirm'] )
 			{
-				$model->db->sql('
-					SELECT
-						`file_hash`
-					FROM `' . $model->db->prefix . 'files`
-					WHERE
-						`node_id` = ' . ( int ) $id . '
-					LIMIT 1
-					;');
-				
-				if ( $r = $model->db->result )
+				$model->confirm('Are you sure you wish to delete this file?');
+			}
+			else
+			{
+				// Delete file
+				if ( $model->node->delete(( int ) $id) )
 				{
-					$hash = $r[0]['file_hash'];
-
-					if ( is_file($file = $contr->rootPath . 'file/uploads/' . $hash) )
-					{
-						unlink($file);
-					}
-
 					$model->db->sql('
-						DELETE
+						SELECT
+							`file_hash`
 						FROM `' . $model->db->prefix . 'files`
 						WHERE
 							`node_id` = ' . ( int ) $id . '
 						LIMIT 1
 						;');
-
-					if ( $model->db->result )
+					
+					if ( $r = $model->db->result )
 					{
-						header('Location: ?notice=deleted');
+						$hash = $r[0]['file_hash'];
 
-						$model->end();
+						if ( is_file($file = $contr->rootPath . 'file/uploads/' . $hash) )
+						{
+							unlink($file);
+						}
+
+						$model->db->sql('
+							DELETE
+							FROM `' . $model->db->prefix . 'files`
+							WHERE
+								`node_id` = ' . ( int ) $id . '
+							LIMIT 1
+							;');
+
+						if ( $model->db->result )
+						{
+							header('Location: ?notice=deleted');
+
+							$model->end();
+						}
 					}
 				}
 			}
-		}
 
-		break;
+			break;
+	}
 }
 
 // Create a list of all files
