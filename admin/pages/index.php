@@ -248,6 +248,7 @@ switch ( $action )
 			// Delete page
 			if ( $model->node->delete($id) )
 			{
+				// Not using LIMIT 1 because a node can have several pages (translations)
 				$model->db->sql('
 					DELETE
 					FROM `' . $model->db->prefix . 'pages`

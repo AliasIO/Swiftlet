@@ -62,65 +62,72 @@ if ( $model->POST_valid['form-submit'] )
 			{
 				case UPLOAD_ERR_OK:
 					$hash = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]));
-
-					$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'file/uploads/' . $hash);
-
-					if ( $r )
+					
+					if ( is_file($contr->rootPath . 'file/uploads/' . $hash) )
 					{
-						$width  = '';
-						$height = '';
-
-						if ( $size = getimagesize($file) )
-						{						
-							list($width, $height) = $size;
-						}
-
-						$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
-						
-						$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
-						
-						$permalink = $model->node->permalink($title);
-						
-						$nodeId = $model->node->create($title, $permalink, $filesNodeId);
-
-						if ( $nodeId )
-						{
-							$model->db->sql('
-								INSERT INTO `' . $model->db->prefix . 'files` (
-									`node_id`,
-									`title`,
-									`extension`,
-									`file_hash`,
-									`mime_type`,
-									`width`,
-									`height`,
-									`size`,
-									`date`,
-									`date_edit`
-									)
-								VALUES (
-									' . ( int ) $nodeId . ',
-									"' . $model->db->escape($title) . '",
-									"' . $model->db->escape($extension) . '",
-									"' . $model->db->escape($hash) . '",
-									"' . $model->db->escape($_FILES['file']['type'][$i]) . '",
-									' . ( int ) $width . ',
-									' . ( int ) $height . ',
-									' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
-									NOW(),
-									NOW()
-									)
-								;');
-
-							if ( $model->db->result )
-							{
-								$uploads[] = '<a href="' . $model->rewrite_url($view->rootPath . 'file/?name=' . $permalink . $extension) . '">' . $model->h($title) . '</a>';
-							}
-						}
+						$model->form->errors['file'][$i] = 'This file has already been uploaded.';
 					}
 					else
 					{
-						$model->form->errors['file'][$i] = 'Could not move file to destined location.';
+						$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'file/uploads/' . $hash);
+
+						if ( $r )
+						{
+							$width  = '';
+							$height = '';
+
+							if ( $size = getimagesize($file) )
+							{						
+								list($width, $height) = $size;
+							}
+
+							$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
+							
+							$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
+							
+							$permalink = $model->node->permalink($title);
+							
+							$nodeId = $model->node->create($title, $permalink, $filesNodeId);
+
+							if ( $nodeId )
+							{
+								$model->db->sql('
+									INSERT INTO `' . $model->db->prefix . 'files` (
+										`node_id`,
+										`title`,
+										`extension`,
+										`file_hash`,
+										`mime_type`,
+										`width`,
+										`height`,
+										`size`,
+										`date`,
+										`date_edit`
+										)
+									VALUES (
+										' . ( int ) $nodeId . ',
+										"' . $model->db->escape($title) . '",
+										"' . $model->db->escape($extension) . '",
+										"' . $model->db->escape($hash) . '",
+										"' . $model->db->escape($_FILES['file']['type'][$i]) . '",
+										' . ( int ) $width . ',
+										' . ( int ) $height . ',
+										' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
+										NOW(),
+										NOW()
+										)
+									;');
+
+								if ( $model->db->result )
+								{
+									$uploads[] = '<a href="' . $model->rewrite_url($view->rootPath . 'file/?name=' . $permalink . $extension) . '">' . $model->h($title) . '</a>';
+								}
+							}
+						}
+						else
+						{
+							$model->form->errors['file'][$i] = 'Could not move file to destined location.';
+						}
 					}
 
 					break;
@@ -154,9 +161,104 @@ if ( $model->POST_valid['form-submit'] )
 		}
 	}
 }
+else if ( isset($model->GET_raw['notice']) )
+{
+	switch ( $model->GET_raw['notice'] )
+	{
+		case 'deleted':
+			$view->notice = 'The file has been deleted.';
+
+			break;
+	}
+}
+
+switch ( $action )
+{
+	case 'delete':
+		if ( !$model->POST_valid['confirm'] )
+		{
+			$model->confirm('Are you sure you wish to delete this file?');
+		}
+		else
+		{
+			// Delete file
+			if ( $model->node->delete($id) )
+			{
+				$model->db->sql('
+					SELECT
+						`file_hash`
+					FROM `' . $model->db->prefix . 'files`
+					WHERE
+						`node_id` = ' . ( int ) $id . '
+					LIMIT 1
+					;');
+				
+				if ( $r = $model->db->result )
+				{
+					$hash = $r[0]['file_hash'];
+
+					if ( is_file($file = $contr->rootPath . 'file/uploads/' . $hash) )
+					{
+						unlink($file);
+					}
+
+					$model->db->sql('
+						DELETE
+						FROM `' . $model->db->prefix . 'files`
+						WHERE
+							`node_id` = ' . ( int ) $id . '
+						LIMIT 1
+						;');
+
+					if ( $model->db->result )
+					{
+						header('Location: ?notice=deleted');
+
+						$model->end();
+					}
+				}
+			}
+		}
+
+		break;
+}
 
 // Create a list of all files
-$files = $filesNodeId ? $model->node->get_children($filesNodeId) : array();
+$files = array();
+
+$nodes = $filesNodeId ? $model->node->get_children($filesNodeId) : array();
+
+if ( $nodes )
+{
+	$nodeIds = array();
+	
+	foreach ( $nodes['children'] as $d )
+	{
+		$nodeIds[] = $d['id'];
+	}
+	
+	if ( $nodeIds )
+	{
+		$model->db->sql('
+			SELECT
+				n.`permalink`,
+				f.*
+			FROM      `' . $model->db->prefix . 'nodes` AS n
+			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
+			WHERE
+				n.`id` IN ( ' . implode(', ', $nodeIds) . ' )
+			LIMIT ' . count($nodeIds) . '
+			;');
+		
+		if ( $r = $model->db->result )
+		{
+			foreach ( $r as $d )
+			{
+				$files[] = $d;
+			}
+		}
+	}
+}
 
 $view->id     = $id;
 $view->action = $action;

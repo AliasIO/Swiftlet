@@ -2,7 +2,7 @@
 
 <?php if ( $view->action != 'upload' ): ?>
 <p>
-	<a href="?action=upload">Upload new files</a>
+	<a href="?action=upload"><?php echo t('Upload files') ?></a>
 </p>
 <?php endif ?>
 
@@ -15,7 +15,7 @@
 <?php endif ?>
 
 <?php if ( $view->action == 'upload' ): ?>
-<h2>Upload files</h2>
+<h2><?php echo t('Upload files') ?></h2>
 
 <form id="formFile" method="post" action="./?action=upload" enctype="multipart/form-data">
 	<?php for ( $i = 0; $i < 5; $i ++ ): ?>
@@ -51,13 +51,12 @@
 				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
 
 				<p>
-					<a href="?">Cancel</a>
+					<a href="?"><?php echo t('Cancel') ?></a>
 				</p>
 			</dd>
 		</dl>
 	</fieldset>
 </form>
-<?php endif ?>
 
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
@@ -67,13 +66,42 @@
 	});
 	/* ]]> */ -->
 </script>
+<?php endif ?>
 
 <h2>Files</h2>
 
 <?php if ( $view->files ): ?>
-<?php foreach ( $view->files as $file ): ?>
-<?php echo print_r($file) ?>
-<?php endforeach ?>
+<table>
+	<thead>
+		<tr>
+			<th>Title</th>
+			<th>Mime type</th>
+			<th>File size</th>
+			<th>Dimensions</th>
+			<th>Uploaded on</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ( $view->files as $file ): ?>
+		<tr>
+			<td>
+				<a href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>">
+					<?php echo $file['title'] ?>
+				</a>
+			</td>
+			<td><?php echo $file['mime_type'] ?></td>
+			<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : t('n/a') ?></td>
+			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>
+			<td><?php echo $model->format_date($file['date']) ?></td>
+			<td>
+				<a href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
+			</td>
+			</td>
+		</tr>
+		<?php endforeach ?>
+	</tbody>
+</table>
 <?php else: ?>
 <p>
 	<em><?php echo t('No files') ?></em>

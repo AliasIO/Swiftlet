@@ -268,6 +268,22 @@ class model
 	}
 
 	/**
+	 * Format a date
+	 * @param string $v
+	 * @return string
+	 */
+	function format_date($v)
+	{
+		$params = array(
+			'string' => $v
+			);
+
+		$this->hook('format_date', $params);
+
+		return $params['string'];
+	}
+
+	/**
 	 * Rewrite URLs
 	 * @param string $url
 	 * @return string

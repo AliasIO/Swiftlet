@@ -6,6 +6,9 @@
 # Changed "pages" plug-in to "page"
 # Page plug-in can now handle multiple languages (in combination with the lang plug-in)
 # Added index.html files to directories to prevent contents from being displayed
+# Added format_date hook
+# Added file plug-in for secure file uploads
+# Rewrote plug-in installer and /_model/plugin.class.php
 #
 #
 # 1.1.0.RC3 - 1.1.0

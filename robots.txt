@@ -3,6 +3,7 @@ Disallow: /_model/
 Disallow: /_plugins/
 Disallow: /_view/
 Disallow: /admin/
+Disallow: /file/uploads/
 Disallow: /installer/
 Disallow: /lib/
 Disallow: /log/

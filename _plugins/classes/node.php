@@ -316,7 +316,7 @@ class node
 				'permalink' => $model->db->result[0]['permalink']
 				);
 		}
-		
+
 		return $node;
 	}
 
@@ -372,11 +372,11 @@ class node
 	function get_children($id)
 	{
 		$model = $this->model;
-
+		
 		if ( $node = $this->get($id) )
 		{
 			$node['children'] = array();
-			
+
 			$model->db->sql('
 				SELECT
 					`id`,
@@ -394,23 +394,29 @@ class node
 			{
 				$nodes    = array();
 				$children = array();
+
+				foreach ( $model->db->result as $d )
+				{
+					$children[] = $d['id'];
+				}
+
+				foreach ( $model->db->result as $d )
+				{
+					$nodes[] = array(
+						'id'        => $d['id'],
+						'left_id'   => $d['left_id'],
+						'right_id'  => $d['right_id'],
+						'title'     => $d['title'],
+						'permalink' => $d['permalink'],
+						'level'     => 0,
+						'children'  => array()
+						);
+				}
 				
-				foreach ( $model->db->result as $d ) $children[] = $d['id'];
-
-				foreach ( $model->db->result as $d ) $nodes[] = array(
-					'id'        => $d['id'],
-					'left_id'   => $d['left_id'],
-					'right_id'  => $d['right_id'],
-					'title'     => $d['title'],
-					'permalink' => $d['permalink'],
-					'level'     => 0,
-					'children'  => array()
-					);
-
 				$nodes = $this->tree($nodes);
-				
+
 				$nodes['all'] = $children;
-				
+
 				return $nodes;
 			}
 		}

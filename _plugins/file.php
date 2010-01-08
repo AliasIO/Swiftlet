@@ -34,8 +34,8 @@ switch ( $hook )
 					`height`    INT(10) UNSIGNED NOT NULL,
 					`size`      INT(10) UNSIGNED NOT NULL,
 					`date`      DATETIME         NOT NULL,
-					`date_edit` DATETIME         NOT NULL
-					INDEX `node_id` (`node_id`)
+					`date_edit` DATETIME         NOT NULL,
+					INDEX `node_id` (`node_id`),
 					PRIMARY KEY (`id`)
 					)
 				;');
@@ -75,6 +75,66 @@ switch ( $hook )
 
 		break;
 	case 'unit_tests':
+		/**
+		 * Uploading a file
+		 */
+		$post = array(
+			'title[0]'    => 'Unit test',
+			'file[0]'     => '@' . $contr->rootPath . 'favicon.ico',
+			'form-submit' => 'Submit',
+			'auth_token'  => $model->authToken
+			);
+
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/', $post);
+
+		$model->db->sql('
+			SELECT
+				f.*
+			FROM      `' . $model->db->prefix . 'nodes` AS n
+			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
+			WHERE
+				n.`title` = "Unit Test"
+			LIMIT 1
+			;', FALSE);
+
+		$file = isset($model->db->result[0]) ? $model->db->result[0] : FALSE;
+
+		$params[] = array(
+			'test' => 'Uploading a file in <code>/admin/files/</code>.',
+			'pass' => ( bool ) $file['node_id']
+			);
+
+		/**
+		 * Deleting a file
+		 */
+		if ( $file['node_id'] )
+		{
+			$post = array(
+				'get_data'   => serialize(array(
+					'id'     => ( int ) $file['node_id'],
+					'action' => 'delete'
+					)),
+				'confirm'    => '1',
+				'auth_token' => $model->authToken
+				);
+
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/?id=' . ( int ) $file['node_id'] . '&action=delete', $post);
+		}
+
+		$model->db->sql('
+			SELECT
+				n.`id`
+			FROM      `' . $model->db->prefix . 'nodes` AS n
+			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
+			WHERE
+				f.`id` = ' . ( int ) $file['id'] . '
+			LIMIT 1
+			;', FALSE);
+
+		$params[] = array(
+			'test' => 'Deleting a file in <code>/admin/files/</code>.',
+			'pass' => !$model->db->result
+			);
 
 		break;
 }
