@@ -2,4 +2,5 @@ Options +FollowSymlinks
 RewriteEngine on
 
 # Pages
-RewriteRule ^p/([a-z0-9_-]+) page/?permalink=$1 [NC,QSA]
+RewriteRule ^p/([a-z0-9_-]+) page/index.php?permalink=$1 [NC,QSA]
+RewriteRule ^file/([a-z0-9_-]+) file/index.php?name=$1 [NC,QSA]

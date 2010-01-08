@@ -17,7 +17,7 @@
 <?php if ( $view->action == 'upload' ): ?>
 <h2>Upload files</h2>
 
-<form id="formFile" method="post" action="./<?php echo $view->id ? '?action=edit&id=' . $view->id : '' ?>" enctype="multipart/form-data">
+<form id="formFile" method="post" action="./?action=upload" enctype="multipart/form-data">
 	<?php for ( $i = 0; $i < 5; $i ++ ): ?>
 	<fieldset>
 		<dl>
@@ -48,7 +48,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" id="form-submit" value="<?php echo $model->t('Upload') ?>"/>
+				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
 
 				<p>
 					<a href="?">Cancel</a>
