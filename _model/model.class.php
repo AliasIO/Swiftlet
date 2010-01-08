@@ -272,15 +272,16 @@ class model
 	 * @param string $v
 	 * @return string
 	 */
-	function format_date($v)
+	function format_date($date, $type = 'datetime')
 	{
 		$params = array(
-			'string' => $v
+			'date' => $date,
+			'type' => $type
 			);
 
 		$this->hook('format_date', $params);
 
-		return $params['string'];
+		return $params['date'];
 	}
 
 	/**

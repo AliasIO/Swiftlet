@@ -6,5 +6,4 @@
  */
 
 $translation = array(
-	'is up and running!' => 'is translated!'
 	);
