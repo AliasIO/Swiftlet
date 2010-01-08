@@ -197,8 +197,8 @@ if ( $model->POST_valid['form-submit'] )
 						"' . $passHash . '",
 						"' . $email . '",
 						' . $auth . ',
-						NOW(),
-						NOW()
+						"' . gmdate('Y-m-d H:i:s') . '",
+						"' . gmdate('Y-m-d H:i:s') . '"
 						)
 						;');
 
@@ -226,7 +226,7 @@ if ( $model->POST_valid['form-submit'] )
 						' . ( $passHash ? '`pass_hash` = "' . $passHash . '",' : '' ) . '
 						`email`     = "' . $email . '",
 						`auth`      = ' . $auth . ',
-						`date_edit` = NOW()
+						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 					WHERE
 						`id` = ' . $user['id'] . '
 					LIMIT 1

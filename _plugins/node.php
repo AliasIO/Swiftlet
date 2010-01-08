@@ -50,8 +50,8 @@ switch ( $hook )
 				1,
 				"ROOT",
 				"root",
-				NOW(),
-				NOW()
+				"' . gmdate('Y-m-d H:i:s') . '",
+				"' . gmdate('Y-m-d H:i:s') . '"
 				)
 			;');
 

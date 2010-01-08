@@ -104,7 +104,7 @@ class node
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` + 2,
-					`date_edit` = NOW()
+					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`left_id` > ' . ( int ) $parentNode['left_id'] . '
 				;');
@@ -112,7 +112,7 @@ class node
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` + 2,
-					`date_edit` = NOW()
+					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . ( int ) $parentNode['left_id'] . '
 				;');
@@ -131,8 +131,8 @@ class node
 					' . ( ( int ) $parentNode['left_id'] + 2 ) . ',
 					"' . $title . '",
 					"' . $permalink . '",
-					NOW(),
-					NOW()
+					"' . gmdate('Y-m-d H:i:s') . '",
+					"' . gmdate('Y-m-d H:i:s') . '"
 					)
 				;');
 
@@ -257,7 +257,7 @@ class node
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` - 2,
-					`date_edit` = NOW()
+					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . $rightId . '
 				;');
@@ -266,7 +266,7 @@ class node
 				UPDATE `' . $model->db->prefix . 'nodes` SET
 					`left_id`   = `left_id`  - 1,
 					`right_id`  = `right_id` - 1,
-					`date_edit` = NOW()
+					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`left_id`  > ' . $leftId  . ' AND
 					`right_id` < ' . $rightId . '
@@ -275,7 +275,7 @@ class node
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
 					`left_id`  = `left_id` - 2,
-					`date_edit` = NOW()
+					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`left_id`  > ' . $leftId  . ' AND
 					`right_id` > ' . $rightId . '

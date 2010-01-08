@@ -56,7 +56,7 @@ class session
 				DELETE
 				FROM `' . $this->model->db->prefix . 'sessions`
 				WHERE
-					`date_expire` <= NOW()
+					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
 				;');
 
 			/**
@@ -101,13 +101,13 @@ class session
 					VALUES (
 						"' . $this->hash . '",
 						"' . $model->db->escape(serialize($this->contents)) . '",
-						NOW(),
-						DATE_ADD(NOW(), INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+						"' . gmdate('Y-m-d H:i:s') . '",
+						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 						)
 					ON DUPLICATE KEY UPDATE
 						`contents`    = "' . $model->db->escape(serialize($this->contents)) . '",
-						`date`        = NOW(),
-						`date_expire` = DATE_ADD(NOW(), INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+						`date`        = "' . gmdate('Y-m-d H:i:s') . '",
+						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 					;');
 
 				$this->id = $model->db->result;
@@ -163,7 +163,7 @@ class session
 			UPDATE `' . $this->model->db->prefix . 'sessions`
 			SET
 				`contents` = "' . $this->model->db->escape(serialize($this->contents)) . '",
-				`date_expire` = DATE_ADD(NOW(), INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+				`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 			WHERE
 				`id` = ' . $this->id . '
 			LIMIT 1						

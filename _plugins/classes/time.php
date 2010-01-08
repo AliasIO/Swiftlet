@@ -17,7 +17,8 @@ class time
 		$ready,
 		$dateFormat = 'M j, Y',
 		$timeFormat = 'h:i',
-		$timeZone   = ''
+		$timeZone   = 'GMT',
+		$timeOffset = 0
 		;
 
 	private
@@ -45,6 +46,13 @@ class time
 			}
 		}
 
+		date_default_timezone_set($this->timeZone);
+
+		$this->timeOffset =
+			mktime(date('H'),   date('i'),   date('s'),   date('n'),   date('j'),   date('Y')) -
+			mktime(gmdate('H'), gmdate('i'), gmdate('s'), gmdate('n'), gmdate('j'), gmdate('Y'))
+			;
+
 		$this->ready = TRUE;
 	}
 
@@ -55,7 +63,7 @@ class time
 	 */
 	function format_date($date, $type = 'datetime')
 	{
-		if ( $timestamp = strtotime($date) )
+		if ( $timestamp = strtotime($date) + $this->timeOffset )
 		{
 			switch ( $type )
 			{
@@ -72,6 +80,6 @@ class time
 			}
 		}
 
-		return $date . ' - ' . $this->timeZone;
+		return $date . ( $this->timeZone == 'GMT' ? ' GMT' : '' );
 	}
 }

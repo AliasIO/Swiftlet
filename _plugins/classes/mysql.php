@@ -77,7 +77,7 @@ class mysql
 					FROM      `' . $this->prefix . 'cache_queries` AS cq
 					LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
 					WHERE
-						cq.`date_expire` <= NOW()
+						cq.`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
 					;');
 			}
 			else
@@ -217,8 +217,8 @@ class mysql
 				VALUES (
 					"' . $this->escape($hash) . '",
 					"' . $this->escape(serialize($result)) . '",
-					NOW(),
-					DATE_ADD(NOW(), INTERVAL 1 HOUR)
+					"' . gmdate('Y-m-d H:i:s') . '",
+					DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL 1 HOUR)
 					)
 				;');
 

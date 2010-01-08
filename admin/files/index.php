@@ -113,8 +113,8 @@ if ( $model->POST_valid['form-submit'] )
 										' . ( int ) $width . ',
 										' . ( int ) $height . ',
 										' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
-										NOW(),
-										NOW()
+										"' . gmdate('Y-m-d H:i:s') . '",
+										"' . gmdate('Y-m-d H:i:s') . '"
 										)
 									;');
 

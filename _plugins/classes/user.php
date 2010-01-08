@@ -67,7 +67,7 @@ class user
 						{
 							$this->prefs[$d['pref']] = $d;
 
-							$this->prefs[$d['pref']]['values'] = unserialize($d['values']);
+							$this->prefs[$d['pref']]['options'] = unserialize($d['options']);
 						}
 					}
 				}
@@ -156,16 +156,16 @@ class user
 				`pref`,
 				`type`,
 				`match`,
-				`values`
+				`options`
 				)
 			VALUES (
-				"' . $model->db->escape($params['pref']) . '",
-				"' . $model->db->escape($params['type'])   . '",
-				"' . $model->db->escape($params['match'])  . '",
-				"' . $model->db->escape($params['values']) . '"
+				"' . $model->db->escape($params['pref'])    . '",
+				"' . $model->db->escape($params['type'])    . '",
+				"' . $model->db->escape($params['match'])   . '",
+				"' . $model->db->escape($params['options']) . '"
 				)
 			ON DUPLICATE KEY UPDATE
-				`values` = "' . $model->db->escape($params['values']) . '"
+				`options` = "' . $model->db->escape($params['options']) . '"
 			;');
 	}
 

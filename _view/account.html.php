@@ -115,8 +115,8 @@
 						?>
 						<select name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>">
 						<option value="" ><?php echo t('Select&hellip;') ?></option>
-						<?php foreach ( $pref['values'] as $value ): ?>
-						<option value="<?php echo h($value) ?>" <?php echo h($value) == $model->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo h(t($value)) ?></option>
+						<?php foreach ( $pref['options'] as $k => $v ): ?>
+						<option value="<?php echo h($k) ?>" <?php echo h($k) == $model->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo h(t($v)) ?></option>
 						<?php endforeach ?>
 						</select>
 						<?php

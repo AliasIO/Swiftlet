@@ -103,7 +103,7 @@ if ( $model->POST_valid['form-submit'] )
 							UPDATE `' . $model->db->prefix . 'pages` SET
 								`title`     = "' . $model->POST_db_safe['title'][$language] . '",
 								`body`      = "' . $model->POST_db_safe['body'][$language] . '",
-								`date_edit` = NOW()
+								`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 							WHERE
 								`node_id` = ' . $id . ' AND
 								`lang`    = "' . $model->db->escape($language) . '"
@@ -126,8 +126,8 @@ if ( $model->POST_valid['form-submit'] )
 								"' . $model->POST_db_safe['title'][$language] . '",
 								"' . $model->POST_db_safe['body'][$language] . '",
 								"' . $model->db->escape($language) . '",
-								NOW(),
-								NOW()
+								"' . gmdate('Y-m-d H:i:s') . '",
+								"' . gmdate('Y-m-d H:i:s') . '"
 								)
 							;');
 					}
@@ -164,8 +164,8 @@ if ( $model->POST_valid['form-submit'] )
 								"' . $model->POST_db_safe['title'][$language] . '",
 								"' . $model->POST_db_safe['body'][$language] . '",
 								"' . $model->db->escape($language) . '",
-								NOW(),
-								NOW()
+								"' . gmdate('Y-m-d H:i:s') . '",
+								"' . gmdate('Y-m-d H:i:s') . '"
 								)
 							;');
 					}

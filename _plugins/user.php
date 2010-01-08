@@ -47,18 +47,18 @@ switch ( $hook )
 				"Admin",
 				"' . sha1('swiftlet' . strtolower('Admin') . $model->sysPassword) . '",
 				4,
-				NOW(),
-				NOW()
+				"' . gmdate('Y-m-d H:i:s') . '",
+				"' . gmdate('Y-m-d H:i:s') . '"
 				)
 			;');
 
 		$model->db->sql('
 			CREATE TABLE `' . $model->db->prefix . 'user_prefs` (
-				`id`     INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`pref`   VARCHAR(255)     NOT NULL,
-				`type`   VARCHAR(255)     NOT NULL,
-				`match`  VARCHAR(255)     NOT NULL,
-				`values` VARCHAR(255)     NOT NULL,
+				`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`pref`    VARCHAR(255)     NOT NULL,
+				`type`    VARCHAR(255)     NOT NULL,
+				`match`   VARCHAR(255)     NOT NULL,
+				`options` TEXT                 NULL,
 				UNIQUE `pref` (`pref`),
 				PRIMARY KEY (`id`)
 				)

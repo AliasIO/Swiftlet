@@ -15,7 +15,7 @@ class lang
 {
 	public
 		$language  = 'English US',
-		$languages = array('English US'),
+		$languages = array('English US' => 'English US'),
 		$ready
 		;
 
@@ -64,7 +64,7 @@ class lang
 
 		if ( !empty($model->user->ready) )
 		{
-			$this->languages = array('English US');
+			$this->languages = array('English US' => 'English US');
 
 			if ( is_dir($dir = $contr->rootPath . 'lang/') )
 			{
@@ -74,7 +74,7 @@ class lang
 					{
 						if ( is_dir($dir . $file) && substr($file, 0, 1) != '.' )
 						{
-							$this->languages[] = $file;
+							$this->languages[$file] = $file;
 						}
 					}
 
@@ -84,15 +84,15 @@ class lang
 
 			$this->languages = array_unique($this->languages);
 
-			rsort($this->languages);
+			arsort($this->languages);
 
-			if ( !isset($model->user->prefs['Language']['values']) || $this->languages != $model->user->prefs['Language']['values'] )
+			if ( !isset($model->user->prefs['Language']['options']) || $this->languages != $model->user->prefs['Language']['options'] )
 			{
 				$model->user->save_pref(array(
-					'pref'   => 'Language',
-					'type'   => 'select',
-					'match'  => '/.*/',
-					'values' => serialize($this->languages)
+					'pref'    => 'Language',
+					'type'    => 'select',
+					'match'   => '/.*/',
+					'options' => serialize($this->languages)
 					));
 			}
 		}
