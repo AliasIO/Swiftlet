@@ -6,6 +6,7 @@
 
 <?php if ( isset($view->title) ): ?>
 <ul class="crumbs">
+	<li><a href="<?php echo $contr->rootPath ?>"><?php echo t('Home') ?></a> &rsaquo;</li>
 	<?php if ( $view->parents ): ?>
 	<?php foreach ( $view->parents as $permalink => $title ): ?>
 	<li><a href="<?php echo $model->rewrite_url($contr->rootPath . 'page/?permalink=' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>

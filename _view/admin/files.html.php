@@ -74,12 +74,13 @@
 <table>
 	<thead>
 		<tr>
-			<th>Title</th>
-			<th>Mime type</th>
-			<th>File size</th>
-			<th>Dimensions</th>
-			<th>Uploaded on</th>
-			<th>Action</th>
+			<th><?php echo t('Title') ?></th>
+			<th><?php echo t('Location') ?></th>
+			<th><?php echo t('Mime type') ?></th>
+			<th><?php echo t('File size') ?></th>
+			<th><?php echo t('Dimensions') ?></th>
+			<th><?php echo t('Uploaded on') ?></th>
+			<th><?php echo t('Action') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -90,6 +91,7 @@
 					<?php echo $file['title'] ?>
 				</a>
 			</td>
+			<td><?php echo $model->rewrite_url('file/?name=' . $file['permalink'] . $file['extension']) ?></td>
 			<td><?php echo $file['mime_type'] ?></td>
 			<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : t('n/a') ?></td>
 			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>

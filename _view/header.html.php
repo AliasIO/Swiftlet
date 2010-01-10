@@ -21,7 +21,7 @@
 
 		<?php if ( $contr->inAdmin ): ?>
 		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/ckeditor/custom_config.js"></script>
+		<script type="text/javascript" src="<?php echo $view->viewPath ?>scripts/ckeditor_conf.js.php"></script>
 		<?php endif ?>
 		
 		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/jquery/jquery-1.3.2.min.js"></script>
