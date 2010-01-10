@@ -100,7 +100,7 @@ switch ( $hook )
 		foreach ( $languages as $language )
 		{
 			$post['title[' . $model->h($language) . ']'] = 'Unit Test Page';
-			$post['body[' . $model->h($language) . ']']  = 'Unit Test Page - Create';
+			$post['body['  . $model->h($language) . ']'] = 'Unit Test Page - Create';
 		}
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/', $post);

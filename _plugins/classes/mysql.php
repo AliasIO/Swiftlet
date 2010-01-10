@@ -95,7 +95,10 @@ class mysql
 	{
 		$model = $this->model;
 		
-		if ( !$this->ready ) $model->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
+		if ( !$this->ready )
+		{
+			$model->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
+		}
 
 		$this->result = array();
 
@@ -155,10 +158,10 @@ class mysql
 				LIMIT 1
 				;', FALSE);
 			
-			if ( $d = $this->result )
+			if ( $this->result && $r = $this->result[0] )
 			{
-				$this->result = unserialize($d[0]['results']);
-				
+				$this->result = unserialize($r['results']);
+
 				return;
 			}
 
@@ -329,8 +332,14 @@ class mysql
 	{
 		if ( $this->ready )
 		{
-			if ( is_array($v) ) return array_map(array($this, 'escape'), $v);
-			else                return mysql_real_escape_string($v);
+			if ( is_array($v) )
+			{
+				return array_map(array($this, 'escape'), $v);
+			}
+			else
+			{
+				return mysql_real_escape_string($v);
+			}
 		}
 	}
 }

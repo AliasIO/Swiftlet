@@ -8,9 +8,15 @@
 /**
  * Check PHP version
  */
-if ( version_compare(PHP_VERSION, '5.1', '<') ) die('PHP 5.1 or higher is required.');
+if ( version_compare(PHP_VERSION, '5.1', '<') )
+{
+	die('PHP 5.1 or higher is required.');
+}
 
-if ( empty($contrSetup) ) die('Missing controller setup');
+if ( empty($contrSetup) )
+{
+	die('Missing controller setup.');
+}
 
 require($contrSetup['rootPath'] . '_model/model.class.php');
 require($contrSetup['rootPath'] . '_model/controller.class.php');
@@ -18,11 +24,11 @@ require($contrSetup['rootPath'] . '_model/controller.class.php');
 $contr = new contr($contrSetup);
 $model = new model($contr);
 
-$view  =& $model->view;
+$view = $model->view;
 
 unset($contrSetup);
 
-if ( !$contr->standAlone )
+if ( empty($contr->standAlone) )
 {
 	$model->hook('header');
 }

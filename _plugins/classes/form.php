@@ -77,7 +77,10 @@ class form
 
 				$model->POST_valid[$var] = $this->check($model->POST_raw[$var], $regexes);
 
-				if ( $model->POST_valid[$var] === FALSE ) $this->errors[$var] = TRUE;
+				if ( $model->POST_valid[$var] === FALSE )
+				{
+					$this->errors[$var] = TRUE;
+				}
 			}
 		}
 	}
@@ -97,9 +100,12 @@ class form
 		{
 			foreach ( $regexes as $regex )
 			{
-				if ( preg_match($regex, $var) ) return $var;
+				if ( preg_match($regex, $var) )
+				{
+					return $var;
+				}
 			}
-			
+
 			return FALSE;
 		}
 	}

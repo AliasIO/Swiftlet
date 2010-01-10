@@ -47,12 +47,15 @@ class model
 		}
 		else
 		{
-			$model->error(FALSE, 'Missing configuration file');
+			$model->error(FALSE, 'Missing configuration file.');
 		}
 
 		if ( isset($config) )
 		{
-			foreach ( $config as $k => $v ) $model->{$k} = $v;
+			foreach ( $config as $k => $v )
+			{
+				$model->{$k} = $v;
+			}
 
 			unset($config);
 		}
@@ -143,7 +146,7 @@ class model
 	 */
 	private function hook_sort($a, $b)
 	{
-		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? 1 : - 1;
+		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? 1 : -1;
 	}
 
 	/**
@@ -170,10 +173,16 @@ class model
 
 		foreach ( $dependencies as $dependency )
 		{
-			if ( empty($this->{$dependency}->ready ) ) $missing[] = $dependency;
+			if ( empty($this->{$dependency}->ready ) )
+			{
+				$missing[] = $dependency;
+			}
 		}
 
-		if ( $missing ) $this->error(FALSE, 'Plug-ins required for this page: "' . implode('", "', $missing) . '".', __FILE__, __LINE__);
+		if ( $missing )
+		{
+			$this->error(FALSE, 'Plug-ins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
+		}
 	}
 
 	/**
@@ -187,8 +196,14 @@ class model
 		 */
 		function undo_magic_quotes($v)
     {
-			if ( is_array($v) ) return array_map('undo_magic_quotes', $v);
-			else                return stripslashes($v);
+			if ( is_array($v) )
+			{
+				return array_map('undo_magic_quotes', $v);
+			}
+			else
+			{
+				return stripslashes($v);
+			}
     }
 
     if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() )
@@ -224,8 +239,14 @@ class model
 		 */
 		function html_safe($v)
 		{
-			if ( is_array($v) ) return array_map('html_safe', $v);
-			else                return htmlentities($v, ENT_QUOTES, 'UTF-8');
+			if ( is_array($v) )
+			{
+				return array_map('html_safe', $v);
+			}
+			else
+			{
+				return htmlentities($v, ENT_QUOTES, 'UTF-8');
+			}
 		}
 
 		foreach ( $this->POST_raw as $k => $v )
@@ -348,7 +369,7 @@ class model
 		$model = $this;
 		$contr = $this->contr;
 		
-		if ( !$contr->standAlone )
+		if ( empty($contr->standAlone) )
 		{
 			$model->hook('footer');
 		}
@@ -373,7 +394,10 @@ class model
 	{
 		$this->hook('error');
 
-		header('HTTP/1.1 503 Service Temporarily Unavailable');
+		if ( !headers_sent() )
+		{
+			header('HTTP/1.1 503 Service Temporarily Unavailable');
+		}
 
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 			<html id="swiftlet_error">
@@ -441,7 +465,7 @@ class model
 				echo '</pre>';
 			}
 
-			if ( isset($this->debugOutput) )
+			if ( !empty($this->debugOutput) )
 			{
 				echo '
 					<p>[

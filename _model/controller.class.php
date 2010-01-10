@@ -22,21 +22,27 @@ class contr
 		;
 
 	/**
-	 * Initialize Controller
+	 * Initialize
 	 * @param array $contrSetup
 	 */
 	function __construct($contrSetup)
 	{
 		$contr = $this;
 
-		foreach ( $contrSetup as $k => $v ) $contr->{$k} = $v;
+		foreach ( $contrSetup as $k => $v )
+		{
+			$contr->{$k} = $v;
+		}
 
 		if ( !$contr->rootPath )
 		{
 			$contr->rootPath = './';
 		}
-		
-		if ( empty($contr->rootPathView) ) $contr->rootPathView = $contr->rootPath;
+
+		if ( empty($contr->rootPathView) )
+		{
+			$contr->rootPathView = $contr->rootPath;
+		}
 
 		$this->viewPath   = $contr->rootPath . '_view/';
 		$this->pluginPath = $contr->rootPath . '_plugins/';

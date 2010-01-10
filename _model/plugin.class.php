@@ -61,9 +61,14 @@ class plugin
 			$model->error(FALSE, 'No plug-in name provided in ' . $contr->pluginPath . $file . '.', __FILE__, __LINE__);
 		}
 
+		if ( isset($model->pluginsLoaded[$info['name']]) )
+		{
+			$model->error(FALSE, 'Plug-in name `' . $info['name'] . '` (' . $contr->pluginPath . $file . ') already taken by ' . $contr->pluginPath . $model->pluginsLoaded[$info['name']]->info['file'] . '.', __FILE__, __LINE__);
+		}
+		
 		if ( !$info['version'] )
 		{
-			$model->error(FALSE, 'No version number provided for plug-in "' . $info['name'] . '" (' . $contr->pluginPath . $file . ').', __FILE__, __LINE__);
+			$model->error(FALSE, 'No version number provided for plug-in `' . $info['name'] . '` (' . $contr->pluginPath . $file . ').', __FILE__, __LINE__);
 		}
 
 		/**
@@ -71,12 +76,12 @@ class plugin
 		 */
 		if ( !$info['compatible']['from'] || !$info['compatible']['to'] )
 		{
-			$model->error(FALSE, 'No compatibility information provided for plug-in "' . $info['name'] . '" in ' . $contr->pluginPath . $file . '', __FILE__, __LINE__);
+			$model->error(FALSE, 'No compatibility information provided for plug-in `' . $info['name'] . '` in ' . $contr->pluginPath . $file . '', __FILE__, __LINE__);
 		}
 
 		if ( version_compare(model::version, str_replace('*', '99999', $info['compatible']['from']), '<') || version_compare(model::version, str_replace('*', '99999', $info['compatible']['to']), '>') )
 		{
-			$model->error(FALSE, 'Plug-in "' . $info['name'] . '" (/' . $contr->pluginPath . $file . ') is designed for ' . ( $info['compatible']['from'] == $info['compatible']['to'] ? 'version ' . $info['compatible']['from'] : 'versions ' . $info['compatible']['from'] . ' to ' . $info['compatible']['to'] ) . ' of Swiftlet (running version ' . model::version . ')', __FILE__, __LINE__);
+			$model->error(FALSE, 'Plug-in `' . $info['name'] . '` (/' . $contr->pluginPath . $file . ') is designed for ' . ( $info['compatible']['from'] == $info['compatible']['to'] ? 'version ' . $info['compatible']['from'] : 'versions ' . $info['compatible']['from'] . ' to ' . $info['compatible']['to'] ) . ' of Swiftlet (running version ' . model::version . ')', __FILE__, __LINE__);
 		}
 
 		if ( $info['hooks'] )

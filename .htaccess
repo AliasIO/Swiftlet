@@ -1,6 +1,15 @@
+php_value magic_quotes_gpc    0
+php_value register_globals    0
+php_value max_execution_time  900
+php_value memory_limit        120M
+php_value post_max_size       100M
+php_value upload_max_filesize 100M
+
 Options +FollowSymlinks
 RewriteEngine on
 
 # Pages
 RewriteRule ^p/([a-z0-9_-]+) page/index.php?permalink=$1 [NC,QSA]
+
+# Files
 RewriteRule ^file/([a-z0-9_-]+) file/index.php?name=$1 [NC,QSA]

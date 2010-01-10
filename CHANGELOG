@@ -11,6 +11,8 @@
 # Rewrote plug-in installer and /_model/plugin.class.php
 # Fixed a bug in node plugin when deleting a node
 # Added .htaccess file to /file/uploads/ to disallow access
+# Added timezone plug-in
+# Now storing all dates in GMT
 #
 #
 # 1.1.0.RC3 - 1.1.0

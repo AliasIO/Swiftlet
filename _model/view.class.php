@@ -107,7 +107,7 @@ class view
 		}
 		else
 		{
-			$model->error(FALSE, 'Missing view file "' . $file . '"');
+			$model->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`');
 		}
 	}
 }

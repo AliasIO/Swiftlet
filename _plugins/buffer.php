@@ -17,7 +17,7 @@ switch ( $hook )
 			'hooks'      => array('init' => 1, 'end' => 999, 'error' => 999, 'footer' => 1)
 			);
 
-		break;	
+		break;
 	case 'init':
 		require($contr->classPath . 'buffer.php');
 

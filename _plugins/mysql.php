@@ -17,7 +17,7 @@ switch ( $hook )
 			'hooks'      => array('init' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999)
 			);
 
-		break;	
+		break;
 	case 'install':
 		$model->db->sql('
 			CREATE TABLE `' . $model->db->prefix . 'cache_queries` (
@@ -45,11 +45,6 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		if ( isset($model->db) )
-		{
-			$model->error(FALSE, 'Can not use database "mysql", already using "' . get_class($model->db) . '"', __FILE__, __LINE__);
-		}
-
 		require($contr->classPath . 'mysql.php');
 
 		$model->db = new mysql($model, $model->dbHost, $model->dbUser, $model->dbPass, $model->dbName, $model->dbPrefix);

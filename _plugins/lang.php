@@ -14,7 +14,6 @@ switch ( $hook )
 			'name'         => 'lang',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('user'),
 			'hooks'        => array('init' => 5, 'translate' => 1)
 			);
 
