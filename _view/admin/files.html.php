@@ -74,13 +74,13 @@
 <table>
 	<thead>
 		<tr>
-			<th><?php echo t('Thumbnail') ?></th>
-			<th><?php echo t('Title') ?></th>
-			<th><?php echo t('Mime type') ?></th>
-			<th><?php echo t('File size') ?></th>
-			<th><?php echo t('Dimensions') ?></th>
+			<th><?php echo t('Thumbnail')   ?></th>
+			<th><?php echo t('Title')       ?></th>
+			<th><?php echo t('Mime type')   ?></th>
+			<th><?php echo t('File size')   ?></th>
+			<th><?php echo t('Dimensions')  ?></th>
 			<th><?php echo t('Uploaded on') ?></th>
-			<th><?php echo t('Action') ?></th>
+			<th><?php echo t('Action')      ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -88,13 +88,22 @@
 		<tr>
 			<td>
 				<?php if ( $file['image'] ): ?>
+
+				<?php if ( !empty($model->GET_raw['CKEditorFuncNum']) ): ?>
+				<a href="javascript: void(0);" onclick="window.opener.CKEDITOR.tools.callFunction(<?php echo $model->GET_raw['CKEditorFuncNum'] ?>, '<?php echo $model->rewrite_url('file/?name=' . $file['permalink'] . $file['extension']) ?>'); window.close()">
+				<?php else: ?>
 				<a href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>">
+				<?php endif ?>
 					<img src="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
 				</a>
 				<?php endif ?>
 			</td>
 			<td>
+				<?php if ( !empty($model->GET_raw['CKEditorFuncNum']) ): ?>
+				<a href="javascript: void(0);" onclick="window.opener.CKEDITOR.tools.callFunction(<?php echo $model->GET_raw['CKEditorFuncNum'] ?>, '<?php echo $model->rewrite_url('file/?name=' . $file['permalink'] . $file['extension']) ?>'); window.close()">
+				<?php else: ?>
 				<a href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>">
+				<?php endif ?>
 					<?php echo $file['title'] ?>
 				</a>
 			</td>
@@ -114,4 +123,18 @@
 <p>
 	<em><?php echo t('No files') ?></em>
 </p>
+<?php endif ?>
+
+<script type="text/javascript">
+	<!-- /* <![CDATA[ */
+	$(function() {
+		$('body').css({
+			height:    '100%',
+			overflowY: 'auto'
+			});
+	});
+	/* ]]> */ -->
+</script>
+
+<?php if ( !empty($model->GET_raw['CKEditorFuncNum']) ): ?>
 <?php endif ?>
