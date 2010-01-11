@@ -54,4 +54,103 @@ class file
 
 		return $url;
 	}
+
+	/**
+	 * Create a thumbnail
+	 * @param string $hash
+	 * @param string $mimeType
+	 * @param string $width
+	 * @param string $height
+	 * @return string
+	 */
+	function thumb($hash, $mimeType, $width, $height)
+	{
+		$contr = $this->contr;
+
+		if ( is_file($file = $contr->rootPath . 'file/uploads/' . $hash) )
+		{
+			$size = 120;
+
+			$image = FALSE;
+
+			switch ( $mimeType )
+			{
+				case 'image/png':
+				case 'image/x-png':
+					$image = imagecreatefrompng($file);
+
+					break;
+				case 'image/jpeg':
+				case 'image/pjpeg':
+					$image = imagecreatefromjpeg($file);
+
+					break;
+				case 'image/gif':
+					$image = imagecreatefromgif($file);
+
+					break;					
+			}
+
+			if ( $image )
+			{
+				$thumb = imagecreatetruecolor($size, $size);
+
+				$bgColor = imagecolorallocate($thumb, 253, 254, 255);
+
+				imagefill($thumb, 0, 0, $bgColor);
+
+				imagecolortransparent($thumb, $bgColor);
+
+				$widthRatio  = 1;
+				$heightRatio = 1;
+				
+				if ( $width <= $size && $height <= $size )
+				{
+					$posX = ( $size - $width  ) / 2;
+					$posY = ( $size - $height ) / 2;
+
+					$sizeX = $width;
+					$sizeY = $height;
+				}
+				else
+				{
+					$height > $width  ? $widthRatio  = $height / $width  : NULL;
+					$width  > $height ? $heightRatio = $width  / $height : NULL;
+
+					$posX = ceil(( $size - ( $size * ( $width  / ( $width  * $widthRatio  ) ) ) ) / 2);
+					$posY = ceil(( $size - ( $size * ( $height / ( $height * $heightRatio ) ) ) ) / 2);
+
+					$sizeX = $size;
+					$sizeY = $size;
+				}
+
+				imagecopyresized(
+					$thumb,
+					$image,
+					$posX,
+					$posY,
+					0,
+					0,
+					$sizeX,
+					$sizeY,
+					$width  * $widthRatio,
+					$height * $heightRatio
+					);
+				
+				if ( $widthRatio > 1 || $heightRatio > 1 )
+				{
+					imagefilledrectangle(
+						$thumb,
+						( $widthRatio  > 1 ? $size - $posX : 0 ),
+						( $heightRatio > 1 ? $size - $posY : 0 ),
+						$size,
+						$size,
+						$bgColor
+						);
+				}
+
+				imagepng($thumb, $contr->rootPath . 'file/uploads/thumbs/' . $hash);
+			}
+		}
+	}
 }

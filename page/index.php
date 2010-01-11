@@ -38,19 +38,7 @@ if ( isset($model->GET_raw['permalink']) )
 		$view->title  = $d['title'];
 		$view->body   = $d['body'];
 
-		// Replace relative paths with absolute paths to solve issues with the rich text editor
-		preg_match_all('/(<[^<]*(src|href)=["\'])([^\/][^"\']+)/', $view->body, $m);
-
-		if ( $m )
-		{
-			for ( $i = 0; $i < count($m[0]); $i ++ )
-			{
-				if ( !preg_match('/^[a-z]:\/\//i', $m[3][$i]) )
-				{
-					$view->body = str_replace($m[0][0], $m[1][0] . 'http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . $m[3][0], $view->body);
-				}
-			}
-		}
+		$model->page->parse_urls($view->body);
 
 		$nodes = $model->node->get_parents($d['node_id']);
 

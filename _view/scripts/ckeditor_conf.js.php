@@ -18,15 +18,16 @@ CKEDITOR.config.baseHref = 'http://<?php echo $_SERVER['SERVER_NAME'] . $contr->
 CKEDITOR.config.height   = '400';
 CKEDITOR.config.toolbar  = [
 	['Format'],
-	['Bold', 'Italic', 'Underline', 'Strike'],
+	['Bold', 'Italic', 'Strike'],
 	['NumberedList', 'BulletedList'],
-	['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-	['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'],
-	['RemoveFormat'],
 	['Link', 'Unlink'],
 	['Image', 'Flash', 'Table', 'SpecialChar'],
+	['PasteText', 'PasteFromWord'],
+	['RemoveFormat'],
 	['Source']
 	];
+
+CKEDITOR.config.filebrowserBrowseUrl = '<?php echo $view->rootPath ?>admin/files';
 <?php
 
 $model->end();

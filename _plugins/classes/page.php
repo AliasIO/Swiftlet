@@ -86,4 +86,26 @@ class page
 			}
 		}
 	}
+
+	/**
+	 * Prefix relative URLs with path to root
+	 * @param string $v
+	 */
+	function parse_urls(&$v)
+	{
+		$view = $this->model->view;
+
+		preg_match_all('/(<[^<]*(src|href)=["\'])([^\/][^"\']+)/', $v, $m);
+
+		if ( $m )
+		{
+			for ( $i = 0; $i < count($m[0]); $i ++ )
+			{
+				if ( !preg_match('/^[a-z]:\/\//i', $m[3][$i]) )
+				{
+					$v = str_replace($m[0][0], $m[1][0] . $view->rootPath . $m[3][0], $v);
+				}
+			}
+		}
+	}
 }

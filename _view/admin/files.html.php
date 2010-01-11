@@ -74,8 +74,8 @@
 <table>
 	<thead>
 		<tr>
+			<th><?php echo t('Thumbnail') ?></th>
 			<th><?php echo t('Title') ?></th>
-			<th><?php echo t('Location') ?></th>
 			<th><?php echo t('Mime type') ?></th>
 			<th><?php echo t('File size') ?></th>
 			<th><?php echo t('Dimensions') ?></th>
@@ -87,15 +87,21 @@
 		<?php foreach ( $view->files as $file ): ?>
 		<tr>
 			<td>
+				<?php if ( $file['image'] ): ?>
+				<a href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>">
+					<img src="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
+				</a>
+				<?php endif ?>
+			</td>
+			<td>
 				<a href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>">
 					<?php echo $file['title'] ?>
 				</a>
 			</td>
-			<td><?php echo $model->rewrite_url('file/?name=' . $file['permalink'] . $file['extension']) ?></td>
 			<td><?php echo $file['mime_type'] ?></td>
-			<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : t('n/a') ?></td>
-			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>
-			<td><?php echo $model->format_date($file['date']) ?></td>
+			<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : '' ?></td>
+			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : '' ?></td>
+			<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 			<td>
 				<a href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
 			</td>

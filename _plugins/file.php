@@ -28,6 +28,7 @@ switch ( $hook )
 					`node_id`   INT(10) UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)     NOT NULL,
 					`extension` VARCHAR(255)     NULL,
+					`image`     INT(1)           NULL,
 					`file_hash` VARCHAR(40)      NOT NULL,
 					`mime_type` VARCHAR(255)     NOT NULL,
 					`width`     INT(10) UNSIGNED NOT NULL,
@@ -36,6 +37,7 @@ switch ( $hook )
 					`date`      DATETIME         NOT NULL,
 					`date_edit` DATETIME         NOT NULL,
 					INDEX `node_id` (`node_id`),
+					INDEX `image`   (`image`),
 					PRIMARY KEY (`id`)
 					)
 				;');

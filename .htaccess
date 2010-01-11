@@ -12,4 +12,4 @@ RewriteEngine on
 RewriteRule ^p/([a-z0-9_-]+) page/index.php?permalink=$1 [NC,QSA]
 
 # Files
-RewriteRule ^file/([a-z0-9_-]+) file/index.php?name=$1 [NC,QSA]
+RewriteRule ^file/((thumb/)([a-z0-9_-]+)) file/index.php?name=$3&thumb=$2 [NC,QSA]

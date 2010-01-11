@@ -76,9 +76,11 @@ if ( $model->POST_valid['form-submit'] )
 							$width  = '';
 							$height = '';
 
-							if ( $size = getimagesize($file) )
-							{						
-								list($width, $height) = $size;
+							if ( $image = getimagesize($file) )
+							{
+								list($width, $height) = $image;
+
+								$model->file->thumb($hash, $_FILES['file']['type'][$i], $width, $height);
 							}
 
 							$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
@@ -96,6 +98,7 @@ if ( $model->POST_valid['form-submit'] )
 										`node_id`,
 										`title`,
 										`extension`,
+										`image`,
 										`file_hash`,
 										`mime_type`,
 										`width`,
@@ -108,6 +111,7 @@ if ( $model->POST_valid['form-submit'] )
 										' . ( int ) $nodeId . ',
 										"' . $model->db->escape($title) . '",
 										"' . $model->db->escape($extension) . '",
+										' . ( !empty($image) ? 1 : 0 ) . ',
 										"' . $model->db->escape($hash) . '",
 										"' . $model->db->escape($_FILES['file']['type'][$i]) . '",
 										' . ( int ) $width . ',
@@ -204,6 +208,11 @@ if ( ( int ) $id )
 							unlink($file);
 						}
 
+						if ( is_file($file = $contr->rootPath . 'file/uploads/thumbs/' . $hash) )
+						{
+							unlink($file);
+						}
+
 						$model->db->sql('
 							DELETE
 							FROM `' . $model->db->prefix . 'files`
@@ -249,7 +258,9 @@ if ( $nodes )
 			FROM      `' . $model->db->prefix . 'nodes` AS n
 			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
 			WHERE
+				f.`id` AND
 				n.`id` IN ( ' . implode(', ', $nodeIds) . ' )
+			ORDER BY f.`date` DESC
 			LIMIT ' . count($nodeIds) . '
 			;');
 		
