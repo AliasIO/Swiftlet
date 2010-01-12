@@ -75,7 +75,7 @@ if ( count($newPlugins) )
 	$view->notices[] = $model->t(
 		'%1$s Plug-in(s) require installation (go to %2$s).',
 		array(
-			count($new_plugins),
+			count($newPlugins),
 			'<a href="' . $view->rootPath . 'installer/"><code>/installer/</code></a>'
 			)
 		);

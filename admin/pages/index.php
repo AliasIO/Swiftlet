@@ -19,7 +19,7 @@ $model->form->validate(array(
 	'form-submit' => 'bool',
 	'delete'      => 'bool',
 	'title'       => 'string',
-	'body'        => '/.+/',
+	'body'        => '/.*/',
 	'parent'      => 'int'
 	));
 

@@ -103,7 +103,7 @@ class page
 			{
 				if ( !preg_match('/^[a-z]:\/\//i', $m[3][$i]) )
 				{
-					$v = str_replace($m[0][0], $m[1][0] . $view->rootPath . $m[3][0], $v);
+					$v = str_replace($m[0][$i], $m[1][$i] . $view->rootPath . $m[3][$i], $v);
 				}
 			}
 		}
