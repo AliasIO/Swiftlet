@@ -1,0 +1,1 @@
+<h1><?php echo $model->t($contr->pageTitle) ?></h1>

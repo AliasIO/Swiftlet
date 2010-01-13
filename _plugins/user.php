@@ -91,8 +91,7 @@ switch ( $hook )
 			'description' => 'Add and edit accounts',
 			'group'       => 'Users',
 			'path'        => 'account/',
-			'auth'        => 1,
-			'order'       => 1
+			'order'       => 3
 			);
 		
 		break;
@@ -104,7 +103,7 @@ switch ( $hook )
 			'username'         => 'Unit_Test',
 			'password'         => '123',
 			'password_confirm' => '123',
-			'auth'             => '1',
+			'owner'            => '0',
 			'form-submit'      => 'Submit',
 			'auth_token'       => $model->authToken
 			);
@@ -134,7 +133,7 @@ switch ( $hook )
 		{
 			$post = array(
 				'username'    => $user['username'],
-				'auth'        => $user['auth'],
+				'owner'       => $user['owner'],
 				'email'       => 'unit@test.com',
 				'form-submit' => 'Submit',
 				'auth_token'  => $model->authToken

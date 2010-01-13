@@ -62,6 +62,6 @@ class admin
 	 */
 	private function page_sort($a, $b)
 	{
-		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? - 1 : 1;
+		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? 1 : - 1;
 	}
 }

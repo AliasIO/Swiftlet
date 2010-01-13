@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('session', 'user'),
-			'hooks'        => array('init' => 4, 'install' => 1)
+			'hooks'        => array('admin' => 1, 'init' => 4, 'install' => 1)
 			);
 
 		break;
@@ -72,6 +72,17 @@ switch ( $hook )
 
 			$model->perm = new perm($model);
 		}
+
+		break;
+	case 'admin':
+		$params[] = array(
+			'name'        => 'Permsissions',
+			'description' => 'Add and edit roles and permissions',
+			'group'       => 'Users',
+			'path'        => 'admin/perms/',
+			'perm'        => 'admin perm access',
+			'order'       => 4
+			);
 
 		break;
 }

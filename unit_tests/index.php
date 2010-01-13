@@ -17,7 +17,7 @@ $model->check_dependencies(array('db', 'session', 'user'));
 $model->form->validate(array(
 	));
 
-if ( $model->session->get('user auth') < user::editor )
+if ( !$model->session->get('user is owner') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
