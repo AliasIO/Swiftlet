@@ -31,7 +31,7 @@ $model->form->validate(array(
 	'password'         => 'string, empty',
 	'password_confirm' => 'string, empty',
 	'email'            => 'email,  empty',
-	'auth'             => 'int,    empty'
+	'owner'            => 'bool'
 	) + $prefsValidate);
 
 if ( $model->session->get('user id') == user::guestId )
@@ -44,12 +44,12 @@ if ( $model->session->get('user id') == user::guestId )
 $id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
 $action = isset($model->GET_raw['action']) ? $model->GET_raw['action'] : 'edit';
 
-if ( $action != 'edit' && $model->session->get('user auth') < user::admin )
+if ( $action != 'edit' && !$model->session->get('user is owner') )
 {
 	$action = 'edit';
 }
 
-if ( $id && ( $action == 'edit' || $action == 'delete' ) && $model->session->get('user auth') >= user::admin )
+if ( $id && ( $action == 'edit' || $action == 'delete' ) && $model->session->get('user is owner') )
 {
 	$model->db->sql('
 		SELECT
@@ -66,7 +66,7 @@ if ( $id && ( $action == 'edit' || $action == 'delete' ) && $model->session->get
 			'id'       => $r[0]['id'],
 			'username' => $r[0]['username'],
 			'email'    => $r[0]['email'],
-			'auth'     => $r[0]['auth']
+			'owner'    => $r[0]['owner']
 			);
 	}
 }
@@ -80,7 +80,7 @@ if ( !isset($user) )
 				'id'       => '',
 				'username' => '',
 				'email'    => '',
-				'auth'     => ''
+				'owner'    => ''
 				);
 
 			break;
@@ -89,7 +89,7 @@ if ( !isset($user) )
 				'id'       => $model->session->get('user id'),
 				'username' => $model->session->get('user username'),
 				'email'    => $model->session->get('user email'),
-				'auth'     => $model->session->get('user auth')
+				'owner'    => $model->session->get('user is owner')
 				);
 	}
 }
@@ -128,7 +128,7 @@ if ( $model->POST_valid['form-submit'] )
 		}
 	}
 
-	if ( $model->session->get('user auth') >= user::admin )
+	if ( $model->session->get('user is owner') )
 	{
 		if ( !$model->POST_valid['username'] )
 		{
@@ -160,21 +160,17 @@ if ( $model->POST_valid['form-submit'] )
 
 	if ( $model->form->errors )
 	{
-		$view->error = 'Please correct the errors below.';
+		$view->error = $model->t('Please correct the errors below.');
 	}
 	else
 	{
 		$username = $user['username'];
-		$auth     = $user['auth'];
+		$owner    = $user['owner'];
 
-		if ( $model->session->get('user auth') >= user::admin )
+		if ( $model->session->get('user is owner') )
 		{
 			$username = $model->POST_db_safe['username'];
-
-			if ( $model->session->get('user auth') > $user['auth'] && $model->session->get('user auth') > $model->POST_valid['auth'] )
-			{
-				$auth = $model->POST_db_safe['auth'];
-			}
+			$owner    = $model->POST_valid['owner'];
 		}
 
 		$passHash = $model->POST_valid['password'] ? sha1('swiftlet' . strtolower($username) . $model->POST_raw['password']) : FALSE;
@@ -188,7 +184,7 @@ if ( $model->POST_valid['form-submit'] )
 						`username`,
 						`pass_hash`,
 						`email`,
-						`auth`,
+						`owner`,
 						`date`,
 						`date_edit`
 						)
@@ -196,7 +192,7 @@ if ( $model->POST_valid['form-submit'] )
 						"' . $username . '",
 						"' . $passHash . '",
 						"' . $email . '",
-						' . $auth . ',
+						' . ( int ) $owner . ',
 						"' . gmdate('Y-m-d H:i:s') . '",
 						"' . gmdate('Y-m-d H:i:s') . '"
 						)
@@ -225,7 +221,7 @@ if ( $model->POST_valid['form-submit'] )
 						`username`  = "' . $username . '",
 						' . ( $passHash ? '`pass_hash` = "' . $passHash . '",' : '' ) . '
 						`email`     = "' . $email . '",
-						`auth`      = ' . $auth . ',
+						`owner`     = ' . ( int ) $owner . ',
 						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 					WHERE
 						`id` = ' . $user['id'] . '
@@ -239,7 +235,7 @@ if ( $model->POST_valid['form-submit'] )
 						$model->session->put(array(
 							'user username' => $username,
 							'user email'    => $email,
-							'user auth'     => $auth
+							'user is owner' => $owner
 							));
 					}
 
@@ -258,7 +254,7 @@ if ( $model->POST_valid['form-submit'] )
 				}
 				else
 				{
-					$view->notice = 'There were no changes.';
+					$view->notice = $model->t('There were no changes.');
 				}
 		}
 	}
@@ -270,7 +266,7 @@ else
 	 */
 	$model->POST_html_safe['username'] = $model->h($user['username']);
 	$model->POST_html_safe['email']    = $model->h($user['email']);
-	$model->POST_html_safe['auth']     = $model->h($user['auth']);
+	$model->POST_html_safe['owner']    = ( int ) ($user['owner']);
 
 	foreach ( $model->user->prefs as $d )
 	{
@@ -281,11 +277,11 @@ else
 switch ( $action )
 {
 	case 'delete':
-		if ( $user && $model->session->get('user auth') > $user['auth'] )
+		if ( $user && $model->session->get('user is owner') )
 		{
 			if ( !$model->POST_valid['confirm'] )
 			{
-				$model->confirm('Are you sure you wish to delete this account?');
+				$model->confirm($model->t('Are you sure you wish to delete this account?'));
 			}
 			else
 			{
@@ -322,15 +318,15 @@ if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'saved':
-			$view->notice = 'Your changes have been saved.';
+			$view->notice = $model->t('Your changes have been saved.');
 
 			break;
 		case 'created':
-			$view->notice = 'The account has been created.';
+			$view->notice = $model->t('The account has been created.');
 
 			break;
 		case 'deleted':
-			$view->notice = 'The account has been deleted.';
+			$view->notice = $model->t('The account has been deleted.');
 
 			break;
 	}
@@ -338,9 +334,8 @@ if ( isset($model->GET_raw['notice']) )
 
 $view->userId       = $user['id'];
 $view->userUsername = $model->h($user['username']);
-$view->userAuth     = $user['auth'];
 
-if ( $model->session->get('user auth') >= user::admin )
+if ( $model->session->get('user is owner') )
 {
 	$model->db->sql('
 		SELECT
@@ -361,16 +356,6 @@ if ( $model->session->get('user auth') >= user::admin )
 		asort($view->users);
 	}
 }
-
-$view->authLevels = array(
-	-1 => 'Banned',
-	0  => 'Guest',
-	1  => 'User',
-	2  => 'Editor',
-	3  => 'Administrator',
-	4  => 'Owner',
-	5  => 'Developer'
-	);
 
 $view->prefs   = $model->user->prefs;
 $view->id      = $id;

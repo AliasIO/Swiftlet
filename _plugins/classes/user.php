@@ -19,16 +19,8 @@ class user
 		;
 
 	const
-		guestId = 0,
-
-		banned  = -1,
-		guest   = 0,
-		user    = 1,
-		editor  = 2,
-		admin   = 3,
-		owner   = 4,
-		dev     = 5
-		;		
+		guestId = 0
+		;
 
 	private
 		$model,
@@ -81,8 +73,7 @@ class user
 				{
 					$model->session->put(array(
 						'user id'       => user::guestId,
-						'user username' => user::guestId,
-						'user auth'     => user::guest
+						'user username' => user::guestId
 						));
 				}
 			}
@@ -98,7 +89,7 @@ class user
 	function login($username, $password)
 	{
 		$model = $this->model;
-		
+
 		if ( $model->session->get('user id') !== FALSE )
 		{
 			$pass_hash = sha1('swiftlet' . strtolower($username) . $password);
@@ -118,10 +109,10 @@ class user
 				$model->session->put(array(
 					'user id'       => $r['id'],
 					'user username' => $r['username'],
-					'user auth'     => $r['auth'],
-					'user email'    => $r['email']
+					'user email'    => $r['email'],
+					'user is owner' => $r['owner']
 					));
-				
+
 				return TRUE;
 			}
 

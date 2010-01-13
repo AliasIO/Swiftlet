@@ -27,7 +27,7 @@ switch ( $hook )
 				`username`  VARCHAR(255)     NOT NULL,
 				`pass_hash` VARCHAR(40)      NOT NULL,
 				`email`     VARCHAR(255)     NULL,
-				`auth`      INT(1)           NOT NULL,
+				`owner`     INT(1)           NOT NULL,
 				`date`      DATETIME         NOT NULL,
 				`date_edit` DATETIME         NOT NULL,
 				UNIQUE `username` (`username`),
@@ -39,14 +39,14 @@ switch ( $hook )
 			INSERT INTO `' . $model->db->prefix . 'users` (
 				`username`,
 				`pass_hash`,
-				`auth`,
+				`owner`,
 				`date`,
 				`date_edit`
 				)
 			VALUES (
 				"Admin",
 				"' . sha1('swiftlet' . strtolower('Admin') . $model->sysPassword) . '",
-				4,
+				1,
 				"' . gmdate('Y-m-d H:i:s') . '",
 				"' . gmdate('Y-m-d H:i:s') . '"
 				)

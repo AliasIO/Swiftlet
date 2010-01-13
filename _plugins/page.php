@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'         => 'page',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'node'),
+			'dependencies' => array('db', 'node', 'perm'),
 			'hooks'        => array('admin' => 1, 'header' => 1, 'init' => 5, 'install' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
 			);
 
@@ -39,6 +39,11 @@ switch ( $hook )
 			$model->node->create('Pages', 'pages', node::rootId);
 		}
 
+		if ( !empty($model->perm->ready) )
+		{
+			$model->perm->create('admin page access');
+		}
+
 		break;
 	case 'init':
 		if ( !empty($model->db->ready) && !empty($model->node->ready) )
@@ -55,7 +60,7 @@ switch ( $hook )
 			'description' => 'Add and edit pages',
 			'group'       => 'Content',
 			'path'        => 'admin/pages/',
-			'auth'        => 3,
+			'perm'        => 'admin page access',
 			'order'       => 1
 			);
 

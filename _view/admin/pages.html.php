@@ -75,7 +75,6 @@
 	</fieldset>
 </form>
 
-<?php if ( $model->session->get('user auth') >= user::admin ): ?>
 <h2><?php echo $model->t('Select a page') ?></h2>
 
 <form id="formPages" method="get" action="./">
@@ -103,7 +102,6 @@
 		</dl>
 	</fieldset>
 </form>
-<?php endif ?>
 
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */

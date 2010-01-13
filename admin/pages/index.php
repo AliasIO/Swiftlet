@@ -13,7 +13,7 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$model->check_dependencies(array('db', 'form', 'node', 'session', 'user'));
+$model->check_dependencies(array('db', 'form', 'node', 'perm'));
 
 $model->form->validate(array(
 	'form-submit' => 'bool',
@@ -26,7 +26,7 @@ $model->form->validate(array(
 $id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
 $action = isset($model->GET_raw['action']) && $id ? $model->GET_raw['action'] : FALSE;
 
-if ( $model->session->get('user auth') < user::admin )
+if ( !$model->perm->check('admin page access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
@@ -55,7 +55,7 @@ if ( $model->POST_valid['form-submit'] )
 
 	if ( $model->form->errors )
 	{
-		$view->error = 'Please correct the errors below.';
+		$view->error = $model->t('Please correct the errors below.');
 	}
 	else
 	{
@@ -185,15 +185,15 @@ else if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'created':
-			$view->notice = 'The page has been created.';
+			$view->notice = $model->t('The page has been created.');
 			
 			break;
 		case 'updated':
-			$view->notice = 'The page has been updated.';
+			$view->notice = $model->t('The page has been updated.');
 			
 			break;
 		case 'deleted':
-			$view->notice = 'The page has been deleted.';
+			$view->notice = $model->t('The page has been deleted.');
 			
 			break;
 	}
@@ -241,7 +241,7 @@ switch ( $action )
 	case 'delete':
 		if ( !$model->POST_valid['confirm'] )
 		{
-			$model->confirm('Are you sure you wish to delete this page?');
+			$model->confirm($model->t('Are you sure you wish to delete this page?'));
 		}
 		else
 		{

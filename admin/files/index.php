@@ -13,7 +13,7 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$model->check_dependencies(array('db', 'form', 'node', 'session', 'user'));
+$model->check_dependencies(array('db', 'form', 'node', 'perm'));
 
 $model->form->validate(array(
 	'form-submit' => 'bool',
@@ -23,7 +23,7 @@ $model->form->validate(array(
 $id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
 $action = isset($model->GET_raw['action']) ? $model->GET_raw['action'] : FALSE;
 
-if ( $model->session->get('user auth') < user::admin )
+if ( !$model->perm->check('admin file access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
@@ -161,7 +161,7 @@ if ( $model->POST_valid['form-submit'] )
 
 		if ( $uploads )
 		{
-			$view->notice = 'The following files have been uploaded:<br/><br/>' . implode('<br/>', $uploads); 
+			$view->notice = $model->t('The following files have been uploaded:<br/><br/>%1$s', implode('<br/>', $uploads));
 		}
 	}
 }
@@ -170,7 +170,7 @@ else if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'deleted':
-			$view->notice = 'The file has been deleted.';
+			$view->notice = $model->t('The file has been deleted.');
 
 			break;
 	}
@@ -183,7 +183,7 @@ if ( ( int ) $id )
 		case 'delete':
 			if ( !$model->POST_valid['confirm'] )
 			{
-				$model->confirm('Are you sure you wish to delete this file?');
+				$model->confirm($model->t('Are you sure you wish to delete this file?'));
 			}
 			else
 			{

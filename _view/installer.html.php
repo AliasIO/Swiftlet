@@ -28,7 +28,7 @@
 				</label>
 			</dt>
 			<dd>
-				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? '' : ' disabled="disabled"' ) ?>/>
+				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? ' checked="checked"' : ' disabled="disabled"' ) ?>/>
 				<?php if ( $v['dependency_status'] ): ?>
 				<em><?php echo t('Depends on') ?>:
 				<?php foreach ( $v['dependency_status'] as $dependency => $ready ): ?>

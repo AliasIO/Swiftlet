@@ -36,12 +36,12 @@
 				<a href="<?php echo $view->rootPath ?>"><?php echo t('Home') ?></a>
 
 				<?php if ( isset($model->user) ): ?>
-				
-				<?php if ( $model->session->get('user auth') >= user::editor ): ?>
+
+				<?php if ( !empty($model->perm->ready) && $model->perm->check('admin access') ): ?>
 				| <a href="<?php echo $view->rootPath ?>admin/"><?php echo t('Administration') ?></a>
 				<?php endif ?>
 				
-				<?php if ( $model->session->get('user id') != user::guest ): ?>
+				<?php if ( $model->session->get('user id') != user::guestId ): ?>
 				| <?php echo t('You are logged in as %s', '<a href="' . $view->rootPath . 'account/">' . $model->session->get('user username') . '</a>') ?>
 				| <a href="<?php echo $view->rootPath ?>login/?logout"><?php echo t('Logout') ?></a>
 				<?php else: ?>

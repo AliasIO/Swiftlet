@@ -1,12 +1,12 @@
 <h1><?php echo t($contr->pageTitle) ?></h1>
 
-<?php if ( $model->session->get('user auth') >= user::admin ): ?>
+<?php if ( $model->session->get('user is owner') ): ?>
 <?php if ( $view->action == 'edit' ): ?>
 <h2><?php echo $model->t('Edit account') ?></h2>
 
 <p>
 	<a href="./?action=create"><?php echo $model->t('Create a new account') ?></a> 
-	<?php if ( $model->session->get('user auth') > $view->userAuth ): ?>
+	<?php if ( $model->session->get('user id') != $view->userId ): ?>
 	<a href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $model->t('Delete this account') ?></a>
 	<?php endif ?>
 </p>
@@ -37,7 +37,7 @@
 		<dl>
 			<dt><label for="username"><?php echo t('Username') ?></label></dt>
 			<dd>
-				<?php if ( $model->session->get('user auth') >= user::admin ): ?>
+				<?php if ( $model->session->get('user is owner') ): ?>
 				<input type="text" class="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
 				<?php else: ?>
 				<?php echo $view->userUsername ?>
@@ -78,29 +78,18 @@
 				<?php endif ?>
 			</dd>
 		</dl>
+		<?php if ( $model->session->get('user is owner') ): ?>
 		<dl>
-			<dt><label for="auth"><?php echo t('Authorisation level') ?></label></dt>
+			<dt><label for="auth"><?php echo t('Owner privileges') ?></label></dt>
 			<dd>
-				<?php if ( $view->action == 'create' || ( $model->session->get('user auth') >= user::admin && $model->session->get('user auth') > $view->userAuth ) ): ?>
-				<select name="auth" id="auth">
-					<option value="-1"<?php echo $model->POST_html_safe['auth'] == -1 ? ' selected="selected"' : '' ?>><?php echo t('Banned') ?></option>
-					<option value="1"<?php  echo $model->POST_html_safe['auth'] == 1 || !$model->POST_html_safe['auth'] ? ' selected="selected"' : '' ?>><?php echo t('User') ?></option>
-					<option value="2"<?php  echo $model->POST_html_safe['auth'] == 2  ? ' selected="selected"' : '' ?>><?php echo t('Editor') ?></option>
-					<option value="3"<?php  echo $model->POST_html_safe['auth'] == 3  ? ' selected="selected"' : '' ?>><?php echo t('Administrator') ?></option>
-					
-					<?php if ( $model->session->get('user auth') >= user::admin && $model->session->get('user auth') > $view->userAuth ): ?>
-					<option value="4"<?php  echo $model->POST_html_safe['auth'] == 4  ? ' selected="selected"' : '' ?>><?php echo t('Owner') ?></option>
-					<?php endif ?>
-					
-					<?php if ( $model->session->get('user auth') >= user::dev && $model->session->get('user auth') > $view->userAuth ): ?>
-					<option value="5"<?php  echo $model->POST_html_safe['auth'] == 5  ? ' selected="selected"' : '' ?>><?php echo t('Developer') ?></option>
-					<?php endif ?>
-				</select>
+				<?php if ( $model->session->get('user id') != $view->userId ): ?>
+				<input type="checkbox" class="checkbox" name="owner" value="1" <?php echo $model->POST_html_safe['owner'] ? 'checked="checked"' : '' ?>/>
 				<?php else: ?>
-				<?php echo t($view->authLevels[$view->userAuth]) ?>
+				<?php echo t('Yes') ?>
 				<?php endif ?>
 			</dd>
 		</dl>
+		<?php endif ?>
 	</fieldset>
 	<?php if ( $view->prefs ): ?>
 	<fieldset>
@@ -157,7 +146,7 @@
 	</fieldset>
 </form>
 
-<?php if ( $model->session->get('user auth') >= user::admin ): ?>
+<?php if ( $model->session->get('user is owner') ): ?>
 <h2><?php echo t('Select an account') ?></h2>
 
 <form id="formUsers" method="get" action="./">

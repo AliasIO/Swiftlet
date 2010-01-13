@@ -25,7 +25,7 @@ if ( isset($model->GET_raw['logout']) )
 {
 	if ( !$model->POST_valid['confirm'] )
 	{
-		$model->confirm('Do you want to logout?');
+		$model->confirm($model->t('Do you want to logout?'));
 	}
 	else
 	{
@@ -41,7 +41,7 @@ if ( $model->POST_valid['form-submit'] )
 {
 	if ( $model->form->errors )
 	{
-		$view->error = 'Please provide a username and password.';
+		$view->error = $model->t('Please provide a username and password.');
 	}
 	else
 	{
@@ -62,9 +62,14 @@ if ( $model->POST_valid['form-submit'] )
 		}
 		else
 		{
-			$view->error = 'Incorrect username/password combination.';
+			$view->error = $model->t('Incorrect username/password combination.');
 		}
 	}
+}
+
+if ( isset($model->GET_raw['ref']) )
+{
+	$view->notice = $model->t('Please login with an authenticated account.');
 }
 
 if ( isset($model->GET_raw['notice']) )
@@ -72,11 +77,11 @@ if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'login':
-			$view->notice = 'Hello ' . $model->session->get('user username') . ', you are now logged in.';
+			$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->session->get('user username'));
 		
 			break;
 		case 'logout':
-			$view->notice = 'You are now logged out.';
+			$view->notice = $model->t('You are now logged out.');
 
 			break;
 	}

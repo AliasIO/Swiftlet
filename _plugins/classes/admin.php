@@ -31,7 +31,7 @@ class admin
 	{
 		$this->model = $model;
 		$this->contr = $model->contr;
-		
+
 		$pages = array();
 
 		$model->hook('admin', $pages);
@@ -40,13 +40,13 @@ class admin
 
 		foreach ( $pages as $page )
 		{
-			if ( $page['auth'] <= $model->session->get('user auth') )
+			if ( !isset($page['perm']) || $model->perm->check($page['perm']) )
 			{
 				if ( !isset($this->pages[$page['group']]) )
 				{
 					$this->pages[$page['group']] = array();
 				}
-				
+
 				$this->pages[$page['group']][] = $page;
 			}
 		}

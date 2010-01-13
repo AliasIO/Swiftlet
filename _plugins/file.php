@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'         => 'file',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'node'),
+			'dependencies' => array('db', 'node', 'perm'),
 			'hooks'        => array('admin' => 2, 'init' => 5, 'install' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
 			);
 
@@ -48,6 +48,11 @@ switch ( $hook )
 			$model->node->create('Files', 'files', node::rootId);
 		}
 
+		if ( !empty($model->perm->ready) )
+		{
+			$model->perm->create('admin file access');
+		}
+
 		break;
 	case 'init':
 		if ( !empty($model->db->ready) && !empty($model->node->ready) )
@@ -64,7 +69,7 @@ switch ( $hook )
 			'description' => 'Upload and manage files',
 			'group'       => 'Content',
 			'path'        => 'admin/files/',
-			'auth'        => 3,
+			'perm'        => 'admin file access',
 			'order'       => 1
 			);
 

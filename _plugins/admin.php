@@ -14,13 +14,20 @@ switch ( $hook )
 			'name'         => 'admin',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'session'),
-			'hooks'        => array('init' => 3, 'unit_tests' => 1)
+			'dependencies' => array('db', 'perm', 'session'),
+			'hooks'        => array('init' => 5, 'install' => 1, 'unit_tests' => 1)
 			);
 
 		break;
+	case 'install':
+		if ( !empty($model->perm->ready) )
+		{
+			$model->perm->create('admin access');
+		}
+
+		break;
 	case 'init':
-		if ( !empty($model->session->ready) )
+		if ( !empty($model->perm->ready) )
 		{
 			require($contr->classPath . 'admin.php');
 

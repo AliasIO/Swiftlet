@@ -62,11 +62,11 @@ ksort($view->new_plugins);
 
 if ( empty($model->db->ready) )
 {
-	$view->error = 'No database connected (required). You may need to change the database settings in <code>/_config.php</code>.';
+	$view->error = $model->t('No database connected (required). You may need to change the database settings in %1$s.', '<code>/_config.php</code>');
 }
 elseif ( !$model->sysPassword )
 {
-	$view->error = '<code>sysPassword</code> has no value in <code>/_config.php</code> (required).';
+	$view->error = $model->t('%1$s has no value in %1$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
 }
 else
 {
@@ -74,7 +74,7 @@ else
 	{
 		if ( $model->form->errors )
 		{
-			$view->error = 'Incorrect system password.';
+			$view->error =  $model->t('Incorrect system password.');
 		}
 		elseif ( $model->POST_valid['plugin'] && is_array($model->POST_valid['plugin']) )
 		{
@@ -167,11 +167,11 @@ if ( isset($model->GET_raw['notice']) && isset($model->GET_raw['plugins']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'installed':
-			$view->notice = 'The following plug-in(s) have been successfully installed:<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']);
+			$view->notice = $model->t('The following plug-in(s) have been successfully installed:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
 
 			break;
 		case 'upgraded':
-			$view->notice = 'The following plug-in(s) have been successfully upgraded:<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']);
+			$view->notice = $model->t('The following plug-in(s) have been successfully upgraded:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
 
 			break;
 	}

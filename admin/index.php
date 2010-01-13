@@ -13,9 +13,9 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$model->check_dependencies(array('admin', 'session', 'user'));
+$model->check_dependencies(array('admin', 'perm'));
 
-if ( $model->session->get('user auth') < user::editor )
+if ( !$model->perm->check('admin access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 

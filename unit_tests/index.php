@@ -26,7 +26,7 @@ if ( $model->session->get('user auth') < user::editor )
 
 if ( !$model->POST_valid['confirm'] )
 {
-	$model->confirm('Do you want run unit tests?');
+	$model->confirm($model->t('Do you want run unit tests?'));
 }
 else
 {
