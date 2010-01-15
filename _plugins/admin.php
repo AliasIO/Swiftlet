@@ -22,7 +22,7 @@ switch ( $hook )
 	case 'install':
 		if ( !empty($model->perm->ready) )
 		{
-			$model->perm->create('admin access');
+			$model->perm->create('admin access', 'Access to the administration overview');
 		}
 
 		break;

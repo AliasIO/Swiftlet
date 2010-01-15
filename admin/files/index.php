@@ -65,7 +65,7 @@ if ( $model->POST_valid['form-submit'] )
 					
 					if ( is_file($contr->rootPath . 'file/uploads/' . $hash) )
 					{
-						$model->form->errors['file'][$i] = 'This file has already been uploaded.';
+						$model->form->errors['file'][$i] = $model->t('This file has already been uploaded.');
 					}
 					else
 					{
@@ -130,30 +130,30 @@ if ( $model->POST_valid['form-submit'] )
 						}
 						else
 						{
-							$model->form->errors['file'][$i] = 'Could not move file to destined location.';
+							$model->form->errors['file'][$i] = $model->t('Could not move file to destined location.');
 						}
 					}
 
 					break;
 				case UPLOAD_ERR_INI_SIZE:
 				case UPLOAD_ERR_FORM_SIZE:
-					$model->form->errors['file'][$i] = 'The file is to big.';
+					$model->form->errors['file'][$i] = $model->t('The file is to big.');
 
 					break;
 				case UPLOAD_ERR_PARTIAL:
-					$model->form->errors['file'][$i] = 'Upload failed, try again.';
+					$model->form->errors['file'][$i] = $model->t('Upload failed, try again.');
 
 					break;
 				case UPLOAD_ERR_NO_TMP_DIR:
-					$model->form->errors['file'][$i] = 'Upload failed, missing a temporary folder.';
+					$model->form->errors['file'][$i] = $model->t('Upload failed, missing a temporary folder.');
 
 					break;
 				case UPLOAD_ERR_CANT_WRITE:
-					$model->form->errors['file'][$i] = 'Upload failed, could not write to disk.';
+					$model->form->errors['file'][$i] = $model->t('Upload failed, could not write to disk.');
 
 					break;
 				case UPLOAD_ERR_EXTENSION:
-					$model->form->errors['file'][$i] = 'File upload stopped by extension.';
+					$model->form->errors['file'][$i] = $model->t('File upload stopped by extension.');
 
 					break;
 			}

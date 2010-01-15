@@ -41,7 +41,7 @@ switch ( $hook )
 
 		if ( !empty($model->perm->ready) )
 		{
-			$model->perm->create('admin page access');
+			$model->perm->create('admin page access', 'Access to page management');
 		}
 
 		break;

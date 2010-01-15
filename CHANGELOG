@@ -15,6 +15,7 @@
 # Now storing all dates in GMT
 # Updated CKEditor to 3.1, created a config file in /_view/scripts/
 # Fixed issue with relative paths and rich text editors
+# Updated jQuery to v1.4
 #
 #
 # 1.1.0.RC3 - 1.1.0

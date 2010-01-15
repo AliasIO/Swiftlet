@@ -70,6 +70,32 @@ a:hover {
 	text-decoration: none;
 }
 
+/* Table elements */
+
+table {
+	border-color: var(form-border-color);
+	border-style: solid;
+	border-width: 1px 0 0 1px;
+	margin-bottom: 1em;
+	text-align: left;
+}
+
+th, td {
+	border-color: var(form-border-color);
+	border-style: solid;
+	border-width: 0 1px 1px 0;
+	padding: .5em;
+	vertical-align: top;
+}
+
+th {
+	background: var(form-background-color);
+	font-weight: bold;
+}
+
+td {
+}
+
 /* Form elements */
 
 form {
@@ -176,29 +202,25 @@ button:hover, .button:hover {
 	background: var(link-color);
 }
 
-/* Table elements */
+/* Table elements in forms */
 
-table {
-	border-color: var(form-border-color);
-	border-style: solid;
-	border-width: 1px 0 0 1px;
-	margin-bottom: 1em;
-	text-align: left;
+form table {
+	border: none;
+	margin: 0;
 }
 
-th, td {
-	border-color: var(form-border-color);
-	border-style: solid;
-	border-width: 0 1px 1px 0;
-	padding: .5em;
+	form table input.text, form table input.password, form table textarea, form table select {
+		width: auto;
+	}
+
+form th, form td {
+	border: none;
+	padding: .5em .5em 0 .5em;
 }
 
-th {
-	background: var(form-background-color);
-	font-weight: bold;
-}
-
-td {
+form tbody th {
+	font-weight: normal;
+	width: 12em;
 }
 
 /* Content */
@@ -260,6 +282,11 @@ td {
 
 	#content h4 {
 		font-size: 1.2em;
+	}
+
+	#content h5 {
+		font-weight: bold;
+		margin-bottom: .2em;
 	}
 
 	#content ul, #content ol {

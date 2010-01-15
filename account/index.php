@@ -117,14 +117,14 @@ if ( $model->POST_valid['form-submit'] )
 {
 	if ( $action == 'create' && !$model->POST_valid['password'] )
 	{
-		$model->form->errors['password'] = 'Please provide a password';
+		$model->form->errors['password'] = $model->t('Please provide a password');
 	}
 
 	if ( $model->POST_valid['password'] || $model->POST_valid['password_confirm'] )
 	{
 		if ( $model->POST_valid['password'] != $model->POST_valid['password_confirm'] )
 		{
-			$model->form->errors['password_repeat'] = 'Passwords do not match';
+			$model->form->errors['password_repeat'] = $model->t('Passwords do not match');
 		}
 	}
 
@@ -132,14 +132,14 @@ if ( $model->POST_valid['form-submit'] )
 	{
 		if ( !$model->POST_valid['username'] )
 		{
-			$model->form->errors['username'] = 'Please provide a username';
+			$model->form->errors['username'] = $model->t('Please provide a username');
 		}
 
 		if ( strtolower($model->POST_raw['username']) != strtolower($user['username']) )
 		{
 			if ( !$model->POST_valid['password'] )
 			{
-				$model->form->errors['password'] = 'Please provide a password to change the username';
+				$model->form->errors['password'] = $model->t('Please provide a password to change the username');
 			}
 
 			$model->db->sql('
@@ -153,7 +153,7 @@ if ( $model->POST_valid['form-submit'] )
 
 			if ( $model->db->result )
 			{
-				$model->form->errors['username'] = 'Username has already been taken';
+				$model->form->errors['username'] = $model->t('Username has already been taken');
 			}
 		}
 	}

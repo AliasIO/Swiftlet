@@ -50,7 +50,7 @@ switch ( $hook )
 
 		if ( !empty($model->perm->ready) )
 		{
-			$model->perm->create('admin file access');
+			$model->perm->create('admin file access', 'Access to file management');
 		}
 
 		break;

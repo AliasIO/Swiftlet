@@ -132,6 +132,3 @@
 	});
 	/* ]]> */ -->
 </script>
-
-<?php if ( !empty($model->GET_raw['CKEditorFuncNum']) ): ?>
-<?php endif ?>

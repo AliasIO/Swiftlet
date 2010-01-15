@@ -41,15 +41,7 @@ if ( $model->POST_valid['form-submit'] )
 	{
 		if ( !$model->POST_valid['title'][$language] )
 		{
-			$model->form->errors['title'][$language] = 'Please provide a title';
-		}
-	}
-
-	foreach ( $model->POST_valid['body'] as $language => $title )
-	{
-		if ( !$model->POST_valid['body'][$language] )
-		{
-			$model->form->errors['body'][$language] = 'Please provide any content';
+			$model->form->errors['title'][$language] = $model->t('Please provide a title');
 		}
 	}
 

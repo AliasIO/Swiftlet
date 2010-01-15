@@ -18,7 +18,10 @@ class perm
 		;
 
 	const
-		roleOwnerId = 1
+		roleOwnerId = 1,
+		yes         = 1,
+		no          = 0,
+		never       = -1
 		;
 
 	private
@@ -94,16 +97,18 @@ class perm
 	 * @param string $name
 	 * @return integer
 	 */
-	function create($name)
+	function create($name, $description)
 	{
 		$model = $this->model;
-		
+
 		$model->db->sql('
 			INSERT IGNORE INTO `' . $model->db->prefix . 'perms` (
-				`name`
+				`name`,
+				`desc`
 				)
 			VALUES (
 				"' . $model->db->escape($name) . '"
+				"' . $model->db->escape($description) . '"
 				)
 			;');
 

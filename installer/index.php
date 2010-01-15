@@ -74,7 +74,7 @@ else
 	{
 		if ( $model->form->errors )
 		{
-			$view->error =  $model->t('Incorrect system password.');
+			$view->error = $model->t('Incorrect system password.');
 		}
 		elseif ( $model->POST_valid['plugin'] && is_array($model->POST_valid['plugin']) )
 		{

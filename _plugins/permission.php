@@ -24,6 +24,7 @@ switch ( $hook )
 			CREATE TABLE `' . $model->db->prefix . 'perms` (
 				`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 				`name` VARCHAR(255)     NOT NULL,
+				`desc` VARCHAR(255)     NOT NULL,
 				UNIQUE `name` (`name`),
 				PRIMARY KEY (`id`)
 				)
