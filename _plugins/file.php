@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('admin' => 2, 'init' => 5, 'install' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
+			'hooks'        => array('admin' => 2, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
 			);
 
 		break;
@@ -51,6 +51,37 @@ switch ( $hook )
 		if ( !empty($model->perm->ready) )
 		{
 			$model->perm->create('admin file access', 'Access to file management');
+		}
+
+		break;
+	case 'remove':
+		if ( in_array($model->db->prefix . 'files', $model->db->tables) )
+		{
+			$model->db->sql('
+				DROP TABLE `' . $model->db->prefix . 'files`
+					;');
+		}
+
+		if ( !empty($model->node->ready) )
+		{
+			$model->db->sql('
+				SELECT
+					`id`
+				FROM `' . $model->db->prefix . 'nodes`
+				WHERE
+					`permalink` = "files"
+				LIMIT 1
+				;');
+
+			if ( $model->db->result && $nodeId = $model->db->result[0]['id'] )
+			{
+				$model->node->delete($nodeId);
+			}
+		}
+
+		if ( !empty($model->perm->ready) )
+		{
+			$model->perm->delete('admin file access');
 		}
 
 		break;

@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'perm', 'session'),
-			'hooks'        => array('init' => 5, 'install' => 1, 'unit_tests' => 1)
+			'hooks'        => array('init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 			);
 
 		break;
@@ -23,6 +23,13 @@ switch ( $hook )
 		if ( !empty($model->perm->ready) )
 		{
 			$model->perm->create('admin access', 'Access to the administration overview');
+		}
+
+		break;
+	case 'remove':
+		if ( !empty($model->perm->ready) )
+		{
+			$model->perm->delete('admin access');
 		}
 
 		break;

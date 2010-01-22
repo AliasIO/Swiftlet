@@ -5,9 +5,15 @@
 <h2><?php echo $model->t('Edit page') ?></h2>
 
 <p>
+	<?php if ( $model->perm->check('admin page create') ): ?>
 	<a href="./"><?php echo $model->t('Create a new page') ?></a> |
+	<?php endif ?>
+	<?php if ( $model->perm->check('admin page edit') ): ?>
 	<a href="<?php echo $view->rootPath . $model->rewrite_url('page/?permalink=' . $view->permalink) ?>"><?php echo $model->t('View this page') ?></a> |
+	<?php endif ?>
+	<?php if ( $model->perm->check('admin page delete') ): ?>
 	<a href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
+<?php endif ?>
 </p>
 
 <p>

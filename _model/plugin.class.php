@@ -142,6 +142,20 @@ class plugin
 	}
 
 	/**
+	 * Remove a plug-in
+	 */
+	function remove()
+	{
+		$model = $this->model;
+		$view  = $this->view;
+		$contr = $this->contr;
+
+		$hook = 'remove';
+
+		require($contr->pluginPath . $this->info['file']);		
+	}
+
+	/**
 	 * Get version number of a plug-in
 	 */
 	function get_version()

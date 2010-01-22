@@ -159,15 +159,20 @@ class session
 	 */
 	function end()
 	{
-		$this->model->db->sql('
-			UPDATE `' . $this->model->db->prefix . 'sessions`
-			SET
-				`contents` = "' . $this->model->db->escape(serialize($this->contents)) . '",
-				`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
-			WHERE
-				`id` = ' . $this->id . '
-			LIMIT 1						
-			;');
+		$model = $this->model;
+
+		if ( in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		{
+			$model->db->sql('
+				UPDATE `' . $model->db->prefix . 'sessions`
+				SET
+					`contents` = "' . $model->db->escape(serialize($this->contents)) . '",
+					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+				WHERE
+					`id` = ' . $this->id . '
+				LIMIT 1						
+				;');
+		}
 
 		setcookie('sw_session', $this->id, time() + $this->lifeTime, $this->contr->absPath);
 	}

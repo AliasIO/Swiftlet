@@ -1,7 +1,7 @@
 # 1.1.0 - 1.2.0.A1
 #
 # Added translation plug-in
-# Added user options (plug-ins can add options to the user account page)
+# Added user preferences (plug-ins can add options to the user account page)
 # CSS changes (page to fixed width, buttons more obvious, rounded corners)
 # Changed "pages" plug-in to "page"
 # Page plug-in can now handle multiple languages (in combination with the lang plug-in)
@@ -16,6 +16,7 @@
 # Updated CKEditor to 3.1, created a config file in /_view/scripts/
 # Fixed issue with relative paths and rich text editors
 # Updated jQuery to v1.4
+# Added ability to remove (uninstall) plugins
 #
 #
 # 1.1.0.RC3 - 1.1.0

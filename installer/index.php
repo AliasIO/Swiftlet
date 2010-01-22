@@ -16,20 +16,36 @@ $model->check_dependencies(array('buffer', 'form'));
 
 $model->form->validate(array(
 	'plugin'          => 'bool',
-	'system_password' => '/^' . preg_quote($model->sysPassword, '/') . '$/',
+	'system-password' => '/^' . preg_quote($model->sysPassword, '/') . '$/',
 	'mode'            => 'string',
 	'form-submit'     => 'bool',
 	));
 
-$view->new_plugins      = array();
-$view->outdated_plugins = array();
+$view->newPlugins       = array();
+$view->outdatedPlugins  = array();
+$view->installedPlugins = array();
 
 if ( isset($model->db) )
 {
+	$requiredBy = array();
+
+	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
+	{
+		foreach ( $plugin->info['dependencies'] as $dependency )
+		{
+			if ( !isset($requiredBy[$dependency]) )
+			{
+				$requiredBy[$dependency] = array();
+			}
+
+			$requiredBy[$dependency][$pluginName] = !empty($model->{$dependency}->ready) && $plugin->get_version() ? 1 : 0;
+		}
+	}
+
 	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
 	{
 		$version = $plugin->get_version();
-		
+
 		if ( !$version )
 		{
 			if ( isset($plugin->info['hooks']['install']) )
@@ -41,24 +57,30 @@ if ( isset($model->db) )
 					$dependencyStatus[$dependency] = !empty($model->{$dependency}->ready) ? 1 : 0;
 				}
 
-				$view->new_plugins[$pluginName]                      = $plugin->info;
-				$view->new_plugins[$pluginName]['dependency_status'] = $dependencyStatus;
+				$view->newPlugins[$pluginName]                      = $plugin->info;
+				$view->newPlugins[$pluginName]['dependency_status'] = $dependencyStatus;
 			}
 		}
 		else
 		{
-			if ( isset($plugin->info['hook']['upgrade']) )
+			if ( isset($plugin->info['hooks']['upgrade']) )
 			{
 				if ( version_compare($version, str_replace('*', '99999', $plugin->info['upgradable']['from']), '>=') && version_compare($version, str_replace('*', '99999', $plugin->info['upgradable']['to']), '<=') )
 				{
-					$view->outdated_plugins[$pluginName] = $plugin->info;
+					$view->outdatedPlugins[$pluginName] = $plugin->info;
 				}
+			}
+			
+			if ( ($plugin->info['hooks']['remove']) )
+			{
+				$view->installedPlugins[$pluginName]                       = $plugin->info;
+				$view->installedPlugins[$pluginName]['required_by_status'] = isset($requiredBy[$pluginName]) ? $requiredBy[$pluginName] : array();
 			}
 		}
 	}
 }
 
-ksort($view->new_plugins);
+ksort($view->newPlugins);
 
 if ( empty($model->db->ready) )
 {
@@ -95,11 +117,11 @@ else
 						');				
 				}
 
-				$plugins_installed = array();
+				$pluginsInstalled = array();
 
 				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
 				{
-					if ( isset($view->new_plugins[$pluginName]) && !in_array(0, $view->new_plugins[$pluginName]['dependency_status']) )
+					if ( isset($view->newPlugins[$pluginName]) && !in_array(0, $view->newPlugins[$pluginName]['dependency_status']) )
 					{
 						$model->pluginsLoaded[$pluginName]->install();
 
@@ -110,54 +132,85 @@ else
 								)
 							VALUES (
 								"' . $model->db->escape($pluginName) . '",
-								"' . $view->new_plugins[$pluginName]['version'] . '"
-								);
-							');
+								"' . $view->newPlugins[$pluginName]['version'] . '"
+								)
+							;');
 
-						$plugins_installed[] = $pluginName;
+						$pluginsInstalled[] = $pluginName;
 
-						unset($view->new_plugins[$pluginName]);
+						unset($view->newPlugins[$pluginName]);
 					}
 				}
 
-				if ( $plugins_installed )
+				if ( $pluginsInstalled )
 				{
-					header('Location: ?notice=installed&plugins=' . implode('|', $plugins_installed));
+					header('Location: ?notice=installed&plugins=' . implode('|', $pluginsInstalled));
 
 					$model->end();
 				}
 			}
-			elseif ( $model->POST_raw['mode'] == 'upgrade' )
+			else if ( $model->POST_raw['mode'] == 'upgrade' )
 			{
-				$plugins_upgraded = array();
+				$pluginsUpgraded = array();
 
 				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
 				{
-					if ( isset($view->outdated_plugins[$pluginName]) )
+					if ( isset($view->outdatedPlugins[$pluginName]) )
 					{
 						$model->pluginsLoaded[$pluginName]->upgrade();
 
 						$model->db->sql('
 							UPDATE `' . $model->db->prefix . 'versions` SET
-								`version` = "' . $view->outdated_plugins[$pluginName]['version'] . '"
+								`version` = "' . $view->outdatedPlugins[$pluginName]['version'] . '"
 							WHERE
 								`plugin` = "' . $pluginName . '"
 							LIMIT 1
 							;');
 
-						$plugins_upgraded[] = $pluginName;
+						$pluginsUpgraded[] = $pluginName;
 
-						unset($view->outdated_plugins[$pluginName]);
+						unset($view->outdatedPlugins[$pluginName]);
 					}
 				}
 
-				if ( $plugins_upgraded )
+				if ( $pluginsUpgraded )
 				{
-					header('Location: ?notice=upgraded&plugins=' . implode('|', $plugins_upgraded));
+					header('Location: ?notice=upgraded&plugins=' . implode('|', $pluginsUpgraded));
 
 					$model->end();
 				}
-			}			
+			}		
+			else if (	$model->POST_raw['mode'] == 'remove' )
+			{
+				$pluginsRemoved = array();
+
+				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+				{
+					if ( isset($view->installedPlugins[$pluginName]) && !in_array(1, $view->installedPlugins[$pluginName]['required_by_status']) )
+					{
+						$model->db->sql('
+							DELETE
+							FROM `' . $model->db->prefix . 'versions`
+							WHERE
+								`plugin` = "' . $model->db->escape($pluginName) . '"
+							LIMIT 1
+							;');
+
+						$model->pluginsLoaded[$pluginName]->remove();
+
+						$pluginsRemoved[] = $pluginName;
+
+						unset($view->installedPlugins[$pluginName]);
+					}
+				}
+
+				if ( $pluginsRemoved )
+				{
+					header('Location: ?notice=removed&plugins=' . implode('|', $pluginsRemoved));
+
+					$model->end();
+				}
+			}
 		}
 	}
 }
@@ -174,25 +227,11 @@ if ( isset($model->GET_raw['notice']) && isset($model->GET_raw['plugins']) )
 			$view->notice = $model->t('The following plug-in(s) have been successfully upgraded:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
 
 			break;
+		case 'removed':
+			$view->notice = $model->t('The following plug-in(s) have been successfully removed:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+
+			break;
 	}
-}
-
-if ( $view->new_plugins )
-{
-	$view->install_notice = 'Please select the plug-ins you wish to install. The system password is stored in <code>/_config.php</code>';
-}
-elseif ( !empty($model->db->ready) )
-{
-		$view->install_notice = 'There are no uninstalled plug-ins.';
-}
-
-if ( $view->outdated_plugins )
-{
-	$view->upgrade_notice = 'Please select the plug-ins you wish to upgrade. The system password is stored in <code>/_config.php</code>';
-}
-elseif ( !empty($model->db->ready) )
-{
-		$view->upgrade_notice = 'There are no outdated plug-ins.';
 }
 
 $view->load('installer.html.php');

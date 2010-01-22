@@ -15,55 +15,89 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('session', 'user'),
-			'hooks'        => array('admin' => 1, 'init' => 4, 'install' => 1)
+			'hooks'        => array('admin' => 1, 'init' => 4, 'install' => 1, 'remove' => 1)
 			);
 
 		break;
 	case 'install':
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'perms` (
-				`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`name` VARCHAR(255)     NOT NULL,
-				`desc` VARCHAR(255)     NOT NULL,
-				UNIQUE `name` (`name`),
-				PRIMARY KEY (`id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'perms', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'perms` (
+					`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`name` VARCHAR(255)     NOT NULL,
+					`desc` VARCHAR(255)     NOT NULL,
+					UNIQUE `name` (`name`),
+					PRIMARY KEY (`id`)
+					)
+				;');
+		}
 
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'perms_roles` (
-				`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`name` VARCHAR(255)     NOT NULL,
-				UNIQUE `name` (`name`),
-				PRIMARY KEY (`id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'perms_roles', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'perms_roles` (
+					`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`name` VARCHAR(255)     NOT NULL,
+					UNIQUE `name` (`name`),
+					PRIMARY KEY (`id`)
+					)
+				;');
 
-		$model->db->sql('
-			INSERT INTO `' . $model->db->prefix . 'perms_roles` (
-				`name`
-				)
-			VALUES (
-				"Administrator"
-				)
-			;');
+			$model->db->sql('
+				INSERT INTO `' . $model->db->prefix . 'perms_roles` (
+					`name`
+					)
+				VALUES (
+					"Administrator"
+					)
+				;');
+		}
 
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'perms_roles_xref` (
-				`perm_id` INT(10) UNSIGNED NOT NULL,
-				`role_id` INT(10) UNSIGNED NOT NULL,
-				`value`   INT(1)               NULL,
-				UNIQUE `perm_user` (`perm_id`, `role_id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'perms_roles_xref', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'perms_roles_xref` (
+					`perm_id` INT(10) UNSIGNED NOT NULL,
+					`role_id` INT(10) UNSIGNED NOT NULL,
+					`value`   INT(1)               NULL,
+					UNIQUE `perm_user` (`perm_id`, `role_id`)
+					)
+				;');
+		}
 
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'perms_roles_users_xref` (
-				`role_id` INT(10) UNSIGNED NOT NULL,
-				`user_id` INT(10) UNSIGNED NOT NULL,
-				UNIQUE `role_user` (`role_id`, `user_id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'perms_roles_users_xref', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'perms_roles_users_xref` (
+					`role_id` INT(10) UNSIGNED NOT NULL,
+					`user_id` INT(10) UNSIGNED NOT NULL,
+					UNIQUE `role_user` (`role_id`, `user_id`)
+					)
+				;');
+		}
+
+		break;
+	case 'remove':
+		if ( in_array($model->db->prefix . 'perms', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms`;');
+		}
+
+		if ( in_array($model->db->prefix . 'perms_roles', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms_roles`;');
+		}
+
+		if ( in_array($model->db->prefix . 'perms_roles_xref', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms_roles_xref`;');
+		}
+
+		if ( in_array($model->db->prefix . 'perms_roles_users_xref', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms_roles_users_xref`;');
+		}
 
 		break;
 	case 'init':

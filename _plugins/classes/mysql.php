@@ -59,14 +59,14 @@ class mysql
 			{
 				foreach ( $r as $d )
 				{
-					$this->tables[] = $d[0];
+					$this->tables[$d[0]] = $d[0];
 				}
 			}
 			
 			/**
 			 * Check if the cache tables exists
 			 */
-			if ( in_array($this->prefix . 'cache_queries', $this->tables) )
+			if ( in_array($this->prefix . 'cache_queries', $this->tables) && in_array($this->prefix . 'cache_tables', $this->tables) )
 			{
 				/**
 				 * Clear cache
@@ -94,7 +94,7 @@ class mysql
 	function sql($sql, $cache = TRUE)
 	{
 		$model = $this->model;
-		
+
 		if ( !$this->ready )
 		{
 			$model->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
@@ -118,6 +118,19 @@ class mysql
 				return $this->result = mysql_insert_id();
 
 				break;
+			case preg_match('/^DROP TABLE/i', $this->sql):
+				$this->write();
+
+				$tables = $this->get_tables();
+
+				foreach ( $tables as $table )
+				{
+					unset($this->tables[$table]);
+				}
+
+				return $this->result = mysql_insert_id();
+
+				break;
 			default:
 				$this->write();
 
@@ -133,7 +146,7 @@ class mysql
 	private function read($cache)
 	{
 		$model = $this->model;
-		
+
 		$model->debugOutput['mysql queries']['reads'] ++;
 
 		$tables = $this->get_tables();
@@ -209,36 +222,39 @@ class mysql
 		if ( $this->result && $model->dbCaching && $cache && $tables )
 		{
 			$result = $this->result;
-			
-			$this->sql('
-				INSERT INTO `' . $this->prefix . 'cache_queries` (
-					`hash`,
-					`results`,
-					`date`,
-					`date_expire`
-					)
-				VALUES (
-					"' . $this->escape($hash) . '",
-					"' . $this->escape(serialize($result)) . '",
-					"' . gmdate('Y-m-d H:i:s') . '",
-					DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL 1 HOUR)
-					)
-				;');
 
-			if ( $id = $this->result )
+			if ( in_array($this->prefix . 'cache_queries', $this->tables) && in_array($this->prefix . 'cache_tables', $this->tables) )
 			{
-				foreach ( $tables as $table )
+				$this->sql('
+					INSERT INTO `' . $this->prefix . 'cache_queries` (
+						`hash`,
+						`results`,
+						`date`,
+						`date_expire`
+						)
+					VALUES (
+						"' . $this->escape($hash) . '",
+						"' . $this->escape(serialize($result)) . '",
+						"' . gmdate('Y-m-d H:i:s') . '",
+						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL 1 HOUR)
+						)
+					;');
+
+				if ( $id = $this->result )
 				{
-					$this->sql('
-						INSERT INTO `' . $this->prefix . 'cache_tables` (
-							`query_id`,
-							`table`
-							)
-						VALUES (
-							' . ( int ) $id . ',
-							"' . $this->escape($table) . '"
-							)
-						;');
+					foreach ( $tables as $table )
+					{
+						$this->sql('
+							INSERT INTO `' . $this->prefix . 'cache_tables` (
+								`query_id`,
+								`table`
+								)
+							VALUES (
+								' . ( int ) $id . ',
+								"' . $this->escape($table) . '"
+								)
+							;');
+					}
 				}
 			}
 
@@ -294,7 +310,7 @@ class mysql
 	{
 		$tables = array();
 
-		preg_match_all('/(FROM|JOIN|UPDATE|INTO|TRUNCATE) (`?(' . preg_quote($this->prefix, '/') . '[a-z0-9_]+)`?\s?,?)+/i', $this->sql, $m);
+		preg_match_all('/(FROM|JOIN|UPDATE|INTO|TRUNCATE|DROP TABLE) (`?(' . preg_quote($this->prefix, '/') . '[a-z0-9_]+)`?\s?,?)+/i', $this->sql, $m);
 		
 		if ( isset($m[3]) )
 		{

@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('user'),
-			'hooks'        => array('init' => 5, 'install' => 1, 'format_date' => 1)
+			'hooks'        => array('init' => 5, 'install' => 1, 'format_date' => 1, 'remove' => 1)
 			);
 
 		break;
@@ -159,6 +159,10 @@ switch ( $hook )
 				));
 		}
 		
+		break;
+	case 'remove':
+		$model->user->delete_pref('Time zone');
+
 		break;
 	case 'init':
 		if ( !empty($model->db->ready) && !empty($model->node->ready) )

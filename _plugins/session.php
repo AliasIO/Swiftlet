@@ -15,22 +15,32 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db'),
-			'hooks'        => array('init' => 2, 'install' => 1, 'end' => 1)
+			'hooks'        => array('init' => 2, 'install' => 1, 'end' => 1, 'remove' => 1)
 			);
 
 		break;
 	case 'install':
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'sessions` (
-				`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`hash`        VARCHAR(40)      NOT NULL,
-				`contents`    TEXT             NOT NULL,
-				`date`        DATETIME         NOT NULL,
-				`date_expire` DATETIME         NOT NULL,
-				PRIMARY KEY (`id`),
-				UNIQUE KEY `hash` (`hash`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'sessions` (
+					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`hash`        VARCHAR(40)      NOT NULL,
+					`contents`    TEXT             NOT NULL,
+					`date`        DATETIME         NOT NULL,
+					`date_expire` DATETIME         NOT NULL,
+					PRIMARY KEY (`id`),
+					UNIQUE KEY `hash` (`hash`)
+					)
+				;');
+		}
+
+		break;
+	case 'remove':
+		if ( in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'sessions`;');
+		}
 
 		break;
 	case 'init':

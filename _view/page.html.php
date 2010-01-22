@@ -15,10 +15,14 @@
 	<li><?php echo $view->title ?></li>
 </ul>
 
-<?php if ( $model->session->get('user auth') >= user::admin  ): ?>
+<?php if ( $model->perm->check('admin page edit') || $model->perm->check('admin page delete') ): ?>
 <ul class="admin-toolbox">
+	<?php if ( $model->perm->check('admin page edit') ): ?>
 	<li><a href="<?php echo $view->rootPath ?>admin/pages/?action=edit&id=<?php   echo $view->nodeId ?>"><?php echo t('Edit') ?></a></li>
+	<?php endif ?>
+	<?php if ( $model->perm->check('admin page delete') ): ?>
 	<li><a href="<?php echo $view->rootPath ?>admin/pages/?action=delete&id=<?php echo $view->nodeId ?>"><?php echo t('Delete') ?></a></li>
+	<?php endif ?>
 </ul>
 <?php endif ?>
 

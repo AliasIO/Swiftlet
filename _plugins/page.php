@@ -15,24 +15,27 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('admin' => 1, 'header' => 1, 'init' => 5, 'install' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
+			'hooks'        => array('admin' => 1, 'header' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
 			);
 
 		break;
 	case 'install':
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'pages` (
-				`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`node_id`   INT(10) UNSIGNED NOT NULL,
-				`title`     VARCHAR(255)     NOT NULL,
-				`body`      TEXT             NOT NULL,
-				`lang`      VARCHAR(255)     NOT NULL,
-				`date`      DATETIME         NOT NULL,
-				`date_edit` DATETIME         NOT NULL,
-				INDEX (`node_id`),
-				PRIMARY KEY (`id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'pages', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'pages` (
+					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`node_id`   INT(10) UNSIGNED NOT NULL,
+					`title`     VARCHAR(255)     NOT NULL,
+					`body`      TEXT             NOT NULL,
+					`lang`      VARCHAR(255)     NOT NULL,
+					`date`      DATETIME         NOT NULL,
+					`date_edit` DATETIME         NOT NULL,
+					INDEX (`node_id`),
+					PRIMARY KEY (`id`)
+					)
+				;');
+		}
 
 		if ( !empty($model->node->ready) )
 		{
@@ -42,6 +45,38 @@ switch ( $hook )
 		if ( !empty($model->perm->ready) )
 		{
 			$model->perm->create('admin page access', 'Access to page management');
+			$model->perm->create('admin page create', 'Ability to create pages');
+			$model->perm->create('admin page edit',   'Ability to edit pages');
+			$model->perm->create('admin page delete', 'Ability to delete pages');
+		}
+
+		break;
+	case 'remove':
+		if ( in_array($model->db->prefix . 'pages', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'pages`;');
+		}
+
+		if ( !empty($model->node->ready) )
+		{
+			$model->db->sql('
+				SELECT
+					`id`
+				FROM `' . $model->db->prefix . 'nodes`
+				WHERE
+					`permalink` = "pages"
+				LIMIT 1
+				;');
+			
+			if ( $model->db->result && $nodeId = $model->db->result[0]['id'] )
+			{
+				$model->node->delete($nodeId);
+			}
+		}
+
+		if ( !empty($model->perm->ready) )
+		{
+			$model->perm->delete('admin page access');
 		}
 
 		break;

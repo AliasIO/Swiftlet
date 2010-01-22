@@ -135,7 +135,7 @@ class user
 	}
 
 	/**
-	 * Save a new preference
+	 * Save a preference
 	 * @param array $params
 	 */
 	function save_pref($params)
@@ -167,14 +167,14 @@ class user
 	function delete_pref($pref)
 	{
 		$model = $this->model;
-		
+
 		$model->db->sql('
 			DELETE
-				uo, uox
-			FROM      `' . $model->db->prefix . 'user_prefs`      AS uo
-			LEFT JOIN `' . $model->db->prefix . 'user_prefs_xref` AS uox ON uo.`id` = uox.`pref_id`
+				up, upx
+			FROM      `' . $model->db->prefix . 'user_prefs`      AS up
+			LEFT JOIN `' . $model->db->prefix . 'user_prefs_xref` AS upx ON up.`id` = upx.`pref_id`
 			WHERE
-				uo.`pref` = "' . $model->db->escape($pref) . '"
+				up.`pref` = "' . $model->db->escape($pref) . '"
 			;');
 	}
 
@@ -211,7 +211,7 @@ class user
 	}
 
 	/**
-	 * Get preferences
+	 * Get a user's preferences
 	 * @param int $id
 	 */
 	function get_pref_values($userId)

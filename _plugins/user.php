@@ -16,71 +16,97 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'session'),
-			'hooks'        => array('admin' => 2, 'init' => 3, 'install' => 1, 'unit_tests' => 1)
+			'hooks'        => array('admin' => 2, 'init' => 3, 'install' => 1, 'unit_tests' => 1, 'remove' => 1)
 			);
 
 		break;
 	case 'install':
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'users` (
-				`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`username`  VARCHAR(255)     NOT NULL,
-				`pass_hash` VARCHAR(40)      NOT NULL,
-				`email`     VARCHAR(255)     NULL,
-				`owner`     INT(1)           NOT NULL,
-				`date`      DATETIME         NOT NULL,
-				`date_edit` DATETIME         NOT NULL,
-				UNIQUE `username` (`username`),
-				PRIMARY KEY (`id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'users', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'users` (
+					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`username`  VARCHAR(255)     NOT NULL,
+					`pass_hash` VARCHAR(40)      NOT NULL,
+					`email`     VARCHAR(255)     NULL,
+					`owner`     INT(1)           NOT NULL,
+					`date`      DATETIME         NOT NULL,
+					`date_edit` DATETIME         NOT NULL,
+					UNIQUE `username` (`username`),
+					PRIMARY KEY (`id`)
+					)
+				;');
 
-		$model->db->sql('
-			INSERT INTO `' . $model->db->prefix . 'users` (
-				`username`,
-				`pass_hash`,
-				`owner`,
-				`date`,
-				`date_edit`
-				)
-			VALUES (
-				"Admin",
-				"' . sha1('swiftlet' . strtolower('Admin') . $model->sysPassword) . '",
-				1,
-				"' . gmdate('Y-m-d H:i:s') . '",
-				"' . gmdate('Y-m-d H:i:s') . '"
-				)
-			;');
+			$model->db->sql('
+				INSERT INTO `' . $model->db->prefix . 'users` (
+					`username`,
+					`pass_hash`,
+					`owner`,
+					`date`,
+					`date_edit`
+					)
+				VALUES (
+					"Admin",
+					"' . sha1('swiftlet' . strtolower('Admin') . $model->sysPassword) . '",
+					1,
+					"' . gmdate('Y-m-d H:i:s') . '",
+					"' . gmdate('Y-m-d H:i:s') . '"
+					)
+				;');
+		}
 
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'user_prefs` (
-				`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`pref`    VARCHAR(255)     NOT NULL,
-				`type`    VARCHAR(255)     NOT NULL,
-				`match`   VARCHAR(255)     NOT NULL,
-				`options` TEXT                 NULL,
-				UNIQUE `pref` (`pref`),
-				PRIMARY KEY (`id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'user_prefs', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'user_prefs` (
+					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`pref`    VARCHAR(255)     NOT NULL,
+					`type`    VARCHAR(255)     NOT NULL,
+					`match`   VARCHAR(255)     NOT NULL,
+					`options` TEXT                 NULL,
+					UNIQUE `pref` (`pref`),
+					PRIMARY KEY (`id`)
+					)
+				;');
+		}
 
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'user_prefs_xref` (
-				`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`user_id` INT(10)          NOT NULL,
-				`pref_id` INT(10)          NOT NULL,
-				`value`   VARCHAR(255)     NOT NULL,
-				UNIQUE `user_pref_id` (`user_id`, `pref_id`),
-				PRIMARY KEY (`id`)
-				)
-			;');
+		if ( !in_array($model->db->prefix . 'user_prefs_xref', $model->db->tables) )
+		{
+			$model->db->sql('
+				CREATE TABLE `' . $model->db->prefix . 'user_prefs_xref` (
+					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`user_id` INT(10)          NOT NULL,
+					`pref_id` INT(10)          NOT NULL,
+					`value`   VARCHAR(255)     NOT NULL,
+					UNIQUE `user_pref_id` (`user_id`, `pref_id`),
+					PRIMARY KEY (`id`)
+					)
+				;');
+		}
+
+		break;
+	case 'remove':
+		if ( in_array($model->db->prefix . 'users', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'users`;');
+		}
+
+		if ( in_array($model->db->prefix . 'user_prefs', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'user_prefs`;');
+		}
+
+		if ( in_array($model->db->prefix . 'user_prefs_xref', $model->db->tables) )
+		{
+			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'user_prefs_xref`;');
+		}
 
 		break;
 	case 'init':
 		if ( !empty($model->session->ready) )
 		{
 			require($contr->classPath . 'user.php');
-			
+
 			$model->user = new user($model);
 		}
 

@@ -37,7 +37,7 @@ class perm
 	{
 		$this->model = $model;
 		$this->contr = $model->contr;
-		
+
 		/**
 		 * Check if the permissions table exists
 		 */
@@ -107,27 +107,42 @@ class perm
 				`desc`
 				)
 			VALUES (
-				"' . $model->db->escape($name) . '"
+				"' . $model->db->escape($name) . '",
 				"' . $model->db->escape($description) . '"
 				)
 			;');
+	}
 
-		if ( $permId = $model->db->result )
+	/**
+	 * Delete a permission
+	 * @param string $name
+	 * @return bool
+	 */
+	function delete($name)
+	{
+		$model = $this->model;
+
+		$model->db->sql('
+			SELECT
+				`id`
+			FROM `' . $model->db->prefix . 'perms`
+			WHERE
+				`name` = "' . $model->db->escape($name) . '"
+			LIMIT 1
+			;');
+
+		if ( $model->db->result && $id = $model->db->result[0]['id'] )
 		{
 			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'perms_roles_xref` (
-					`perm_id`,
-					`role_id`,
-					`value`
-					)
-				VALUES (
-					' . ( int ) $permId . ',
-					' . ( int ) perm::roleOwnerId . ',
-					1
-					)
+				DELETE
+					p, prx
+				FROM      `' . $model->db->prefix . 'perms`            AS p
+				LEFT JOIN `' . $model->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
+				WHERE
+					p.`id` = ' . ( int ) $id . '
 				;');
 
-			return $permId;
+			return !empty($model->db->result);
 		}
 	}
 }

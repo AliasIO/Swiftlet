@@ -1,5 +1,9 @@
 <h1><?php echo t($contr->pageTitle) ?></h1>
 
+<p>
+	<?php echo t('Select the plug-ins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
+</p>
+
 <?php if ( !empty($view->error) ): ?>
 <p class="message error"><?php echo $view->error ?></p>
 <?php endif ?>
@@ -8,17 +12,13 @@
 <p class="message notice"><?php echo $view->notice ?></p>
 <?php endif ?>
 
-<h2><?php echo t('Uninstalled plug-ins') ?></h2>
+<h2><?php echo t('Install') ?></h2>
 
-<?php if ( !empty($view->install_notice) ): ?>
-<p class="message notice"><?php echo $view->install_notice ?></p>
-<?php endif ?>
-
-<?php if ( $view->new_plugins ): ?>
+<?php if ( $view->newPlugins ): ?>
 
 <form id="formInstaller" method="post" action="./">
 	<fieldset>
-		<?php foreach ( $view->new_plugins as $plugin => $v ): ?>
+		<?php foreach ( $view->newPlugins as $plugin => $v ): ?>
 		<dl>
 			<dt>
 				<label for="plugin_<?php echo $plugin ?>">
@@ -28,8 +28,8 @@
 				</label>
 			</dt>
 			<dd>
-				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? ' checked="checked"' : ' disabled="disabled"' ) ?>/>
-				
+				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+
 				<?php if ( $v['dependency_status'] ): ?>
 				<em>
 					<?php echo t('Depends on') ?>:
@@ -49,7 +49,7 @@
 				<label for="system_password"><?php echo t('System password') ?></label>
 			</dt>
 			<dd>
-				<input type="password" class="password" name="system_password" id="system_password"/>
+				<input type="password" class="password" name="system-password" id="system-password-1"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -67,19 +67,29 @@
 	</fieldset>
 </form>
 
+<script type="text/javascript">
+	<!-- /* <![CDATA[ */
+	// Focus the username field
+	$(function() {
+		$('#system-password-1').focus();
+	});
+	/* ]]> */ -->
+</script>
+<?php else: ?>
+
+<p>
+	<em><?php echo t('There are no plug-ins to be installed.') ?></em>
+</p>
+
 <?php endif ?>
 
-<h2><?php echo t('Outdated plug-ins') ?></h2>
+<h2><?php echo t('Upgrade') ?></h2>
 
-<?php if ( !empty($view->upgrade_notice) ): ?>
-<p class="message notice"><?php echo $view->upgrade_notice ?></p>
-<?php endif ?>
-
-<?php if ( $view->outdated_plugins ): ?>
+<?php if ( $view->outdatedPlugins ): ?>
 
 <form id="formLogin" method="post" action="./">
 	<fieldset>
-		<?php foreach ( $view->outdated_plugins as $plugin => $v ): ?>
+		<?php foreach ( $view->outdatedPlugins as $plugin => $v ): ?>
 		<dl>
 			<dt>
 				<label for="plugin_<?php echo $plugin ?>">
@@ -108,7 +118,7 @@
 				<label for="system_password"><?php echo t('System password') ?></label>
 			</dt>
 			<dd>
-				<input type="password" class="password" name="system_password" id="system_password"/>
+				<input type="password" class="password" name="system-password" id="system-password-2"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -125,5 +135,74 @@
 		</dl>
 	</fieldset>
 </form>
+
+<?php else: ?>
+
+<p>
+	<em><?php echo t('There are no plug-ins to be upgraded.') ?></em>
+</p>
+
+<?php endif ?>
+
+<h2><?php echo t('Remove') ?></h2>
+
+<?php if ( $view->installedPlugins ): ?>
+
+<form id="formInstaller" method="post" action="./">
+	<fieldset>
+		<?php foreach ( $view->installedPlugins as $plugin => $v ): ?>
+		<dl>
+			<dt>
+				<label for="plugin_<?php echo $plugin ?>">
+					<?php echo $plugin ?> (<?php echo $v['file'] ?>)
+					<em>v<?php echo $v['version'] ?></em>
+					<em><?php echo $v['description'] ?></em>
+				</label>
+			</dt>
+			<dd>
+				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(1, $v['required_by_status']) ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+
+				<?php if ( $v['required_by_status'] ): ?>
+				<em>
+					<?php echo t('Required by') ?>:
+
+					<?php foreach ( $v['required_by_status'] as $requiredBy => $ready ): ?>
+					<?php echo ( $ready ? '<span class="dependency-ok" title="' . t('Ready') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . t('Not ready') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
+					<?php endforeach ?>
+				</em>
+				<?php endif ?>
+			</dd>
+		</dl>
+		<?php endforeach; ?>
+	</fieldset>
+	<fieldset>
+		<dl>
+			<dt>
+				<label for="system_password"><?php echo t('System password') ?></label>
+			</dt>
+			<dd>
+				<input type="password" class="password" name="system-password" id="system-password-3"/>
+			</dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<dl>
+			<dt><br/></dt>
+			<dd>
+				<input type="hidden" name="mode" value="remove"/>
+
+				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+
+				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Remove') ?>"/>
+			</dd>
+		</dl>
+	</fieldset>
+</form>
+
+<?php else: ?>
+
+<p>
+	<em><?php echo t('There are no plug-ins to be removed.') ?></em>
+</p>
 
 <?php endif ?>

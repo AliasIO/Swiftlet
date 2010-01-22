@@ -54,121 +54,127 @@ if ( $model->POST_valid['form-submit'] )
 		switch ( $action )
 		{
 			case 'edit':
-				// Update page
-				$permalink = $model->node->permalink($model->POST_db_safe['title']['English US'], $id);
-				
-				$view->permalink = $permalink;
-
-				$model->db->sql('
-					UPDATE `' . $model->db->prefix . 'nodes` SET
-						`title`     = "' . $model->POST_db_safe['title']['English US'] . '",
-						`permalink` = "' . $permalink . '"
-					WHERE
-						`id` = ' . $id . '
-					LIMIT 1
-					;');
-
-				// Check in which languages the page is stored
-				$langExist = array();
-
-				$model->db->sql('
-					SELECT
-						`lang`
-					FROM `' . $model->db->prefix . 'pages`
-					WHERE
-						`node_id` = ' . $id . '
-					;');
-
-				if ( $r = $model->db->result )
+				if ( $model->perm->check('admin page edit') )
 				{
-					foreach ( $r as $d )
+					// Update page
+					$permalink = $model->node->permalink($model->POST_db_safe['title']['English US'], $id);
+					
+					$view->permalink = $permalink;
+
+					$model->db->sql('
+						UPDATE `' . $model->db->prefix . 'nodes` SET
+							`title`     = "' . $model->POST_db_safe['title']['English US'] . '",
+							`permalink` = "' . $permalink . '"
+						WHERE
+							`id` = ' . $id . '
+						LIMIT 1
+						;');
+
+					// Check in which languages the page is stored
+					$langExist = array();
+
+					$model->db->sql('
+						SELECT
+							`lang`
+						FROM `' . $model->db->prefix . 'pages`
+						WHERE
+							`node_id` = ' . $id . '
+						;');
+
+					if ( $r = $model->db->result )
 					{
-						$langExist[] = $d['lang'];
+						foreach ( $r as $d )
+						{
+							$langExist[] = $d['lang'];
+						}
 					}
+
+					foreach ( $languages as $language )
+					{
+						if ( in_array($language, $langExist) )
+						{
+							$model->db->sql('
+								UPDATE `' . $model->db->prefix . 'pages` SET
+									`title`     = "' . $model->POST_db_safe['title'][$language] . '",
+									`body`      = "' . $model->POST_db_safe['body'][$language] . '",
+									`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
+								WHERE
+									`node_id` = ' . $id . ' AND
+									`lang`    = "' . $model->db->escape($language) . '"
+								LIMIT 1
+								;');
+						}
+						else
+						{
+							$model->db->sql('
+								INSERT INTO `' . $model->db->prefix . 'pages` (
+									`node_id`,
+									`title`,
+									`body`,
+									`lang`,
+									`date`,
+									`date_edit`
+									)
+								VALUES (
+									' . $id . ',
+									"' . $model->POST_db_safe['title'][$language] . '",
+									"' . $model->POST_db_safe['body'][$language] . '",
+									"' . $model->db->escape($language) . '",
+									"' . gmdate('Y-m-d H:i:s') . '",
+									"' . gmdate('Y-m-d H:i:s') . '"
+									)
+								;');
+						}
+					}
+
+					$model->node->move($id, $model->POST_raw['parent']);
+
+					header('Location: ?action=edit&id=' . $id . '&permalink=' . $permalink . '&notice=updated');
+
+					$model->end();
 				}
-
-				foreach ( $languages as $language )
-				{
-					if ( in_array($language, $langExist) )
-					{
-						$model->db->sql('
-							UPDATE `' . $model->db->prefix . 'pages` SET
-								`title`     = "' . $model->POST_db_safe['title'][$language] . '",
-								`body`      = "' . $model->POST_db_safe['body'][$language] . '",
-								`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
-							WHERE
-								`node_id` = ' . $id . ' AND
-								`lang`    = "' . $model->db->escape($language) . '"
-							LIMIT 1
-							;');
-					}
-					else
-					{
-						$model->db->sql('
-							INSERT INTO `' . $model->db->prefix . 'pages` (
-								`node_id`,
-								`title`,
-								`body`,
-								`lang`,
-								`date`,
-								`date_edit`
-								)
-							VALUES (
-								' . $id . ',
-								"' . $model->POST_db_safe['title'][$language] . '",
-								"' . $model->POST_db_safe['body'][$language] . '",
-								"' . $model->db->escape($language) . '",
-								"' . gmdate('Y-m-d H:i:s') . '",
-								"' . gmdate('Y-m-d H:i:s') . '"
-								)
-							;');
-					}
-				}
-
-				$model->node->move($id, $model->POST_raw['parent']);
-
-				header('Location: ?action=edit&id=' . $id . '&permalink=' . $permalink . '&notice=updated');
-
-				$model->end();
 
 				break;
 			default:
-				// Create page
-				$permalink = $model->node->permalink($model->POST_db_safe['title']['English US']);
-
-				$node_id = $model->node->create($model->POST_db_safe['title']['English US'], $permalink, $model->POST_raw['parent']);
-
-				if ( $node_id )
+				if ( $model->perm->check('admin page create') )
 				{
-					foreach ( $languages as $language )
-					{
-						$model->db->sql('
-							INSERT INTO `' . $model->db->prefix . 'pages` (
-								`node_id`,
-								`title`,
-								`body`,
-								`lang`,
-								`date`,
-								`date_edit`
-								)
-							VALUES (
-								' . $node_id . ',
-								"' . $model->POST_db_safe['title'][$language] . '",
-								"' . $model->POST_db_safe['body'][$language] . '",
-								"' . $model->db->escape($language) . '",
-								"' . gmdate('Y-m-d H:i:s') . '",
-								"' . gmdate('Y-m-d H:i:s') . '"
-								)
-							;');
-					}
+					// Create page
+					$permalink = $model->node->permalink($model->POST_db_safe['title']['English US']);
 
-					if ( $model->db->result )
-					{
-						header('Location: ?action=edit&id=' . $node_id . '&permalink=' . $permalink . '&notice=created');
+					$node_id = $model->node->create($model->POST_db_safe['title']['English US'], $permalink, $model->POST_raw['parent']);
 
-						exit;
+					if ( $node_id )
+					{
+						foreach ( $languages as $language )
+						{
+							$model->db->sql('
+								INSERT INTO `' . $model->db->prefix . 'pages` (
+									`node_id`,
+									`title`,
+									`body`,
+									`lang`,
+									`date`,
+									`date_edit`
+									)
+								VALUES (
+									' . $node_id . ',
+									"' . $model->POST_db_safe['title'][$language] . '",
+									"' . $model->POST_db_safe['body'][$language] . '",
+									"' . $model->db->escape($language) . '",
+									"' . gmdate('Y-m-d H:i:s') . '",
+									"' . gmdate('Y-m-d H:i:s') . '"
+									)
+								;');
+						}
+
+						if ( $model->db->result )
+						{
+							header('Location: ?action=edit&id=' . $node_id . '&permalink=' . $permalink . '&notice=created');
+
+							exit;
+						}
 					}
-				}
+			}
 		}
 	}
 }
@@ -194,70 +200,76 @@ else if ( isset($model->GET_raw['notice']) )
 switch ( $action )
 {
 	case 'edit':
-		$node = $model->node->get_parents($id);
-
-		if ( $node )
+		if ( $model->perm->check('admin page edit') )
 		{
-			$model->db->sql('
-				SELECT
-					p.`title`,
-					p.`body`,
-					p.`lang`,
-					n.`left_id`,
-					n.`right_id`,
-					n.`permalink`
-				FROM      `' . $model->db->prefix . 'nodes` AS n
-				LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
-				WHERE
-					n.`id`= ' . ( int ) $id . '
-				;');
+			$node = $model->node->get_parents($id);
 
-			if ( $r = $model->db->result )
+			if ( $node )
 			{
-				$editLeftId  = $r[0]['left_id'];
-				$editRightId = $r[0]['right_id'];
+				$model->db->sql('
+					SELECT
+						p.`title`,
+						p.`body`,
+						p.`lang`,
+						n.`left_id`,
+						n.`right_id`,
+						n.`permalink`
+					FROM      `' . $model->db->prefix . 'nodes` AS n
+					LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+					WHERE
+						n.`id`= ' . ( int ) $id . '
+					;');
 
-				$view->permalink = $r[0]['permalink'];
-
-				foreach ( $r as $d )
+				if ( $r = $model->db->result )
 				{
-					$model->POST_html_safe['title'][$d['lang']] = $d['title'];
-					$model->POST_html_safe['body'][$d['lang']]  = $d['body'];
-				}
+					$editLeftId  = $r[0]['left_id'];
+					$editRightId = $r[0]['right_id'];
 
-				$model->POST_html_safe['parent'] = $node['parents'][count($node['parents']) - 1]['id'];
+					$view->permalink = $r[0]['permalink'];
+
+					foreach ( $r as $d )
+					{
+						$model->POST_html_safe['title'][$d['lang']] = $d['title'];
+						$model->POST_html_safe['body'][$d['lang']]  = $d['body'];
+					}
+
+					$model->POST_html_safe['parent'] = $node['parents'][count($node['parents']) - 1]['id'];
+				}
 			}
 		}
 
 		break;
 	case 'delete':
-		if ( !$model->POST_valid['confirm'] )
+		if ( $model->perm->check('admin page delete') )
 		{
-			$model->confirm($model->t('Are you sure you wish to delete this page?'));
-		}
-		else
-		{
-			// Delete page
-			if ( $model->node->delete($id) )
+			if ( !$model->POST_valid['confirm'] )
 			{
-				// Not using LIMIT 1 because a node can have several pages (translations)
-				$model->db->sql('
-					DELETE
-					FROM `' . $model->db->prefix . 'pages`
-					WHERE
-						`node_id` = ' . ( int ) $id . '
-					;');
-
-				if ( $model->db->result )
+				$model->confirm($model->t('Are you sure you wish to delete this page?'));
+			}
+			else
+			{
+				// Delete page
+				if ( $model->node->delete($id) )
 				{
-					header('Location: ?notice=deleted');
+					// Not using LIMIT 1 because a node can have several pages (translations)
+					$model->db->sql('
+						DELETE
+						FROM `' . $model->db->prefix . 'pages`
+						WHERE
+							`node_id` = ' . ( int ) $id . '
+						;');
 
-					$model->end();
+					if ( $model->db->result )
+					{
+						header('Location: ?notice=deleted');
+
+						$model->end();
+					}
 				}
 			}
-		}
 
-		break;
+			break;
+		}
 }
 
 foreach ( $languages as $language )
@@ -311,12 +323,12 @@ if ( $r = $model->db->result )
 
 	// Remove the main pages node from the editable pages dropdown
 	array_shift($list);
-	
+
 	foreach ( $list as $i => $item )
 	{
 		$list[$i]['level'] = $list[$i]['level'] - 1;
 	}
-	
+
 	// A page can not be a child of itself or a descendant, remove those pages from dropdown
 	if ( $action == 'edit' )
 	{
