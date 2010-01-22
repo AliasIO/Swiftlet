@@ -44,10 +44,10 @@ switch ( $hook )
 
 		if ( !empty($model->perm->ready) )
 		{
-			$model->perm->create('admin page access', 'Access to page management');
-			$model->perm->create('admin page create', 'Ability to create pages');
-			$model->perm->create('admin page edit',   'Ability to edit pages');
-			$model->perm->create('admin page delete', 'Ability to delete pages');
+			$model->perm->create('Pages', 'admin page access', 'Manage pages');
+			$model->perm->create('Pages', 'admin page create', 'Create pages');
+			$model->perm->create('Pages', 'admin page edit',   'Edit pages');
+			$model->perm->create('Pages', 'admin page delete', 'Delete pages');
 		}
 
 		break;

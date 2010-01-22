@@ -97,18 +97,20 @@ class perm
 	 * @param string $name
 	 * @return integer
 	 */
-	function create($name, $description)
+	function create($group, $name, $description)
 	{
 		$model = $this->model;
 
 		$model->db->sql('
 			INSERT IGNORE INTO `' . $model->db->prefix . 'perms` (
 				`name`,
-				`desc`
+				`desc`,
+				`group`
 				)
 			VALUES (
 				"' . $model->db->escape($name) . '",
-				"' . $model->db->escape($description) . '"
+				"' . $model->db->escape($description) . '",
+				"' . $model->db->escape($group) . '"
 				)
 			;');
 	}

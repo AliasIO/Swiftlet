@@ -24,12 +24,39 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'perms` (
-					`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`name` VARCHAR(255)     NOT NULL,
-					`desc` VARCHAR(255)     NOT NULL,
+					`id`    INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`name`  VARCHAR(255)     NOT NULL,
+					`desc`  VARCHAR(255)     NOT NULL,
+					`group` VARCHAR(255)     NOT NULL,
 					UNIQUE `name` (`name`),
 					PRIMARY KEY (`id`)
 					)
+				;');
+
+			$model->db->sql('
+				INSERT INTO `' . $model->db->prefix . 'perms` (
+					`name`,
+					`desc`,
+					`group`
+					)
+				VALUES (
+					"admin perm access",
+					"Manage roles and permissions",
+					"Permissions"
+				),
+				(
+					"admin perm create",
+					"Create roles",
+					"Permissions"
+				),(
+					"admin perm edit",
+					"Edit roles",
+					"Permissions"
+				),(
+					"admin perm delete",
+					"Delete roles",
+					"Permissions"
+				)
 				;');
 		}
 

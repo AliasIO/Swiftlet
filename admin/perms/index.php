@@ -27,6 +27,26 @@ $model->form->validate(array(
 $id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
 $action = isset($model->GET_raw['action']) ? $model->GET_raw['action'] : FALSE;
 
+if ( !$model->perm->check('admin perm access') )
+{
+	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+
+	$model->end();
+}
+
+/*
+ * Get users
+ */
+$model->db->sql('
+	SELECT
+		`id`,
+		`username`
+	FROM `' . $model->db->prefix . 'users`
+	ORDER BY `username` ASC
+	;');
+
+$users = $model->db->result;
+
 /*
  * Get permissions
  */
@@ -39,9 +59,26 @@ $model->db->sql('
 
 $perms = $model->db->result;
 
+$permsGroups = array();
+
+if ( $perms )
+{
+	foreach ( $perms as $perm )
+	{
+		if ( !isset($permsGroups[$perm['group']]) )
+		{
+			$permsGroups[$perm['group']] = array();
+		}
+
+		$permsGroups[$perm['group']][] = $perm;
+	}
+}
+
 /*
  * Get roles
  */
+$roles = array();
+
 $model->db->sql('
 	SELECT
 		`id`,
@@ -106,25 +143,45 @@ if ( $model->POST_valid['form-submit'] )
 	}
 	else
 	{
-		$model->db->sql('
-			INSERT IGNORE INTO `' . $model->db->prefix . 'perms_roles` (
-				`name`
-			)
-			VALUES (
-				"' . $model->POST_db_safe['name'] . '"
-			)
-			;');
-		
-		if ( $model->db->result )
+		if ( $action == 'create' && $model->perm->check('admin perm create') )
 		{
-			header('Location: ?notice=created');
+			$model->db->sql('
+				INSERT IGNORE INTO `' . $model->db->prefix . 'perms_roles` (
+					`name`
+				)
+				VALUES (
+					"' . $model->POST_db_safe['name'] . '"
+				)
+				;');
+			
+			if ( $model->db->result )
+			{
+				header('Location: ?notice=created');
 
-			$model->end();
+				$model->end();
+			}
+		}
+		else if ( $action == 'edit' && $model->perm->check('admin perm edit') )
+		{
+			$model->db->sql('
+				UPDATE `' . $model->db->prefix . 'perms_roles` SET
+					`name` = "' . $model->POST_db_safe['name'] . '"
+				WHERE
+					`id` = ' . ( int ) $id . '
+				LIMIT 1
+				;');
+
+			if ( $model->db->result )
+			{
+				header('Location: ?notice=updated');
+
+				$model->end();
+			}
 		}
 	}
 }
 
-if ( $model->POST_valid['form-submit-2'] && $id )
+if ( $model->POST_valid['form-submit-2'] && $id && $model->perm->check('admin perm edit') )
 {
 	if ( !$model->form->errors )
 	{
@@ -251,8 +308,12 @@ if ( $action && $id )
 {
 	switch ( $action )
 	{
+		case 'edit':
+			$model->POST_html_safe['name'] = $roles[$id]['name'];
+
+			break;
 		case 'remove':
-			if ( isset($model->GET_raw['user_id']) && $userId = ( int ) $model->GET_raw['user_id'] )
+			if ( isset($model->GET_raw['user_id']) && $userId = ( int ) $model->GET_raw['user_id'] && $model->perm->check('admin perm edit') )
 			{
 				if ( !$model->POST_valid['confirm'] )
 				{
@@ -279,27 +340,30 @@ if ( $action && $id )
 
 			break;
 		case 'delete':
-			if ( !$model->POST_valid['confirm'] )
+			if ( $model->perm->check('admin perm delete') )
 			{
-				$model->confirm($model->t('Are you sure you wish to delete this role?'));
-			}
-			else
-			{
-				$model->db->sql('
-					DELETE
-						pr, prx, prux
-					FROM      `' . $model->db->prefix . 'perms_roles`            AS pr
-					LEFT JOIN `' . $model->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`       = prx.`role_id`
-					LEFT JOIN `' . $model->db->prefix . 'perms_roles_users_xref` AS prux ON prx.`role_id` = prux.`role_id`
-					WHERE
-						pr.`id` = ' . ( int ) $id . '
-					;');
-
-				if ( $model->db->result )
+				if ( !$model->POST_valid['confirm'] )
 				{
-					header('Location: ?notice=deleted');
+					$model->confirm($model->t('Are you sure you wish to delete this role?'));
+				}
+				else
+				{
+					$model->db->sql('
+						DELETE
+							pr, prx, prux
+						FROM      `' . $model->db->prefix . 'perms_roles`            AS pr
+						LEFT JOIN `' . $model->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`       = prx.`role_id`
+						LEFT JOIN `' . $model->db->prefix . 'perms_roles_users_xref` AS prux ON prx.`role_id` = prux.`role_id`
+						WHERE
+							pr.`id` = ' . ( int ) $id . '
+						;');
 
-					$model->end();
+					if ( $model->db->result )
+					{
+						header('Location: ?notice=deleted');
+
+						$model->end();
+					}
 				}
 			}
 
@@ -309,10 +373,11 @@ if ( $action && $id )
 
 $model->POST_html_safe['value'] = $values;
 
-$view->id     = $id;
-$view->action = $action;
-$view->perms  = $perms;
-$view->roles  = $roles;
+$view->id          = $id;
+$view->action      = $action;
+$view->users       = $users;
+$view->permsGroups = $permsGroups;
+$view->roles       = $roles;
 
 $view->load('admin/perms.html.php');
 

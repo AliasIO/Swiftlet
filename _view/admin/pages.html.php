@@ -1,28 +1,5 @@
 <h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
-<p>
-<?php if ( $view->action == 'edit' ): ?>
-<h2><?php echo $model->t('Edit page') ?></h2>
-
-<p>
-	<?php if ( $model->perm->check('admin page create') ): ?>
-	<a href="./"><?php echo $model->t('Create a new page') ?></a> |
-	<?php endif ?>
-	<?php if ( $model->perm->check('admin page edit') ): ?>
-	<a href="<?php echo $view->rootPath . $model->rewrite_url('page/?permalink=' . $view->permalink) ?>"><?php echo $model->t('View this page') ?></a> |
-	<?php endif ?>
-	<?php if ( $model->perm->check('admin page delete') ): ?>
-	<a href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
-<?php endif ?>
-</p>
-
-<p>
-</p>
-<?php else: ?>
-<h2><?php echo $model->t('New page') ?></h2>
-<?php endif ?>
-</p>
-
 <?php if ( !empty($view->error) ): ?>
 <p class="message error"><?php echo $view->error ?></p>
 <?php endif ?>
@@ -30,6 +7,24 @@
 <?php if ( !empty($view->notice) ): ?>
 <p class="message notice"><?php echo $view->notice ?></p>
 <?php endif ?>
+
+<?php if ( $view->action == 'edit' && $model->perm->check('admin page edit') ): ?>
+<h2><?php echo $model->t('Edit page') ?></h2>
+
+<p>
+	<?php if ( $model->perm->check('admin page create') ): ?>
+	<a href="./"><?php echo $model->t('Create a new page') ?></a> |
+	<?php endif ?>
+	<a href="<?php echo $view->rootPath . $model->rewrite_url('page/?permalink=' . $view->permalink) ?>"><?php echo $model->t('View this page') ?></a>
+	<?php if ( $model->perm->check('admin page delete') ): ?>
+	| <a href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
+<?php endif ?>
+</p>
+<?php elseif ( $model->perm->check('admin page create') ): ?>
+<h2><?php echo $model->t('New page') ?></h2>
+<?php endif ?>
+
+<?php if ( $model->perm->check('admin page create') || $view->action == 'edit' && $model->perm->check('admin page edit') ): ?>
 
 <form id="formPage" method="post" action="./<?php echo $view->id ? '?action=edit&id=' . $view->id : '' ?>">
 	<?php foreach ( $view->languages as $i => $language ): ?>
@@ -80,7 +75,9 @@
 		</dl>
 	</fieldset>
 </form>
+<?php endif ?>
 
+<?php if ( $model->perm->check('admin page edit') ): ?>
 <h2><?php echo $model->t('Select a page') ?></h2>
 
 <form id="formPages" method="get" action="./">
@@ -108,6 +105,7 @@
 		</dl>
 	</fieldset>
 </form>
+<?php endif ?>
 
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
