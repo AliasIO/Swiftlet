@@ -45,25 +45,45 @@ if ( $model->POST_valid['form-submit'] )
 	}
 	else
 	{
-		$r = $model->user->login($model->POST_raw['username'], $model->POST_raw['password']);
+		$model->db->sql('
+			SELECT
+				`date_login_attempt`
+			FROM `' . $model->db->prefix . 'users`
+			WHERE
+				`username` = "' . $model->POST_html_safe['username'] . '"
+			LIMIT 1
+			;');
 
-		if ( $r )
+		if ( isset($model->db->result[0]) && $r = $model->db->result[0] )
 		{
-			if ( !empty($model->GET_raw['ref']) )
+			if ( strtotime($r['date_login_attempt']) > gmmktime() - 3 )
 			{
-				header('Location: ' . $model->GET_raw['ref']);
-
-				$model->end();
+				$view->error = $model->t('Only one login attempt per 3 seconds allowed, please try again.');
 			}
-			
-			header('Location: ?notice=login');
+			else
+			{
+				$r = $model->user->login($model->POST_raw['username'], $model->POST_raw['password']);
 
-			$model->end();
+				if ( $r )
+				{
+					if ( !empty($model->GET_raw['ref']) )
+					{
+						header('Location: ' . $model->GET_raw['ref']);
+
+						$model->end();
+					}
+					
+					header('Location: ?notice=login');
+
+					$model->end();
+				}
+				else
+				{
+					$view->error = $model->t('Incorrect username/password combination.');
+				}
+			}
 		}
-		else
-		{
-			$view->error = $model->t('Incorrect username/password combination.');
-		}
+
 	}
 }
 

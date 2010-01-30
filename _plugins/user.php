@@ -25,14 +25,15 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'users` (
-					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`username`  VARCHAR(255)     NOT NULL,
-					`email`     VARCHAR(255)     NULL,
-					`owner`     INT(1)           NOT NULL,
-					`date`      DATETIME         NOT NULL,
-					`date_edit` DATETIME         NOT NULL,
-					`salt`      VARCHAR(64)      NOT NULL,
-					`pass_hash` VARCHAR(64)      NOT NULL,
+					`id`                 INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`username`           VARCHAR(255)     NOT NULL,
+					`email`              VARCHAR(255)     NULL,
+					`owner`              INT(1)           NOT NULL,
+					`date`               DATETIME         NOT NULL,
+					`date_edit`          DATETIME         NOT NULL,
+					`date_login_attempt` DATETIME NOT     NULL,
+					`salt`               VARCHAR(64)      NOT NULL,
+					`pass_hash`          VARCHAR(64)      NOT NULL,
 					UNIQUE `username` (`username`),
 					PRIMARY KEY (`id`)
 					)

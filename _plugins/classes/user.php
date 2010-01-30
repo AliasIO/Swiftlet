@@ -92,6 +92,14 @@ class user
 
 		if ( $model->session->get('user id') !== FALSE )
 		{
+			$model->db->sql('
+				UPDATE `' . $model->db->prefix . 'users` SET
+					`date_login_attempt` = "' . gmdate('Y-m-d H:i:s') . '"
+				WHERE
+					`username` = "' . $model->db->escape($username) . '"
+				LIMIT 1
+				;');
+
 			if ( $this->validate_password($username, $password) )
 			{
 				$model->db->sql('
