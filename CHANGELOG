@@ -2,6 +2,8 @@
 #
 # Updated jQuery to v1.4.1
 # Bug #5 - Fixed URL parsing issue
+# Improved password hashing with SHA-256 and per-user random salt
+# Require password when changing account details
 #
 #
 # 1.1.0 - 1.2.0.A1

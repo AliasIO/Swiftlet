@@ -26,7 +26,7 @@ folder on your server to view the website.
 Getting started
 ---------------
 
-  - Read the documentation on http://swiftlet.org/docs.
+  - Read the documentation on [swiftlet.org/docs](http://swiftlet.org/docs).
   - To change the landing page, replace or modify /index.php and /_view/index.php.
   - To change global settings, modify /_config.php.
 

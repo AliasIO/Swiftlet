@@ -26,12 +26,13 @@ if ( $model->user->prefs )
 }
 
 $model->form->validate(array(
-	'form-submit'      => 'bool',
-	'username'         => 'string, empty',
-	'password'         => 'string, empty',
-	'password_confirm' => 'string, empty',
-	'email'            => 'email,  empty',
-	'owner'            => 'bool'
+	'form-submit'          => 'bool',
+	'username'             => 'string, empty',
+	'password'             => 'string, empty',
+	'new_password'         => 'string, empty',
+	'new_password_confirm' => 'string, empty',
+	'email'                => 'email,  empty',
+	'owner'                => 'bool'
 	) + $prefsValidate);
 
 if ( $model->session->get('user id') == user::guestId )
@@ -115,16 +116,29 @@ if ( $user['id'] )
 
 if ( $model->POST_valid['form-submit'] )
 {
-	if ( $action == 'create' && !$model->POST_valid['password'] )
+	if ( $action == 'edit' )
 	{
-		$model->form->errors['password'] = $model->t('Please provide a password');
+		if ( !$model->session->get('user is owner') || $model->session->get('user id') == $id )
+		{
+			if ( !$model->user->validate_password($model->session->get('user username'), $model->POST_raw['password']) )
+			{
+				$model->form->errors['password'] = $model->t('Incorrect password');
+
+				echo $model->session->get('user username') . ' : ' . $model->POST_raw['password'];
+			}
+		}
 	}
 
-	if ( $model->POST_valid['password'] || $model->POST_valid['password_confirm'] )
+	if ( $action == 'create' && !$model->POST_valid['new_password'] )
 	{
-		if ( $model->POST_valid['password'] != $model->POST_valid['password_confirm'] )
+		$model->form->errors['new_password'] = $model->t('Please provide a password');
+	}
+
+	if ( $model->POST_valid['new_password'] || $model->POST_valid['new_password_confirm'] )
+	{
+		if ( $model->POST_valid['new_password'] != $model->POST_valid['new_password_confirm'] )
 		{
-			$model->form->errors['password_repeat'] = $model->t('Passwords do not match');
+			$model->form->errors['new_password_repeat'] = $model->t('Passwords do not match');
 		}
 	}
 
@@ -137,11 +151,6 @@ if ( $model->POST_valid['form-submit'] )
 
 		if ( strtolower($model->POST_raw['username']) != strtolower($user['username']) )
 		{
-			if ( !$model->POST_valid['password'] )
-			{
-				$model->form->errors['password'] = $model->t('Please provide a password to change the username');
-			}
-
 			$model->db->sql('
 				SELECT
 					`id`
@@ -177,8 +186,12 @@ if ( $model->POST_valid['form-submit'] )
 			}
 		}
 
-		$passHash = $model->POST_valid['password'] ? sha1('swiftlet' . strtolower($username) . $model->POST_raw['password']) : FALSE;
-		$email    = $model->POST_valid['email']    ? $model->POST_db_safe['email'] : FALSE;
+		$password = $model->POST_valid['new_password'] ? $model->POST_valid['new_password'] : $model->POST_raw['password'];
+		
+		$salt     = hash('sha256', uniqid(mt_rand(), true));
+		$passHash = hash('sha256', 'swiftlet' . $salt . strtolower($username) . $password);
+
+		$email = $model->POST_valid['email'] ? $model->POST_db_safe['email'] : FALSE;
 
 		switch ( $action )
 		{
@@ -186,19 +199,21 @@ if ( $model->POST_valid['form-submit'] )
 				$model->db->sql('
 					INSERT INTO `' . $model->db->prefix . 'users` (
 						`username`,
-						`pass_hash`,
 						`email`,
 						`owner`,
 						`date`,
-						`date_edit`
+						`date_edit`,
+						`salt`,
+						`pass_hash`
 						)
 					VALUES (
 						"' . $username . '",
-						"' . $passHash . '",
 						"' . $email . '",
 						' . ( int ) $owner . ',
 						"' . gmdate('Y-m-d H:i:s') . '",
-						"' . gmdate('Y-m-d H:i:s') . '"
+						"' . gmdate('Y-m-d H:i:s') . '",
+						"' . $salt . '",
+						"' . $passHash . '"
 						)
 						;');
 
@@ -223,10 +238,13 @@ if ( $model->POST_valid['form-submit'] )
 				$model->db->sql('
 					UPDATE `' . $model->db->prefix . 'users` SET
 						`username`  = "' . $username . '",
-						' . ( $passHash ? '`pass_hash` = "' . $passHash . '",' : '' ) . '
 						`email`     = "' . $email . '",
 						`owner`     = ' . ( int ) $owner . ',
 						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
+						' . ( isset($passHash) ? ',
+						`salt`      = "' . $salt . '",
+						`pass_hash` = "' . $passHash . '"
+						' : '' ) . '
 					WHERE
 						`id` = ' . $user['id'] . '
 					LIMIT 1

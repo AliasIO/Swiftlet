@@ -48,8 +48,9 @@
 				<?php endif ?>
 			</dd>
 		</dl>
+		<?php if ( $view->action == 'edit' && ( !$model->session->get('user is owner') || $model->session->get('user id') == $view->userId ) ): ?> 
 		<dl>
-			<dt><label for="password"><?php echo t('Password') ?> (2x)</label></dt>
+			<dt><label for="password"><?php echo t('Password') ?></label></dt>
 			<dd>
 				<input type="password" class="password" name="password" id="password"/>
 				
@@ -58,13 +59,24 @@
 				<?php endif ?>
 			</dd>
 		</dl>
+		<?php endif ?>
+		<dl>
+			<dt><label for="new_password"><?php echo $view->action == 'edit' ? t('New password') : t('Password') ?> (2x)</label></dt>
+			<dd>
+				<input type="password" class="password" name="new_password" id="new_password"/>
+				
+				<?php if ( isset($model->form->errors['new_password']) ): ?>
+				<span class="error"><?php echo $model->form->errors['new_password'] ?></span>
+				<?php endif ?>
+			</dd>
+		</dl>
 		<dl>
 			<dt><br/></dt>
 			<dd>
-				<input type="password" class="password" name="password_confirm" id="password_confirm"/>
+				<input type="password" class="password" name="new_password_confirm" id="new_password_confirm"/>
 				
-				<?php if ( isset($model->form->errors['password_repeat']) ): ?>
-				<span class="error"><?php echo $model->form->errors['password_repeat'] ?></span>
+				<?php if ( isset($model->form->errors['new_password_repeat']) ): ?>
+				<span class="error"><?php echo $model->form->errors['new_password_repeat'] ?></span>
 				<?php endif ?>
 			</dd>
 		</dl>

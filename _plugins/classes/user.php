@@ -92,34 +92,30 @@ class user
 
 		if ( $model->session->get('user id') !== FALSE )
 		{
-			$pass_hash = sha1('swiftlet' . strtolower($username) . $password);
-
-			$model->db->sql('
-				SELECT
-					*
-				FROM `' . $model->db->prefix . 'users`
-				WHERE
-					`username`  = "' . $model->db->escape($username)  . '" AND
-					`pass_hash` = "' . $model->db->escape($pass_hash) . '"
-				LIMIT 1
-				;', FALSE);
-
-			if ( isset($model->db->result[0]) && $r = $model->db->result[0] )
+			if ( $this->validate_password($username, $password) )
 			{
-				$model->session->put(array(
-					'user id'       => $r['id'],
-					'user username' => $r['username'],
-					'user email'    => $r['email'],
-					'user is owner' => $r['owner']
-					));
+				$model->db->sql('
+					SELECT
+						*
+					FROM `' . $model->db->prefix . 'users`
+					WHERE
+						`username` = "' . $model->db->escape($username) . '"
+					LIMIT 1
+					;', FALSE);
 
-				return TRUE;
+				if ( !empty($model->db->result[0]) && $r = $model->db->result[0] )
+				{
+					$model->session->put(array(
+						'user id'       => $r['id'],
+						'user username' => $r['username'],
+						'user email'    => $r['email'],
+						'user is owner' => $r['owner']
+						));
+
+					return TRUE;
+				}
 			}
-
-			return FALSE;
 		}
-
-		return FALSE;
 	}
 
 	/**
@@ -132,6 +128,34 @@ class user
 		
 		$model->session->reset();
 		$model->session->end();
+	}
+
+	/**
+ 	 * Validate password
+	 */
+	function validate_password($username, $password)
+	{
+		$model = $this->model;
+
+		$model->db->sql('
+			SELECT
+				`salt`,
+				`pass_hash`
+			FROM `' . $model->db->prefix . 'users`
+			WHERE
+				`username` = "' . $model->db->escape($username) . '"
+			LIMIT 1
+			;', FALSE);
+
+		if ( !empty($model->db->result[0]) && $r = $model->db->result[0] )
+		{
+			$passHash = hash('sha256', 'swiftlet' . $r['salt'] . strtolower($username) . $password);
+
+			if ( $passHash == $r['pass_hash'] )
+			{
+				return true;
+			}
+		}
 	}
 
 	/**
