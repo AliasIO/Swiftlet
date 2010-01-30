@@ -3,7 +3,9 @@
 # Updated jQuery to v1.4.1
 # Bug #5 - Fixed URL parsing issue
 # Improved password hashing with SHA-256 and per-user random salt
+# Change password hash on every login
 # Require password when changing account details
+# Limited login attempts to one per three seconds
 #
 #
 # 1.1.0 - 1.2.0.A1

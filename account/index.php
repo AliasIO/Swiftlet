@@ -188,8 +188,7 @@ if ( $model->POST_valid['form-submit'] )
 
 		$password = $model->POST_valid['new_password'] ? $model->POST_valid['new_password'] : $model->POST_raw['password'];
 		
-		$salt     = hash('sha256', uniqid(mt_rand(), true));
-		$passHash = hash('sha256', 'swiftlet' . $salt . strtolower($username) . $password);
+		$passHash = $model->user->make_pass_hash($username, $password);
 
 		$email = $model->POST_valid['email'] ? $model->POST_db_safe['email'] : FALSE;
 
@@ -203,7 +202,6 @@ if ( $model->POST_valid['form-submit'] )
 						`owner`,
 						`date`,
 						`date_edit`,
-						`salt`,
 						`pass_hash`
 						)
 					VALUES (
@@ -212,7 +210,6 @@ if ( $model->POST_valid['form-submit'] )
 						' . ( int ) $owner . ',
 						"' . gmdate('Y-m-d H:i:s') . '",
 						"' . gmdate('Y-m-d H:i:s') . '",
-						"' . $salt . '",
 						"' . $passHash . '"
 						)
 						;');
@@ -240,11 +237,8 @@ if ( $model->POST_valid['form-submit'] )
 						`username`  = "' . $username . '",
 						`email`     = "' . $email . '",
 						`owner`     = ' . ( int ) $owner . ',
-						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
-						' . ( isset($passHash) ? ',
-						`salt`      = "' . $salt . '",
+						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '",
 						`pass_hash` = "' . $passHash . '"
-						' : '' ) . '
 					WHERE
 						`id` = ' . $user['id'] . '
 					LIMIT 1

@@ -147,7 +147,6 @@ class user
 
 		$model->db->sql('
 			SELECT
-				`salt`,
 				`pass_hash`
 			FROM `' . $model->db->prefix . 'users`
 			WHERE
@@ -157,13 +156,32 @@ class user
 
 		if ( !empty($model->db->result[0]) && $r = $model->db->result[0] )
 		{
-			$passHash = hash('sha256', 'swiftlet' . $r['salt'] . strtolower($username) . $password);
+			$salt     = substr($r['pass_hash'], 0, 64);
+			$passHash = $salt . hash('sha256', 'swiftlet' . $salt . strtolower($username) . $password);
 
 			if ( $passHash == $r['pass_hash'] )
-			{
+			{	
+				$passHash = $this->make_pass_hash($username, $password); 
+
+				$model->db->sql('
+					UPDATE `' . $model->db->prefix . 'users` SET
+						`pass_hash` = "' . $passHash . '"
+					WHERE
+						`username` = "' . $model->db->escape($username) . '"
+					LIMIT 1
+					;');
+				
 				return true;
 			}
 		}
+	}
+
+	function make_pass_hash($username, $password)
+	{
+		$salt     = hash('sha256', uniqid(mt_rand(), true));
+		$passHash = $salt . hash('sha256', 'swiftlet' . $salt . strtolower($username) . $password);
+
+		return $passHash;
 	}
 
 	/**

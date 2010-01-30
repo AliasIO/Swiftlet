@@ -32,15 +32,14 @@ switch ( $hook )
 					`date`               DATETIME         NOT NULL,
 					`date_edit`          DATETIME         NOT NULL,
 					`date_login_attempt` DATETIME NOT     NULL,
-					`salt`               VARCHAR(64)      NOT NULL,
-					`pass_hash`          VARCHAR(64)      NOT NULL,
+					`pass_hash`          VARCHAR(128)     NOT NULL,
 					UNIQUE `username` (`username`),
 					PRIMARY KEY (`id`)
 					)
 				;');
 
 			$salt     = hash('sha256', uniqid(mt_rand(), true));	
-			$passHash = hash('sha256', 'swiftlet' . $salt . 'admin' . $model->sysPassword);
+			$passHash = $salt . hash('sha256', 'swiftlet' . $salt . 'admin' . $model->sysPassword);
 
 			$model->db->sql('
 				INSERT INTO `' . $model->db->prefix . 'users` (
@@ -48,7 +47,6 @@ switch ( $hook )
 					`owner`,
 					`date`,
 					`date_edit`,
-					`salt`,
 					`pass_hash`
 					)
 				VALUES (
@@ -56,7 +54,6 @@ switch ( $hook )
 					1,
 					"' . gmdate('Y-m-d H:i:s') . '",
 					"' . gmdate('Y-m-d H:i:s') . '",
-					"' . $salt . '",
 					"' . $passHash . '"
 					)
 				;');
