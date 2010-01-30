@@ -1,7 +1,7 @@
 Swiftlet
 ========
 
-http://swiftlet.org
+[swiftlet.org](http://swiftlet.org)
 
 Light-weight framework written in PHP.
 
@@ -34,5 +34,5 @@ Getting started
 Support
 -------
 
-  - Join the community at http://swiftlet.org/community.
-  - File bug reports at http://github.com/ElbertF/Swiftlet/issues.
+  - Join the community at [swiftlet.org/community](http://swiftlet.org/community).
+  - File bug reports at [github.com/ElbertF/Swiftlet/issues](http://github.com/ElbertF/Swiftlet/issues).
