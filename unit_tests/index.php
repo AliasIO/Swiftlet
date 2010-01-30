@@ -33,29 +33,6 @@ else
 	$tests = array();
 
 	/**
-	 * /_config.php
-	 */
-	$tests[] = array(
-		'test' => '<em>For distributors only</em> &mdash; <code>sysPassword</code> should be empty <code>/_config.php</code>.',
-		'pass' => $model->sysPassword == ''
-		);
-
-	$tests[] = array(
-		'test' => '<em>For distributors only</em> &mdash; <code>dbName</code> should be empty <code>/_config.php</code>.',
-		'pass' => $model->dbName == ''
-		);
-
-	$tests[] = array(
-		'test' => '<em>For distributors only</em> &mdash; <code>debugMode</code> should be set to <code>TRUE</code> in <code>/_config.php</code>.',
-		'pass' => $model->debugMode == TRUE
-		);
-
-	$tests[] = array(
-		'test' => '<em>For distributors only</em> &mdash; <code>urlRewrite</code> should be set to <code>TRUE</code> <code>/_config.php</code>.',
-		'pass' => $model->urlRewrite == TRUE
-		);
-
-	/**
 	 * Forms
 	 */
 	$params = array(

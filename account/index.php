@@ -170,7 +170,11 @@ if ( $model->POST_valid['form-submit'] )
 		if ( $model->session->get('user is owner') )
 		{
 			$username = $model->POST_db_safe['username'];
-			$owner    = $model->POST_valid['owner'];
+
+			if ( $model->session->get('user id') != $user['id'] )
+			{
+				$owner = $model->POST_valid['owner'];
+			}
 		}
 
 		$passHash = $model->POST_valid['password'] ? sha1('swiftlet' . strtolower($username) . $model->POST_raw['password']) : FALSE;
@@ -235,7 +239,7 @@ if ( $model->POST_valid['form-submit'] )
 						$model->session->put(array(
 							'user username' => $username,
 							'user email'    => $email,
-							'user is owner' => $owner
+							'user is owner' => ( int ) $owner
 							));
 					}
 
