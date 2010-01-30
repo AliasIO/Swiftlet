@@ -1,9 +1,5 @@
 <h1><?php echo t($contr->pageTitle) ?></h1>
 
-<p>
-	<?php echo t('Select the plug-ins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
-</p>
-
 <?php if ( !empty($view->error) ): ?>
 <p class="message error"><?php echo $view->error ?></p>
 <?php endif ?>
@@ -11,6 +7,10 @@
 <?php if ( !empty($view->notice) ): ?>
 <p class="message notice"><?php echo $view->notice ?></p>
 <?php endif ?>
+
+<p>
+	<?php echo t('Select the plug-ins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
+</p>
 
 <h2><?php echo t('Install') ?></h2>
 

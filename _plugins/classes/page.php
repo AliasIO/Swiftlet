@@ -101,7 +101,7 @@ class page
 		{
 			for ( $i = 0; $i < count($m[0]); $i ++ )
 			{
-				if ( !preg_match('/^[a-z]:\/\//i', $m[3][$i]) )
+				if ( !preg_match('/^[a-z]+:\/\//i', $m[3][$i]) )
 				{
 					$v = str_replace($m[0][$i], $m[1][$i] . $view->rootPath . $m[3][$i], $v);
 				}

@@ -88,7 +88,7 @@ if ( empty($model->db->ready) )
 }
 elseif ( !$model->sysPassword )
 {
-	$view->error = $model->t('%1$s has no value in %1$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
+	$view->error = $model->t('%1$s has no value in %2$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
 }
 else
 {

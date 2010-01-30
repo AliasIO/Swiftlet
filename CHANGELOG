@@ -1,3 +1,9 @@
+# 1.2.0.A1 - 1.2.0.A2
+#
+# Updated jQuery to v1.4.1
+# Bug #5 - Fixed URL parsing issue
+#
+#
 # 1.1.0 - 1.2.0.A1
 #
 # Added translation plug-in
