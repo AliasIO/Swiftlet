@@ -12,8 +12,8 @@ essentials to build a powerful and secure website in PHP.
 Server requirements
 -------------------
 
-  * PHP 5.1
-  * MySQL 5 (optional but required for some plug-ins)
+  - PHP 5.1
+  - MySQL 5 (optional but required for some plug-ins)
 
 
 Installation
@@ -26,13 +26,13 @@ folder on your server to view the website.
 Getting started
 ---------------
 
-  * Read the documentation on http://swiftlet.org/docs.
-  * To change the landing page, replace or modify /index.php and /_view/index.php.
-  * To change global settings, modify /_config.php.
+  - Read the documentation on http://swiftlet.org/docs.
+  - To change the landing page, replace or modify /index.php and /_view/index.php.
+  - To change global settings, modify /_config.php.
 
 
 Support
 -------
 
-  * Join the community at http://swiftlet.org/community.
-  * File bug reports at http://github.com/ElbertF/Swiftlet/issues.
+  - Join the community at http://swiftlet.org/community.
+  - File bug reports at http://github.com/ElbertF/Swiftlet/issues.
