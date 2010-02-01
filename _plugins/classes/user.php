@@ -160,7 +160,14 @@ class user
 		if ( !empty($model->db->result[0]) && $r = $model->db->result[0] )
 		{
 			$salt     = substr($r['pass_hash'], 0, 64);
-			$passHash = $salt . hash('sha256', 'swiftlet' . $salt . strtolower($username) . $password);
+			$passHash = $salt . $password;
+	
+			for ( $i = 0; $i < 100000; $i ++ )
+			{
+				$passHash = hash('sha256', $passHash);
+			}
+
+			$passHash = $salt . $passHash;
 
 			if ( $passHash == $r['pass_hash'] )
 			{	
@@ -187,8 +194,16 @@ class user
 	 */
 	function make_pass_hash($username, $password)
 	{
-		$salt     = hash('sha256', uniqid(mt_rand(), true));
-		$passHash = $salt . hash('sha256', 'swiftlet' . $salt . strtolower($username) . $password);
+		$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . strtolower($username));
+		$passHash = $salt . $password;
+		
+		// Let's slow things down by hashing it a bunch of times
+		for ( $i = 0; $i < 100000; $i ++ )
+		{
+			$passHash = hash('sha256', $passHash);
+		}
+		
+		$passHash = $salt . $passHash;
 
 		return $passHash;
 	}

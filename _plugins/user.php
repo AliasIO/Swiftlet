@@ -38,8 +38,15 @@ switch ( $hook )
 					)
 				;');
 
-			$salt     = hash('sha256', uniqid(mt_rand(), true));	
-			$passHash = $salt . hash('sha256', 'swiftlet' . $salt . 'admin' . $model->sysPassword);
+			$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . 'admin');
+			$passHash = $salt . $model->sysPassword;
+
+			for ( $i = 0; $i < 100000; $i ++ )
+			{
+				$passHash = hash('sha256', $passHash);
+			}
+
+			$passHash = $salt . $passHash;
 
 			$model->db->sql('
 				INSERT INTO `' . $model->db->prefix . 'users` (
