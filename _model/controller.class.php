@@ -49,7 +49,7 @@ class contr
 		$this->classPath  = $contr->rootPath . '_plugins/classes/';
 
 		/**
-		 * Find absolute path
+		 * Find absolute path to the root
 		 */
 		$this->absPath = str_replace('//', '/', preg_replace('/([^\/]+\/){' . ( substr_count(( $contr->rootPath == './' ? '' : $contr->rootPath ), '/') ) . '}$/', '', dirname(str_replace('\\', '/', $_SERVER['PHP_SELF'])) . '/'));
 	}

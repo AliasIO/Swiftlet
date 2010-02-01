@@ -140,6 +140,9 @@ class user
 
 	/**
  	 * Validate password
+	 * @param string $username
+	 * @param string $password
+	 * @return bool
 	 */
 	function validate_password($username, $password)
 	{
@@ -176,6 +179,12 @@ class user
 		}
 	}
 
+	/**
+ 	 * Create a password hash
+	 * @param string $username
+	 * @param string $password
+	 * @return string
+	 */
 	function make_pass_hash($username, $password)
 	{
 		$salt     = hash('sha256', uniqid(mt_rand(), true));

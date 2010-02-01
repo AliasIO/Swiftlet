@@ -30,14 +30,13 @@ $config = array(
 	/**
 	 * URL rewrites.
 	 */
-	'urlRewrite' => TRUE, // TRUE | FALSE
+	'urlRewrite' => TRUE // TRUE | FALSE
 	);
 
 /**
  * MySQL Database settings
  * Leave dbName empty if no database is used
  */
-
 switch ( $model->userIp )
 {
 	/**

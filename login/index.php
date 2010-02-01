@@ -45,6 +45,9 @@ if ( $model->POST_valid['form-submit'] )
 	}
 	else
 	{
+		/*
+		 * Limit the number of login attempts to 1 per 3 seconds
+ 		 */
 		$model->db->sql('
 			SELECT
 				`date_login_attempt`
@@ -68,11 +71,15 @@ if ( $model->POST_valid['form-submit'] )
 				{
 					if ( !empty($model->GET_raw['ref']) )
 					{
+						/*
+						 * Header injection is not an issue here, header()
+						 * prevents more than one header to be sent at once
+						 */
 						header('Location: ' . $model->GET_raw['ref']);
 
 						$model->end();
 					}
-					
+
 					header('Location: ?notice=login');
 
 					$model->end();
@@ -83,7 +90,6 @@ if ( $model->POST_valid['form-submit'] )
 				}
 			}
 		}
-
 	}
 }
 
@@ -97,8 +103,8 @@ if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'login':
-			$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->session->get('user username'));
-		
+			$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->h($model->session->get('user username')));
+
 			break;
 		case 'logout':
 			$view->notice = $model->t('You are now logged out.');

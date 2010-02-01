@@ -18,7 +18,7 @@ class model
 		;
 
 	/**
-	 * Initialize Model
+	 * Initialize
 	 * @param object $contr
 	 */
 	function __construct($contr)
@@ -39,7 +39,7 @@ class model
 		$model->userIp = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'] );
 
 		/*
-		 * Configuration
+		 * Load configuration
 		 */
 		if ( is_file($contr->rootPath . '_config.php') )
 		{
@@ -88,7 +88,7 @@ class model
 		$this->view = $view;
 
 		/*
-		 * Plugins
+		 * Plug-ins
 		 */
 		require($contr->rootPath . '_model/plugin.class.php');
 
@@ -111,7 +111,7 @@ class model
 	}
 
 	/**
-	 * Initialize plugin
+	 * Initialize plug-in
 	 * @param string plugin
 	 */
 	private function plugin_load($file)
@@ -129,6 +129,9 @@ class model
 	{
 		if ( !empty($this->hooksRegistered[$hook]) )
 		{
+			/**
+			 * Hook plug-ins in the right order
+			 */
 			usort($this->hooksRegistered[$hook], array($this, 'hook_sort'));
 
 			foreach ( $this->hooksRegistered[$hook] as $plugin )
@@ -190,12 +193,12 @@ class model
 	 */
 	private function input_sanitize()
 	{
-    /**
+	    /**
 		 * Undo magic quotes
 		 * @see http://php.net/magic_quotes
 		 */
 		function undo_magic_quotes($v)
-    {
+	    {
 			if ( is_array($v) )
 			{
 				return array_map('undo_magic_quotes', $v);
@@ -204,10 +207,13 @@ class model
 			{
 				return stripslashes($v);
 			}
-    }
+	    }
 
-    if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() )
-    {
+    	/**
+		 * Recursively remove magic quotes
+		 */
+		if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() )
+	    {
 			$_GET    = array_map('undo_magic_quotes', $_GET);
 			$_POST   = array_map('undo_magic_quotes', $_POST);
 			$_COOKIE = array_map('undo_magic_quotes', $_COOKIE);
@@ -233,8 +239,8 @@ class model
 
 		unset($_POST, $_GET);
 
-    /**
-		 * Convert HTML entities
+    	/**
+		 * Convert special characters to HTML entities
 		 * @param string $v
 		 */
 		function html_safe($v)

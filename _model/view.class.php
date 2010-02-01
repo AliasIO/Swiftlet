@@ -33,7 +33,7 @@ class view
 		;
 
 	/**
-	 * Initialize View
+	 * Initialize
 	 * @param object $model
 	 */
 	function __construct($model)
@@ -64,6 +64,10 @@ class view
 		$view->pageKeywords    = !empty($contr->pageKeywords)    ? $model->h($contr->pageKeywords)    : $view->siteKeywords;
 	}
 
+	/*
+	 * Load a View file
+	 * @param $file
+	 */
 	function load($file)
 	{
 		$model = $this->model;
@@ -107,7 +111,7 @@ class view
 		}
 		else
 		{
-			$model->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`');
+			$model->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`.');
 		}
 	}
 }

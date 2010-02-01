@@ -9,3 +9,5 @@ Disallow: /lib/
 Disallow: /log/
 Disallow: /unit_tests/
 Disallow: /_config.php
+Disallow: /CHANGELOG
+Disallow: /README.md

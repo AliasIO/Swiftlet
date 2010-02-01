@@ -94,7 +94,9 @@ class perm
 
 	/**
 	 * Create a new permission
+	 * @param string $group
 	 * @param string $name
+	 * @param string $description
 	 * @return integer
 	 */
 	function create($group, $name, $description)

@@ -10,12 +10,12 @@
  */
 if ( version_compare(PHP_VERSION, '5.1', '<') )
 {
-	die('PHP 5.1 or higher is required.');
+	die('<p>PHP 5.1 or higher is required.</p>');
 }
 
 if ( empty($contrSetup) )
 {
-	die('Missing controller setup.');
+	die('<p>Missing controller setup.</p>');
 }
 
 require($contrSetup['rootPath'] . '_model/model.class.php');

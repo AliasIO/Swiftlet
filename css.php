@@ -13,6 +13,9 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
+/*
+ * Parse CSS files so we can use variables
+ */
 if ( !empty($model->GET_raw['file']) && is_file($file = $contr->viewPath . $model->GET_raw['file'] . '.css') )
 {
 	$css = file_get_contents($file);

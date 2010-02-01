@@ -58,7 +58,8 @@ class time
 
 	/**
 	 * Format a date
-	 * @param string $v
+	 * @param string $date
+	 * @param string $type
 	 * @return string
 	 */
 	function format_date($date, $type = 'datetime')

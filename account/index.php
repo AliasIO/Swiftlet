@@ -205,7 +205,7 @@ if ( $model->POST_valid['form-submit'] )
 						`pass_hash`
 						)
 					VALUES (
-						"' . $username . '",
+						"' . $model->db->escape($username) . '",
 						"' . $email . '",
 						' . ( int ) $owner . ',
 						"' . gmdate('Y-m-d H:i:s') . '",
@@ -219,7 +219,7 @@ if ( $model->POST_valid['form-submit'] )
 					foreach ( $model->user->prefs as $pref )
 					{
 						$model->user->save_pref_value(array(
-							'user_id' => $newId,
+							'user_id' => ( int ) $newId,
 							'pref'    => $pref['pref'],
 							'value'   => $model->POST_db_safe['pref-' . $pref['id']]
 							));
@@ -234,13 +234,13 @@ if ( $model->POST_valid['form-submit'] )
 			case 'edit':
 				$model->db->sql('
 					UPDATE `' . $model->db->prefix . 'users` SET
-						`username`  = "' . $username . '",
+						`username`  = "' . $model->db->escape($username) . '",
 						`email`     = "' . $email . '",
 						`owner`     = ' . ( int ) $owner . ',
 						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '",
 						`pass_hash` = "' . $passHash . '"
 					WHERE
-						`id` = ' . $user['id'] . '
+						`id` = ' . ( int ) $user['id'] . '
 					LIMIT 1
 					;');
 
@@ -258,13 +258,13 @@ if ( $model->POST_valid['form-submit'] )
 					foreach ( $model->user->prefs as $pref )
 					{
 						$model->user->save_pref_value(array(
-							'user_id' => $user['id'],
+							'user_id' => ( int ) $user['id'],
 							'pref'    => $pref['pref'],
 							'value'   => $model->POST_db_safe['pref-' . $pref['id']]
 							));
 					}
 
-					header('Location: ?id=' . $user['id'] . '&notice=saved');
+					header('Location: ?id=' . ( int ) $user['id'] . '&notice=saved');
 					
 					$model->end();
 				}

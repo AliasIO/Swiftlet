@@ -32,14 +32,22 @@ if ( isset($model->GET_raw['permalink']) )
 		LIMIT 1
 		;');
 
-	if ( $model->db->result && $d = $model->db->result[0] )
+	if ( isset($model->db->result[0]) && $d = $model->db->result[0] )
 	{
 		$view->nodeId = $d['node_id'];
 		$view->title  = $d['title'];
 		$view->body   = $d['body'];
 
+		/*
+		 * Prefix relative links with the path to the root
+		 * This way internal links won't break when the site
+		 * is moved to another directory
+		 */
 		$model->page->parse_urls($view->body);
 
+		/*
+		 * Create a breadcrumb trail
+		 */
 		$nodes = $model->node->get_parents($d['node_id']);
 
 		$view->parents = array();
@@ -56,7 +64,7 @@ if ( isset($model->GET_raw['permalink']) )
 	{
 		header('HTTP/1.0 404 Not Found'); 
 
-		$view->error =  $model->t('The page you are looking for does not exist.');
+		$view->error = $model->t('The page you are looking for does not exist.')
 	}
 }
 

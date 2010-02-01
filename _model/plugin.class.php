@@ -24,7 +24,7 @@ class plugin
 		;
 
 	/**
-	 * Initialize plugin
+	 * Initialize
 	 * @param object $model
 	 * @param string $plugin
 	 */
@@ -142,7 +142,7 @@ class plugin
 	}
 
 	/**
-	 * Remove a plug-in
+	 * Remove (uninstall) a plug-in
 	 */
 	function remove()
 	{
@@ -156,7 +156,7 @@ class plugin
 	}
 
 	/**
-	 * Get version number of a plug-in
+	 * Get version number of an installed plug-in
 	 */
 	function get_version()
 	{
