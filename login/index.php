@@ -103,11 +103,17 @@ if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'login':
-			$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->h($model->session->get('user username')));
+			if ( $model->session->get('user id') != user::guestId )
+			{
+				$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->h($model->session->get('user username')));
+			}
 
 			break;
 		case 'logout':
-			$view->notice = $model->t('You are now logged out.');
+			if ( $model->session->get('user id') == user::guestId )
+			{
+				$view->notice = $model->t('You are now logged out.');
+			}
 
 			break;
 	}

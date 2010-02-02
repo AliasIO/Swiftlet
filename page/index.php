@@ -64,7 +64,7 @@ if ( isset($model->GET_raw['permalink']) )
 	{
 		header('HTTP/1.0 404 Not Found'); 
 
-		$view->error = $model->t('The page you are looking for does not exist.')
+		$view->error = $model->t('The page you are looking for does not exist.');
 	}
 }
 

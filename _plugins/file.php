@@ -24,18 +24,18 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'files` (
-					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`node_id`   INT(10) UNSIGNED NOT NULL,
-					`title`     VARCHAR(255)     NOT NULL,
-					`extension` VARCHAR(255)     NULL,
-					`image`     INT(1)           NULL,
-					`file_hash` VARCHAR(40)      NOT NULL,
-					`mime_type` VARCHAR(255)     NOT NULL,
-					`width`     INT(10) UNSIGNED NOT NULL,
-					`height`    INT(10) UNSIGNED NOT NULL,
-					`size`      INT(10) UNSIGNED NOT NULL,
-					`date`      DATETIME         NOT NULL,
-					`date_edit` DATETIME         NOT NULL,
+					`id`        INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
+					`node_id`   INT(10)    UNSIGNED NOT NULL,
+					`title`     VARCHAR(255)        NOT NULL,
+					`extension` VARCHAR(255)            NULL,
+					`image`     TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+					`file_hash` VARCHAR(40)         NOT NULL,
+					`mime_type` VARCHAR(255)        NOT NULL,
+					`width`     INT(10)    UNSIGNED     NULL,
+					`height`    INT(10)    UNSIGNED     NULL,
+					`size`      INT(10)    UNSIGNED     NULL,
+					`date`      DATETIME            NOT NULL,
+					`date_edit` DATETIME            NOT NULL,
 					INDEX `node_id` (`node_id`),
 					INDEX `image`   (`image`),
 					PRIMARY KEY (`id`)
@@ -61,7 +61,7 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				DROP TABLE `' . $model->db->prefix . 'files`
-					;');
+				;');
 		}
 
 		if ( !empty($model->node->ready) )

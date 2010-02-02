@@ -27,7 +27,7 @@ switch ( $hook )
 					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`node_id`   INT(10) UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)     NOT NULL,
-					`body`      TEXT             NOT NULL,
+					`body`      TEXT                 NULL,
 					`lang`      VARCHAR(255)     NOT NULL,
 					`date`      DATETIME         NOT NULL,
 					`date_edit` DATETIME         NOT NULL,

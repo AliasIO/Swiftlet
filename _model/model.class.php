@@ -220,7 +220,7 @@ class model
 		}
 
 		/*
-		 * Check integrety of confirmed information
+		 * Check integrety of confirmed information (see $model->confirm())
 		 */
 		if ( isset($_POST['confirm']) && !empty($_POST['get_data']) && !empty($_GET) )
 		{
@@ -232,7 +232,7 @@ class model
 
 		/*
 		 * $_POST and $_GET values can't be trusted
-		 * If neccesary, access them through $model->POST_raw and $mode->GET_raw
+		 * If neccesary, access them through $model->POST_raw and $model->GET_raw
 		 */
 		$this->POST_raw = isset($_POST) ? $_POST : array();
 		$this->GET_raw  = isset($_GET)  ? $_GET  : array();
@@ -418,9 +418,12 @@ class model
 						}
 
 						#swiftlet_error div {
-							color: #300;
 							background: #FFC;
 							border: 1px solid #DD7;
+							border-radius: 3px;
+							-moz-border-radius: 3px;
+							-webkit-border-radius: 3px;
+							color: #300;
 							padding: 1em 2em;
 						}
 

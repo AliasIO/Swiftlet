@@ -25,14 +25,14 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'users` (
-					`id`                 INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`username`           VARCHAR(255)     NOT NULL,
-					`email`              VARCHAR(255)     NULL,
-					`owner`              INT(1)           NOT NULL,
-					`date`               DATETIME         NOT NULL,
-					`date_edit`          DATETIME         NOT NULL,
-					`date_login_attempt` DATETIME NOT     NULL,
-					`pass_hash`          VARCHAR(128)     NOT NULL,
+					`id`                 INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
+					`username`           VARCHAR(255)        NOT NULL,
+					`email`              VARCHAR(255)            NULL,
+					`owner`              TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+					`date`               DATETIME            NOT NULL,
+					`date_edit`          DATETIME            NOT NULL,
+					`date_login_attempt` DATETIME NOT            NULL,
+					`pass_hash`          VARCHAR(128)        NOT NULL,
 					UNIQUE `username` (`username`),
 					PRIMARY KEY (`id`)
 					)
@@ -137,12 +137,12 @@ switch ( $hook )
 		 * Creating a user account
 		 */
 		$post = array(
-			'username'         => 'Unit_Test',
-			'password'         => '123',
-			'password_confirm' => '123',
-			'owner'            => '0',
-			'form-submit'      => 'Submit',
-			'auth_token'       => $model->authToken
+			'username'             => 'Unit_Test',
+			'new_password'         => '123',
+			'new_password_confirm' => '123',
+			'owner'                => '0',
+			'form-submit'          => 'Submit',
+			'auth_token'           => $model->authToken
 			);
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?action=create', $post);
@@ -170,6 +170,7 @@ switch ( $hook )
 		{
 			$post = array(
 				'username'    => $user['username'],
+				'password'    => '123',
 				'owner'       => $user['owner'],
 				'email'       => 'unit@test.com',
 				'form-submit' => 'Submit',

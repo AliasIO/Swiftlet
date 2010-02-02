@@ -26,7 +26,7 @@ switch ( $hook )
 				CREATE TABLE `' . $model->db->prefix . 'sessions` (
 					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`hash`        VARCHAR(40)      NOT NULL,
-					`contents`    TEXT             NOT NULL,
+					`contents`    TEXT             NULL,
 					`date`        DATETIME         NOT NULL,
 					`date_expire` DATETIME         NOT NULL,
 					PRIMARY KEY (`id`),
