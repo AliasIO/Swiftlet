@@ -86,10 +86,15 @@ if ( $model->POST_valid['form-submit'] )
 				}
 				else
 				{
-					$view->error = $model->t('Incorrect username/password combination.');
+					$view->error = $model->t('Incorrect password, try again.');
 				}
 			}
 		}
+		else
+		{
+			$view->error = $model->t('Sorry, we have no record of that username.');
+		}
+
 	}
 }
 

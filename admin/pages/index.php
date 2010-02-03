@@ -35,13 +35,15 @@ if ( !$model->perm->check('admin page access') )
 
 $languages = !empty($model->lang->ready) ? $model->lang->languages : array('English US');
 
+sort($languages);
+
 if ( $model->POST_valid['form-submit'] )
 {
 	foreach ( $model->POST_valid['title'] as $language => $title )
 	{
 		if ( !$model->POST_valid['title'][$language] )
 		{
-			$model->form->errors['title'][$language] = $model->t('Please provide a title');
+			$model->form->errors['title_' . array_search($language, $languages)] = $model->t('Please provide a title');
 		}
 	}
 

@@ -84,6 +84,11 @@ class page
 				$contr->pageTitle = $d['title'];
 				$view->pageTitle  = $model->h($d['title']);
 			}
+			else
+			{
+				$contr->pageTitle = 'Page not found';
+				$view->pageTitle  = 'Page not found';
+			}
 		}
 	}
 

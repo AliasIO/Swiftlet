@@ -7,7 +7,7 @@
 
 if ( !isset($model) ) die('Direct access to this file is not allowed');
 
-/**
+/*
  * Form
  * @abstract
  */
@@ -108,5 +108,48 @@ class form
 
 			return FALSE;
 		}
+	}
+
+	/*
+	 * Highlight errors recursively
+	 * @param mixed $fields
+	 * @param string $parents
+	 */	
+	function highlight_errors($fields, $parents = FALSE)
+	{
+		$model = $this->model;
+		
+		if ( !$parents )
+		{
+			echo '
+				<script type="text/javascript">
+					<!-- /* <![CDATA[ */
+					$(function() {
+				';
+		}
+
+		foreach ( $fields as $k => $v )
+		{
+			if ( is_array($v) )
+			{
+				$this->highlight_errors($v, $parents ? '[' . $k . ']' : $k );
+			}
+			else
+			{
+				$fieldName = $parents ? $parents . '[' . $k . ']' : $k;
+
+				echo '$(\'#' . $model->h($fieldName) . '\').addClass(\'field-error\');';
+			}
+		}
+
+		if ( !$parents )
+		{
+			echo '
+					});
+					/* ]]> */ -->
+				</script>
+				';
+		}
+
 	}
 }

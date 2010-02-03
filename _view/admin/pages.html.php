@@ -36,19 +36,17 @@
 			<dt><label for="title_<?php echo $i ?>"><?php echo $model->t('Title') ?></label></dt>
 			<dd>
 				<input type="text" class="text" name="title[<?php echo h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$language] ?>"/>
-				<?php if ( isset($model->form->errors['title'][$language]) ): ?>
-				<span class="error"><?php echo $model->form->errors['title'][$language] ?></span>
+				
+				<?php if ( isset($model->form->errors['title_' . $i]) ): ?>
+				<span class="error"><?php echo $model->form->errors['title_' . $i] ?></span>
 				<?php endif ?>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="body_<?php echo $i ?>"><?php echo $model->t('Body') ?></label></dt>
+			<dt><label for="body<?php echo $i ?>"><?php echo $model->t('Body') ?></label></dt>
 		</dl>
 		<dl>
 			<textarea class="textarea large code ckeditor" name="body[<?php echo h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $model->POST_html_safe['body'][$language] ?></textarea>
-			<?php if ( isset($model->form->errors['body'][$language]) ): ?>
-			<span class="error"><?php echo $model->form->errors['body'][$language] ?></span>
-			<?php endif ?>
 		</dl>
 	</fieldset>
 	<?php endforeach ?>

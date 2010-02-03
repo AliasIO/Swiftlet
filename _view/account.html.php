@@ -24,7 +24,7 @@
 <p class="message notice"><?php echo $view->notice ?></p>
 <?php endif ?>
 
-<form id="formAccount" method="post" action="" autocomplete="off">
+<form id="formAccount" method="post" action="./<?php echo $view->id ? '?id=' . $view->id : '' ?>" autocomplete="off">
 	<fieldset>
 		<?php if ( $view->action == 'edit' ): ?>
 		<dl>
@@ -48,18 +48,6 @@
 				<?php endif ?>
 			</dd>
 		</dl>
-		<?php if ( $view->action == 'edit' && ( !$model->session->get('user is owner') || $model->session->get('user id') == $view->userId ) ): ?> 
-		<dl>
-			<dt><label for="password"><?php echo t('Password') ?></label></dt>
-			<dd>
-				<input type="password" class="password" name="password" id="password"/>
-				
-				<?php if ( isset($model->form->errors['password']) ): ?>
-				<span class="error"><?php echo $model->form->errors['password'] ?></span>
-				<?php endif ?>
-			</dd>
-		</dl>
-		<?php endif ?>
 		<dl>
 			<dt><label for="new_password"><?php echo $view->action == 'edit' ? t('New password') : t('Password') ?> (2x)</label></dt>
 			<dd>
@@ -144,6 +132,20 @@
 			</dd>
 		</dl>
 		<?php endforeach ?>
+	</fieldset>
+	<?php endif ?>
+	<?php if ( $view->action == 'edit' && ( !$model->session->get('user is owner') || $model->session->get('user id') == $view->userId ) ): ?> 
+	<fieldset>
+		<dl>
+			<dt><label for="password"><?php echo t('Password') ?></label></dt>
+			<dd>
+				<input type="password" class="password" name="password" id="password"/>
+				
+				<?php if ( isset($model->form->errors['password']) ): ?>
+				<span class="error"><?php echo $model->form->errors['password'] ?></span>
+				<?php endif ?>
+			</dd>
+		</dl>
 	</fieldset>
 	<?php endif ?>
 	<fieldset>

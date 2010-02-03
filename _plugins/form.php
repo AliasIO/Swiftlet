@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'       => 'form',
 			'version'    => '1.0.0',
 			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'hooks'      => array('init' => 1)
+			'hooks'      => array('footer' => 1, 'init' => 1)
 			);
 
 		break;	
@@ -24,4 +24,9 @@ switch ( $hook )
 		$model->form = new form($model);
 
 		break;
+	case 'footer':
+		if ( !empty($model->form->errors) )
+		{
+			$model->form->highlight_errors($model->form->errors);
+		}
 }

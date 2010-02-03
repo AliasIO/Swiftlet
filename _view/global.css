@@ -119,6 +119,11 @@ form {
 		color: #E00;
 	}
 
+	form .field-error {
+		background: #FEE;
+		border-color: #D77;
+	}
+
 fieldset {
 	background: var(form-background-color);
 	border-radius: 3px;

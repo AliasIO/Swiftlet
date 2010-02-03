@@ -95,7 +95,7 @@ if ( !isset($user) )
 	}
 }
 
-// Get preference values for user
+// Get user's preferences
 foreach ( $model->user->prefs as $pref )
 {
 	$user['pref-' . $pref['id']] = '';
@@ -117,14 +117,12 @@ if ( $user['id'] )
 if ( $model->POST_valid['form-submit'] )
 {
 	if ( $action == 'edit' )
-	{
-		if ( !$model->session->get('user is owner') || $model->session->get('user id') == $id )
+	{		
+		if ( !$model->session->get('user is owner') || !$id || $model->session->get('user id') == $id )
 		{
 			if ( !$model->user->validate_password($model->session->get('user username'), $model->POST_raw['password']) )
 			{
-				$model->form->errors['password'] = $model->t('Incorrect password');
-
-				echo $model->session->get('user username') . ' : ' . $model->POST_raw['password'];
+				$model->form->errors['password'] = $model->t('Incorrect password, try again');
 			}
 		}
 	}

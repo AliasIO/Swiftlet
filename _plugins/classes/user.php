@@ -170,7 +170,7 @@ class user
 			$passHash = $salt . $passHash;
 
 			if ( $passHash == $r['pass_hash'] )
-			{	
+			{
 				$passHash = $this->make_pass_hash($username, $password); 
 
 				$model->db->sql('
