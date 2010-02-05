@@ -20,6 +20,7 @@ $model->form->validate(array(
 	'delete'      => 'bool',
 	'title'       => 'string',
 	'body'        => '/.*/',
+	'published'   => 'bool',
 	'parent'      => 'int'
 	));
 
@@ -99,6 +100,7 @@ if ( $model->POST_valid['form-submit'] )
 								UPDATE `' . $model->db->prefix . 'pages` SET
 									`title`     = "' . $model->POST_db_safe['title'][$language] . '",
 									`body`      = "' . $model->POST_db_safe['body'][$language] . '",
+									`published` = ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
 									`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 								WHERE
 									`node_id` = ' . $id . ' AND
@@ -113,6 +115,7 @@ if ( $model->POST_valid['form-submit'] )
 									`node_id`,
 									`title`,
 									`body`,
+									`published`,
 									`lang`,
 									`date`,
 									`date_edit`
@@ -121,6 +124,7 @@ if ( $model->POST_valid['form-submit'] )
 									' . $id . ',
 									"' . $model->POST_db_safe['title'][$language] . '",
 									"' . $model->POST_db_safe['body'][$language] . '",
+									' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
 									"' . $model->db->escape($language) . '",
 									"' . gmdate('Y-m-d H:i:s') . '",
 									"' . gmdate('Y-m-d H:i:s') . '"
@@ -154,6 +158,7 @@ if ( $model->POST_valid['form-submit'] )
 									`node_id`,
 									`title`,
 									`body`,
+									`published`,
 									`lang`,
 									`date`,
 									`date_edit`
@@ -162,6 +167,7 @@ if ( $model->POST_valid['form-submit'] )
 									' . $node_id . ',
 									"' . $model->POST_db_safe['title'][$language] . '",
 									"' . $model->POST_db_safe['body'][$language] . '",
+									' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
 									"' . $model->db->escape($language) . '",
 									"' . gmdate('Y-m-d H:i:s') . '",
 									"' . gmdate('Y-m-d H:i:s') . '"
@@ -212,6 +218,7 @@ switch ( $action )
 					SELECT
 						p.`title`,
 						p.`body`,
+						p.`published`,
 						p.`lang`,
 						n.`left_id`,
 						n.`right_id`,
@@ -235,7 +242,8 @@ switch ( $action )
 						$model->POST_html_safe['body'][$d['lang']]  = $d['body'];
 					}
 
-					$model->POST_html_safe['parent'] = $node['parents'][count($node['parents']) - 1]['id'];
+					$model->POST_html_safe['parent']    = $node['parents'][count($node['parents']) - 1]['id'];
+					$model->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
 				}
 			}
 		}
@@ -269,9 +277,11 @@ switch ( $action )
 					}
 				}
 			}
-
-			break;
 		}
+
+		break;
+	default:
+		$model->POST_html_safe['published'] = 1;
 }
 
 foreach ( $languages as $language )
@@ -292,11 +302,8 @@ $listParents = array();
 
 $model->db->sql('
 	SELECT
-		`id`,
-		`left_id`,
-		`right_id`,
-		`title`
-	FROM      `' . $model->db->prefix . 'nodes`
+		*
+	FROM `' . $model->db->prefix . 'nodes` AS n
 	WHERE
 		`permalink` = "pages"
 	LIMIT 1
@@ -312,6 +319,7 @@ if ( $r = $model->db->result )
 			'left_id'   => $nodePages['left_id'],
 			'right_id'  => $nodePages['right_id'],
 			'title'     => $nodePages['title'],
+			'date'      => $nodePages['date'],
 			'permalink' => 'pages',
 			'level'     => 0
 			)
@@ -344,8 +352,11 @@ if ( $r = $model->db->result )
 	}
 }
 
-$view->nodesParents = $listParents;
-$view->nodes        = $list;
+$pagination = $model->paginate('pages', count($list), 10);
+
+$view->nodesParents    = $listParents;
+$view->nodes           = array_splice($list, $pagination['from'], 10);
+$view->nodesPagination = $pagination;
 
 if ( !isset($view->permalink) )
 {

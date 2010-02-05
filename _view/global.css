@@ -195,7 +195,7 @@ textarea.code {
 	font-family: monospace;
 }
 
-button, button:focus, .button, .button:focus {
+button, button:focus, input.button, input.button:focus {
 	background: var(text-color);
 	border-color: var(text-color);
 	color: var(content-background-color);
@@ -203,8 +203,24 @@ button, button:focus, .button, .button:focus {
 	padding: .3em 2em .4em 2em;
 }
 
-button:hover, .button:hover {
+button:hover, input.button:hover {
 	background: var(link-color);
+	cursor: pointer;
+}
+
+a:link.button, a:hover.button, a:active.button, a:visited.button {
+	background: var(form-background-color);
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border: 1px solid var(form-border-color);
+	display: inline-block;
+	padding: .1em .5em .3em .5em;
+	text-decoration: none;
+}
+
+a:hover.button {
+	background-color: var(input-focus-background-color);
 }
 
 /* Table elements in forms */

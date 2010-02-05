@@ -244,9 +244,12 @@ if ( $nodes )
 {
 	$nodeIds = array();
 	
-	foreach ( $nodes['children'] as $d )
+	if ( !empty($nodes['children']) )
 	{
-		$nodeIds[] = $d['id'];
+		foreach ( $nodes['children'] as $d )
+		{
+			$nodeIds[] = $d['id'];
+		}
 	}
 	
 	if ( $nodeIds )

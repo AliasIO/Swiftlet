@@ -54,7 +54,7 @@
 </script><?php else: ?>
 <?php if ( $model->perm->check('admin perm role create') ): ?>
 <p>
-	<a href="./?action=create"><?php echo $model->t('Create a new role') ?></a>
+	<a class="button" href="./?action=create"><?php echo $model->t('Create a new role') ?></a>
 </p>
 <?php endif ?>
 <?php endif ?>
@@ -70,10 +70,10 @@
 		<?php if ( $model->perm->check('admin perm edit') || $model->perm->check('admin perm delete') ): ?>
 		<p>
 			<?php if ( $model->perm->check('admin perm edit') ): ?>
-			<a href="./?id=<?php echo $role['id'] ?>&action=edit"  ><?php echo $model->t('Edit this role') ?></a> |
+			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=edit"  ><?php echo $model->t('Edit this role') ?></a>
 			<?php endif ?>
 			<?php if ( $model->perm->check('admin perm delete') ): ?>
-			<a href="./?id=<?php echo $role['id'] ?>&action=delete"><?php echo $model->t('Delete this role') ?></a>
+			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=delete"><?php echo $model->t('Delete this role') ?></a>
 			<?php endif ?>
 		</p>
 		<?php endif ?>
@@ -117,14 +117,14 @@
 		<h5><?php echo t('Users') ?></h5>
 
 		<p>
-			<a href="./?id=<?php echo $role['id'] ?>&action=add"><?php echo $model->t('Add a user') ?></a>
+			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=add"><?php echo $model->t('Add a user') ?></a>
 		</p>
 
 		<?php if ( $role['users'] ): ?>
 		<ul>
 			<?php foreach ( $role['users'] as $user ): ?>
 			<li>
-				[ <a href=".?id=<?php echo $role['id'] ?>&user_id=<?php echo $user['id'] ?>&action=remove"><?php echo t('Remove') ?></a> ]
+				<a class="button" href=".?id=<?php echo $role['id'] ?>&user_id=<?php echo $user['id'] ?>&action=remove"><?php echo t('Remove') ?></a>
 				<?php echo $user['username'] ?>
 			</li>
 			<?php endforeach ?>

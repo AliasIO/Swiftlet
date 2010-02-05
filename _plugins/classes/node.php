@@ -306,25 +306,16 @@ class node
 
 		$model->db->sql('
 			SELECT
-				`left_id`,
-				`right_id`,
-				`title`,
-				`permalink`
+				*
 			FROM `' . $model->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $id . '
 			LIMIT 1
 			;');
 
-		if ( $model->db->result )
+		if ( isset($model->db->result[0]) )
 		{
-			$node = array(
-				'id'        => $id,
-				'left_id'   => $model->db->result[0]['left_id'],
-				'right_id'  => $model->db->result[0]['right_id'],
-				'title'     => $model->db->result[0]['title'],
-				'permalink' => $model->db->result[0]['permalink']
-				);
+			$node = $model->db->result[0];
 		}
 
 		return $node;
@@ -347,11 +338,7 @@ class node
 			
 			$model->db->sql('
 				SELECT
-					`id`,
-					`left_id`,
-					`right_id`,
-					`title`,
-					`permalink`
+					*
 				FROM `' . $model->db->prefix . 'nodes`
 				WHERE
 					`left_id`  < ' . ( int ) $node['left_id']  . ' AND
@@ -361,13 +348,10 @@ class node
 
 			if ( $model->db->result )
 			{
-				foreach ( $model->db->result as $d ) $node['parents'][] = array(
-					'id'        => $d['id'],
-					'left_id'   => $d['left_id'],
-					'right_id'  => $d['right_id'],
-					'title'     => $d['title'],
-					'permalink' => $d['permalink']
-					);
+				foreach ( $model->db->result as $d )
+				{
+					$node['parents'][] = $d;
+				}
 			}
 		}
 
@@ -389,11 +373,7 @@ class node
 
 			$model->db->sql('
 				SELECT
-					`id`,
-					`left_id`,
-					`right_id`,
-					`title`,
-					`permalink`
+					*
 				FROM `' . $model->db->prefix . 'nodes`
 				WHERE
 					`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
@@ -412,15 +392,7 @@ class node
 
 				foreach ( $model->db->result as $d )
 				{
-					$nodes[] = array(
-						'id'        => $d['id'],
-						'left_id'   => $d['left_id'],
-						'right_id'  => $d['right_id'],
-						'title'     => $d['title'],
-						'permalink' => $d['permalink'],
-						'level'     => 0,
-						'children'  => array()
-						);
+					$nodes[] = $d;
 				}
 				
 				$nodes = $this->tree($nodes);
@@ -474,14 +446,7 @@ class node
 		{
 			foreach ( $nodes as $node )
 			{
-				$list[] = array(
-					'id'        => $node['id'],
-					'left_id'   => $node['left_id'],
-					'right_id'  => $node['right_id'],
-					'title'     => $node['title'],
-					'permalink' => $node['permalink'],
-					'level'     => $node['level']
-					);
+				$list[] = $node;
 
 				if ( !empty($node['children']) )
 				{

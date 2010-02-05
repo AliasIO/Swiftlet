@@ -5,9 +5,9 @@
 <h2><?php echo $model->t('Edit account') ?></h2>
 
 <p>
-	<a href="./?action=create"><?php echo $model->t('Create a new account') ?></a> 
+	<a class="button" href="./?action=create"><?php echo $model->t('Create a new account') ?></a> 
 	<?php if ( $model->session->get('user id') != $view->userId ): ?>
-	<a href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $model->t('Delete this account') ?></a>
+	<a class="button" href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $model->t('Delete this account') ?></a>
 	<?php endif ?>
 </p>
 

@@ -24,14 +24,16 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'pages` (
-					`id`        INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`node_id`   INT(10) UNSIGNED NOT NULL,
-					`title`     VARCHAR(255)     NOT NULL,
-					`body`      TEXT                 NULL,
-					`lang`      VARCHAR(255)     NOT NULL,
-					`date`      DATETIME         NOT NULL,
-					`date_edit` DATETIME         NOT NULL,
-					INDEX (`node_id`),
+					`id`        INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
+					`node_id`   INT(10)    UNSIGNED NOT NULL,
+					`title`     VARCHAR(255)        NOT NULL,
+					`body`      TEXT                    NULL,
+					`published` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+					`lang`      VARCHAR(255)        NOT NULL,
+					`date`      DATETIME            NOT NULL,
+					`date_edit` DATETIME            NOT NULL,
+					INDEX `node_id`   (`node_id`),
+					INDEX `published` (`published`),
 					PRIMARY KEY (`id`)
 					)
 				;');

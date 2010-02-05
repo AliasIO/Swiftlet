@@ -50,7 +50,7 @@ class page
 	 */
 	function rewrite($url)
 	{
-		$url = preg_replace('/page\/\?permalink=(.+)?/', 'p/$1', $url);
+		$url = preg_replace('/page\/\?page=(.+)?/', 'p/$1', $url);
 
 		return $url;
 	}
@@ -64,18 +64,18 @@ class page
 		$contr = $this->contr;
 		$view  = $this->model->view;
 
-		if ( isset($model->GET_raw['permalink']) )
+		if ( isset($model->GET_raw['page']) )
 		{
 			$model->db->sql('
 				SELECT
 					p.`id`,
 					p.`node_id`,
-					p.`body`,
 					n.`title`
 				FROM      `' . $model->db->prefix . 'pages` AS p
 				LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 				WHERE
-					n.`permalink` = "' . $model->GET_db_safe['permalink'] . '"
+					n.`permalink` = "' . $model->GET_db_safe['page'] . '" AND
+					p.`published` = 1
 				LIMIT 1
 				;');
 

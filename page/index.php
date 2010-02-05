@@ -14,7 +14,7 @@ require($contrSetup['rootPath'] . '_model/init.php');
 
 $model->check_dependencies(array('db', 'node', 'page'));
 
-if ( isset($model->GET_raw['permalink']) )
+if ( isset($model->GET_raw['page']) )
 {
 	$language = !empty($model->lang->ready) ? $model->lang->language : array('English US');
 
@@ -27,7 +27,8 @@ if ( isset($model->GET_raw['permalink']) )
 		FROM      `' . $model->db->prefix . 'pages` AS p
 		LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 		WHERE
-			n.`permalink` = "' . $model->GET_db_safe['permalink'] . '" AND
+			n.`permalink` = "' . $model->GET_db_safe['page'] . '" AND
+			p.`published` = 1 AND
 			p.`lang`      = "' . $model->db->escape($language) . '"
 		LIMIT 1
 		;');

@@ -267,13 +267,90 @@ class model
 
 		$this->hook('input_sanitize');
 	}
+
+	/**
+	 * Create pagination
+	 * @param string $id
+	 * @param int $rows
+	 * @param int $maxRows
+	 * @param int $pageNum
+	 * @return array
+	 */
+	function paginate($id, $rows, $maxRows)
+	{
+		$model = $this;
+
+		$pageNum = isset($model->GET_raw['p_' . $id]) ? $model->GET_raw['p_' . $id] : 1;
+
+		$get = preg_replace('/(^|&)' . preg_quote('p_' . $id, '/') . '=[0-9]*/', '', $_SERVER['QUERY_STRING']);
+
+		$url = './' . ( $get ? '?' . $get . '&' : '?' ) . 'p_' . $id . '=';
+
+		$pages = ceil($rows / $maxRows);
+
+		$pagination = '';
+
+		if ( $pageNum > 1 )
+		{
+			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . t('previous') . '</a> ';
+		}
+		
+		for ( $i = 1; $i <= 3; $i ++ )
+		{
+			if ( $i > $pages )
+			{
+				break;
+			}
+
+			$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
+		}
+
+
+		if ( $pageNum > 7 )
+		{
+			$pagination .= '&hellip ';
+		}
+
+		for ( $i = $pageNum - 3; $i <= $pageNum + 3; $i ++ )
+		{
+			if ( $i > 3 && $i < $pages - 2 )
+			{
+				$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
+			}
+		}
+
+		if ( $pageNum < $pages - 6 )
+		{
+			$pagination .= '&hellip ';
+		}
+
+		if ( $pages > 3 )
+		{
+			for ( $i = $pages - 2; $i <= $pages; $i ++)
+			{
+				if ( $i > 3 )
+				{
+					$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
+				}
+			}
+		}
+
+		if ( $pageNum < $pages )
+		{
+			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . t('next') . '</a> ';
+		}
+
+		$pagination = t('Go to page') . ': ' . $pagination;
+
+		return array('from' => ( $pageNum - 1 ) * $maxRows, 'to' => ( $pageNum * $maxRows < $rows ? ( $pageNum * $maxRows) : $rows ), 'html' => $pagination);
+	}
 	
 	/**
 	 * Make a string HTML safe
 	 * @param string $v
 	 * @return string
 	 */
-	function h($v)
+	static function h($v)
 	{
 		return htmlentities($v, ENT_QUOTES, 'UTF-8');
 	}

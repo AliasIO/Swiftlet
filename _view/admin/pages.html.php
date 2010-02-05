@@ -13,12 +13,12 @@
 
 <p>
 	<?php if ( $model->perm->check('admin page create') ): ?>
-	<a href="./"><?php echo $model->t('Create a new page') ?></a> |
+	<a class="button" href="./"><?php echo $model->t('Create a new page') ?></a>
 	<?php endif ?>
-	<a href="<?php echo $view->rootPath . $model->rewrite_url('page/?permalink=' . $view->permalink) ?>"><?php echo $model->t('View this page') ?></a>
+	<a class="button" href="<?php echo $view->rootPath . $model->rewrite_url('page/?page=' . $view->permalink) ?>"><?php echo $model->t('View this page') ?></a>
 	<?php if ( $model->perm->check('admin page delete') ): ?>
-	| <a href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
-<?php endif ?>
+	<a class="button" href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
+	<?php endif ?>
 </p>
 <?php elseif ( $model->perm->check('admin page create') ): ?>
 <h2><?php echo $model->t('New page') ?></h2>
@@ -52,6 +52,12 @@
 	<?php endforeach ?>
 	<fieldset>
 		<dl>
+			<dt><label for="published"><?php echo $model->t('Published') ?></label></dt>
+			<dd>
+				<input type="checkbox" class="checkbox" name="published" id="published" value="1"<?php echo $model->POST_html_safe['published'] ? ' checked="checked"' : '' ?>/>
+			</dd>
+		</dl>
+		<dl>
 			<dt><label for="parent"><?php echo $model->t('Parent page') ?></label></dt>
 			<dd>
 				<select class="select" name="parent" id="parent">
@@ -75,34 +81,55 @@
 </form>
 <?php endif ?>
 
-<?php if ( $model->perm->check('admin page edit') ): ?>
-<h2><?php echo $model->t('Select a page') ?></h2>
+<a name="pages"></a>
 
-<form id="formPages" method="get" action="./">
-	<fieldset>
-		<dl>
-			<dt><label for="id"><?php echo $model->t('Page') ?></label></dt>
-			<dd>
-				<select name="id" id="id" onchange="if ( this.value ) document.getElementById('formPages').submit();">
-					<option value=""><?php echo $model->t('Select&hellip') ?></option>
-					<?php foreach ( $view->nodes as $node ): ?>
-					<option value="<?php echo $node['id'] ?>"<?php echo $view->id == $node['id'] ? ' selected="selected"' : '' ?>><?php echo str_repeat('&nbsp;', $node['level'] * 3) . $node['title'] ?></option>
-					<?php endforeach ?>
-				</select>
-			</dd>
-		</dl>
-	</fieldset>
-	<fieldset>
-		<dl>
-			<dt><br/></dt>
-			<dd>
-				<input type="hidden" name="action" id="action" value="edit"/>
+<h2><?php echo $model->t('All pages') ?></h2>
 
-				<input type="submit" class="button" id="form-submit2" value="<?php echo $model->t('Ok') ?>"/>
-			</dd>
-		</dl>
-	</fieldset>
-</form>
+<?php if ( $view->nodes ): ?>
+<p class="pagination">
+	<?php echo $view->nodesPagination['html'] ?>
+</p>
+
+<table>
+	<thead>
+		<tr>
+			<th><?php echo t('Title') ?></th>
+			<th><?php echo t('Created on') ?></th>
+			<th><?php echo t('Action') ?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ( $view->nodes as $node ): ?>
+		<tr>
+			<td>
+				<?php echo str_repeat('&nbsp;', $node['level'] * 4) ?>
+				<a href="<?php echo $model->rewrite_url($view->rootPath . 'page/?page=' . $node['permalink']) ?>">
+					<?php echo $node['title'] ?>
+				</a>
+			</td>
+			<td>
+				<?php echo $model->format_date($node['date'], 'date') ?>
+			</td>
+			<td>
+				<?php if ( $model->perm->check('admin page edit') ): ?>
+				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=edit"><?php echo t('Edit') ?></a>
+				<?php endif ?>
+				<?php if ( $model->perm->check('admin page delete') ): ?>
+				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=delete"><?php echo t('Delete') ?></a>
+				<?php endif ?>
+			</td>
+		</tr>
+		<?php endforeach ?>
+	</tbody>
+</table>
+
+<p class="pagination">
+	<?php echo $view->nodesPagination['html'] ?>
+</p>
+<?php else: ?>
+<p>
+	<em>No pages</em>
+</p>
 <?php endif ?>
 
 <script type="text/javascript">

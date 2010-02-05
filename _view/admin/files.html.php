@@ -2,7 +2,7 @@
 
 <?php if ( $view->action != 'upload' ): ?>
 <p>
-	<a href="?action=upload"><?php echo t('Upload files') ?></a>
+	<a class="button" href="?action=upload"><?php echo t('Upload files') ?></a>
 </p>
 <?php endif ?>
 
@@ -68,7 +68,7 @@
 </script>
 <?php endif ?>
 
-<h2>Files</h2>
+<h2><?php echo t('All files') ?></h2>
 
 <?php if ( $view->files ): ?>
 <table>
@@ -109,7 +109,7 @@
 			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>
 			<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 			<td>
-				<a href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
 			</td>
 			</td>
 		</tr>

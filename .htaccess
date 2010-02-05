@@ -9,7 +9,7 @@ Options All -Indexes
 RewriteEngine on
 
 # Pages
-RewriteRule ^p/([a-z0-9_-]+) page/index.php?permalink=$1 [NC,QSA]
+RewriteRule ^p/([a-z0-9_-]+) page/index.php?page=$1 [NC,QSA]
 
 # Files
 RewriteRule ^file/((thumb/)?([a-z0-9_-]+)) file/index.php?name=$3&thumb=$2 [NC,QSA]
