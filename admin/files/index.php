@@ -277,9 +277,13 @@ if ( $nodes )
 	}
 }
 
+$pagination = $model->paginate('files', count($files), 10);
+
+$view->files           = array_splice($files, $pagination['from'], 10);
+$view->filesPagination = $pagination;
+
 $view->id     = $id;
 $view->action = $action;
-$view->files  = $files;
 
 $view->load('admin/files.html.php');
 

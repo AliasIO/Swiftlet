@@ -2,7 +2,7 @@
 
 <?php if ( $view->action != 'upload' ): ?>
 <p>
-	<a class="button" href="?action=upload"><?php echo t('Upload files') ?></a>
+	<a class="button" href="?action=upload">&#10010; <?php echo t('Upload files') ?></a>
 </p>
 <?php endif ?>
 
@@ -68,9 +68,16 @@
 </script>
 <?php endif ?>
 
+<a name="files"></a>
+
 <h2><?php echo t('All files') ?></h2>
 
 <?php if ( $view->files ): ?>
+
+<p>
+	<?php echo $view->filesPagination['html'] ?>
+</p>
+
 <table>
 	<thead>
 		<tr>
@@ -109,13 +116,17 @@
 			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>
 			<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 			<td>
-				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete">&#10008; <?php echo t('Delete') ?></a>
 			</td>
 			</td>
 		</tr>
 		<?php endforeach ?>
 	</tbody>
 </table>
+
+<p>
+	<?php echo $view->filesPagination['html'] ?>
+</p>
 <?php else: ?>
 <p>
 	<em><?php echo t('No files') ?></em>
@@ -123,12 +134,14 @@
 <?php endif ?>
 
 <script type="text/javascript">
-	<!-- /* <![CDATA[ */
+	<!-- /* <![CDATA[ */	
 	$(function() {
-		$('body').css({
-			height:    '100%',
-			overflowY: 'auto'
-			});
+		if ( typeof(window.opener.CKEDITOR) != 'undefined' ) {
+			$('body').css({
+				height:    '100%',
+				overflowY: 'auto'
+				});
+		}
 	});
 	/* ]]> */ -->
 </script>
