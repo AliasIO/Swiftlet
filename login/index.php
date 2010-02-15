@@ -98,7 +98,7 @@ if ( $model->POST_valid['form-submit'] )
 	}
 }
 
-if ( isset($model->GET_raw['ref']) )
+if ( isset($model->GET_raw['ref']) && empty($view->error) )
 {
 	$view->notice = $model->t('Please login with an authenticated account.');
 }

@@ -35,9 +35,9 @@ if ( isset($model->GET_raw['page']) )
 
 	if ( isset($model->db->result[0]) && $d = $model->db->result[0] )
 	{
-		$view->nodeId = $d['node_id'];
-		$view->title  = $d['title'];
-		$view->body   = $d['body'];
+		$view->pageTitle = $d['title'];
+		$view->nodeId    = $d['node_id'];
+		$view->body      = $d['body'];
 
 		/*
 		 * Prefix relative links with the path to the root
@@ -63,9 +63,10 @@ if ( isset($model->GET_raw['page']) )
 	}
 	else
 	{
-		header('HTTP/1.0 404 Not Found'); 
+		header('HTTP/1.0 404 Not Found');
 
-		$view->error = $model->t('The page you are looking for does not exist.');
+		$view->pageTitle = $model->t('Page not found');
+		$view->error     = $model->t('The page you are looking for does not exist.');
 	}
 }
 

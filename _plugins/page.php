@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('admin' => 1, 'header' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
+			'hooks'        => array('admin' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
 			);
 
 		break;
@@ -106,13 +106,6 @@ switch ( $hook )
 		if ( $model->page->ready && !empty($params['url']) )
 		{
 			$params['url'] = $model->page->rewrite($params['url']);
-		}
-
-		break;
-	case 'header':
-		if ( !empty($model->page->ready) )
-		{
-			$model->page->set_page_title();
 		}
 
 		break;

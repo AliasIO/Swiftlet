@@ -47,7 +47,7 @@ class session
 
 			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-			$this->hash = sha1($model->userIp . $userAgent . $_SERVER['SERVER_ADDR'] . $this->contr->absPath);
+			$this->hash = sha1($model->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->contr->absPath);
 
 			/**
 			 * Delete expired sessions

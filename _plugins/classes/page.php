@@ -56,43 +56,6 @@ class page
 	}
 
 	/**
-	 * Set the page title
-	 */
-	function set_page_title()
-	{
-		$model = $this->model;
-		$contr = $this->contr;
-		$view  = $this->model->view;
-
-		if ( isset($model->GET_raw['page']) )
-		{
-			$model->db->sql('
-				SELECT
-					p.`id`,
-					p.`node_id`,
-					n.`title`
-				FROM      `' . $model->db->prefix . 'pages` AS p
-				LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
-				WHERE
-					n.`permalink` = "' . $model->GET_db_safe['page'] . '" AND
-					p.`published` = 1
-				LIMIT 1
-				;');
-
-			if ( $model->db->result && $d = $model->db->result[0] )
-			{
-				$contr->pageTitle = $d['title'];
-				$view->pageTitle  = $model->h($d['title']);
-			}
-			else
-			{
-				$contr->pageTitle = 'Page not found';
-				$view->pageTitle  = 'Page not found';
-			}
-		}
-	}
-
-	/**
 	 * Prefix relative URLs with path to root
 	 * @param string $v
 	 */

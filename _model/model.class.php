@@ -292,7 +292,7 @@ class model
 
 		if ( $pageNum > 1 )
 		{
-			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . t('previous') . '</a> ';
+			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . $model->t('previous') . '</a> ';
 		}
 		
 		for ( $i = 1; $i <= 3; $i ++ )
@@ -337,10 +337,10 @@ class model
 
 		if ( $pageNum < $pages )
 		{
-			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . t('next') . '</a> ';
+			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . $model->t('next') . '</a> ';
 		}
 
-		$pagination = t('Go to page') . ': ' . $pagination;
+		$pagination = $model->t('Go to page') . ': ' . $pagination;
 
 		return array('from' => ( $pageNum - 1 ) * $maxRows, 'to' => ( $pageNum * $maxRows < $rows ? ( $pageNum * $maxRows) : $rows ), 'html' => $pagination);
 	}
@@ -451,11 +451,14 @@ class model
 	{
 		$model = $this;
 		$contr = $this->contr;
+		$view  = $this->view;
 		
 		if ( empty($contr->standAlone) )
 		{
 			$model->hook('footer');
 		}
+
+		$view->output();
 
 		$model->debugOutput['execution time']['all'] = $model->timer_end($model->timerStart);
 		$model->debugOutput['peak memory usage']     = round(memory_get_peak_usage() / 1024 / 1024, 3) . ' MB';

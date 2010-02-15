@@ -29,7 +29,9 @@ class view
 
 	private
 		$model,
-		$contr
+		$contr,
+
+		$files = array()
 		;
 
 	/**
@@ -70,48 +72,53 @@ class view
 	 */
 	function load($file)
 	{
+		$this->files[] = $file;
+	}
+
+	/*
+	 * Output loaded View files
+	 */
+	function output()
+	{
 		$model = $this->model;
 		$contr = $this->contr;
 		$view  = $this;
 
-		if ( !function_exists('h') )
+		/**
+		 * Shorthand for $model->h()
+		 * @param string $v
+		 * @return string
+		 */
+		function h($v)
 		{
-			/**
-			 * Shorthand for $model->h()
-			 * @param string $v
-			 * @return string
-			 */
-			function h($v)
+			global $model;
+
+			return $model->h($v);
+		}
+
+		/**
+		 * Shorthand for $model->t()
+		 * @param string $v
+		 * @param mixed $args
+		 * @return string
+		 */
+		function t($v, $args = '')
+		{
+			global $model;
+
+			return $model->t($v, $args);
+		}
+
+		foreach ( $this->files as $file )
+		{
+			if ( is_file($contr->viewPath . $file) )
 			{
-				global $model;
-
-				return $model->h($v);
+				require($contr->viewPath . $file);
 			}
-		}
-
-		if ( !function_exists('t') )
-		{
-			/**
-			 * Shorthand for $model->t()
-			 * @param string $v
-			 * @param mixed $args
-			 * @return string
-			 */
-			function t($v, $args = '')
+			else
 			{
-				global $model;
-
-				return $model->t($v, $args);
+				$model->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`.');
 			}
-		}
-
-		if ( is_file($contr->viewPath . $file) )
-		{
-			require($contr->viewPath . $file);
-		}
-		else
-		{
-			$model->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`.');
 		}
 	}
 }
