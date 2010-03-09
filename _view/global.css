@@ -178,13 +178,30 @@ input, textarea, select, button {
 	padding: .2em;
 }
 
+input, textarea, select {
+	width: 20em;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	background: none;
+	border: none;
+	padding: 0;
+	width: auto;
+}
+
+input, textarea, select, button {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background: var(input-background-color);
+	border: 1px solid var(input-border-color);
+	margin-right: .5em;
+	padding: .2em;
+}
+
 input:focus, textarea:focus, select:focus {
 	background: var(input-focus-background-color);
 	border-color: var(text-color);
-}
-
-input.text, input.password, textarea, select {
-	width: 20em;
 }
 
 textarea.large {
@@ -196,15 +213,16 @@ textarea.code {
 	font-family: monospace;
 }
 
-button, button:focus, input.button, input.button:focus {
+button, button:focus, input[type="submit"], input[type="submit"]:focus {
 	background: var(text-color);
 	border-color: var(text-color);
 	color: var(content-background-color);
 	font-weight: bold;
 	padding: .3em 2em .4em 2em;
+	width: auto;
 }
 
-button:hover, input.button:hover {
+button:hover, input[type="submit"]:hover {
 	background: var(link-color);
 	cursor: pointer;
 }

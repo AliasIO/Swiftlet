@@ -38,7 +38,7 @@
 			<dt><label for="username"><?php echo t('Username') ?></label></dt>
 			<dd>
 				<?php if ( $model->session->get('user is owner') ): ?>
-				<input type="text" class="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
+				<input type="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
 				<?php else: ?>
 				<?php echo $view->userUsername ?>
 				<?php endif ?>
@@ -51,7 +51,7 @@
 		<dl>
 			<dt><label for="new_password"><?php echo $view->action == 'edit' ? t('New password') : t('Password') ?> (2x)</label></dt>
 			<dd>
-				<input type="password" class="password" name="new_password" id="new_password"/>
+				<input type="password" name="new_password" id="new_password"/>
 				
 				<?php if ( isset($model->form->errors['new_password']) ): ?>
 				<span class="error"><?php echo $model->form->errors['new_password'] ?></span>
@@ -61,7 +61,7 @@
 		<dl>
 			<dt><br/></dt>
 			<dd>
-				<input type="password" class="password" name="new_password_confirm" id="new_password_confirm"/>
+				<input type="password" name="new_password_confirm" id="new_password_confirm"/>
 				
 				<?php if ( isset($model->form->errors['new_password_repeat']) ): ?>
 				<span class="error"><?php echo $model->form->errors['new_password_repeat'] ?></span>
@@ -71,7 +71,7 @@
 		<dl>
 			<dt><label for="email"><?php echo t('E-mail address') ?></label></dt>
 			<dd>
-				<input type="text" class="text" name="email" id="email" value="<?php echo $model->POST_html_safe['email'] ?>"/>
+				<input type="text" name="email" id="email" value="<?php echo $model->POST_html_safe['email'] ?>"/>
 				
 				<?php if ( isset($model->form->errors['email']) ): ?>
 				<span class="error"><?php echo t('Invalid e-mail address') ?></span>
@@ -83,7 +83,7 @@
 			<dt><label for="auth"><?php echo t('Owner privileges') ?></label></dt>
 			<dd>
 				<?php if ( $model->session->get('user id') != $view->userId ): ?>
-				<input type="checkbox" class="checkbox" name="owner" value="1" <?php echo $model->POST_html_safe['owner'] ? 'checked="checked"' : '' ?>/>
+				<input type="checkbox" name="owner" value="1" <?php echo $model->POST_html_safe['owner'] ? 'checked="checked"' : '' ?>/>
 				<?php else: ?>
 				<?php echo t('Yes') ?>
 				<?php endif ?>
@@ -113,13 +113,13 @@
 						break;
 					case 'text':
 						?>
-						<input type="text" class="text" name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>" value="<?php echo $model->POST_html_safe['pref-' . $pref['id']] ?>"/>
+						<input type="text" name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>" value="<?php echo $model->POST_html_safe['pref-' . $pref['id']] ?>"/>
 						<?php
 
 						break;
 					case 'checkbox':
 						?>
-						<input type="checkbox" class="checkbox" name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>" value="1" <?php echo $model->POST_html_safe['pref-' . $pref['id']] ? 'checked="checked"' : '' ?>"/>
+						<input type="checkbox" name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>" value="1" <?php echo $model->POST_html_safe['pref-' . $pref['id']] ? 'checked="checked"' : '' ?>"/>
 						<?php
 
 						break;
@@ -139,7 +139,7 @@
 		<dl>
 			<dt><label for="password"><?php echo t('Password') ?></label></dt>
 			<dd>
-				<input type="password" class="password" name="password" id="password"/>
+				<input type="password" name="password" id="password"/>
 				
 				<?php if ( isset($model->form->errors['password']) ): ?>
 				<span class="error"><?php echo $model->form->errors['password'] ?></span>
@@ -154,7 +154,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Save settings') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Save settings') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -181,7 +181,7 @@
 		<dl>
 			<dt><br/></dt>
 			<dd>
-				<input type="submit" class="button" id="form-submit2" value="<?php echo t('Ok') ?>"/>
+				<input type="submit" id="form-submit2" value="<?php echo t('Ok') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>

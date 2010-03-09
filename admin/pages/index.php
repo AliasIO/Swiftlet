@@ -327,7 +327,10 @@ if ( $r = $model->db->result )
 
 	$nodes = $model->node->get_children($nodePages['id']);
 
-	$model->node->nodes_to_array($nodes['children'], $list);
+	if ( !empty($nodes['children']) )
+	{
+		$model->node->nodes_to_array($nodes['children'], $list);
+	}
 
 	$listParents = $list;
 

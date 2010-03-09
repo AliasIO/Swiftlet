@@ -13,13 +13,13 @@
 		<dl>
 			<dt><label for="username"><?php echo t('Username') ?></label></dt>
 			<dd>
-				<input type="text" class="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
+				<input type="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="password"><?php echo t('Password') ?></label></dt>
 			<dd>
-				<input type="password" class="password" name="password" id="password" value=""/>
+				<input type="password" name="password" id="password" value=""/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -29,7 +29,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Login') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Login') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>

@@ -11,7 +11,7 @@
 
 			<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-			<input type="submit" class="button" name="confirm" id="confirm" value="<?php echo t('Yes, proceed') ?>"/>
+			<input type="submit" name="confirm" id="confirm" value="<?php echo t('Yes, proceed') ?>"/>
 
 			<a href="javascript: void(0);" onclick="history.go(-1);"><?php echo t('No, go back') ?></a>
 		</p>

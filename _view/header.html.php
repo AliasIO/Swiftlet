@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="<?php echo $view->viewPath ?>scripts/ckeditor_conf.js.php"></script>
 		<?php endif ?>
 		
-		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/jquery/jquery-1.4.1.min.js"></script>
+		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/jquery/jquery-1.4.2.min.js"></script>
 	</head>
 	<body class="<?php echo $contr->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">

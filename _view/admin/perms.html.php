@@ -22,7 +22,7 @@
 				<label for="name"><?php echo t('Name') ?></label>
 			</dt>
 			<dd>
-				<input type="text" class="text" name="name" id="name" value="<?php echo $model->POST_html_safe['name'] ?>"/>
+				<input type="text" name="name" id="name" value="<?php echo $model->POST_html_safe['name'] ?>"/>
 
 				<?php if ( isset($model->form->errors['name']) ): ?>
 				<span class="error"><?php echo $model->form->errors['name'] ?></span>
@@ -36,7 +36,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Save role') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Save role') ?>"/>
 
 				<a href="./"><?php echo t('Cancel') ?></a>
 			</dd>
@@ -105,7 +105,7 @@
 					<dd>
 						<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-						<input type="submit" class="button" name="form-submit-2" id="form-submit-2" value="<?php echo t('Add user') ?>"/>
+						<input type="submit" name="form-submit-2" id="form-submit-2" value="<?php echo t('Add user') ?>"/>
 
 						<a href="./"><?php echo t('Cancel') ?></a>
 					</dd>
@@ -186,7 +186,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit-3" id="form-submit-3" value="<?php echo $model->t('Save permissions') ?>"/>
+				<input type="submit" name="form-submit-3" id="form-submit-3" value="<?php echo $model->t('Save permissions') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>

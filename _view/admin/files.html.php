@@ -23,7 +23,7 @@
 		<dl>
 			<dt><label for="title_<?php echo $i ?>"><?php echo $model->t('Title') ?></label></dt>
 			<dd>
-				<input type="text" class="text" name="title[<?php echo $i ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$i] ?>"/>
+				<input type="text" name="title[<?php echo $i ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$i] ?>"/>
 				
 				<?php if ( isset($model->form->errors['title'][$i]) ): ?>
 				<span class="error"><?php echo $model->form->errors['title'][$i] ?></span>
@@ -33,7 +33,7 @@
 		<dl>
 			<dt><label for="file_<?php echo $i ?>"><?php echo $model->t('File') ?></label></dt>
 			<dd>
-				<input type="file" class="file" name="file[<?php echo $i ?>]" id="file_<?php echo $i ?>"/>
+				<input type="file" name="file[<?php echo $i ?>]" id="file_<?php echo $i ?>"/>
 				
 				<?php if ( isset($model->form->errors['file'][$i]) ): ?>
 				<span class="error"><?php echo $model->form->errors['file'][$i] ?></span>
@@ -48,7 +48,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
 
 				<p>
 					<a href="?"><?php echo t('Cancel') ?></a>

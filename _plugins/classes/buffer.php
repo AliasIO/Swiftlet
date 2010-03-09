@@ -54,7 +54,10 @@ class buffer
 		{
 			$contents = ob_get_contents();
 
-			ob_end_clean();
+ 			if ( ob_get_length() > 0 )
+			{
+				ob_end_clean();
+			}
 
 			$this->ready = FALSE;
 
@@ -69,7 +72,10 @@ class buffer
 	{
 		if ( $this->ready )
 		{
-			ob_end_clean();
+			if ( ob_get_length() > 0 )
+			{
+				ob_end_clean();
+			}
 		
 			$this->active = FALSE;
 		}

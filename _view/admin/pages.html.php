@@ -35,7 +35,7 @@
 		<dl>
 			<dt><label for="title_<?php echo $i ?>"><?php echo $model->t('Title') ?></label></dt>
 			<dd>
-				<input type="text" class="text" name="title[<?php echo h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$language] ?>"/>
+				<input type="text" name="title[<?php echo h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$language] ?>"/>
 				
 				<?php if ( isset($model->form->errors['title_' . $i]) ): ?>
 				<span class="error"><?php echo $model->form->errors['title_' . $i] ?></span>
@@ -46,7 +46,7 @@
 			<dt><label for="body<?php echo $i ?>"><?php echo $model->t('Body') ?></label></dt>
 		</dl>
 		<dl>
-			<textarea class="textarea large code ckeditor" name="body[<?php echo h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $model->POST_html_safe['body'][$language] ?></textarea>
+			<textarea class="large code ckeditor" name="body[<?php echo h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $model->POST_html_safe['body'][$language] ?></textarea>
 		</dl>
 	</fieldset>
 	<?php endforeach ?>
@@ -54,7 +54,7 @@
 		<dl>
 			<dt><label for="published"><?php echo $model->t('Published') ?></label></dt>
 			<dd>
-				<input type="checkbox" class="checkbox" name="published" id="published" value="1"<?php echo $model->POST_html_safe['published'] ? ' checked="checked"' : '' ?>/>
+				<input type="checkbox" name="published" id="published" value="1"<?php echo $model->POST_html_safe['published'] ? ' checked="checked"' : '' ?>/>
 			</dd>
 		</dl>
 		<dl>
@@ -74,7 +74,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo $model->t('Save page') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Save page') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>

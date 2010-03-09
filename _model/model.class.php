@@ -479,6 +479,12 @@ class model
 	function error($errNo, $errStr, $errFile = '', $errLine = '', $errCont = array())
 	{
 		$this->hook('error');
+		
+		// If error has been supressed with @
+		if ( !error_reporting() )
+		{
+			return;
+		}
 
 		if ( !headers_sent() )
 		{

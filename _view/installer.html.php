@@ -28,7 +28,7 @@
 				</label>
 			</dt>
 			<dd>
-				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+				<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
 				<?php if ( $v['dependency_status'] ): ?>
 				<em>
@@ -49,7 +49,7 @@
 				<label for="system_password"><?php echo t('System password') ?></label>
 			</dt>
 			<dd>
-				<input type="password" class="password" name="system-password" id="system-password-1"/>
+				<input type="password" name="system-password" id="system-password-1"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -61,7 +61,7 @@
 
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Install') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Install') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -99,7 +99,7 @@
 			</dt>
 			<dd>
 				<?php if ( $v['upgradable'] ): ?>
-				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"/>
+				<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"/>
 				<em>(<a href="javascript: void(0);" onclick="
 					e = document.getElementById('sql_<?php echo $plugin ?>');
 					e.style.display = e.style.display == 'none' ? 'block' : 'none';
@@ -118,7 +118,7 @@
 				<label for="system_password"><?php echo t('System password') ?></label>
 			</dt>
 			<dd>
-				<input type="password" class="password" name="system-password" id="system-password-2"/>
+				<input type="password" name="system-password" id="system-password-2"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -130,7 +130,7 @@
 
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Upgrade') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Upgrade') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -160,7 +160,7 @@
 				</label>
 			</dt>
 			<dd>
-				<input type="checkbox" class="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(1, $v['required_by_status']) ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+				<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(1, $v['required_by_status']) ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
 				<?php if ( $v['required_by_status'] ): ?>
 				<em>
@@ -181,7 +181,7 @@
 				<label for="system_password"><?php echo t('System password') ?></label>
 			</dt>
 			<dd>
-				<input type="password" class="password" name="system-password" id="system-password-3"/>
+				<input type="password" name="system-password" id="system-password-3"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -193,7 +193,7 @@
 
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" class="button" name="form-submit" id="form-submit" value="<?php echo t('Remove') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Remove') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
