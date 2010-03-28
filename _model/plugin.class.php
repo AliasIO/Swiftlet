@@ -98,19 +98,24 @@ class plugin
 	 */
 	function hook($hook, $order, &$params = array())
 	{
-		$model = $this->model;
-		$view  = $this->view;
-		$contr = $this->contr;
+		if ( !isset($model->pluginsHooked[$this->info['name']][$hook]) )
+		{
+			$model = $this->model;
+			$view  = $this->model->view;
+			$contr = $this->model->contr;
 
-		$timerStart = $model->timer_start();
-		
-		require($contr->pluginPath . $this->info['file']);
+			$timerStart = $model->timer_start();
 
-		$model->debugOutput['plugins hooked']['hook: ' . $hook][] =	array(
-			'order'          => $order,
-			'plugin'         => $this->info['name'] . ' (' . $contr->pluginPath . $this->info['file'] . ')',
-			'execution time' => $model->timer_end($timerStart)
-			);
+			require($contr->pluginPath . $this->info['file']);
+
+			$model->pluginsHooked[$this->info['name']][$hook] = TRUE;
+
+			$model->debugOutput['plugins hooked']['hook: ' . $hook][] =	array(
+				'order'          => $order,
+				'plugin'         => $this->info['name'] . ' (' . $contr->pluginPath . $this->info['file'] . ')',
+				'execution time' => $model->timer_end($timerStart)
+				);
+		}
 	}
 
 	/**

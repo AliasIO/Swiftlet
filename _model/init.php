@@ -18,11 +18,43 @@ if ( empty($contrSetup) )
 	die('<p>Missing controller setup.</p>');
 }
 
-require($contrSetup['rootPath'] . '_model/model.class.php');
-require($contrSetup['rootPath'] . '_model/controller.class.php');
+if ( !class_exists('model') )
+{
+	require($contrSetup['rootPath'] . '_model/model.class.php');
+}
+
+if ( !class_exists('contr') )
+{
+	require($contrSetup['rootPath'] . '_model/controller.class.php');
+}
+
+if ( isset($contr) )
+{
+	$absPath = $contr->absPath;
+}
 
 $contr = new contr($contrSetup);
-$model = new model($contr);
+
+if ( isset($absPath) )
+{
+	$contr->absPath = $absPath;
+}
+
+if ( !isset($model) )
+{
+	$model = new model($contr);
+}
+else
+{
+	$model->contr = $contr;
+
+	$model->view = new view($model);
+}
+
+if ( !class_exists('view') )
+{
+	$model->view = new view($model);
+}
 
 $view = $model->view;
 

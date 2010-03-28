@@ -47,14 +47,12 @@
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
 	// Focus the name field
-	$(function() {
-		$('#name').focus();
-	});
+	$('#name').focus();
 	/* ]]> */ -->
 </script><?php else: ?>
 <?php if ( $model->perm->check('admin perm role create') ): ?>
 <p>
-	<a class="button" href="./?action=create">&#9998; <?php echo $model->t('Create a new role') ?></a>
+	<a class="button" href="./?action=create"><?php echo $model->t('Create a new role') ?></a>
 </p>
 <?php endif ?>
 <?php endif ?>
@@ -70,10 +68,10 @@
 		<?php if ( $model->perm->check('admin perm edit') || $model->perm->check('admin perm delete') ): ?>
 		<p>
 			<?php if ( $model->perm->check('admin perm edit') ): ?>
-			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=edit"  >&#9986; <?php echo $model->t('Edit this role') ?></a>
+			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=edit"  ><?php echo $model->t('Edit this role') ?></a>
 			<?php endif ?>
 			<?php if ( $model->perm->check('admin perm delete') ): ?>
-			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=delete">&#10008; <?php echo $model->t('Delete this role') ?></a>
+			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=delete"><?php echo $model->t('Delete this role') ?></a>
 			<?php endif ?>
 		</p>
 		<?php endif ?>
@@ -117,7 +115,7 @@
 		<h5><?php echo t('Users') ?></h5>
 
 		<p>
-			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=add">&#10010; <?php echo $model->t('Add a user') ?></a>
+			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=add"><?php echo $model->t('Add a user') ?></a>
 		</p>
 
 		<?php if ( $role['users'] ): ?>
@@ -168,9 +166,9 @@
 					<?php foreach ( $view->roles as $role ): ?>
 					<td>
 						<select name="value[<?php echo $perm['id'] ?>][<?php echo $role['id'] ?>]" id="value_<?php echo $perm['id'] ?>_<?php echo $role['id'] ?>">
-							<option value="<?php echo perm::yes   ?>"<?php echo $model->POST_html_safe['value'][$perm['id']][$role['id']] == perm::yes   ? ' selected="selected"' : '' ?>>&#10004; <?php echo t('Yes')   ?></option>
-							<option value="<?php echo perm::no    ?>"<?php echo $model->POST_html_safe['value'][$perm['id']][$role['id']] == perm::no    ? ' selected="selected"' : '' ?>>&#10008; <?php echo t('No')    ?></option>
-							<option value="<?php echo perm::never ?>"<?php echo $model->POST_html_safe['value'][$perm['id']][$role['id']] == perm::never ? ' selected="selected"' : '' ?>>&#10008; <?php echo t('Never') ?></option>
+							<option value="<?php echo perm::yes   ?>"<?php echo $model->POST_html_safe['value'][$perm['id']][$role['id']] == perm::yes   ? ' selected="selected"' : '' ?>><?php echo t('Yes')   ?></option>
+							<option value="<?php echo perm::no    ?>"<?php echo $model->POST_html_safe['value'][$perm['id']][$role['id']] == perm::no    ? ' selected="selected"' : '' ?>><?php echo t('No')    ?></option>
+							<option value="<?php echo perm::never ?>"<?php echo $model->POST_html_safe['value'][$perm['id']][$role['id']] == perm::never ? ' selected="selected"' : '' ?>><?php echo t('Never') ?></option>
 						</select>
 					</td>
 					<?php endforeach ?>

@@ -9,7 +9,7 @@
 	<li><a href="<?php echo $contr->rootPath ?>"><?php echo t('Home') ?></a> &rsaquo;</li>
 	<?php if ( $view->parents ): ?>
 	<?php foreach ( $view->parents as $permalink => $title ): ?>
-	<li><a href="<?php echo $model->rewrite_url($contr->rootPath . 'page/?page=' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>
+	<li><a href="<?php echo $model->route('p/' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>
 	<?php endforeach ?>
 	<?php endif ?>
 	<li><?php echo $view->pageTitle ?></li>

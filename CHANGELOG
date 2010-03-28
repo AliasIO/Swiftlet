@@ -3,6 +3,9 @@
 # Changed the way View files are loaded so that View vars (like $view->pageTitle) can be changed in Controllers
 # Using CSS selectors instead of classes for theming forms
 # Updated jQuery to v1.4.2
+# Using a default config file to prevent losing settings when overwriting files.
+# Added /sys folder for system files
+# Added improved URL routing, replaced $model->rewriteUrl() to $model->route()
 #
 #
 # 1.2.0.A1 - 1.2.0.A2

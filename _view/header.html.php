@@ -4,7 +4,7 @@
 	<head>
 		<title><?php echo $view->siteName ?> - <?php echo t($view->pageTitle) ?></title>
 
-		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>css.php?file=global"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>sys/css.php?file=global"/>
 
 		<link type="image/png" rel="shortcut icon" href="<?php echo $view->rootPath ?>favicon.ico"/>
 

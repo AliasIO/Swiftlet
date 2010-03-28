@@ -27,21 +27,6 @@ switch ( $hook )
 	case 'footer':
 		if ( !empty($model->form->errors) )
 		{
-			echo '
-				<script type="text/javascript">
-					<!-- /* <![CDATA[ */
-					$(function() {
-				';
-			
-			foreach ( $model->form->errors as $k => $v )
-			{
-				echo '$(\'#' . $model->h($k) . '\').addClass(\'field-error\');';
-			}
-
-			echo '
-					});
-					/* ]]> */ -->
-				</script>
-				';
+			$view->load('form_errors.html.php');
 		}
 }

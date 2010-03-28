@@ -13,11 +13,11 @@
 
 <p>
 	<?php if ( $model->perm->check('admin page create') ): ?>
-	<a class="button" href="./">&#9998; <?php echo $model->t('Create a new page') ?></a>
+	<a class="button" href="./"><?php echo $model->t('Create a new page') ?></a>
 	<?php endif ?>
-	<a class="button" href="<?php echo $view->rootPath . $model->rewrite_url('page/?page=' . $view->permalink) ?>">&#10149; <?php echo $model->t('View this page') ?></a>
+	<a class="button" href="<?php echo $model->route('p/' . $view->permalink) ?>"><?php echo $model->t('View this page') ?></a>
 	<?php if ( $model->perm->check('admin page delete') ): ?>
-	<a class="button" href="./?action=delete&id=<?php echo $view->id ?>">&#10008; <?php echo $model->t('Delete this page') ?></a>
+	<a class="button" href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
 	<?php endif ?>
 </p>
 <?php elseif ( $model->perm->check('admin page create') ): ?>
@@ -103,7 +103,7 @@
 		<tr>
 			<td>
 				<?php echo str_repeat('&nbsp;', $node['level'] * 4) ?>
-				<a href="<?php echo $model->rewrite_url($view->rootPath . 'page/?page=' . $node['permalink']) ?>">
+				<a href="<?php echo $model->route('p/' . $node['permalink']) ?>">
 					<?php echo $node['title'] ?>
 				</a>
 			</td>
@@ -112,10 +112,10 @@
 			</td>
 			<td>
 				<?php if ( $model->perm->check('admin page edit') ): ?>
-				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=edit">&#9986; <?php echo t('Edit') ?></a>
+				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=edit"><?php echo t('Edit') ?></a>
 				<?php endif ?>
 				<?php if ( $model->perm->check('admin page delete') ): ?>
-				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=delete">&#10008; <?php echo t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=delete"><?php echo t('Delete') ?></a>
 				<?php endif ?>
 			</td>
 		</tr>
@@ -135,8 +135,6 @@
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
 	// Focus the title field
-	$(function() {
-		$('#title').focus();
-	});
+	$('#title').focus();
 	/* ]]> */ -->
 </script>

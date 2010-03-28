@@ -31,7 +31,7 @@ class view
 		$model,
 		$contr,
 
-		$files = array()
+		$filesLoaded = array()
 		;
 
 	/**
@@ -47,9 +47,9 @@ class view
 		$contr = $this->contr;
 		$view  = $this;
 
-		$view->rootPath = $contr->rootPathView;
-		$view->viewPath = $contr->rootPathView . '_view/';
-	
+		$view->rootPath = $contr->absPath;
+		$view->viewPath = $contr->absPath . '_view/';
+
 		foreach ( array(
 			'siteName',
 			'siteCopyright',
@@ -60,7 +60,7 @@ class view
 		{
 			$view->{$v} = !empty($model->{$v}) ? $model->h($model->{$v}) : '';
 		}
-		
+
 		$view->pageTitle       = !empty($contr->pageTitle)       ? $model->h($contr->pageTitle)       : '';
 		$view->pageDescription = !empty($contr->pageDescription) ? $model->h($contr->pageDescription) : $view->siteDescription;
 		$view->pageKeywords    = !empty($contr->pageKeywords)    ? $model->h($contr->pageKeywords)    : $view->siteKeywords;
@@ -72,7 +72,7 @@ class view
 	 */
 	function load($file)
 	{
-		$this->files[] = $file;
+		$this->filesLoaded[] = $file;
 	}
 
 	/*
@@ -109,7 +109,7 @@ class view
 			return $model->t($v, $args);
 		}
 
-		foreach ( $this->files as $file )
+		foreach ( $this->filesLoaded as $file )
 		{
 			if ( is_file($contr->viewPath . $file) )
 			{

@@ -38,8 +38,6 @@
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
 	// Focus the username field
-	$(function() {
-		$('#username').focus();
-	});
+	$('#username').focus();
 	/* ]]> */ -->
 </script>

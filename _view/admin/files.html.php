@@ -2,7 +2,7 @@
 
 <?php if ( $view->action != 'upload' ): ?>
 <p>
-	<a class="button" href="?action=upload">&#10010; <?php echo t('Upload files') ?></a>
+	<a class="button" href="?action=upload"><?php echo t('Upload files') ?></a>
 </p>
 <?php endif ?>
 
@@ -96,17 +96,17 @@
 			<td>
 				<?php if ( $file['image'] ): ?>
 				<a
-					href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>"
-					onclick="if ( typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->rewrite_url('file/?name=' . $file['permalink'] . $file['extension']) ?>'); window.close();"
+					href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
+					onclick="if ( typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
 					>
-					<img src="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
+					<img src="<?php echo $model->route('file/thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
 				</a>
 				<?php endif ?>
 			</td>
 			<td>
 				<a
-					href="<?php echo $model->rewrite_url($contr->rootPath . 'file/?name=' . $file['permalink'] . $file['extension']) ?>"
-					onclick="if ( typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->rewrite_url('file/?name=' . $file['permalink'] . $file['extension']) ?>'); window.close();"
+					href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
+					onclick="if ( typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
 					>
 					<?php echo $file['title'] ?>
 				</a>
@@ -116,7 +116,7 @@
 			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>
 			<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 			<td>
-				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete">&#10008; <?php echo t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
 			</td>
 			</td>
 		</tr>
@@ -135,13 +135,11 @@
 
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */	
-	$(function() {
-		if ( typeof(window.opener.CKEDITOR) != 'undefined' ) {
-			$('body').css({
-				height:    '100%',
-				overflowY: 'auto'
-				});
-		}
-	});
+	if ( typeof(window.opener.CKEDITOR) != 'undefined' ) {
+		$('body').css({
+			height:    '100%',
+			overflowY: 'auto'
+			});
+	}
 	/* ]]> */ -->
 </script>

@@ -124,7 +124,7 @@ if ( $model->POST_valid['form-submit'] )
 
 								if ( $model->db->result )
 								{
-									$uploads[] = '<a href="' . $model->rewrite_url($view->rootPath . 'file/?name=' . $permalink . $extension) . '">' . $model->h($title) . '</a>';
+									$uploads[] = '<a href="' . $model->route('file/' . $permalink . $extension) . '">' . $model->h($title) . '</a>';
 								}
 							}
 						}

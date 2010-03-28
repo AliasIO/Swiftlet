@@ -70,9 +70,7 @@
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
 	// Focus the username field
-	$(function() {
-		$('#system-password-1').focus();
-	});
+	$('#system-password-1').focus();
 	/* ]]> */ -->
 </script>
 <?php else: ?>

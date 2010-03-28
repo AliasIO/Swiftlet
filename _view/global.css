@@ -229,10 +229,10 @@ button:hover, input[type="submit"]:hover {
 
 a:link.button, a:hover.button, a:active.button, a:visited.button {
 	background: var(form-background-color);
-		background-image: -moz-linear-gradient(top, var(content-background-color), var(form-background-color));
-		background-image: -webkit-gradient(linear, left top, left bottom, from(var(content-background-color)), to(var(form-background-color)));
-		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=var(content-background-color),endColorstr=var(form-background-color));
-		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=var(content-background-color),endColorstr=var(form-background-color))";
+	background-image: -moz-linear-gradient(top, var(content-background-color), var(form-background-color));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(var(content-background-color)), to(var(form-background-color)));
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=var(content-background-color),endColorstr=var(form-background-color));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=var(content-background-color),endColorstr=var(form-background-color))";
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -240,6 +240,8 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 	display: inline-block;
 	padding: .1em .5em .3em .5em;
 	text-decoration: none;
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .1);
 }
 
 a:hover.button {
@@ -275,6 +277,7 @@ form tbody th {
 	font-family: Verdana, Arial;
 	height: 2em;
 	position: absolute;
+	-moz-box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 	width: 100%;
 }
 

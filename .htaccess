@@ -6,10 +6,8 @@ php_value post_max_size       100M
 php_value upload_max_filesize 100M
 
 Options All -Indexes
+
 RewriteEngine on
-
-# Pages
-RewriteRule ^p/([a-z0-9_-]+) page/index.php?page=$1 [NC,QSA]
-
-# Files
-RewriteRule ^file/((thumb/)?([a-z0-9_-]+)) file/index.php?name=$3&thumb=$2 [NC,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) ?q=$1 [L]

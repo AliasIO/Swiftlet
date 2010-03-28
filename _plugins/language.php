@@ -20,7 +20,7 @@ switch ( $hook )
 		break;
 	case 'init':
 		require($contr->classPath . 'language.php');
-
+			
 		$model->lang = new lang($model);
 
 		break;

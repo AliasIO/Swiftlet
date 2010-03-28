@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('admin' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1, 'url_rewrite' => 1)
+			'hooks'        => array('admin' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
 			);
 
 		break;
@@ -102,10 +102,13 @@ switch ( $hook )
 			);
 
 		break;
-	case 'url_rewrite':
-		if ( $model->page->ready && !empty($params['url']) )
+	case 'route':
+		if ( $model->page->ready )
 		{
-			$params['url'] = $model->page->rewrite($params['url']);
+			if ( $params['parts'][0] == 'p' )
+			{
+				$params['path'] = 'sys/page.php';
+			}
 		}
 
 		break;

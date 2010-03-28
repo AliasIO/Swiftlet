@@ -13,12 +13,15 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-if ( !isset($model->GET_raw['name']) )
+if ( !isset($model->routeParts[1]) )
 {
 	$model->end();
 }
 
-$name = basename($model->GET_raw['name'], strrchr($model->GET_raw['name'], '.'));
+$thumb = isset($model->routeParts[1]) && isset($model->routeParts[2]) && $model->routeParts[1] == 'thumb';
+$name  = $thumb && isset($model->routeParts[2]) ? $model->routeParts[2] : $model->routeParts[1];
+
+$name = basename($name, strstr($name, '.'));
 
 $model->db->sql('
 	SELECT
@@ -35,7 +38,7 @@ $model->db->sql('
 
 if ( $model->db->result && $r = $model->db->result[0] )
 {
-	if ( is_file($file = $contr->rootPath . 'file/uploads/' . ( !empty($model->GET_raw['thumb']) ? 'thumbs/' : '' ) . $r['file_hash']) )
+	if ( is_file($file = $contr->rootPath . 'uploads/files/' . ( $thumb ? 'thumbs/' : '' ) . $r['file_hash']) )
 	{
 		if ( substr($r['mime_type'], 0, 5) == 'image' )
 		{

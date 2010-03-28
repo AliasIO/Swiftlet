@@ -14,7 +14,7 @@ require($contrSetup['rootPath'] . '_model/init.php');
 
 $model->check_dependencies(array('db', 'node', 'page'));
 
-if ( isset($model->GET_raw['page']) )
+if ( isset($model->routeParts[1]) )
 {
 	$language = !empty($model->lang->ready) ? $model->lang->language : array('English US');
 
@@ -27,7 +27,7 @@ if ( isset($model->GET_raw['page']) )
 		FROM      `' . $model->db->prefix . 'pages` AS p
 		LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 		WHERE
-			n.`permalink` = "' . $model->GET_db_safe['page'] . '" AND
+			n.`permalink` = "' . $model->db->escape($model->routeParts[1]) . '" AND
 			p.`published` = 1 AND
 			p.`lang`      = "' . $model->db->escape($language) . '"
 		LIMIT 1
@@ -61,13 +61,14 @@ if ( isset($model->GET_raw['page']) )
 			}
 		}
 	}
-	else
-	{
-		header('HTTP/1.0 404 Not Found');
+}
 
-		$view->pageTitle = $model->t('Page not found');
-		$view->error     = $model->t('The page you are looking for does not exist.');
-	}
+if ( !isset($view->nodeId) )
+{
+	header('HTTP/1.0 404 Not Found');
+
+	$view->pageTitle = $model->t('Page not found');
+	$view->error     = $model->t('The page you are looking for does not exist.');
 }
 
 $view->load('page.html.php');
