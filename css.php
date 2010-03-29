@@ -6,7 +6,7 @@
  */
 
 $contrSetup = array(
-	'rootPath'   => '../',
+	'rootPath'   => './',
 	'pageTitle'  => 'CSS Parser',
 	'standAlone' => TRUE
 	);

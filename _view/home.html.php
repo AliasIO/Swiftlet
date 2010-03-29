@@ -1,8 +1,4 @@
-<h1>
-	<?php echo $view->siteName ?>
-	<img style="vertical-align: middle;" src="<?php echo $view->viewPath ?>images/logo.png" width="120" height="120" alt="Logo"/>
-	&hellip;<?php echo t('is up and running!') ?>
-</h1>
+<h1><?php echo t($view->pageTitle) ?></h1>
 
 <h2><?php echo t('Getting started') ?>:</h2>
 

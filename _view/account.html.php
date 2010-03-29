@@ -24,7 +24,7 @@
 <p class="message notice"><?php echo $view->notice ?></p>
 <?php endif ?>
 
-<form id="formAccount" method="post" action="./<?php echo $view->id ? '?id=' . $view->id : '' ?>" autocomplete="off">
+<form id="formAccount" method="post" action="./?action=<?php echo $view->action . ( $view->id ? '&id=' . $view->id : '' ) ?>" autocomplete="off">
 	<fieldset>
 		<?php if ( $view->action == 'edit' ): ?>
 		<dl>
@@ -161,31 +161,39 @@
 </form>
 
 <?php if ( $model->session->get('user is owner') ): ?>
-<h2><?php echo t('Select an account') ?></h2>
+<a name="users"></a>
 
-<form id="formUsers" method="get" action="./">
-	<fieldset>
-		<dl>
-			<dt><label for="id"><?php echo t('Username') ?></label></dt>
-			<dd>
-				<select name="id" id="id" onchange="if ( this.value ) document.getElementById('formUsers').submit();">
-					<option value=""><?php echo t('Select&hellip;') ?></option>
-					<?php foreach ( $view->users as $id => $username ): ?>
-					<option value="<?php echo $id ?>"><?php echo $username ?></option>
-					<?php endforeach ?>
-				</select>
-			</dd>
-		</dl>
-	</fieldset>
-	<fieldset>
-		<dl>
-			<dt><br/></dt>
-			<dd>
-				<input type="submit" id="form-submit2" value="<?php echo t('Ok') ?>"/>
-			</dd>
-		</dl>
-	</fieldset>
-</form>
+<h2><?php echo t('All accounts') ?></h2>
+
+<?php if ( $view->users ): ?>
+<p>
+	<?php echo $view->usersPagination['html'] ?>
+</p>
+
+<table>
+	<thead>
+		<tr>
+			<th><?php echo t('Username') ?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ( $view->users as $id => $username ): ?>
+		<tr>
+			<td>
+				<a href="?id=<?php echo $id ?>"><?php echo $username ?></a>
+			</td>
+		</tr>
+		<?php endforeach ?>
+	</tbody>
+</table>
+
+<p>
+	<?php echo $view->usersPagination['html'] ?>
+</p>
+<?php else: ?>
+<p>
+	<em><?php echo t('No accounts') ?></em>
+</p>
 <?php endif ?>
 
 <?php if ( $view->action == 'create' ): ?>
@@ -195,4 +203,5 @@
 	$('#username').focus();
 	/* ]]> */ -->
 </script>
+<?php endif ?>
 <?php endif ?>

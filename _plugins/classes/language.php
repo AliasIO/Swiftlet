@@ -66,7 +66,7 @@ class lang
 		{
 			$this->languages = array('English US' => 'English US');
 
-			if ( is_dir($dir = $contr->rootPath . 'sys/lang/') )
+			if ( is_dir($dir = $contr->rootPath . 'lang/') )
 			{
 				if ( $handle = opendir($dir) )
 				{
@@ -109,7 +109,7 @@ class lang
 
 		if ( $this->language )
 		{
-			if ( is_dir($dir = $contr->rootPath . 'sys/lang/' . $this->language . '/') )
+			if ( is_dir($dir = $contr->rootPath . 'lang/' . $this->language . '/') )
 			{
 				if ( $handle = opendir($dir) )
 				{

@@ -6,7 +6,7 @@
 
 <?php if ( isset($view->body) ): ?>
 <ul class="crumbs">
-	<li><a href="<?php echo $contr->rootPath ?>"><?php echo t('Home') ?></a> &rsaquo;</li>
+	<li><a href="<?php echo $view->rootPath ?>"><?php echo t('Home') ?></a> &rsaquo;</li>
 	<?php if ( $view->parents ): ?>
 	<?php foreach ( $view->parents as $permalink => $title ): ?>
 	<li><a href="<?php echo $model->route('p/' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>

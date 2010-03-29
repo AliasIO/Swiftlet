@@ -4,7 +4,7 @@
 	<head>
 		<title><?php echo $view->siteName ?> - <?php echo t($view->pageTitle) ?></title>
 
-		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>sys/css.php?file=global"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>css.php?file=global"/>
 
 		<link type="image/png" rel="shortcut icon" href="<?php echo $view->rootPath ?>favicon.ico"/>
 
@@ -28,31 +28,42 @@
 	</head>
 	<body class="<?php echo $contr->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">
-			<p>
-				<?php echo $contr->inAdmin ? '<strong>' . t('Administration') . '</strong>' : '' ?>
-			</p>
+			<h1 id="logo">
+				<a href="<?php echo $view->rootPath ?>" title="<?php echo t('Home') ?>"><?php echo $view->siteName ?></a>
+			</h1>
 
-			<p class="header-links">
-				<a href="<?php echo $view->rootPath ?>"><?php echo t('Home') ?></a>
-
+			<ul class="header-links">
 				<?php if ( isset($model->user) ): ?>
 
 				<?php if ( !empty($model->perm->ready) && $model->perm->check('admin access') ): ?>
-				| <a href="<?php echo $view->rootPath ?>admin/"><?php echo t('Administration') ?></a>
+				<li>
+					<a href="<?php echo $view->rootPath ?>admin/"><?php echo t('Dashboard') ?></a>
+				</li>
 				<?php endif ?>
 				
 				<?php if ( $model->session->get('user id') != user::guestId ): ?>
-				| <?php echo t('You are logged in as %s', '<a href="' . $view->rootPath . 'account/">' . $model->session->get('user username') . '</a>') ?>
-				| <a href="<?php echo $view->rootPath ?>login/?logout"><?php echo t('Logout') ?></a>
+				<li>
+					<a href="<?php echo $view->rootPath ?>account/"><?php echo t('Account', $model->session->get('user username')) ?></a>
+				</li>
+				<li>
+					<a href="<?php echo $view->rootPath ?>login/?logout"><?php echo t('Logout') ?></a>
+				</li>
 				<?php else: ?>
-				| <?php echo t('You are not logged in') ?> (<a href="<?php echo $view->rootPath ?>login/"><?php echo t('login') ?></a>)
+				<li>
+					<a href="<?php echo $view->rootPath ?>login/"><?php echo t('Login') ?></a>
+				</li>
 				<?php endif; ?>
 				
 				<?php endif; ?>
-			</p>
+			</ul>
 			
 			<div style="clear: both;"></div>
 		</div>
 
 		<div id="page">
 			<div id="content">
+				<?php if ( $contr->inAdmin ): ?>
+				<p id="admin-bar">
+					<?php echo t('Administration') ?>
+				</p>
+				<?php endif ?>

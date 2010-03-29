@@ -7,7 +7,7 @@
 
 $contrSetup = array(
 	'rootPath'  => '../',
-	'pageTitle' => 'Administration',
+	'pageTitle' => 'Dashboard',
 	'inAdmin'   => TRUE
 	);
 

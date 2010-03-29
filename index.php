@@ -43,9 +43,11 @@ if ( $path = $params['path'] )
 	require($path);
 }
 
+/*
+ * Page not found
+ */
 chdir($contr->rootPath);
 
-require('home.php'); # 404
-
+require('404.php');
 
 $model->end();

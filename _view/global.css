@@ -32,7 +32,6 @@
 /* Main */
 
 html {
-	height: 100%;
 	overflow-y: scroll;
 }
 
@@ -40,8 +39,7 @@ body {
 	background: var(page-background-color);
 	color: var(text-color);
 	font-family: Verdana, Arial;
-	font-size: 14px;
-	height: 100%;
+	font-size: 13px;
 	text-align: center;
 }
 
@@ -76,7 +74,7 @@ table {
 	border-color: var(form-border-color);
 	border-style: solid;
 	border-width: 1px 0 0 1px;
-	margin-bottom: 1em;
+	margin-bottom: 1.5em;
 	text-align: left;
 	width: 100%;
 }
@@ -100,7 +98,7 @@ td {
 /* Form elements */
 
 form {
-	margin-bottom: 1em;
+	margin-bottom: 1.5em;
 }
 
 	form.hide {
@@ -238,7 +236,7 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 	-webkit-border-radius: 3px;
 	border: 1px solid var(form-border-color);
 	display: inline-block;
-	padding: .1em .5em .3em .5em;
+	padding: .2em .5em .3em .5em;
 	text-decoration: none;
 	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, .1);
 	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .1);
@@ -272,72 +270,98 @@ form tbody th {
 /* Content */
 
 #header {
-	background-color: var(text-color);
-	color: var(page-background-color);
 	font-family: Verdana, Arial;
-	height: 2em;
-	position: absolute;
-	-moz-box-shadow: 0 0 10px rgba(0, 0, 0, .5);
-	width: 100%;
+	margin: 0 auto;
+	width: var(page-width);
 }
 
-	#header p {
+	#header a:link, #header a:hover, #header a:active, #header a:visited {
+		color: var(text-color);
+		display: block;
 		float: left;
-		font-size: 12px;
-		line-height: 2em;
-		padding: 0 1em;
+		line-height: 80px;
+		text-decoration: none;
 	}
 
-	#header p.header-links {
+	#header a:hover {
+		text-decoration: underline;
+	}
+
+	#header .header-links {
 		float: right;
+		font-size: 12px;
+	}
+
+	#header .header-links li {
+		display: block;
+		float: left;
+	}
+
+	#header .header-links a:link, #header .header-links a:hover, #header .header-links a:active, #header .header-links a:visited {
+		margin-left: 1em;
+		padding: 0 0 0 1em;
+	}
+
+#logo {
+	float:left;
+}
+
+	#logo a:link, #logo a:hover, #logo a:active, #logo a:visited {
+		background: url('_view/images/logo.png') left center no-repeat;
+		font-size: 2.6em;
+		text-indent: -99999%;
+		width: 193px;
 	}
 
 #page {
 	background: var(content-background-color);
-	border-color: var(content-border-color);
-	border-style: solid;
-	border-width: 0 1px;
-	min-height: 100%;
-	margin: auto;
+	border: 1px solid var(content-border-color);
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	margin: 0 auto;
 	text-align: left;
 	width: var(page-width);
 }
 
 #content {
-	padding: 4em 2em 1em 2em;
+	padding: 2em 2em .5em 2em;
 }
 
 	#content p {
-		margin-bottom: 1em;
+		margin-bottom: 1.5em;
 	}
 
 	#content h1 {
-		font-size: 2.6em;
+		border-bottom: 1px solid var(content-border-color);
+		font-size: 2em;
 		line-height: 1em;
-		margin-bottom: .5em;
+		margin-bottom: .6em;
+		padding-bottom: .9em;
 	}
 
 	#content h2 {
-		font-size: 1.6em;
-		margin-bottom: .2em;
+		font-size: 1.4em;
+		margin-bottom: .6em;
 	}
 
 	#content h3 {
-		font-size: 1.2em;
-		margin-bottom: .2em;
+		font-size: 1.3em;
+		margin-bottom: .6em;
 	}
 
 	#content h4 {
-		font-size: 1.2em;
+		font-size: 1.1em;
+		font-weight: bold;
 	}
 
 	#content h5 {
 		font-weight: bold;
-		margin-bottom: .2em;
+		margin-bottom: .6em;
 	}
 
 	#content ul, #content ol {
-		margin-bottom: 1em;
+		margin-bottom: 1.5em;
 	}
 	
 		#content ul ul, #content ol ol, #content ul ol, #content ol ul {
@@ -388,8 +412,19 @@ form tbody th {
 			margin-left: 0;
 		}
 
-#footer {	
-	padding: 0 1em 2em 0;
+#admin-bar {
+	background: var(link-color);
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	color: var(content-background-color);
+	font-weight: bold;
+	padding: .2em 0 .4em 0;
+	text-align: center;
+}
+
+#footer {
+	padding: 1em 1em 2em 0;
 	text-align: center;
 }
 

@@ -7,7 +7,7 @@
 
 $contrSetup = array(
 	'rootPath'  => './',
-	'pageTitle' => 'Up and running'
+	'pageTitle' => 'Installation successful'
 	);
 
 require($contrSetup['rootPath'] . '_model/init.php');
@@ -59,7 +59,7 @@ else
 	{
 		$view->notices[] = $model->t(
 			'Please remove the %1$s directory when running in a production environment.',
-			'<a href="' . $view->rootPath . 'sys/unit_tests/"><code>/sys/unit_tests/</code></a>'
+			'<a href="' . $view->rootPath . 'unit_tests/"><code>/unit_tests/</code></a>'
 			);
 	}
 
@@ -88,7 +88,7 @@ else
 			'%1$s Plug-in(s) require installation (go to %2$s).',
 			array(
 				count($newPlugins),
-				'<a href="' . $view->rootPath . 'sys/installer/"><code>/sys/installer/</code></a>'
+				'<a href="' . $view->rootPath . 'installer/"><code>/installer/</code></a>'
 				)
 			);
 	}

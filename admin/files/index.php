@@ -51,9 +51,9 @@ if ( $model->POST_valid['form-submit'] )
 	{
 		$uploads = array();
 
-		if ( !is_writable($contr->rootPath . 'file/uploads/') )
+		if ( !is_writable($contr->rootPath . 'uploads/files/') )
 		{
-			$model->error(FALSE, 'Directory "/file/uploads/" is not writable.', __FILE__, __LINE__);
+			$model->error(FALSE, 'Directory "/uploads/files/" is not writable.', __FILE__, __LINE__);
 		}
 
 		for ( $i = 0; $i < count($_FILES['file']['name']); $i ++ )
@@ -63,13 +63,13 @@ if ( $model->POST_valid['form-submit'] )
 				case UPLOAD_ERR_OK:
 					$hash = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]));
 					
-					if ( is_file($contr->rootPath . 'file/uploads/' . $hash) )
+					if ( is_file($contr->rootPath . 'uploads/files/' . $hash) )
 					{
 						$model->form->errors['file'][$i] = $model->t('This file has already been uploaded.');
 					}
 					else
 					{
-						$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'file/uploads/' . $hash);
+						$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'uploads/files/' . $hash);
 
 						if ( $r )
 						{
@@ -203,12 +203,12 @@ if ( ( int ) $id )
 					{
 						$hash = $r[0]['file_hash'];
 
-						if ( is_file($file = $contr->rootPath . 'file/uploads/' . $hash) )
+						if ( is_file($file = $contr->rootPath . 'uploads/files/' . $hash) )
 						{
 							unlink($file);
 						}
 
-						if ( is_file($file = $contr->rootPath . 'file/uploads/thumbs/' . $hash) )
+						if ( is_file($file = $contr->rootPath . 'uploads/files/thumbs/' . $hash) )
 						{
 							unlink($file);
 						}

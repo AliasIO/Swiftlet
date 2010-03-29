@@ -107,7 +107,7 @@ switch ( $hook )
 		{
 			if ( $params['parts'][0] == 'p' )
 			{
-				$params['path'] = 'sys/page.php';
+				$params['path'] = 'page.php';
 			}
 		}
 

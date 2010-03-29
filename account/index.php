@@ -353,21 +353,36 @@ if ( $model->session->get('user is owner') )
 {
 	$model->db->sql('
 		SELECT
-			`id`,
-			`username`
+			COUNT(`id`) as `count`
 		FROM `' . $model->db->prefix . 'users`
 		;');
-
+	
 	if ( $r = $model->db->result )
 	{
-		$view->users = array();
-		
-		foreach ( $r as $i => $d )
+		$usersPagination = $model->paginate('users', $r[0]['count'], 25);	
+	
+		$model->db->sql('
+			SELECT
+				`id`,
+				`username`
+			FROM `' . $model->db->prefix . 'users`
+			ORDER BY `username`
+			LIMIT ' . $usersPagination['from'] . ', 25
+			;');
+
+		if ( $r = $model->db->result )
 		{
-			$view->users[$d['id']] = $d['username'];
+			$view->users = array();
+			
+			foreach ( $r as $i => $d )
+			{
+				$view->users[$d['id']] = $d['username'];
+			}
+			
+			asort($view->users);
 		}
 		
-		asort($view->users);
+		$view->usersPagination = $usersPagination;
 	}
 }
 

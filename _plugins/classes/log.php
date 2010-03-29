@@ -41,26 +41,26 @@ class log
 	{
 		$contr = $this->contr;
 
-		if ( !is_dir($contr->rootPath . 'sys/log') )
+		if ( !is_dir($contr->rootPath . 'log') )
 		{
-			$this->model->error(FALSE, 'Directory "/sys/log" does not exist.', __FILE__, __LINE__);
+			$this->model->error(FALSE, 'Directory "/log" does not exist.', __FILE__, __LINE__);
 		}
 
-		if ( !is_writable($contr->rootPath . 'sys/log') )
+		if ( !is_writable($contr->rootPath . 'log') )
 		{
-			$this->model->error(FALSE, 'Directory "/sys/log" is not writable.', __FILE__, __LINE__);
+			$this->model->error(FALSE, 'Directory "/log" is not writable.', __FILE__, __LINE__);
 		}
 
 		$contents = date('M d H:i:s') . "\t" . $contents . "\n";
 
-		if ( !$handle = fopen($contr->rootPath . 'sys/log/' . $filename, 'a+') )
+		if ( !$handle = fopen($contr->rootPath . 'log/' . $filename, 'a+') )
 		{
-			$this->model->error(FALSE, 'Could not open file "/sys/log/' . $filename . '".', __FILE__, __LINE__);
+			$this->model->error(FALSE, 'Could not open file "/log/' . $filename . '".', __FILE__, __LINE__);
 		}
 
 		if ( fwrite($handle, $contents) === FALSE )
 		{
-			$this->model->error(FALSE, 'Could not write to file "/sys/log/' . $filename . '".', __FILE__, __LINE__);
+			$this->model->error(FALSE, 'Could not write to file "/log/' . $filename . '".', __FILE__, __LINE__);
 		}
 
 		fclose($handle);

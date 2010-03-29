@@ -426,9 +426,9 @@ class model
 	 */
 	function route($route)
 	{
-		$contr = $this->contr;
+		$view = $this->view;
 
-		$route = $contr->rootPath . ( $this->urlRewrite ? '' : '?' ) . $route;
+		$route = $view->rootPath . ( $this->urlRewrite ? '' : '?' ) . $route;
 
 		return $route;
 	}
