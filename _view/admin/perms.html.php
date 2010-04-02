@@ -156,7 +156,9 @@
 					<th>
 						<strong><?php echo $model->h($model->t($group)) ?></strong>
 					</th>
-					<th><br/></th>
+					<?php foreach ( $view->roles as $role ): ?>
+					<td><br/></td>
+					<?php endforeach ?>
 				</tr>
 				<?php foreach ( $perms as $perm ): ?>
 				<tr>

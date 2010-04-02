@@ -84,7 +84,7 @@ th, td {
 	border-style: solid;
 	border-width: 0 1px 1px 0;
 	padding: .5em;
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 th {
@@ -279,7 +279,7 @@ form tbody th {
 		color: var(text-color);
 		display: block;
 		float: left;
-		line-height: 80px;
+		line-height: 90px;
 		text-decoration: none;
 	}
 
@@ -308,10 +308,9 @@ form tbody th {
 
 	#logo a:link, #logo a:hover, #logo a:active, #logo a:visited {
 		background: url('_view/images/logo.png') left center no-repeat;
-		font-size: 2.6em;
 		overflow: hidden;
 		text-indent: -99999%;
-		width: 193px;
+		width: 175px;
 	}
 
 #page {
@@ -416,9 +415,12 @@ form tbody th {
 
 #admin-bar {
 	background: var(link-color);
+	border-color: rgba(0, 0, 0, .2);
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
+	border-style: solid;
+	border-width: 0 1px 1px 0;
 	color: var(content-background-color);
 	font-weight: bold;
 	padding: .2em 0 .4em 0;

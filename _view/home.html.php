@@ -1,6 +1,6 @@
 <h1><?php echo $model->t($view->pageTitle) ?></h1>
 
-<h2><?php echo $model->t('Getting started') ?>:</h2>
+<h2><?php echo $model->t('What\'s next?') ?></h2>
 
 <ul>
 	<li><?php echo $model->t('View the %s file.', '<a href="' . $view->rootPath . 'README.md"><code>/README.md</code></a>') ?></li>
