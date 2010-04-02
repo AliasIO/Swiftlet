@@ -1,4 +1,4 @@
-<h1><?php echo t($contr->pageTitle) ?></h1>
+<h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
 <?php if ( !empty($view->error) ): ?>
 <p class="message error"><?php echo $view->error ?></p>
@@ -9,10 +9,10 @@
 <?php endif ?>
 
 <p>
-	<?php echo t('Select the plug-ins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
+	<?php echo $model->t('Select the plug-ins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
 </p>
 
-<h2><?php echo t('Install') ?></h2>
+<h2><?php echo $model->t('Install') ?></h2>
 
 <?php if ( $view->newPlugins ): ?>
 
@@ -32,10 +32,10 @@
 
 				<?php if ( $v['dependency_status'] ): ?>
 				<em>
-					<?php echo t('Depends on') ?>:
+					<?php echo $model->t('Depends on') ?>:
 					
 					<?php foreach ( $v['dependency_status'] as $dependency => $ready ): ?>
-					<?php echo ( $ready ? '<span class="dependency-ok" title="' . t('Ready') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . t('Not ready') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
+					<?php echo ( $ready ? '<span class="dependency-ok" title="' . $model->t('Ready') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $model->t('Not ready') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
 					<?php endforeach ?>
 				</em>
 				<?php endif ?>
@@ -46,7 +46,7 @@
 	<fieldset>
 		<dl>
 			<dt>
-				<label for="system_password"><?php echo t('System password') ?></label>
+				<label for="system_password"><?php echo $model->t('System password') ?></label>
 			</dt>
 			<dd>
 				<input type="password" name="system-password" id="system-password-1"/>
@@ -61,7 +61,7 @@
 
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Install') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Install') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -76,12 +76,12 @@
 <?php else: ?>
 
 <p>
-	<em><?php echo t('There are no plug-ins to be installed.') ?></em>
+	<em><?php echo $model->t('There are no plug-ins to be installed.') ?></em>
 </p>
 
 <?php endif ?>
 
-<h2><?php echo t('Upgrade') ?></h2>
+<h2><?php echo $model->t('Upgrade') ?></h2>
 
 <?php if ( $view->outdatedPlugins ): ?>
 
@@ -101,9 +101,9 @@
 				<em>(<a href="javascript: void(0);" onclick="
 					e = document.getElementById('sql_<?php echo $plugin ?>');
 					e.style.display = e.style.display == 'none' ? 'block' : 'none';
-					"><?php echo t('View SQL') ?></a>)</em>
+					"><?php echo $model->t('View SQL') ?></a>)</em>
 				<?php else: ?>
-				<em><?php echo t('No upgrade available from version') ?> <?php echo $v['installed_version'] ?></em>
+				<em><?php echo $model->t('No upgrade available from version') ?> <?php echo $v['installed_version'] ?></em>
 				<?php endif; ?>
 			</dd>
 		</dl>
@@ -113,7 +113,7 @@
 	<fieldset>
 		<dl>
 			<dt>
-				<label for="system_password"><?php echo t('System password') ?></label>
+				<label for="system_password"><?php echo $model->t('System password') ?></label>
 			</dt>
 			<dd>
 				<input type="password" name="system-password" id="system-password-2"/>
@@ -128,7 +128,7 @@
 
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Upgrade') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upgrade') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -137,12 +137,12 @@
 <?php else: ?>
 
 <p>
-	<em><?php echo t('There are no plug-ins to be upgraded.') ?></em>
+	<em><?php echo $model->t('There are no plug-ins to be upgraded.') ?></em>
 </p>
 
 <?php endif ?>
 
-<h2><?php echo t('Remove') ?></h2>
+<h2><?php echo $model->t('Remove') ?></h2>
 
 <?php if ( $view->installedPlugins ): ?>
 
@@ -162,10 +162,10 @@
 
 				<?php if ( $v['required_by_status'] ): ?>
 				<em>
-					<?php echo t('Required by') ?>:
+					<?php echo $model->t('Required by') ?>:
 
 					<?php foreach ( $v['required_by_status'] as $requiredBy => $ready ): ?>
-					<?php echo ( $ready ? '<span class="dependency-ok" title="' . t('Ready') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . t('Not ready') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
+					<?php echo ( $ready ? '<span class="dependency-ok" title="' . $model->t('Ready') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $model->t('Not ready') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
 					<?php endforeach ?>
 				</em>
 				<?php endif ?>
@@ -176,7 +176,7 @@
 	<fieldset>
 		<dl>
 			<dt>
-				<label for="system_password"><?php echo t('System password') ?></label>
+				<label for="system_password"><?php echo $model->t('System password') ?></label>
 			</dt>
 			<dd>
 				<input type="password" name="system-password" id="system-password-3"/>
@@ -191,7 +191,7 @@
 
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Remove') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Remove') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -200,7 +200,7 @@
 <?php else: ?>
 
 <p>
-	<em><?php echo t('There are no plug-ins to be removed.') ?></em>
+	<em><?php echo $model->t('There are no plug-ins to be removed.') ?></em>
 </p>
 
 <?php endif ?>

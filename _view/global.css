@@ -309,6 +309,7 @@ form tbody th {
 	#logo a:link, #logo a:hover, #logo a:active, #logo a:visited {
 		background: url('_view/images/logo.png') left center no-repeat;
 		font-size: 2.6em;
+		overflow: hidden;
 		text-indent: -99999%;
 		width: 193px;
 	}
@@ -353,6 +354,7 @@ form tbody th {
 	#content h4 {
 		font-size: 1.1em;
 		font-weight: bold;
+		margin-bottom: .6em;
 	}
 
 	#content h5 {
@@ -372,7 +374,7 @@ form tbody th {
 		list-style: outside square;
 		margin-left: 3em;
 	}
-	
+
 	#content .message {
 		border-radius: 3px;
 		-moz-border-radius: 3px;

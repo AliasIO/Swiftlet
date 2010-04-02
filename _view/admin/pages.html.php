@@ -30,12 +30,12 @@
 	<?php foreach ( $view->languages as $i => $language ): ?>
 	<fieldset>
 		<dl>
-			<strong><?php echo h(t($language)) ?></strong>
+			<strong><?php echo $model->h($model->t($language)) ?></strong>
 		</dl>
 		<dl>
 			<dt><label for="title_<?php echo $i ?>"><?php echo $model->t('Title') ?></label></dt>
 			<dd>
-				<input type="text" name="title[<?php echo h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$language] ?>"/>
+				<input type="text" name="title[<?php echo $model->h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$language] ?>"/>
 				
 				<?php if ( isset($model->form->errors['title_' . $i]) ): ?>
 				<span class="error"><?php echo $model->form->errors['title_' . $i] ?></span>
@@ -46,7 +46,7 @@
 			<dt><label for="body<?php echo $i ?>"><?php echo $model->t('Body') ?></label></dt>
 		</dl>
 		<dl>
-			<textarea class="large code ckeditor" name="body[<?php echo h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $model->POST_html_safe['body'][$language] ?></textarea>
+			<textarea class="large code ckeditor" name="body[<?php echo $model->h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $model->POST_html_safe['body'][$language] ?></textarea>
 		</dl>
 	</fieldset>
 	<?php endforeach ?>
@@ -93,9 +93,9 @@
 <table>
 	<thead>
 		<tr>
-			<th><?php echo t('Title') ?></th>
-			<th><?php echo t('Created on') ?></th>
-			<th><?php echo t('Action') ?></th>
+			<th><?php echo $model->t('Title') ?></th>
+			<th><?php echo $model->t('Created on') ?></th>
+			<th><?php echo $model->t('Action') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -112,10 +112,10 @@
 			</td>
 			<td>
 				<?php if ( $model->perm->check('admin page edit') ): ?>
-				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=edit"><?php echo t('Edit') ?></a>
+				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=edit"><?php echo $model->t('Edit') ?></a>
 				<?php endif ?>
 				<?php if ( $model->perm->check('admin page delete') ): ?>
-				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=delete"><?php echo t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=delete"><?php echo $model->t('Delete') ?></a>
 				<?php endif ?>
 			</td>
 		</tr>

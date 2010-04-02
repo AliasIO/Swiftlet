@@ -2,7 +2,7 @@
 
 <?php if ( $view->action != 'upload' ): ?>
 <p>
-	<a class="button" href="?action=upload"><?php echo t('Upload files') ?></a>
+	<a class="button" href="?action=upload"><?php echo $model->t('Upload files') ?></a>
 </p>
 <?php endif ?>
 
@@ -15,7 +15,7 @@
 <?php endif ?>
 
 <?php if ( $view->action == 'upload' ): ?>
-<h2><?php echo t('Upload files') ?></h2>
+<h2><?php echo $model->t('Upload files') ?></h2>
 
 <form id="formFile" method="post" action="./?action=upload" enctype="multipart/form-data">
 	<?php for ( $i = 0; $i < 5; $i ++ ): ?>
@@ -51,7 +51,7 @@
 				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
 
 				<p>
-					<a href="?"><?php echo t('Cancel') ?></a>
+					<a href="?"><?php echo $model->t('Cancel') ?></a>
 				</p>
 			</dd>
 		</dl>
@@ -61,16 +61,14 @@
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
 	// Focus the title field
-	$(function() {
-		$('#title_0').focus();
-	});
+	$('#title_0').focus();
 	/* ]]> */ -->
 </script>
 <?php endif ?>
 
 <a name="files"></a>
 
-<h2><?php echo t('All files') ?></h2>
+<h2><?php echo $model->t('All files') ?></h2>
 
 <?php if ( $view->files ): ?>
 
@@ -81,13 +79,13 @@
 <table>
 	<thead>
 		<tr>
-			<th><?php echo t('Thumbnail')   ?></th>
-			<th><?php echo t('Title')       ?></th>
-			<th><?php echo t('File type')   ?></th>
-			<th><?php echo t('File size')   ?></th>
-			<th><?php echo t('Dimensions')  ?></th>
-			<th><?php echo t('Uploaded on') ?></th>
-			<th><?php echo t('Action')      ?></th>
+			<th><?php echo $model->t('Thumbnail')   ?></th>
+			<th><?php echo $model->t('Title')       ?></th>
+			<th><?php echo $model->t('File type')   ?></th>
+			<th><?php echo $model->t('File size')   ?></th>
+			<th><?php echo $model->t('Dimensions')  ?></th>
+			<th><?php echo $model->t('Uploaded on') ?></th>
+			<th><?php echo $model->t('Action')      ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -97,7 +95,7 @@
 				<?php if ( $file['image'] ): ?>
 				<a
 					href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-					onclick="if ( typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
+					onclick="if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
 					>
 					<img src="<?php echo $model->route('file/thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
 				</a>
@@ -106,17 +104,17 @@
 			<td>
 				<a
 					href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-					onclick="if ( typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
+					onclick="if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
 					>
 					<?php echo $file['title'] ?>
 				</a>
 			</td>
 			<td><?php echo $file['mime_type'] . ' (' . ltrim(strtoupper($file['extension']), '.') . ')' ?></td>
 			<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : '' ?></td>
-			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : t('n/a') ?></td>
+			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : $model->t('n/a') ?></td>
 			<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 			<td>
-				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo $model->t('Delete') ?></a>
 			</td>
 			</td>
 		</tr>
@@ -129,13 +127,13 @@
 </p>
 <?php else: ?>
 <p>
-	<em><?php echo t('No files') ?></em>
+	<em><?php echo $model->t('No files') ?></em>
 </p>
 <?php endif ?>
 
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */	
-	if ( typeof(window.opener.CKEDITOR) != 'undefined' ) {
+	if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) {
 		$('body').css({
 			height:    '100%',
 			overflowY: 'auto'

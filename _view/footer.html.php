@@ -9,13 +9,11 @@
 		<script type="text/javascript">
 			<!-- /* <![CDATA[ */
 			// Fade in notices and error messages
-			$(function() {
-				$('.notice, .error')
-					.css({
-						'display' : 'none'
-						})
-					.fadeIn('slow');
-			});
+			$('.notice, .error')
+				.css({
+					'display' : 'none'
+					})
+				.fadeIn('slow');
 			/* ]]> */ -->
 		</script>
 	</body>

@@ -1,5 +1,12 @@
+# 1.2.0.A4 - 1.2.0.B1
+#
+# Removed all global functions including t() and h() shorthands.
+#
+#
 # 1.2.0.A3 - 1.2.0.A4
 # Updated CKEditor to v3.2
+# UI changes
+# Added 404 page
 #
 #
 # 1.2.0.A2 - 1.2.0.A3

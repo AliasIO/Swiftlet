@@ -44,18 +44,6 @@ class file
 	}
 
 	/**
-	 * Rewrite URLs
-	 * @param string $url
-	 * @return string
-	 */
-	function rewrite($url)
-	{
-		$url = preg_replace('/file\/\?name=(.+)?/', 'file/$1', $url);
-
-		return $url;
-	}
-
-	/**
 	 * Create a thumbnail
 	 * @param string $hash
 	 * @param string $mimeType

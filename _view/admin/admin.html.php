@@ -1,4 +1,4 @@
-<h1><?php echo t($contr->pageTitle) ?></h1>
+<h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
 <?php if ( $view->pages ): ?>
 <?php foreach ( $view->pages as $group => $pages ): ?>
@@ -8,10 +8,9 @@
 <ul>
 	<?php foreach ( $pages as $page ): ?>
 	<li>
-		<h4>
-			<a href="<?php echo $view->rootPath . $page['path'] ?>"><?php echo t($page['name']) ?></a>
-		</h4>
-		<em><?php echo t($page['description']) ?></em>
+		<strong><a href="<?php echo $view->rootPath . $page['path'] ?>"><?php echo $model->t($page['name']) ?></a></strong>
+		
+		<em><?php echo $model->t($page['description']) ?></em>
 	</li>
 	<?php endforeach ?>
 </ul>

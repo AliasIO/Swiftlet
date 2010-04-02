@@ -85,18 +85,15 @@ class model
 
 		$model->authToken = sha1(session_id() . phpversion() . $model->sysPassword . $model->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
 
-		//if ( !$contr->standAlone )
-		//{
-			if ( ( !empty($_POST) && !isset($_POST['auth_token']) ) || ( isset($_POST['auth_token']) && $_POST['auth_token'] != $model->authToken ) )
-			{
-				$model->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
-			}
+		if ( ( !empty($_POST) && !isset($_POST['auth_token']) ) || ( isset($_POST['auth_token']) && $_POST['auth_token'] != $model->authToken ) )
+		{
+			$model->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
+		}
 
-			if ( isset($_POST['auth_token']) )
-			{
-				unset($_POST['auth_token']);
-			}
-		//}
+		if ( isset($_POST['auth_token']) )
+		{
+			unset($_POST['auth_token']);
+		}
 
 		/*
 		 * View
@@ -215,37 +212,53 @@ class model
 	}
 
 	/**
+	 * Undo magic quotes
+	 * @param mixed $v
+	 * @return mixed $v
+	 * @see http://php.net/magic_quotes
+	 */
+	private function undo_magic_quotes($v)
+	{
+		if ( is_array($v) )
+		{
+			return array_map(array($this, 'undo_magic_quotes'), $v);
+		}
+		else
+		{
+			return stripslashes($v);
+		}
+	}
+
+	/**
+	 * Convert special characters to HTML entities
+	 * @param mixed $v
+	 * @return mixed $v
+	 */
+	private static function html_safe($v)
+	{
+		if ( is_array($v) )
+		{
+			return array_map('html_safe', $v);
+		}
+		else
+		{
+			return htmlentities($v, ENT_QUOTES, 'UTF-8');
+		}
+	}
+
+	/**
 	 * Sanatize user input
 	 */
 	private function input_sanitize()
 	{
-	    /**
-		 * Undo magic quotes
-		 * @see http://php.net/magic_quotes
-		 */
-		if ( !function_exists('undo_magic_quotes') )
-		{
-			function undo_magic_quotes($v)
-			{
-				if ( is_array($v) )
-				{
-					return array_map('undo_magic_quotes', $v);
-				}
-				else
-				{
-					return stripslashes($v);
-				}
-			}
-		}
-
     	/**
 		 * Recursively remove magic quotes
 		 */
 		if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() )
 	    {
-			$_GET    = array_map('undo_magic_quotes', $_GET);
-			$_POST   = array_map('undo_magic_quotes', $_POST);
-			$_COOKIE = array_map('undo_magic_quotes', $_COOKIE);
+			$_GET    = array_map(array($this, 'undo_magic_quotes'), $_GET);
+			$_POST   = array_map(array($this, 'undo_magic_quotes'), $_POST);
+			$_COOKIE = array_map(array($this, 'undo_magic_quotes'), $_COOKIE);
 		}
 
 		/*
@@ -268,33 +281,14 @@ class model
 
 		unset($_POST, $_GET);
 
-    	/**
-		 * Convert special characters to HTML entities
-		 * @param string $v
-		 */
-		if ( !function_exists('html_safe') )
-		{
-			function html_safe($v)
-			{
-				if ( is_array($v) )
-				{
-					return array_map('html_safe', $v);
-				}
-				else
-				{
-					return htmlentities($v, ENT_QUOTES, 'UTF-8');
-				}
-			}
-		}
-
 		foreach ( $this->POST_raw as $k => $v )
 		{
-			$this->POST_html_safe[$k] = html_safe($v);
+			$this->POST_html_safe[$k] = $this->html_safe($v);
 		}
 
 		foreach ( $this->GET_raw as $k => $v )
 		{
-			$this->GET_html_safe[$k] = html_safe($v);
+			$this->GET_html_safe[$k] = $this->html_safe($v);
 		}
 
 		$this->hook('input_sanitize');

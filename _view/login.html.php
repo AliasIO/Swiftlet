@@ -1,4 +1,4 @@
-<h1><?php echo t($contr->pageTitle) ?></h1>
+<h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
 <?php if ( !empty($view->error) ): ?>
 <p class="message error"><?php echo $view->error ?></p>
@@ -11,13 +11,13 @@
 <form id="formLogin" method="post" action="./<?php echo !empty($model->GET_raw['ref']) ? '?ref=' . rawurlencode($model->GET_raw['ref']) : '' ?>">
 	<fieldset>
 		<dl>
-			<dt><label for="username"><?php echo t('Username') ?></label></dt>
+			<dt><label for="username"><?php echo $model->t('Username') ?></label></dt>
 			<dd>
 				<input type="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="password"><?php echo t('Password') ?></label></dt>
+			<dt><label for="password"><?php echo $model->t('Password') ?></label></dt>
 			<dd>
 				<input type="password" name="password" id="password" value=""/>
 			</dd>
@@ -29,7 +29,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Login') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Login') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>

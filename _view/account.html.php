@@ -1,4 +1,4 @@
-<h1><?php echo t($contr->pageTitle) ?></h1>
+<h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
 <?php if ( $model->session->get('user is owner') ): ?>
 <?php if ( $view->action == 'edit' ): ?>
@@ -28,14 +28,14 @@
 	<fieldset>
 		<?php if ( $view->action == 'edit' ): ?>
 		<dl>
-			<dt><?php echo t('Id') ?></dt>
+			<dt><?php echo $model->t('Id') ?></dt>
 			<dd>
 				<?php echo $view->userId ?>
 			</dd>
 		</dl>
 		<?php endif ?>
 		<dl>
-			<dt><label for="username"><?php echo t('Username') ?></label></dt>
+			<dt><label for="username"><?php echo $model->t('Username') ?></label></dt>
 			<dd>
 				<?php if ( $model->session->get('user is owner') ): ?>
 				<input type="text" name="username" id="username" value="<?php echo $model->POST_html_safe['username'] ?>"/>
@@ -49,7 +49,7 @@
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="new_password"><?php echo $view->action == 'edit' ? t('New password') : t('Password') ?> (2x)</label></dt>
+			<dt><label for="new_password"><?php echo $view->action == 'edit' ? $model->t('New password') : $model->t('Password') ?> (2x)</label></dt>
 			<dd>
 				<input type="password" name="new_password" id="new_password"/>
 				
@@ -69,23 +69,23 @@
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="email"><?php echo t('E-mail address') ?></label></dt>
+			<dt><label for="email"><?php echo $model->t('E-mail address') ?></label></dt>
 			<dd>
 				<input type="text" name="email" id="email" value="<?php echo $model->POST_html_safe['email'] ?>"/>
 				
 				<?php if ( isset($model->form->errors['email']) ): ?>
-				<span class="error"><?php echo t('Invalid e-mail address') ?></span>
+				<span class="error"><?php echo $model->t('Invalid e-mail address') ?></span>
 				<?php endif ?>
 			</dd>
 		</dl>
 		<?php if ( $model->session->get('user is owner') ): ?>
 		<dl>
-			<dt><label for="auth"><?php echo t('Owner privileges') ?></label></dt>
+			<dt><label for="auth"><?php echo $model->t('Owner privileges') ?></label></dt>
 			<dd>
 				<?php if ( $model->session->get('user id') != $view->userId ): ?>
 				<input type="checkbox" name="owner" value="1" <?php echo $model->POST_html_safe['owner'] ? 'checked="checked"' : '' ?>/>
 				<?php else: ?>
-				<?php echo t('Yes') ?>
+				<?php echo $model->t('Yes') ?>
 				<?php endif ?>
 			</dd>
 		</dl>
@@ -95,7 +95,7 @@
 	<fieldset>
 		<?php foreach ( $view->prefs as $pref ): ?>
 		<dl>
-			<dt><label for="pref-<?php echo $pref['id'] ?>"><?php echo t($pref['pref']) ?></label></dt>
+			<dt><label for="pref-<?php echo $pref['id'] ?>"><?php echo $model->t($pref['pref']) ?></label></dt>
 			<dd>
 				<?php
 				switch ( $pref['type'] )
@@ -103,9 +103,9 @@
 					case 'select':
 						?>
 						<select name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>">
-						<option value="" ><?php echo t('Select&hellip;') ?></option>
+						<option value="" ><?php echo $model->t('Select&hellip;') ?></option>
 						<?php foreach ( $pref['options'] as $k => $v ): ?>
-						<option value="<?php echo h($k) ?>" <?php echo h($k) == $model->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo h(t($v)) ?></option>
+						<option value="<?php echo $model->h($k) ?>" <?php echo $model->h($k) == $model->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo $model->h($model->t($v)) ?></option>
 						<?php endforeach ?>
 						</select>
 						<?php
@@ -127,7 +127,7 @@
 				?>
 
 				<?php if ( isset($model->form->errors['pref-' . $pref['id']]) ): ?>
-				<span class="error"><?php echo t('Invalid') ?></span>
+				<span class="error"><?php echo $model->t('Invalid') ?></span>
 				<?php endif ?>
 			</dd>
 		</dl>
@@ -137,7 +137,7 @@
 	<?php if ( $view->action == 'edit' && ( !$model->session->get('user is owner') || $model->session->get('user id') == $view->userId ) ): ?> 
 	<fieldset>
 		<dl>
-			<dt><label for="password"><?php echo t('Password') ?></label></dt>
+			<dt><label for="password"><?php echo $model->t('Password') ?></label></dt>
 			<dd>
 				<input type="password" name="password" id="password"/>
 				
@@ -154,7 +154,7 @@
 			<dd>
 				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-				<input type="submit" name="form-submit" id="form-submit" value="<?php echo t('Save settings') ?>"/>
+				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Save settings') ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -163,7 +163,7 @@
 <?php if ( $model->session->get('user is owner') ): ?>
 <a name="users"></a>
 
-<h2><?php echo t('All accounts') ?></h2>
+<h2><?php echo $model->t('All accounts') ?></h2>
 
 <?php if ( $view->users ): ?>
 <p>
@@ -173,7 +173,7 @@
 <table>
 	<thead>
 		<tr>
-			<th><?php echo t('Username') ?></th>
+			<th><?php echo $model->t('Username') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -192,7 +192,7 @@
 </p>
 <?php else: ?>
 <p>
-	<em><?php echo t('No accounts') ?></em>
+	<em><?php echo $model->t('No accounts') ?></em>
 </p>
 <?php endif ?>
 

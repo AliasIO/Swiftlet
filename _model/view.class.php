@@ -84,31 +84,6 @@ class view
 		$contr = $this->contr;
 		$view  = $this;
 
-		/**
-		 * Shorthand for $model->h()
-		 * @param string $v
-		 * @return string
-		 */
-		function h($v)
-		{
-			global $model;
-
-			return $model->h($v);
-		}
-
-		/**
-		 * Shorthand for $model->t()
-		 * @param string $v
-		 * @param mixed $args
-		 * @return string
-		 */
-		function t($v, $args = '')
-		{
-			global $model;
-
-			return $model->t($v, $args);
-		}
-
 		foreach ( $this->filesLoaded as $file )
 		{
 			if ( is_file($contr->viewPath . $file) )

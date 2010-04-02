@@ -41,7 +41,7 @@ switch ( $hook )
 					)
 				VALUES (
 					"admin perm access",
-					"Manage roles and permissions",
+					"Manage roles",
 					"Permissions"
 				),
 				(

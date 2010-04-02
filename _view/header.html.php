@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
 	<head>
-		<title><?php echo $view->siteName ?> - <?php echo t($view->pageTitle) ?></title>
+		<title><?php echo $view->siteName ?> - <?php echo $model->t($view->pageTitle) ?></title>
 
 		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>css.php?file=global"/>
 
@@ -11,7 +11,7 @@
 		<meta http-equiv="content-type"     content="text/html; charset=UTF-8"/>
 		<meta http-equiv="content-language" content="en-US"/>
 
-		<meta name="title"        content="<?php echo $view->siteName ?> - <?php echo t($view->pageTitle) ?>"/>
+		<meta name="title"        content="<?php echo $view->siteName ?> - <?php echo $model->t($view->pageTitle) ?>"/>
 		<meta name="distribution" content="global"/>
 		<meta name="generator"    content="Swiftlet - http://swiftlet.org"/>
 		<meta name="copyright"    content="<?php echo $view->siteCopyright   ?>"/>
@@ -29,7 +29,7 @@
 	<body class="<?php echo $contr->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">
 			<h1 id="logo">
-				<a href="<?php echo $view->rootPath ?>" title="<?php echo t('Home') ?>"><?php echo $view->siteName ?></a>
+				<a href="<?php echo $view->rootPath ?>" title="<?php echo $model->t('Home') ?>"><?php echo $view->siteName ?></a>
 			</h1>
 
 			<ul class="header-links">
@@ -37,20 +37,20 @@
 
 				<?php if ( !empty($model->perm->ready) && $model->perm->check('admin access') ): ?>
 				<li>
-					<a href="<?php echo $view->rootPath ?>admin/"><?php echo t('Dashboard') ?></a>
+					<a href="<?php echo $view->rootPath ?>admin/"><?php echo $model->t('Dashboard') ?></a>
 				</li>
 				<?php endif ?>
 				
 				<?php if ( $model->session->get('user id') != user::guestId ): ?>
 				<li>
-					<a href="<?php echo $view->rootPath ?>account/"><?php echo t('Account', $model->session->get('user username')) ?></a>
+					<a href="<?php echo $view->rootPath ?>account/"><?php echo $model->t('Account', $model->session->get('user username')) ?></a>
 				</li>
 				<li>
-					<a href="<?php echo $view->rootPath ?>login/?logout"><?php echo t('Logout') ?></a>
+					<a href="<?php echo $view->rootPath ?>login/?logout"><?php echo $model->t('Logout') ?></a>
 				</li>
 				<?php else: ?>
 				<li>
-					<a href="<?php echo $view->rootPath ?>login/"><?php echo t('Login') ?></a>
+					<a href="<?php echo $view->rootPath ?>login/"><?php echo $model->t('Login') ?></a>
 				</li>
 				<?php endif; ?>
 				
@@ -64,6 +64,6 @@
 			<div id="content">
 				<?php if ( $contr->inAdmin ): ?>
 				<p id="admin-bar">
-					<?php echo t('Administration') ?>
+					<?php echo $model->t('Administration') ?>
 				</p>
 				<?php endif ?>
