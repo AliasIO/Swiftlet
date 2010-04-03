@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('session', 'user'),
-			'hooks'        => array('admin' => 1, 'init' => 4, 'install' => 1, 'remove' => 1)
+			'hooks'        => array('dashboard' => 1, 'init' => 4, 'install' => 1, 'remove' => 1)
 			);
 
 		break;
@@ -136,7 +136,7 @@ switch ( $hook )
 		}
 
 		break;
-	case 'admin':
+	case 'dashboard':
 		$params[] = array(
 			'name'        => 'Permsissions',
 			'description' => 'Add and edit roles and permissions',

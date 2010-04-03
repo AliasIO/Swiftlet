@@ -18,53 +18,65 @@ $config = array(
 	'siteKeywords'    => '',
 
 	/**
-	 * System password. Required for some operations like installing plug-ins.
+	 * System password. Required for operations like installing plug-ins.
 	 */
 	'sysPassword' => '',
 
 	/**
-	 * debugMode should be set to FALSE when running in a production environment.
-	 */
-	'debugMode' => TRUE, // TRUE | FALSE
-
-	/**
-	 * URL rewrites.
+	 * URL rewrites, working .htaccess file required.
 	 */
 	'urlRewrite' => TRUE // TRUE | FALSE
 	);
+
+/*
+ * testing should be set to FALSE when running in a production environment.
+ */
+switch ( $model->userIp )
+{
+	case '127.0.0.1':
+	case '0.0.0.0':
+	case '::1':
+		$config['testing'] = TRUE;
+		
+		break;
+	default:
+		$config['testing'] = FALSE;
+}
 
 /**
  * MySQL Database settings
  * Leave dbName empty if no database is used
  */
-switch ( $model->userIp )
+if ( $config['testing'] )
 {
 	/**
 	 * Settings for local development and testing environment
 	 */
-	case '127.0.0.1':
-	case '0.0.0.0':
-	case '::1':
-		$config += array(
-			'dbHost'    => 'localhost',
-			'dbUser'    => 'root',
-			'dbPass'    => '',
-			'dbName'    => '',
-			'dbPrefix'  => 'sw_',
-			'dbCaching' => TRUE
-			);
-
-		break;
+	$config += array(
+		'dbHost'    => 'localhost',
+		'dbUser'    => '',
+		'dbPass'    => '',
+		'dbName'    => '',
+		'dbPrefix'  => 'sw_',
+		'dbCaching' => TRUE
+		);
+}
+else
+{
 	/**
 	 * Settings for production environment
 	 */
-	default:
-		$config += array(
-			'dbHost'    => 'localhost',
-			'dbUser'    => 'root',
-			'dbPass'    => '',
-			'dbName'    => '',
-			'dbPrefix'  => 'sw_',
-			'dbCaching' => TRUE
-			);
+	$config += array(
+		'dbHost'    => 'localhost',
+		'dbUser'    => '',
+		'dbPass'    => '',
+		'dbName'    => '',
+		'dbPrefix'  => 'sw_',
+		'dbCaching' => TRUE
+		);
 }
+
+/*
+ * debugMode should be set to FALSE when running in a production environment.
+ */
+$config['debugMode'] = $config['testing']; // TRUE | FALSE

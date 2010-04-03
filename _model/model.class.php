@@ -234,11 +234,11 @@ class model
 	 * @param mixed $v
 	 * @return mixed $v
 	 */
-	private static function html_safe($v)
+	private function html_safe($v)
 	{
 		if ( is_array($v) )
 		{
-			return array_map('html_safe', $v);
+			return array_map(array($this, 'html_safe'), $v);
 		}
 		else
 		{

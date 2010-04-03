@@ -8,10 +8,10 @@
 if ( !isset($model) ) die('Direct access to this file is not allowed');
 
 /**
- * Administration
+ * Dashboard
  * @abstract
  */
-class admin
+class dashboard
 {
 	public
 		$pages = array(),
@@ -34,7 +34,7 @@ class admin
 
 		$pages = array();
 
-		$model->hook('admin', $pages);
+		$model->hook('dashboard', $pages);
 
 		usort($pages, array($this, 'page_sort'));
 

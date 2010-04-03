@@ -13,17 +13,17 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$model->check_dependencies(array('admin', 'perm'));
+$model->check_dependencies(array('dashboard', 'perm'));
 
-if ( !$model->perm->check('admin access') )
+if ( !$model->perm->check('dashboard access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$model->end();
 }
 
-$view->pages = $model->admin->pages;
+$view->pages = $model->dashboard->pages;
 
-$view->load('admin/admin.html.php');
+$view->load('admin/dashboard.html.php');
 
 $model->end();

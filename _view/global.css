@@ -79,6 +79,10 @@ table {
 	width: 100%;
 }
 
+thead {
+	background: var(form-background-color);
+}
+
 th, td {
 	border-color: var(form-border-color);
 	border-style: solid;
@@ -88,7 +92,6 @@ th, td {
 }
 
 th {
-	background: var(form-background-color);
 	font-weight: bold;
 }
 
@@ -123,6 +126,18 @@ form {
 		border-color: #D77;
 	}
 
+	form dl {
+		padding: .5em .5em 0 .5em;
+	}
+
+		form dl em {
+			font-size: 11px;
+		}
+	
+	form dt em, form dd em {
+		display: block;
+	}
+
 fieldset {
 	background: var(form-background-color);
 	border-radius: 3px;
@@ -136,34 +151,6 @@ fieldset {
 	fieldset p {
 		clear: both;
 		padding: .5em .5em 0 .5em;
-	}
-
-dl {
-	clear: both;
-	padding: .5em .5em 0 .5em;
-}
-
-	dl em {
-		font-size: 11px;
-	}
-
-dt {
-	float: left;
-	width: 12em;
-}
-
-	dt em {
-		display: block;
-	}
-
-dd {
-	float: left;
-	margin-left: 1em;
-}
-
-	dd p {
-		display: inline;
-		padding: 0;
 	}
 
 input, textarea, select, button {
@@ -374,6 +361,21 @@ form tbody th {
 		margin-left: 3em;
 	}
 
+	#content dl {
+		clear: both;
+		overflow: hidden;
+	}
+
+	#content dt {
+		float: left;
+		width: 12em;
+	}
+
+	#content dd {
+		float: left;
+		margin-left: 1em;
+	}
+
 	#content .message {
 		border-radius: 3px;
 		-moz-border-radius: 3px;
@@ -411,6 +413,20 @@ form tbody th {
 			display: inline;
 			font-size: .9em;
 			margin-left: 0;
+		}
+
+	#content .wrap-column {
+		float: left;
+		width: 50%;
+	}
+
+		#content .wrap-column .column.left {
+			border-right: 1px solid var(form-border-color);
+			padding-right: 2em;
+		}
+
+		#content .wrap-column .column.right {
+			padding-left: 2em;
 		}
 
 #admin-bar {

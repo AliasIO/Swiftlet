@@ -44,13 +44,15 @@ if ( $model->configMissing )
 }
 else
 {
-	if ( $model->debugMode )
+	if ( $model->testing )
 	{
 		$view->notices[] = $model->t(
-			'%1$s is turned on in %2$s. Be sure to turn it off when running in a production environment.',
+			'%1$s is set to %2$s in %3$s. Be sure to change it to %4$s when running in a production environment.',
 			array(
-				'<code>debugMode</code>',
-				'<code>/_config.php</code>'
+				'<code>testing</code>',
+				'<code>TRUE</code>',
+				'<code>/_config.php</code>',
+				'<code>FALSE</code>'
 				)
 			);
 	}

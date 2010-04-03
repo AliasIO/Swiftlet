@@ -16,7 +16,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'session'),
-			'hooks'        => array('admin' => 2, 'init' => 3, 'install' => 1, 'unit_tests' => 1, 'remove' => 1)
+			'hooks'        => array('dashboard' => 2, 'init' => 3, 'install' => 1, 'unit_tests' => 1, 'remove' => 1)
 			);
 
 		break;
@@ -122,7 +122,7 @@ switch ( $hook )
 		}
 
 		break;
-	case 'admin':
+	case 'dashboard':
 		$params[] = array(
 			'name'        => 'Accounts',
 			'description' => 'Add and edit accounts',

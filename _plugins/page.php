@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('admin' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
+			'hooks'        => array('dashboard' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
 			);
 
 		break;
@@ -91,7 +91,7 @@ switch ( $hook )
 		}
 
 		break;
-	case 'admin':
+	case 'dashboard':
 		$params[] = array(
 			'name'        => 'Pages',
 			'description' => 'Add and edit pages',

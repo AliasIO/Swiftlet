@@ -1,6 +1,10 @@
 # 1.2.0.A4 - 1.2.0.B1
 #
 # Removed all global functions including t() and h() shorthands.
+# Renamed admin plug-in to dashboard
+# Added testing environment variable to configuration
+# Extended the admin dashboard with installation details
+# UI changes
 #
 #
 # 1.2.0.A3 - 1.2.0.A4

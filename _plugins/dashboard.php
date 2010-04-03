@@ -11,7 +11,7 @@ switch ( $hook )
 {
 	case 'info':
 		$info = array(
-			'name'         => 'admin',
+			'name'         => 'dashboard',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'perm', 'session'),
@@ -22,23 +22,23 @@ switch ( $hook )
 	case 'install':
 		if ( !empty($model->perm->ready) )
 		{
-			$model->perm->create('Administration', 'admin access', 'Access to the dashboard');
+			$model->perm->create('Administration', 'dashboard access', 'Access to the dashboard');
 		}
 
 		break;
 	case 'remove':
 		if ( !empty($model->perm->ready) )
 		{
-			$model->perm->delete('admin access');
+			$model->perm->delete('dashboard access');
 		}
 
 		break;
 	case 'init':
 		if ( !empty($model->perm->ready) )
 		{
-			require($contr->classPath . 'admin.php');
+			require($contr->classPath . 'dashboard.php');
 
-			$model->admin = new admin($model);
+			$model->dashboard = new dashboard($model);
 		}
 
 		break;
