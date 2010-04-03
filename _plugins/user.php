@@ -16,7 +16,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'session'),
-			'hooks'        => array('dashboard' => 2, 'init' => 3, 'install' => 1, 'unit_tests' => 1, 'remove' => 1)
+			'hooks'        => array('dashboard' => 2, 'init' => 3, 'install' => 1, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1)
 			);
 
 		break;
@@ -119,6 +119,21 @@ switch ( $hook )
 			require($contr->classPath . 'user.php');
 
 			$model->user = new user($model);
+		}
+
+		break;
+	case 'menu':
+		if ( !empty($model->session->ready) )
+		{
+			if ( $model->session->get('user id') == user::guestId )
+			{
+				$params['Login'] = $view->rootPath . 'login/';
+			}
+			else
+			{
+				$params['Account'] = $view->rootPath . 'account/';
+				$params['Logout']  = $view->rootPath . 'login/?logout';
+			}
 		}
 
 		break;

@@ -5,6 +5,7 @@
 # Added testing environment variable to configuration
 # Extended the admin dashboard with installation details
 # UI changes
+# Added menu hook for main navigation menu
 #
 #
 # 1.2.0.A3 - 1.2.0.A4

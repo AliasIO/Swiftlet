@@ -103,6 +103,24 @@ if ( isset($model->GET_raw['ref']) && empty($view->error) )
 	$view->notice = $model->t('Please login with an authenticated account.');
 }
 
+if ( $model->session->get('user id') == user::guestId )
+{
+	$model->db->sql('
+		SELECT
+			`date_login_attempt`
+		FROM `' . $model->db->prefix . 'users`
+		WHERE
+			`date_login_attempt` AND
+			`id` = 1
+		LIMIT 1
+		;');
+
+	if ( empty($model->db->result) )
+	{
+		$view->notice = $model->t('An account has been created with username "Admin" and the system password (%1$s in %2$s).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
+	}
+}
+
 if ( isset($model->GET_raw['notice']) )
 {
 	switch ( $model->GET_raw['notice'] )

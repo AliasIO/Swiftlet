@@ -14,10 +14,16 @@ switch ( $hook )
 			'name'       => 'header',
 			'version'    => '1.0.0',
 			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'hooks'      => array('header' => 999)
+			'hooks'      => array('init' => 999, 'header' => 999)
 			);
 
-		break;	
+		break;
+	case 'init':
+		require($contr->classPath . 'header.php');
+
+		$model->header = new header($model);
+
+		break;
 	case 'header':
 		$view->load('header.html.php');
 

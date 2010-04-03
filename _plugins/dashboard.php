@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'perm', 'session'),
-			'hooks'        => array('init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
+			'hooks'        => array('init' => 5, 'install' => 1, 'menu' => 1, 'remove' => 1, 'unit_tests' => 1)
 			);
 
 		break;
@@ -39,6 +39,16 @@ switch ( $hook )
 			require($contr->classPath . 'dashboard.php');
 
 			$model->dashboard = new dashboard($model);
+		}
+
+		break;
+	case 'menu':
+		if ( !empty($model->perm->ready) )
+		{
+			if ( $model->perm->check('dashboard access') )
+			{
+				$params['Dashboard'] = $view->rootPath . 'admin/';
+			}
 		}
 
 		break;

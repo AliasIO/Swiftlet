@@ -32,31 +32,16 @@
 				<a href="<?php echo $view->rootPath ?>" title="<?php echo $model->t('Home') ?>"><?php echo $view->siteName ?></a>
 			</h1>
 
-			<ul class="header-links">
-				<?php if ( isset($model->user) ): ?>
-
-				<?php if ( !empty($model->perm->ready) && $model->perm->check('admin access') ): ?>
+			<?php if ( !empty($model->header->menu) ): ?>
+			<ul id="menu">
+				<?php foreach ( $model->header->menu as $item => $path ): ?>
 				<li>
-					<a href="<?php echo $view->rootPath ?>admin/"><?php echo $model->t('Dashboard') ?></a>
+					<a href="<?php echo $model->h($path) ?>"><?php echo $model->h($model->t($item)) ?></a>
 				</li>
-				<?php endif ?>
-				
-				<?php if ( $model->session->get('user id') != user::guestId ): ?>
-				<li>
-					<a href="<?php echo $view->rootPath ?>account/"><?php echo $model->t('Account', $model->session->get('user username')) ?></a>
-				</li>
-				<li>
-					<a href="<?php echo $view->rootPath ?>login/?logout"><?php echo $model->t('Logout') ?></a>
-				</li>
-				<?php else: ?>
-				<li>
-					<a href="<?php echo $view->rootPath ?>login/"><?php echo $model->t('Login') ?></a>
-				</li>
-				<?php endif; ?>
-				
-				<?php endif; ?>
+				<?php endforeach ?>
 			</ul>
-			
+			<?php endif ?>
+
 			<div style="clear: both;"></div>
 		</div>
 

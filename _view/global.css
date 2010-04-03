@@ -274,20 +274,20 @@ form tbody th {
 		text-decoration: underline;
 	}
 
-	#header .header-links {
-		float: right;
-		font-size: 12px;
-	}
+#menu {
+	float: right;
+	font-size: 12px;
+}
 
-	#header .header-links li {
-		display: block;
-		float: left;
-	}
+#menu li {
+	display: block;
+	float: left;
+}
 
-	#header .header-links a:link, #header .header-links a:hover, #header .header-links a:active, #header .header-links a:visited {
-		margin-left: 1em;
-		padding: 0 0 0 1em;
-	}
+#menu a:link, #menu a:hover, #menu a:active, #menu a:visited {
+	margin-left: 1em;
+	padding: 0 0 0 1em;
+}
 
 #logo {
 	float:left;
@@ -439,7 +439,7 @@ form tbody th {
 	border-width: 0 1px 1px 0;
 	color: var(content-background-color);
 	font-weight: bold;
-	padding: .2em 0 .4em 0;
+	padding: .3em 0;
 	text-align: center;
 }
 
