@@ -191,11 +191,11 @@ else if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'created':
-			$view->notice = $model->t('The page has been created.');
+			$view->notice = $model->t('The page has been created (%1$sview%2$s).', array('<a href="' . $model->route('p/' . $model->h($model->GET_raw['permalink'])) . '">', '</a>'));
 			
 			break;
 		case 'updated':
-			$view->notice = $model->t('The page has been updated.');
+			$view->notice = $model->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $model->route('p/' . $model->h($model->GET_raw['permalink'])) . '">', '</a>'));
 			
 			break;
 		case 'deleted':

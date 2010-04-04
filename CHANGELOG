@@ -1,3 +1,9 @@
+# 1.2.0.B1 - 1.2.0.B2
+#
+# Fixed thumbnail creation for file uploads
+# Fixed scrollbar in CKEditior file manager popup
+#
+#
 # 1.2.0.A4 - 1.2.0.B1
 #
 # Removed all global functions including t() and h() shorthands.

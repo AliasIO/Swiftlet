@@ -55,7 +55,7 @@ class file
 	{
 		$contr = $this->contr;
 
-		if ( is_file($file = $contr->rootPath . 'file/uploads/' . $hash) )
+		if ( is_file($file = $contr->rootPath . 'uploads/files/' . $hash) )
 		{
 			$size = 120;
 
@@ -137,7 +137,7 @@ class file
 						);
 				}
 
-				imagepng($thumb, $contr->rootPath . 'file/uploads/thumbs/' . $hash);
+				imagepng($thumb, $contr->rootPath . 'uploads/files/thumbs/' . $hash);
 			}
 		}
 	}

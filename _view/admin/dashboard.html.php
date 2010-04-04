@@ -33,11 +33,11 @@
 		</dl>
 		<dl>
 			<dt>Plugins</dt>
-			<dd><?php echo count($model->pluginsHooked) ?> (<a href="<?php echo $view->rootPath ?>installer/"><?php echo $model->t('installer') ?></a>)</dd>
+			<dd><?php echo count($model->pluginsHooked) ?><?php echo $view->newPlugins ? ', ' . $model->t('%1$s not installed', $view->newPlugins) : '' ?> (<a href="<?php echo $view->rootPath ?>installer/"><?php echo $model->t('installer') ?></a>)</dd>
 		</dl>
 		<dl>
 			<dt>Environment</dt>
-			<dd><?php echo $model->testing ? $model->t('Testing') : $model->t('Production') ?></dd>
+			<dd><?php echo $model->testing ? $model->t('Testing (%1$srun unit tests%2$s)', array('<a href="' . $view->rootPath . 'unit_tests/">', '</a>')) : $model->t('Production') ?></dd>
 		</dl>
 		<dl>
 			<dt>Debug mode</dt>

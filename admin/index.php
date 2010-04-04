@@ -22,7 +22,26 @@ if ( !$model->perm->check('dashboard access') )
 	$model->end();
 }
 
-$view->pages = $model->dashboard->pages;
+$newPlugins = 0;
+
+if ( isset($model->db) )
+{
+	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
+	{
+		$version = $plugin->get_version();
+		
+		if ( !$version )
+		{
+			if ( isset($plugin->info['hooks']['install']) )
+			{
+				$newPlugins ++;
+			}
+		}
+	}
+}
+
+$view->newPlugins = $newPlugins;
+$view->pages      = $model->dashboard->pages;
 
 $view->load('admin/dashboard.html.php');
 

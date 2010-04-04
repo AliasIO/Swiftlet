@@ -134,9 +134,9 @@
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */	
 	if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) {
-		$('body').css({
+		$('html, body').css({
 			height:    '100%',
-			overflowY: 'auto'
+			overflowY: 'scroll'
 			});
 	}
 	/* ]]> */ -->

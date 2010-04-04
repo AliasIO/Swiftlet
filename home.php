@@ -12,7 +12,7 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$newPlugins = array();
+$newPlugins = 0;
 
 if ( isset($model->db) )
 {
@@ -24,7 +24,7 @@ if ( isset($model->db) )
 		{
 			if ( isset($plugin->info['hooks']['install']) )
 			{
-				$newPlugins[] = TRUE;
+				$newPlugins ++;
 			}
 		}
 	}
@@ -84,12 +84,12 @@ else
 			);
 	}
 
-	if ( count($newPlugins) )
+	if ( $newPlugins )
 	{
 		$view->notices[] = $model->t(
 			'%1$s Plug-in(s) require installation (go to %2$s).',
 			array(
-				count($newPlugins),
+				$newPlugins,
 				'<a href="' . $view->rootPath . 'installer/"><code>/installer/</code></a>'
 				)
 			);
