@@ -103,7 +103,6 @@ switch ( $hook )
 			'group'       => 'Content',
 			'path'        => 'admin/files/',
 			'perm'        => 'admin file access',
-			'order'       => 2
 			);
 
 		break;

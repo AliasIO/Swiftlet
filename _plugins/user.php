@@ -16,7 +16,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'session'),
-			'hooks'        => array('dashboard' => 2, 'init' => 3, 'install' => 1, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1)
+			'hooks'        => array('dashboard' => 3, 'init' => 3, 'install' => 1, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1)
 			);
 
 		break;
@@ -142,8 +142,7 @@ switch ( $hook )
 			'name'        => 'Accounts',
 			'description' => 'Add and edit accounts',
 			'group'       => 'Users',
-			'path'        => 'account/',
-			'order'       => 3
+			'path'        => 'account/'
 			);
 		
 		break;

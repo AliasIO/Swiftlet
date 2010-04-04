@@ -97,8 +97,7 @@ switch ( $hook )
 			'description' => 'Add and edit pages',
 			'group'       => 'Content',
 			'path'        => 'admin/pages/',
-			'perm'        => 'admin page access',
-			'order'       => 1
+			'perm'        => 'admin page access'
 			);
 
 		break;

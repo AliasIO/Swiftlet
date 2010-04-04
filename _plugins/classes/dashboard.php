@@ -36,8 +36,6 @@ class dashboard
 
 		$model->hook('dashboard', $pages);
 
-		usort($pages, array($this, 'page_sort'));
-
 		foreach ( $pages as $page )
 		{
 			if ( !isset($page['perm']) || $model->perm->check($page['perm']) )
@@ -52,16 +50,5 @@ class dashboard
 		}
 
 		$this->ready = TRUE;
-	}
-
-	/**
-	 * Sort pages by order
-	 * @param array $a
-	 * @param array $b
-	 * @return int
-	 */
-	private function page_sort($a, $b)
-	{
-		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? 1 : - 1;
 	}
 }

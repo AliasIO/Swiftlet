@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('session', 'user'),
-			'hooks'        => array('dashboard' => 1, 'init' => 4, 'install' => 1, 'remove' => 1)
+			'hooks'        => array('dashboard' => 4, 'init' => 4, 'install' => 1, 'remove' => 1)
 			);
 
 		break;
@@ -142,8 +142,7 @@ switch ( $hook )
 			'description' => 'Add and edit roles and permissions',
 			'group'       => 'Users',
 			'path'        => 'admin/perms/',
-			'perm'        => 'admin perm access',
-			'order'       => 4
+			'perm'        => 'admin perm access'
 			);
 
 		break;
