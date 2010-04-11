@@ -8,11 +8,11 @@
 
 		<script type="text/javascript">
 			<!-- /* <![CDATA[ */
-			// Fade in notices and error messages
-			$('.notice, .error')
+			// Fade in message and error messages
+			$('.message')
 				.css({
-					'display' : 'none'
-					})
+					display: 'none'
+				})
 				.fadeIn('slow');
 			/* ]]> */ -->
 		</script>

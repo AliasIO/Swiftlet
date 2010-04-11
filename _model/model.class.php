@@ -41,7 +41,7 @@ class model
 		/**
 		 * Get the user's real IP address
 		 */
-		$model->userIp = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'] );
+		$model->userIp = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : ( !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '' ) );
 
 		/*
 		 * Load configuration
@@ -307,9 +307,24 @@ class model
 
 		$pageNum = isset($model->GET_raw['p_' . $id]) ? $model->GET_raw['p_' . $id] : 1;
 
-		$get = preg_replace('/(^|&)' . preg_quote('p_' . $id, '/') . '=[0-9]*/', '', $_SERVER['QUERY_STRING']);
+		$query = !empty($model->GET_raw) ? $model->GET_raw : array();
 
-		$url = './' . ( $get ? '?' . $get . '&' : '?' ) . 'p_' . $id . '=';
+		unset($query['p_' . $id]);
+
+		$params = '';
+
+		if ( $query )
+		{
+			foreach ( $query as $k => $v )
+			{
+				if ( !in_array($k, $exclude) )
+				{
+					$params[] = $k . '=' . $v;
+				}
+			}
+		}
+
+		$url = '?' . ( $params ? implode('&', $params) . '&' : '' ) . 'p_' . $id . '=';
 
 		$pages = ceil($rows / $maxRows);
 

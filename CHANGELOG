@@ -2,6 +2,7 @@
 #
 # Fixed thumbnail creation for file uploads
 # Fixed scrollbar in CKEditior file manager popup
+# Fixed pagination in combination with routes
 #
 #
 # 1.2.0.A4 - 1.2.0.B1
