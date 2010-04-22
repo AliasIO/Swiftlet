@@ -301,7 +301,7 @@ class model
 	 * @param int $maxRows
 	 * @return array
 	 */
-	function paginate($id, $rows, $maxRows)
+	function paginate($id, $rows, $maxRows, $exclude = array())
 	{
 		$model = $this;
 
