@@ -76,6 +76,11 @@ class user
 						'user username' => user::guestId
 						));
 				}
+				
+				if ( $model->session->get('user id') != user::guestId )
+				{
+					$model->caching = FALSE;
+				}
 			}
 		}
 	}

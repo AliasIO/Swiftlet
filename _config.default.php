@@ -23,6 +23,11 @@ $config = array(
 	'sysPassword' => '',
 
 	/**
+	 * Cache dynamic pages to improve load times
+	 */
+	'caching' => FALSE, // TRUE | FALSE
+	
+	/**
 	 * URL rewrites, working .htaccess file required.
 	 */
 	'urlRewrite' => TRUE // TRUE | FALSE

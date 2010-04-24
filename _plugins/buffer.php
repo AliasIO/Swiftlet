@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'       => 'buffer',
 			'version'    => '1.0.0',
 			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'hooks'      => array('init' => 1, 'end' => 999, 'error' => 999, 'footer' => 1)
+			'hooks'      => array('init' => 3, 'end' => 999, 'error' => 999, 'footer' => 1)
 			);
 
 		break;
@@ -27,18 +27,23 @@ switch ( $hook )
 
 		break;
 	case 'end':
-		$model->debugOutput['buffer output size'] = round(strlen(ob_get_contents()) / 1024 / 1024, 3) . ' MB';
-
-		if ( $model->debugMode && !$contr->standAlone )
+		if ( !empty($model->buffer->ready) )
 		{
-			echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
+			$model->debugOutput['buffer output size'] = round(strlen(ob_get_contents()) / 1024 / 1024, 3) . ' MB';
 
-			print_r($model->debugOutput);
+			$model->buffer->write_cache();
 
-			echo "\n-->";
+			if ( $model->debugMode && !$contr->standAlone )
+			{
+				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
+
+				print_r($model->debugOutput);
+
+				echo "\n-->";
+			}
+
+			$model->buffer->flush();
 		}
-
-		$model->buffer->flush();
 
 		break;
 	case 'error':
