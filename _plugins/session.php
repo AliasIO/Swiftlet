@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db'),
-			'hooks'        => array('init' => 1, 'install' => 1, 'end' => 1, 'remove' => 1)
+			'hooks'        => array('init' => 2, 'install' => 1, 'end' => 1, 'remove' => 1)
 			);
 
 		break;
