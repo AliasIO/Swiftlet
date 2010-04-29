@@ -20,8 +20,9 @@ $model->form->validate(array(
 	'title'       => 'string, empty'
 	));
 
-$id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
-$action = isset($model->GET_raw['action']) ? $model->GET_raw['action'] : FALSE;
+$id       = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
+$action   = isset($model->GET_raw['action'])   ? $model->GET_raw['action']   : FALSE;
+$callback = isset($model->GET_raw['callback']) ? $model->GET_raw['callback'] : FALSE;
 
 if ( !$model->perm->check('admin file access') )
 {
@@ -124,7 +125,7 @@ if ( $model->POST_valid['form-submit'] )
 
 								if ( $model->db->result )
 								{
-									$uploads[] = '<a href="' . $model->route('file/' . $permalink . $extension) . '">' . $model->h($title) . '</a>';
+									$uploads[] = '<a href="' . $model->route('file/' . $permalink . $extension) . '" onclick="callback(\'' . $model->route('file/' . $permalink . $extension) . '\');">' . $model->h($title) . '</a>';
 								}
 							}
 						}
@@ -223,7 +224,7 @@ if ( ( int ) $id )
 
 						if ( $model->db->result )
 						{
-							header('Location: ?notice=deleted');
+							header('Location: ?callback=' . rawurlencode($callback) . '&notice=deleted');
 
 							$model->end();
 						}
@@ -281,9 +282,9 @@ $pagination = $model->paginate('files', count($files), 10);
 
 $view->files           = array_splice($files, $pagination['from'], 10);
 $view->filesPagination = $pagination;
-
-$view->id     = $id;
-$view->action = $action;
+$view->callback        = $model->h($callback);
+$view->id              = $id;
+$view->action          = $action;
 
 $view->load('admin/files.html.php');
 

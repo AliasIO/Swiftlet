@@ -27,9 +27,13 @@ CKEDITOR.config.toolbar  = [
 	['Source']
 	];
 
-CKEDITOR.config.filebrowserBrowseUrl    = '<?php echo $view->rootPath ?>admin/files/?mode=ckeditor';
+CKEDITOR.config.filebrowserBrowseUrl    = '<?php echo $view->rootPath ?>admin/files/?callback=fileBrowserCallback';
 CKEDITOR.config.filebrowserWindowWidth  = '1000';
 CKEDITOR.config.filebrowserWindowHeight = '75%';
+
+function fileBrowserCallback(url) {
+	CKEDITOR.tools.callFunction(2, url);
+}
 <?php
 
 $model->end();

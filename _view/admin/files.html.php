@@ -2,7 +2,7 @@
 
 <?php if ( $view->action != 'upload' ): ?>
 <p>
-	<a class="button" href="?action=upload"><?php echo $model->t('Upload files') ?></a>
+	<a class="button" href="?action=upload&callback=<?php echo $view->callback ?>"><?php echo $model->t('Upload files') ?></a>
 </p>
 <?php endif ?>
 
@@ -17,7 +17,7 @@
 <?php if ( $view->action == 'upload' ): ?>
 <h2><?php echo $model->t('Upload files') ?></h2>
 
-<form id="formFile" method="post" action="./?action=upload" enctype="multipart/form-data">
+<form id="formFile" method="post" action="./?action=upload&callback=<?php echo $view->callback ?>" enctype="multipart/form-data">
 	<?php for ( $i = 0; $i < 5; $i ++ ): ?>
 	<fieldset>
 		<dl>
@@ -51,7 +51,7 @@
 				<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
 
 				<p>
-					<a href="?"><?php echo $model->t('Cancel') ?></a>
+					<a href="?callback=<?php echo $view->callback ?>"><?php echo $model->t('Cancel') ?></a>
 				</p>
 			</dd>
 		</dl>
@@ -95,7 +95,7 @@
 				<?php if ( $file['image'] ): ?>
 				<a
 					href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-					onclick="if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
+					onclick="callback('<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');"
 					>
 					<img src="<?php echo $model->route('file/thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
 				</a>
@@ -104,7 +104,7 @@
 			<td>
 				<a
 					href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-					onclick="if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) window.opener.CKEDITOR.tools.callFunction(2, '<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>'); window.close();"
+					onclick="callback'<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');"
 					>
 					<?php echo $file['title'] ?>
 				</a>
@@ -114,7 +114,7 @@
 			<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : $model->t('n/a') ?></td>
 			<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 			<td>
-				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete"><?php echo $model->t('Delete') ?></a>
+				<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>
 			</td>
 			</td>
 		</tr>
@@ -131,13 +131,27 @@
 </p>
 <?php endif ?>
 
+<?php if ( $view->callback ): ?>
 <script type="text/javascript">
-	<!-- /* <![CDATA[ */	
-	if ( window.opener && typeof(window.opener.CKEDITOR) != 'undefined' ) {
+	<!-- /* <![CDATA[ */
+	var validCallback = window.opener && typeof(window.opener.<?php echo $view->callback ?>) != 'undefined';
+
+	if ( validCallback ) {
 		$('html, body').css({
 			height:    '100%',
 			overflowY: 'scroll'
 			});
 	}
+
+	function callback(url) {
+		if ( validCallback ) {
+			window.opener.<?php echo $view->callback ?>('<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');
+
+			window.close();
+
+			return false;
+		}
+	}
 	/* ]]> */ -->
 </script>
+<?php endif ?>

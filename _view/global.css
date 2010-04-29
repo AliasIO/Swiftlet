@@ -138,6 +138,10 @@ form {
 		display: block;
 	}
 
+	form dd p {
+		display: inline;
+	}
+
 fieldset {
 	background: var(form-background-color);
 	border-radius: 3px;
