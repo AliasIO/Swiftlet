@@ -1,0 +1,33 @@
+<h2>Buffer</h2>
+
+<p><code>/_plugins/buffer.php</code></p>
+
+<p>
+ Buffers provide more control over generated output. Pages can be stored in a variable and manipulated before being send to
+ the browser (e.g. compressed or cached for better performance or parsed by a templating engine) or output can be cancelled
+ in case of an error to prevent broken pages from being displayed.
+</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model->buffer</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;buffer-&gt;start ( )</code><br/>
+		Start buffering. No output will be send to the browser until <code>$model->buffer->flush()</code> is called.
+	</li>
+	<li>
+		<code>$model-&gt;buffer-&gt;flush ( )</code><br/>
+		Flush the buffer, send buffered contents to the browser.
+	</li>
+	<li>
+		<code>$model-&gt;buffer-&gt;clean ( )</code><br/>
+		Clean the buffer, buffered contents are erased and nothing is send to the browser. All output generated after calling
+		this function is send directly to the browser.
+	</li>
+</ul>

@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'       => 'db',
 			'version'    => '1.0.0',
 			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'hooks'      => array('init' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
+			'hooks'      => array('clear_cache' => 1, 'init' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
 			);
 
 		break;
@@ -81,6 +81,13 @@ switch ( $hook )
 		foreach ( $model->GET_raw as $k => $v )
 		{
 			$model->GET_db_safe[$k] = $model->db->escape($v);
+		}
+
+		break;
+	case 'clear_cache':
+		if ( !empty($model->db->ready) )
+		{
+			$model->db->clear_cache();
 		}
 
 		break;

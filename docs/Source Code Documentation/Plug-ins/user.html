@@ -1,0 +1,83 @@
+<h2>User</h2>
+
+<p><code>/_plugins/user.php</code></p>
+
+<p>
+	Handles user authentication. This plug-in requires a database and depends on the <a href="?mysql">MySQL</a> (or any other
+	database) and <a href="?session">Session</a> plug-ins.
+</p>
+
+<h5>Example</h5>
+
+<pre>
+<?php
+if ( $model->session->get('user id') != user::guestId )
+{
+	// User is logged in
+}
+
+if ( $model->session->get('user is owner') )
+{
+	// User is the website owner
+}
+?>
+</pre>
+
+<h3>Preferences</h3>
+
+<p>
+	TODO
+</p>
+
+<h2>Class</h2>
+
+<p>
+	<code>$model-&gt;user</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;user-&gt;login ( <em>string</em> $username, <em>string</em> $password )</code><br/>
+		Logs the user in with a username and password and updates the session.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;logout ( )</code><br/>
+		Logs the user out and resets the session.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;validate_password ( <em>string</em> $username, <em>string</em> $password )</code><br/>
+		Check if a username/password combination is correct.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;make_pass_hash ( <em>string</em> $username, <em>string</em> $password )</code><br/>
+		Generate a password hash.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;save_pref ( <em>array</em> $params )</code><br/>
+		Save a preference.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;delete_pref ( <em>string</em> $pref )</code><br/>
+		Delete a preference.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;save_pref_value ( <em>string</em> $params )</code><br/>
+		Save a preference value.
+	</li>
+	<li>
+		<code>$model-&gt;user-&gt;get_pref_values ( <em>int</em> $userId )</code><br/>
+		Get a user's preferences.
+	</li>
+</ul>
+
+<h4>Constants</h4>
+
+<ul>
+	<li>
+		<code>user::guestId</code><br/>
+		Reserved user ID for all guest users (users who are not logged in). This can be used to test if a user is logged in or not
+		(e.g. <code>if ( $model->session->get('user id') != user::guestId )</code>).
+	</li>
+</ul>

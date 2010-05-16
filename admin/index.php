@@ -22,6 +22,15 @@ if ( !$model->perm->check('dashboard access') )
 	$model->end();
 }
 
+if ( !empty($model->GET_raw['action']) && $model->GET_raw['action'] == 'clear_cache' )
+{
+	$model->clear_cache();
+
+	header('Location: ?notice=cache_cleared');
+
+	$model->end();
+}
+
 $newPlugins = 0;
 
 if ( isset($model->db) )
@@ -37,6 +46,17 @@ if ( isset($model->db) )
 				$newPlugins ++;
 			}
 		}
+	}
+}
+
+if ( !empty($model->GET_raw['notice']) )
+{
+	switch($model->GET_raw['notice'])
+	{
+		case 'cache_cleared':
+			$view->notice = $model->t('The cache has been cleared.');
+
+			break;
 	}
 }
 

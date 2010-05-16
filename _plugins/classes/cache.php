@@ -46,7 +46,12 @@ class cache
 	{
 		$model = $this->model;
 		$contr = $model->contr;
-		
+
+		if ( !empty($model->session->ready) && !empty($model->user->ready) && $model->session->get('user id') != user::guestId )
+		{
+			return;
+		}
+
 		if ( $model->caching && empty($model->POST_raw) && empty($_POST) )
 		{
 			if ( $handle = opendir($contr->rootPath . 'cache') )
@@ -94,6 +99,11 @@ class cache
 		$model = $this->model;
 		$contr = $model->contr;
 
+		if ( !empty($model->session->ready) && !empty($model->user->ready) && $model->session->get('user id') != user::guestId )
+		{
+			return;
+		}
+
 		if ( $headers = headers_list() )
 		{
 			foreach ( $headers as $header )
@@ -133,5 +143,27 @@ class cache
 		}
 
 		unset($contents);
+	}
+	
+	/**
+	 * Clear cache
+	 */
+	function clear()
+	{
+		$model = $this->model;
+		$contr = $model->contr;
+		
+		if ( $handle = opendir($contr->rootPath . 'cache') )
+		{
+			while ( $filename = readdir($handle) )
+			{
+				if ( is_file($contr->rootPath . 'cache/' . $filename) )
+				{					
+					@unlink($contr->rootPath . 'cache/' . $filename);
+				}
+			}
+
+			closedir($handle);
+		}
 	}
 }

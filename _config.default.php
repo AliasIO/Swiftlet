@@ -62,8 +62,7 @@ if ( $config['testing'] )
 		'dbUser'    => '',
 		'dbPass'    => '',
 		'dbName'    => '',
-		'dbPrefix'  => 'sw_',
-		'dbCaching' => TRUE
+		'dbPrefix'  => 'sw_'
 		);
 }
 else
@@ -76,8 +75,7 @@ else
 		'dbUser'    => '',
 		'dbPass'    => '',
 		'dbName'    => '',
-		'dbPrefix'  => 'sw_',
-		'dbCaching' => TRUE
+		'dbPrefix'  => 'sw_'
 		);
 }
 

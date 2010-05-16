@@ -1,6 +1,9 @@
 # 1.2.0.B2 - 1.2.0.B3
 #
 # Added callback to file browser
+# Added documentation plug-in
+# Added clear_cache hook
+# Several interface changes
 #
 #
 # 1.2.0.B1 - 1.2.0.B2

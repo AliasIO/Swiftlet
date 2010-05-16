@@ -1,0 +1,38 @@
+<h2>Pages</h2>
+
+<p>
+	This page is about creating dynamic (scripted) pages. To learn about adding static content, see the documentation
+	for the <a href="?page">Page plug-in</a>.
+</p>
+
+<ol>
+	<li>
+		To create a new page, create a <a href="?controller">Controller</a> (PHP file) and <a href="?view">View</a> (HTML file)
+		as described on the linked pages. The Controller in the root (<code>/</code>) or a sub directory and the View in
+		<code>/_view/</code>.
+		<br/><br/>
+		The reason for the two files is to seperate logic from presentation. You always need to create two files, even if
+		the page only contains static content. 
+	</li>
+	<li>
+		The next step is to make sure the correct root path is set in the Controller. This should be a relative path from
+		the Controller to the root of the installation (e.g. <code>./</code> or <code>../../</code>). The root path is
+		defined in the <code>$contrSetup</code> array on top of the file (<code>rootPath</code>) and can never be empty.
+	</li>
+	<li>
+		Check if the View file is linked correctly (e.g. <code>$view->load('index.html.php')</code>. The path should be
+		relative to the <code>/_view/</code> directory.
+	</li>
+	<li>
+		If needed you can add PHP code to the Controller. To pass variables to the View, the <code>$view</code> object should
+		be used (e.g. <code>$view->foo = 'bar'</code>. All static content (text, images etc.) goes into the View file.
+	<li>
+		Open the Controller file in your web browser to see the page.
+	</li>
+</ol>
+
+<h3>See also</h3>
+
+<ul>
+	<li><a href="?page">Page (plug-in)</a></li>
+</ul>

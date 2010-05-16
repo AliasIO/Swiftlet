@@ -1,0 +1,60 @@
+<h2>Node</h2>
+
+<p><code>/_plugins/node.php</code></p>
+
+<p>
+	<a href="http://en.wikipedia.org/wiki/Node_(computer_science)">Nodes</a> are used to built linked data structures (trees).
+	They can be used to store a references to pages or files hierarchally.
+</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model-&gt;node</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;node-&gt;permalink ( <em>string</em> $title [ , <em>int</em> $id ] )</code><br/>
+		Create a machine-readable version of the title of a node.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;create ( <em>string</em> $title, <em>string</em> $permalink, <em>int</em> $parentId )</code><br/>
+		Create a new node.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;move ( <em>int</em> $id, <em>int</em> $parentId )</code><br/>
+		Move a node to another branch.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;delete ( <em>int</em> $id )</code><br/>
+		Delete a node.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;get ( <em>int</em> $id )</code><br/>
+		Get information about a node.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;get_parents ( <em>int</em> $id )</code><br/>
+		Get a list of all parent nodes, starting from the root.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;get_children ( <em>int</em> $id )</code><br/>
+		Get a list of all child nodes.
+	</li>
+	<li>
+		<code>$model-&gt;node-&gt;tree ( <em>array</em> $nodes )</code><br/>
+		Create a structured array of nodes.
+	</li>
+</ul>
+
+<h4>Constants</h4>
+
+<ul>
+	<li>
+		<code>node::rootId</code><br/>
+		Reserved user ID for the root node.
+	</li>
+</ul>

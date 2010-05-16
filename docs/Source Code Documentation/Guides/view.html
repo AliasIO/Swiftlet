@@ -1,0 +1,75 @@
+<h2>Views</h2>
+
+<h3>Creating a View</h3>
+
+<p>
+	Views (stored in <code>/_views/</code>) contain layout elements for pages, mostly HTML, images and
+	Javascript. PHP code can be used but should be limited to presentational logic (all other code should
+	go in the <a href="?controller">Controller</a>).
+</p>
+
+<h5>Example View</h5>
+
+<pre>
+<p><?php echo $view->siteName ?></p>
+</pre>
+
+<h3>Class</h3>
+
+<p>
+	<code>$view</code>
+</p>
+
+<h4>Public variables</h4>
+
+<ul>
+	<li>
+		<code>$view-&gt;rootPath</code><br/>
+		Absolute path to the root. Note that this can be different from <code>$contr->rootPath</code> (e.g. when URL rewrites or AJAX
+		are used).
+	</li>
+	<li>
+		<code>$view-&gt;viewPath</code><br/>
+		Absolute path to the View directory (<code>/_view</code>).
+	</li>
+	<li>
+		<code>$view-&gt;siteName</code><br/>
+		Name of the website (value of <code>$model->siteName</code>, safe for HTML).
+	</li>
+	<li>
+		<code>$view-&gt;siteCopyright</code><br/>
+		Copyright of the website (value of <code>$model->siteCopyright</code>, safe
+		for HTML).
+	</li>
+	<li>
+		<code>$siteDesigner</code><br/>
+		Name of the website designer (value of <code>$model->siteDesigner</code>, safe for HTML).
+	</li>
+	<li>
+		<code>$view-&gt;pageTitle</code><br/>
+		Title of the page (value of <code>$contr->pageTitle</code>, safe for HTML).
+	</li>
+	<li>
+		<code>$view-&gt;pageDescription</code><br/>
+		Description of the page (value of <code>$contr->pageDescription</code> or <code>$model->siteDescription</code> if missing,
+		safe for HTML).
+	</li>
+	<li>
+		<code>$view-&gt;pageKeywords</code><br/>
+		Keywords relevant to the contents of the page (value of <code>$contr->pageKeywords</code> or <code>$model->siteKeywords</code>
+		if missing,	safe for HTML).
+	</li>
+	<li>
+		<code>$view-&gt;inAdmin</code><br/>
+		If set to <code>TRUE</code> the current page is an <a href="?admin_pages">administration page</a>.
+	</li>
+</ul>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$view-&gt;load ( <em>string</em> $file )</code><br/>
+		Used to load a View (an HTML file in the <code>/view/</code> directory).
+	</li>
+</ul>

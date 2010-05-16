@@ -132,7 +132,7 @@ switch ( $hook )
 			else
 			{
 				$params['Account'] = $view->rootPath . 'account/';
-				$params['Logout']  = $view->rootPath . 'login/?logout';
+				$params['Logout (' .  $model->session->get('user username') . ')']  = $view->rootPath . 'login/?logout';
 			}
 		}
 

@@ -429,6 +429,14 @@ class model
 	}
 
 	/**
+	 * Clear cache
+	 */
+	function clear_cache()
+	{
+		$this->hook('clear_cache');
+	}
+
+	/**
 	 * Route URLs
 	 * @param string $route
 	 * @return string

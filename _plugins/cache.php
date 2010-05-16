@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('buffer'),			
-			'hooks'        => array('cache' => 1, 'init' => 999, 'end' => 999)
+			'hooks'        => array('cache' => 1, 'clear_cache' => 1, 'init' => 999, 'end' => 999)
 			);
 
 		break;
@@ -29,6 +29,13 @@ switch ( $hook )
 		if ( !empty($model->cache->ready) )
 		{
 			$model->cache->write($params['contents']);
+		}
+
+		break;
+	case 'clear_cache':
+		if ( !empty($model->cache->ready) )
+		{
+			$model->cache->clear();
 		}
 
 		break;

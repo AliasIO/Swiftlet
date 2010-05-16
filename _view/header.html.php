@@ -32,23 +32,29 @@
 				<a href="<?php echo $view->rootPath ?>" title="<?php echo $model->t('Home') ?>"><?php echo $view->siteName ?></a>
 			</h1>
 
-			<?php if ( !empty($model->header->menu) ): ?>
-			<ul id="menu">
-				<?php foreach ( $model->header->menu as $item => $path ): ?>
-				<li>
-					<a href="<?php echo $model->h($path) ?>"><?php echo $model->h($model->t($item)) ?></a>
-				</li>
-				<?php endforeach ?>
-			</ul>
-			<?php endif ?>
+			<div id="menu">
+				<ul>
+					<li>
+						<a href="<?php echo $view->rootPath ?>"><?php echo $model->t('Home') ?></a>
+					</li>
+					<?php if ( !empty($model->header->menu) ): ?>
+					<?php foreach ( $model->header->menu as $item => $path ): ?>
+					<li>
+						<a href="<?php echo $model->h($path) ?>"><?php echo $model->h($model->t($item)) ?></a>
+					</li>
+					<?php endforeach ?>
+					<?php endif ?>
+				</ul>
+				
+				<?php if ( $contr->inAdmin ): ?>
+				<p>
+					<?php echo $model->t('Administration') ?>
+				</p>
+				<?php endif ?>
+			</div>
 
 			<div style="clear: both;"></div>
 		</div>
 
 		<div id="page">
 			<div id="content">
-				<?php if ( $contr->inAdmin ): ?>
-				<p id="admin-bar">
-					<?php echo $model->t('Administration') ?>
-				</p>
-				<?php endif ?>

@@ -1,0 +1,73 @@
+<h2>Language</h2>
+
+<p><code>/_plugins/lang.php</code></p>
+
+<p>
+	Plug-in to handle translations. This plug-in hooks into to the 'translate' <a href="?hook">hook</a> and can be called
+	with <code>$model-&gt;t()</code>.
+</p>
+
+<p>
+	Language files are placed in the <code>/lang/</code> directory. Each language has it's own directory named after the
+	language with as many files as needed.
+</p>
+
+<h5>Example</h5>
+
+<p>
+	Language file:
+</p>
+
+<pre>
+<?php
+$translation = array(
+	'Text to translate' => 'translation'
+	);
+?>
+</pre>
+
+<p>
+	View file:
+</p>
+
+<pre>
+<?php
+<p><?php echo $model->t('Text to translate') ?></p>
+?>
+</pre>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model-&gt;lang</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;lang-&gt;check_languages ( )</code><br/>
+		Scan the <code>/lang/</code> directory for installed languages. 
+	</li>
+	<li>
+		<code>$model-&gt;lang-&gt;load ( )</code><br/>
+		Load a language file.
+	</li>
+	<li>
+		<code>$model-&gt;lang-&gt;translate ( <em>string</em> $v )</code><br/>
+		Translate a string (this function should not be called directly, use <code>$model->t()</code> instead.
+	</li>
+</ul>
+
+<h4>Public variables</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;lang-&gt;language</code><br/>
+		The current user's language.
+	</li>
+	<li>
+		<code>$model-&gt;lang-&gt;languages</code><br/>
+		List of installed languages.
+	</li>
+</ul>

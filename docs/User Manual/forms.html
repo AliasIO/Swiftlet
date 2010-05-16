@@ -1,0 +1,104 @@
+<h2>Forms</h2>
+
+<h5>Example</h5>
+
+<pre>
+<form id="form" method="post" action="./">
+	<fieldset>
+		<dl>
+			<dt><label for="foo">Foo</label></dt>
+			<dd>
+				<input type="text" class="text" name="foo" id="foo" value="<?php echo $model->POST_html_safe['foo'] ?>"/>
+			</dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<dl>
+			<dt><br/></dt>
+			<dd>
+				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+
+				<input type="submit" class="button" name="submit" id="submit" value="Submit"/>
+			</dd>
+		</dl>
+	</fieldset>
+</form>
+</pre>
+
+<h3>Auth token</h3>
+
+<p>
+	Forms can not be processed if the <code>auth_token</code> field is missing (a security measure to prevent
+	<a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">cross-site request forgery</a>). Always include the
+	following line when creating forms that are send as POST:
+</p>
+
+<pre>
+<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+</pre>
+
+<h3>Confirmation</h3>
+
+<p>
+	Information send as GET does not have an auth token to ensure its integrity and can't be trusted. When using GET to
+	perform adminstrative tasks (like deleting a page using a link as <code>?id=1&amp;action=delete</code>), confirmation
+	should be requested from the user using the <code>$model->confirm()</code> function (see <a href="?model">Model</a>).
+</p>
+
+<h5>Example</h5>
+
+<pre>
+<?php
+$model->form->validate(array(
+	));
+
+if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
+{
+	if ( !$model->POST_valid['confirm'] )
+	{
+		$model->confirm('Are you sure you wish to delete this page?');
+	}
+	else
+	{
+		// Delete the page
+	}
+}
+?>
+</pre>
+
+<p>
+	The <code>$model->confirm()</code> function exits the code and displays a form to the user with an option to proceed
+	or cancel. If the user chooses to proceed the page is reloaded and <code>$model->POST_valid['confirm']</code> is set
+	to <code>TRUE</code> (this requires the <a href="?form">Form plug-in</a>).
+</p>
+
+<h3>Handling user input</h3>
+
+<p>For security reasons <code>$_GET</code> and <code>$_POST</code> can not be used. It is better to use the filtered altenatives below.</p>
+
+<h5>Safe for HTML</h5>
+
+<ul>
+	<li><code>$model->GET_html_safe</code></li>
+	<li><code>$model->POST_html_safe</code></li>
+</ul>
+
+<h5>Safe for database insertion (requires a database plug-in)</h5>
+
+<ul>
+	<li><code>$model->GET_db_safe</code></li>
+	<li><code>$model->POST_db_safe</code></li>
+</ul>
+
+<h5>Unfiltered (and unsafe!)</h5>
+
+<ul>
+	<li><code>$model->GET_raw</code></li>
+	<li><code>$model->POST_raw</code></li>
+</ul>
+
+<h3>See also</h3>
+
+<ul>
+	<li><a href="?form">Form (plug-in)</a></li>
+</ul>

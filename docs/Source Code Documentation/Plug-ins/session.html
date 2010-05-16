@@ -1,0 +1,54 @@
+<h2>Session</h2>
+
+<p><code>/_plugins/session.php</code></p>
+
+<p>
+	This plug-in manages user session data and can be used to temporarily store preferences and other information. This plug-in
+	requires a database and depends on the <a href="?mysql">MySQL</a> (or any other database) plug-in. 
+</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model-&gt;session</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;session-&gt;get ( <em>string</em> $k [, <em>string</em> $default ] )</code><br/>
+		Use to retrieve a session value (e.g. <code>$model->session->get('user id')</code>). If no value is set,
+		<code>$default</code> is returned (optional).
+	</li>
+	<li>
+		<code>$model-&gt;session-&gt;put ( <em>string|array</em> $k [, <em>string</em> $v ] )</code><br/>
+		Use to create or update a session value.
+	</li>
+	<li>
+		<code>$model-&gt;session-&gt;reset ( )</code><br/>
+		Use to clear all session values.
+	</li>
+	<li>
+		<code>$model-&gt;session-&gt;end ( )</code><br/>
+		Use to store the session in the database and set a session cookie ("sw_session").
+	</li>
+</ul>
+
+<h4>Public variables</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;session-&gt;id</code><br/>
+		The session id.
+	</li>
+	<li>
+		<code>$model-&gt;session-&gt;lifeTime</code><br/>
+		Session lifetime in seconds. The default value is 3600 (2 hours). After this period of inactivity the session will be deleted
+		and the user will be logged out.
+	</li>
+	<li>
+		<code>$model-&gt;session-&gt;contents</code><br/>
+		Array containing all session values.
+	</li>
+</ul>

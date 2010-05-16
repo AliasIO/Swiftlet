@@ -1,0 +1,97 @@
+<h2>The Model</h2>
+
+<p>
+	The Model is the core of the framework which ties everything together.
+</p>
+
+<p>
+	The Model can be accessed using the <code>$model</code> object, an instance of the Model class (<code>/_model/model.class.php</code>)
+	which should be available throughout the entire code.	Most global functions and variables are stored here (e.g. <code>$model-&gt;siteName</code>).
+</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;hook ( <em>string</em> $hook )</code><br/>
+		Use to create a <a href="?hook">hook</a>.
+	</li>
+	<li>
+		<code>$model-&gt;hook_register ( <em>string</em> $plugin, <em>array</em> $hooks )</code><br/>
+		Used in <a href="?plugin">plug-ins</a> to register <a href="?hook">hooks</a>.
+	</li>
+	<li>
+		<code>$model-&gt;check_dependencies ( <em>array</em> $dependencies )</code><br/>
+		Use to see if an instance of a plug-in class exists (e.g. <code>$model-&gt;check_dependencies(array('db'))</code> to check if the
+		database is ready to be used. If not, an error message is displayed.
+	</li>
+	<li>
+		<code>$model-&gt;h ( <em>string</em> $v )</code><br/>
+		Shorthand for <code>htmlentities($v, ENT_QUOTES, 'UTF-8')</code>, used to make values safe for HTML.
+	</li>
+	<li>
+		<code>$model-&gt;t ( <em>string</em> $v )</code><br/>
+		Used to translate strings. This requires a translation plug-in.
+	</li>
+	<li>
+		<code>$model-&gt;format_date ( <em>string</em> $date [ , <em>string</em> $type ] )</code><br/>
+		Used to format dates. <code>$type</code> can be "date", "time" or "datetime" (default).
+	</li>
+	<li>
+		<code>$model-&gt;route ( <em>string</em> $route )</code><br/>
+		Used to route URLs. This requires a working .htaccess file (on a Apache web server).
+	</li>
+	<li>
+		<code>$model-&gt;confirm ( <em>string</em> $notice )</code><br/>
+		Used to confirm permanent changes (like deleting a page). See <a href="?forms#confirmation">Forms</a>.
+	</li>
+	<li>
+		<code>$model-&gt;error ( <em>string</em> $errNo, <em>string</em> $errStr [, <em>string</em> $errFile ] [, <em>string</em> $errLine ] [, <em>array</em> $errCont ] )</code><br/>
+		Use to display an error message and stop the script.
+	</li>
+</ul>
+
+<h4>Public variables</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;userIp</code><br/>
+		The user's internet IP address (this can be IPv4 or IPv6).
+	</li>
+	<li>
+		<code>$model-&gt;authToken</code><br/>
+		Authenticity token used with forms (see <a href="?forms#auth_token">Forms</a>).
+	</li>
+	<li>
+		<code>$model-&gt;contr</code><br/>
+		Instance of the <code>contr</code> class (same as <code>$contr</code>). See <a href="?controller">Controllers</a>.
+	</li>
+	<li>
+		<code>$model-&gt;view</code><br/>
+		Instance of the <code>view</code> class (same as <code>$view</code>). See <a href="?view">Views</a>.
+	</li>
+	<li>
+		<code>$model-&gt;configMissing</code><br/>
+		This variable is set to <code>TRUE</code> if the configuration file is missing.
+	</li>
+	<li>
+		<code>$model-&gt;debugOutput</code><br/>
+		Debug notices generated throughout the code. The contents are shown when an error occurs (and in the generated source code) if
+		<code>debugMode</code> is set to <code>TRUE</code> in <code>/_config.php</code>. The notices can be used to track down bugs.
+	</li>
+</ul>
+
+<h4>Constants</h4>
+
+<ul>
+	<li>
+		<code>model::version</code><br/>
+		Model version number.
+	</li>
+</ul>

@@ -1,0 +1,43 @@
+<h2>Time</h2>
+
+<p><code>/_plugins/time.php</code></p>
+
+<p>
+	Plug-in to format dates/times and adjust them to the user's time zone.
+</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model-&gt;time</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;time-&gt;format_date ( <em>string</em> $date [, <em>string</em> $type ] )</code><br/>
+		Format a date as $type (one of 'date', 'datetime' (default) or 'time'), adjusted to the user's time zone (default is GMT).
+	</li>
+</ul>
+
+<h4>Public variables</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;time-&gt;dateFormat</code><br/>
+		Date format.
+	</li>
+	<li>
+		<code>$model-&gt;time-&gt;timeFormat</code><br/>
+		Time format.
+	</li>
+	<li>
+		<code>$model-&gt;time-&gt;timeZone</code><br/>
+		The current user's time zone (default is GMT).
+	</li>
+	<li>
+		<code>$model-&gt;time-&gt;timeOffset</code><br/>
+		The difference in seconds between the user's time zone and GMT.
+	</li>
+</ul>

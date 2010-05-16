@@ -82,7 +82,7 @@ class mysql
 			}
 			else
 			{
-				$model->dbCaching = FALSE;
+				$model->caching = FALSE;
 			}
 		}
 	}
@@ -156,7 +156,7 @@ class mysql
 		 */
 		$hash = sha1($this->sql);
 
-		if ( $model->dbCaching && $cache && $tables )
+		if ( $model->caching && $cache && $tables )
 		{
 			$sql = $this->sql;
 
@@ -219,7 +219,7 @@ class mysql
 		/**
 		 * Cache results
 		 */
-		if ( $this->result && $model->dbCaching && $cache && $tables )
+		if ( $this->result && $model->caching && $cache && $tables )
 		{
 			$result = $this->result;
 
@@ -276,7 +276,7 @@ class mysql
 		 */
 		$tables = $this->get_tables();
 
-		if ( $model->dbCaching && $tables )
+		if ( $model->caching && $tables )
 		{
 			$sql = $this->sql;
 			
@@ -356,6 +356,23 @@ class mysql
 			{
 				return mysql_real_escape_string($v);
 			}
+		}
+	}
+
+	/**
+	 * Clear cache
+	 */
+	function clear_cache()
+	{
+		if ( $this->ready )
+		{
+			$this->sql('
+				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
+				');
+			
+			$this->sql('
+				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
+				');
 		}
 	}
 }

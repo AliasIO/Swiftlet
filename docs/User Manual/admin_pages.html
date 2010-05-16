@@ -1,0 +1,96 @@
+<h2>Administation pages</h2>
+
+<p>
+	Administation pages are pages where administrative task are performed, such as managing pages or users. Other then that they are no
+	different from other pages (see <a href="?page">Pages</a>).
+</p>
+
+<h5>Example administration page</h5>
+
+<pre>
+<?php
+$contrSetup = array(
+	'rootPath'  => '../',
+	'pageTitle' => 'Example',
+	'inAdmin'   => TRUE
+	);
+
+require($contrSetup['rootPath'] . '_model/init.php');
+
+// Check if the admin plug-in is installed and ready
+$model->check_dependencies(array('admin'));
+
+// Check if the user is an administrator or higher
+if ( $model->session->get('user auth') < user::admin )
+{
+	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+
+	$model->end();
+}
+
+$view->load('admin/example.html.php');
+
+$model->end();
+?>
+</pre>
+
+<ol>
+	<li>
+		Administrative pages should be placed inside the <code>/admin/</code> directory and made inaccessible for anyone but editors or higher.
+	</li>
+	<li>
+		The <code>$contrSetup['inAdmin']</code> needs to be set to <code>TRUE</code>. This variable is passed to the <a href="?view">View</a>
+		(<code>$view->inAdmin</code>) so an administration specific layout can be applied to the page.
+	</li>
+	<li>
+		Optionally the <a href="?dashboard">dashboard plug-in</a> is used to list administration pages;
+		<code>$model->check_dependencies(array('dashboard'))</code> is there to check if the plug-in is installed and ready.
+	</li>
+	<li>
+		Use <code>$model->session->get('user auth') &lt; user::admin</code> to check if the user is an administrator or higher (this requires the
+		<a href="?user">User</a> and <a href="?session">Session plug-in</a>). If authorization fails the user is redirected to the login page.
+	</li>
+</ol>
+
+<h5>Example adminstration plug-in</h5>
+
+<p>
+	TODO
+</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+	case 'info':
+		$info = array(
+			'name'       => 'example',
+			'version'    => '1.0.0',
+			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'hooks'      => array('dashboard' => 1)
+			);
+
+		break;	
+	case 'admin':
+		$params[] = array(
+			'name'        => 'Example',
+			'description' => 'Example adminstration page',
+			'group'       => 'Examples',
+			'path'        => 'admin/example/',
+			'auth'        => 'admin example access'
+			);
+
+		break;
+}
+?>
+</pre>
+
+<h3>See also</h3>
+
+<ul>
+	<li>
+		<a href="?page">Pages</a>
+	</li>
+</ul>

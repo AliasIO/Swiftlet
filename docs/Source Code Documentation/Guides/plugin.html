@@ -1,0 +1,181 @@
+<h2>Plug-ins</h2>
+
+<p>This is a basic example of a plug-in:</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+	case 'info':
+		$info = array(
+			'name'       => 'header',
+			'version'    => '1.0.0',
+			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'hooks'      => array('header' => 999)
+			);
+
+		break;	
+	case 'header':
+		$view->load('header.html.php');
+
+		break;
+}
+?>
+</pre>
+
+<p>
+	Plug-ins are stored in the <code>/_plugins/</code> directory. The <a href="?model">Model</a> scans this directory
+	when a page is loaded and includes every plug-in it finds, executing the code in the <code>case 'info'</code>
+	block (this is where hooks are registered and version and compatibility information is provided).
+</p>
+
+<p>
+	Every time a hook is called, the plug-in is included again executing the code in the matching <code>case</code>
+	block.
+</p>
+
+<h3>Creating database tables</h3>
+
+<p>
+	Plug-ins that need database tables to be created have to be installed through the plug-in installer
+	(<code>/installer/</code>). Here is a more elaborate example of a plug-in:
+</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+	case 'load':
+		$info = array(
+			'name'         => 'foo',
+			'description'  => 'Description here.',
+			'version'      => '1.0.0',
+			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'upgradable'   => array('from' => '1.1.0', 'to' => '1.1.*'),
+			'dependencies' => array('db'),
+			'hooks'        => array('init' => 1, 'install' => 1)
+			);
+
+		break;
+	case 'install':
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'foo` (
+				`id`  INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`foo` VARCHAR(256)     NOT NULL,
+				PRIMARY KEY (`id`)
+				)
+			;');
+
+		break;
+	case 'upgrade':
+		$model->db->sql('
+			UPDATE `' . $model->db->prefix . 'foo` SET
+				`foo` = "bar"
+			;');
+
+		break;
+	case 'init':
+		require($contr->classPath . 'foo.php');
+
+		$model->foo = new foo($model);
+
+		break;
+}
+?>
+</pre>
+
+<p>
+	The <code>case 'install'</code> and <code>case 'upgrade'</code> blocks are used by the plug-in installer.
+	Plug-ins can only be upgraded if the version matches the values in <code>$info['upgradable']</code> (to go
+	from version 1.0.x to 3.0.x, you usually have to upgrade to version 2.0.x first).
+</p>
+
+<h3>Classes</h3>
+
+<p>
+	It's usually a good idea to put plug-in functionality in a separate class (these are stored in the
+	<code>/_plugins/classes</code> directory).
+</p>
+
+<p>
+	This is a basic example of a plug-in class:
+</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+class foo
+{
+	public
+		$ready
+		;
+	
+	private
+		$model,
+		$contr
+		;
+
+	function __construct($model)
+	{
+		$this->model = $model;
+		$this->contr = $model->contr;
+
+		$this->ready = TRUE;
+	}
+}
+?>
+</pre>
+
+<p>
+	An instance of <code>$model</code> should be passed to each class in order to access the <a href="?model">Model</a> inside
+	the class.
+</p>
+
+<p>
+	If the plug-in is required by other plug-ins or pages the <code>$ready</code> variable is checked using
+	<code>$model->check_dependencies()</code>. The variable should always be set.
+</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$pluginsLoaded['plugin_name']</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model->pluginsLoaded['plugin_name']->hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
+		Hook a plug-in into the code.
+	</li>
+	<li>
+		<code>$model->pluginsLoaded['plugin_name']->install ( )</code><br/>
+		Install a plug-in (call the 'install' hook).
+	</li>
+	<li>
+		<code>$model->pluginsLoaded['plugin_name']->upgrade ( )</code><br/>
+		Upgrade a plug-in (call the 'upgrade' hook).
+	</li>
+	<li>
+		<code>$model->pluginsLoaded['plugin_name']->remove ( )</code><br/>
+		Remove a plug-in (call the 'remove' hook).
+	</li>
+	<li>
+		<code>$model->pluginsLoaded['plugin_name']->get_version ( )</code><br/>
+		Get version number of a plug-in.
+	</li>
+</ul>
+
+<h3>See also</h3>
+
+<ul>
+	<li>
+		<a href="?unit_tests">Unit tests</a>
+	</li>
+</ul>

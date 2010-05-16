@@ -1,0 +1,71 @@
+<h2>Hooks</h2>
+
+<p>
+	A hook is a point in the code (usually in the <a href="?model">Model</a>) where <a href="?plugin">plug-ins</a> can be inserted (hooked).
+</p>
+
+<h4>List of available hooks</h4>
+
+<ul>
+	<li>
+		<code>admin</code> (<code>/admin/index.php</code>)<br/>
+		Use to register adminstration pages (see <a href="?admin_pages">Administration pages</a>).
+	</li>
+	<li>
+		<code>cache</code> (<code>/_plugins/classes/buffer.php</code>)<br/>
+		Use to write HTML output to cache.
+	</li>
+	<li>
+		<code>clear_cache</code> (<code>/_model/model.class.php</code>)<br/>
+		Clear the cache.
+	</li>
+	<li>
+		<code>end</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to include code at the bottom of each page.
+	</li>
+	<li>
+		<code>error</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to output errors.
+	</li>
+	<li>
+		<code>header</code> (<code>/_model/init.php</code>)<br/>
+		Use to include code on top of each page. Skipped when <code>$contr-&gt;standAlone</code> is set.
+	</li>
+	<li>
+		<code>init</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to extend the <a href="?model">Model</a>. This hook is called on every page, when the Model (core code) is initialized. 
+	</li>
+	<li>
+		<code>input_sanitize</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to filter user input (GET and POST).
+	</li>
+	<li>
+		<code>footer</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to include code at the bottom of each page. Skipped when <code>$contr-&gt;standAlone</code> is set.
+	</li>
+	<li>
+		<code>format_date</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to format a date.
+	</li>
+	<li>
+		<code>menu</code> (<code>/_plugins/classes/header.php</code>)<br/>
+		Use to add a item to the main navigation menu.
+	</li>
+	<li>
+		<code>route</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to route URLs. Requires a <code>/.htaccess</code> file witch matching settings.
+	</li>
+	<li>
+		<code>translate</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to translate strings.
+	</li>
+	<li>
+		<code>unit_tests</code> (<code>/unit_tests/index.php</code>)<br/>
+		Use to add unit tests.
+	</li>
+</ul>
+
+<p>
+	In most cases these hooks are all you need. If however you need to create a new hook, use <code>$model-&gt;hook('hook_name')</code>
+	(see <a href="?model">Model</a>).
+</p>

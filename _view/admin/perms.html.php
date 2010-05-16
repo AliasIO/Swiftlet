@@ -63,7 +63,7 @@
 <ul>
 	<?php foreach ( $view->roles as $role ): ?>
 	<li>
-		<h4><?php echo $model->h($model->t($role['name'])) ?></h4>
+		<h3><?php echo $model->h($model->t($role['name'])) ?></h3>
 
 		<?php if ( $model->perm->check('admin perm edit') || $model->perm->check('admin perm delete') ): ?>
 		<p>
@@ -77,7 +77,7 @@
 		<?php endif ?>
 
 		<?php if ( $view->action == 'add' && $view->id == $role['id'] ): ?>
-		<h5><?php echo $model->t('Add user') ?></h5>
+		<h4><?php echo $model->t('Add user') ?></h4>
 
 		<form id="formUser<?php echo $role['id'] ?>" method="post" action="./?action=add&id=<?php echo $role['id'] ?>">
 			<fieldset>
@@ -112,7 +112,7 @@
 		</form>
 		<?php endif ?>
 		
-		<h5><?php echo $model->t('Users') ?></h5>
+		<h4><?php echo $model->t('Users') ?></h4>
 
 		<p>
 			<a class="button" href="./?id=<?php echo $role['id'] ?>&action=add"><?php echo $model->t('Add a user') ?></a>

@@ -1,0 +1,118 @@
+<h2>Controllers</h2>
+
+<p>Each page consists of a Controller (logic, PHP code) and a <a href="?view">View</a> (presentation, HTML code).</p>
+
+<h4>Example Controller (<code>/index.php</code>)</h4>
+
+<pre>
+<?php
+$contrSetup = array(
+	'rootPath'  => './',
+	'pageTitle' => 'Hello world'
+	);
+
+require($contrSetup['rootPath'] . '_model/init.php');
+
+$model->check_dependencies(array('db')); // Use if database access is needed
+
+$view->hello = 'Hello world!';
+
+$view->load('index.html.php');
+
+$model->end();
+?>
+</pre>
+
+<h4>Example View (<code>/_view/index.html.php</code>)</h4>
+
+<pre>
+<p><?php echo $view->hello ?></p>
+</pre>
+
+<h3>Setup</h3>
+
+<p>The <code>$contrSetup</code> array needs to be defined at the top of the Controller file.</p>
+
+<h4>List of possible keys</h4>
+
+<ul>
+	<li>
+		<code>rootPath</code> (required)<br/>		
+		Relative path to the root, i.e. <code>./</code> or <code>../../</code>. The root path can not be empty, and should never be
+		set to <code>/</code> (this defeats the purpose of the root path and can break the installation if it's moved to another
+		directory).
+	</li>
+	<li>
+		<code>pageTitle</code><br/>
+		The title of the page as displayed in the browser's title bar.
+	</li>
+	<li>
+		<code>pageDescription</code><br/>
+		Description of the page (for search engine optimization).
+	</li>
+	<li>
+		<code>pageKeywords</code><br/>
+		Keywords relevant to the contents of the page (for search engine optimization).
+	</li>
+	<li>
+		<code>inAdmin</code><br/>		
+		Used for <a href="?admin_pages">adminstration pages</a>.
+	</li>
+	<li>
+		<code>standAlone</code><br/>		
+		If set to <code>TRUE</code> the "header" and "footer" hooks will be excluded.
+	</li>
+</ul>
+
+<p>
+	All the defined keys are available as a variable of the <code>$contr</code> object (i.e.
+	<code>$contr-&gt;rootPath</code>).
+</p>
+
+<p>After <code>$contrSetup</code> the <code>/_model/init.php</code> file needs to be included.</p>
+
+<p>
+	<code>$model->check_dependencies()</code> can be used to check if any required plug-ins are ready. If not ready,
+	an error message will be displayed.
+</p>
+
+<p>At the end of the Controller, the <code>$model-&gt;end()</code> function need to be called.</p>
+
+<h3>Class</h3>
+
+<p>
+	<code>$contr</code>
+</p>
+
+<h4>Public variables</h4>
+
+<ul>
+	<li>
+		<code>$contr-&gt;rootPath</code><br/>
+		Relative path to the root (e.g. <code>./</code>).
+	</li>
+	<li>
+		<code>$contr-&gt;absPath</code><br/>
+		Absolute path to the root (e.g. <code>/</code>).
+	</li>
+	<li>
+		<code>$contr-&gt;pageTitle</code><br/>
+		Title of the page.
+	</li>
+	<li>
+		<code>$contr-&gt;pageDescription</code><br/>
+		Description of the page.
+	</li>
+	<li>
+		<code>$contr-&gt;pageKeywords</code><br/>
+		Keywords relevant to the contents of the page.
+	</li>
+	<li>
+		<code>$contr-&gt;standAlone</code><br/>
+		If this variable is set to <code>TRUE</code> the header and footer hooks will not be executed.
+	</li>
+	<li>
+		<code>$contr-&gt;inAdmin</code><br/>
+		Used for <a href="?admin_pages">adminstration pages</a>.
+	</li>
+</ul>
