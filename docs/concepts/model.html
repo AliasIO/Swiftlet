@@ -20,11 +20,11 @@
 <ul>
 	<li>
 		<code>$model-&gt;hook ( <em>string</em> $hook )</code><br/>
-		Use to create a <a href="?hook">hook</a>.
+		Use to create a <a href="./hook">hook</a>.
 	</li>
 	<li>
 		<code>$model-&gt;hook_register ( <em>string</em> $plugin, <em>array</em> $hooks )</code><br/>
-		Used in <a href="?plugin">plug-ins</a> to register <a href="?hook">hooks</a>.
+		Used in <a href="./plugin">plug-ins</a> to register <a href="./hook">hooks</a>.
 	</li>
 	<li>
 		<code>$model-&gt;check_dependencies ( <em>array</em> $dependencies )</code><br/>
@@ -44,12 +44,16 @@
 		Used to format dates. <code>$type</code> can be "date", "time" or "datetime" (default).
 	</li>
 	<li>
+		<code>$model-&gt;email ( <em>string</em> $to, <em>string</em> $subject, <em>string</em> $body [ , <em>array</em> $headers ] )</code><br/>
+		Used to format dates. <code>$type</code> can be "date", "time" or "datetime" (default).
+	</li>
+	<li>
 		<code>$model-&gt;route ( <em>string</em> $route )</code><br/>
 		Used to route URLs. This requires a working .htaccess file (on a Apache web server).
 	</li>
 	<li>
 		<code>$model-&gt;confirm ( <em>string</em> $notice )</code><br/>
-		Used to confirm permanent changes (like deleting a page). See <a href="?forms#confirmation">Forms</a>.
+		Used to confirm permanent changes (like deleting a page). See <a href="../plugins/form#confirmation">Forms</a>.
 	</li>
 	<li>
 		<code>$model-&gt;error ( <em>string</em> $errNo, <em>string</em> $errStr [, <em>string</em> $errFile ] [, <em>string</em> $errLine ] [, <em>array</em> $errCont ] )</code><br/>
@@ -66,15 +70,15 @@
 	</li>
 	<li>
 		<code>$model-&gt;authToken</code><br/>
-		Authenticity token used with forms (see <a href="?forms#auth_token">Forms</a>).
+		Authenticity token used with forms (see <a href="../plugins/form#auth_token">Forms</a>).
 	</li>
 	<li>
 		<code>$model-&gt;contr</code><br/>
-		Instance of the <code>contr</code> class (same as <code>$contr</code>). See <a href="?controller">Controllers</a>.
+		Instance of the <code>contr</code> class (same as <code>$contr</code>). See <a href="./controller">Controllers</a>.
 	</li>
 	<li>
 		<code>$model-&gt;view</code><br/>
-		Instance of the <code>view</code> class (same as <code>$view</code>). See <a href="?view">Views</a>.
+		Instance of the <code>view</code> class (same as <code>$view</code>). See <a href="./view">Views</a>.
 	</li>
 	<li>
 		<code>$model-&gt;configMissing</code><br/>

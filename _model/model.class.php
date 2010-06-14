@@ -429,6 +429,28 @@ class model
 	}
 
 	/**
+	 * Send e-mail
+	 * @param string $to
+	 * @param string $subject
+	 * @param string $body
+	 * @param string $headers
+	 * @return bool
+	 */
+	function email($to, $subject, $body, $headers = array())
+	{
+		$params = array(
+			'to'      => $to,
+			'subject' => $subject,
+			'body'    => $body,
+			'headers' => $headers
+			);
+
+		$this->hook('email', $params);
+
+		return $params['success'];
+	}
+
+	/**
 	 * Clear cache
 	 */
 	function clear_cache()
@@ -603,7 +625,7 @@ class model
 				echo '</pre>';
 			}
 
-			if ( !empty($this->debugOutput) )
+			if ( empty($this->debugOutput) )
 			{
 				echo '
 					<p>[
@@ -619,6 +641,16 @@ class model
 
 				echo '</pre>';
 			}
+		}
+
+		if ( $this->adminEmail )
+		{
+			echo '
+						<p>
+							<br/>
+							Please contact us at <a href="mailto:' . $this->h($this->adminEmail) . '">' . $this->h($this->adminEmail) . '</a>.
+						</p>
+				';
 		}
 
 		echo '

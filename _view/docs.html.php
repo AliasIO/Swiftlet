@@ -1,39 +1,54 @@
-<div id="documentation">
+<div class="no-grid">
 	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+</div>
 
-	<div class="wrap-column-left">
-		<div class="column">
-			<?php if ( isset($view->pageContents) ): ?>
-			<ul class="crumbs" style="float: none; text-align: center;">
-				<li style="float: left;"><?php echo $view->pagePrev ?></li>
-				<li>&nbsp;<?php echo $view->pageUp ?>&nbsp;</li>
-				<li style="float: right;"><?php echo $view->pageNext ?></li>
+<div id="documentation">
+	<div class="grid">
+		<div class="span-9">
+			<?php echo $view->contents ?>
+		</div>
+		
+		<div class="span-3">
+			<h2>Manual</h2>
+
+			<ul>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/install"   >Installation</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/config"    >Configuration</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/page"      >Pages</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/admin_page">Adminstation pages</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/form"      >Forms</a></li>
+			</ul>
+			
+			<h2>Concepts</h2>
+			
+			<ul>
+				<li><a href="<?php echo $view->rootPath ?>docs/concepts/model"     >Model</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/concepts/view"      >Views</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/concepts/controller">Controllers</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/concepts/hook"      >Hooks</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/concepts/plugin"    >Plugins</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/concepts/unit_test" >Unit Tests</a></li>
 			</ul>
 
-			<div style="clear: both;"></div>
+			<h2>Plugins</h2>
 
-			<?php echo $view->pageContents ?>
-
-			<ul class="crumbs" style="float: none; text-align: center;">
-				<li style="float: left;"><?php echo $view->pagePrev ?></li>
-				<li>&nbsp;<?php echo $view->pageUp ?>&nbsp;</li>
-				<li style="float: right;"><?php echo $view->pageNext ?></li>
+			<ul>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/buffer"    >Buffer</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/cache"     >Cache</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/dashboard" >Dashboard</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/email"     >E-mail</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/file"      >File</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/form"      >Form</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/lang"      >Lang</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/log"       >Log</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/mysql"     >MySQL</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/node"      >Node</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/page"      >Page</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/permission">Permission</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/session"   >Session</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/time"      >Time</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/user"      >User</a></li>
 			</ul>
-
-			<div style="clear: both;"></div>
-			<?php else: ?>
-				<div id="content">
-					<h1>The page you requested does not exist.</h1>
-				</div>
-			<?php endif ?>
 		</div>
 	</div>
-	
-	<div class="wrap-column-right">
-		<div class="column">
-			<?php echo $view->overview ?>
-		</div>
-	</div>
-
-	<div style="clear: both;"></div>
 </div>

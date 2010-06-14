@@ -29,7 +29,7 @@ switch ( $hook )
 			'name'        => 'Documentation',
 			'description' => 'Source code documentation and manual',
 			'group'       => 'Developer',
-			'path'        => 'admin/docs/',
+			'path'        => 'docs/',
 			);
 
 		break;

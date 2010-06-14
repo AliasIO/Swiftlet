@@ -1,5 +1,7 @@
-<h1><?php echo $model->t($view->pageTitle) ?></h1>
+<div class="no-grid">
+	<h1><?php echo $model->t($view->pageTitle) ?></h1>
 
-<p class="message error">
-	<?php echo $model->t('The page you are looking for does not exist.') ?>
-</p>
+	<p>
+		<?php echo $model->t('The page you are looking for does not exist.') ?>
+	</p>
+</div>

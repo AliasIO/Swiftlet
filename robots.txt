@@ -3,11 +3,15 @@ Disallow: /_model/
 Disallow: /_plugins/
 Disallow: /_view/
 Disallow: /admin/
-Disallow: /file/uploads/
+Disallow: /cache/
 Disallow: /installer/
+Disallow: /lang/
 Disallow: /lib/
 Disallow: /log/
 Disallow: /unit_tests/
+Disallow: /uploads/
+Disallow: /_config.default.php
 Disallow: /_config.php
 Disallow: /CHANGELOG
-Disallow: /README.md
+Disallow: /LICENSE
+Disallow: /README

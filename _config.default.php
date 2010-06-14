@@ -18,7 +18,12 @@ $config = array(
 	'siteKeywords'    => '',
 
 	/**
-	 * System password. Required for operations like installing plug-ins.
+	 * Administrative e-mail address
+	 */
+	'adminEmail' => '',
+
+	/**
+	 * System password. Required for operations like installing plug-ins
 	 */
 	'sysPassword' => '',
 
@@ -28,13 +33,13 @@ $config = array(
 	'caching' => FALSE, // TRUE | FALSE
 	
 	/**
-	 * URL rewrites, working .htaccess file required.
+	 * URL rewrites, working .htaccess file required
 	 */
 	'urlRewrite' => TRUE // TRUE | FALSE
 	);
 
 /*
- * testing should be set to FALSE when running in a production environment.
+ * testing should be set to FALSE when running in a production environment
  */
 switch ( $model->userIp )
 {
@@ -80,6 +85,6 @@ else
 }
 
 /*
- * debugMode should be set to FALSE when running in a production environment.
+ * debugMode should be set to FALSE when running in a production environment
  */
 $config['debugMode'] = $config['testing']; // TRUE | FALSE

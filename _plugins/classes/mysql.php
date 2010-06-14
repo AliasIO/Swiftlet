@@ -173,9 +173,24 @@ class mysql
 			
 			if ( $this->result && $r = $this->result[0] )
 			{
-				$this->result = unserialize($r['results']);
+				$this->result = @unserialize($r['results']);
 
-				return;
+				if ( $this->result )
+				{
+					return;
+				}
+				else
+				{
+					// Remove invalid cached result
+					$this->sql('
+						DELETE
+							cq, ct
+						FROM      `' . $this->prefix . 'cache_queries` AS cq
+						LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
+						WHERE
+							cq.`hash` = "' . $this->escape($hash) . '"
+						;');
+				}
 			}
 
 			$this->sql    = $sql;

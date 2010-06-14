@@ -5,6 +5,7 @@
 		<title><?php echo $view->siteName ?> - <?php echo $model->t($view->pageTitle) ?></title>
 
 		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>css.php?file=global"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>css.php?file=grid"/>
 
 		<link type="image/png" rel="shortcut icon" href="<?php echo $view->rootPath ?>favicon.ico"/>
 

@@ -1,0 +1,63 @@
+<h2>Unit tests</h2>
+
+<p>	
+	Swiftlet can perform automated tests to ensure everything keeps working as expected during plugin development.
+	Unit test can be executed by going to <code>/unit_tests/</code>.
+</p>
+
+<p>
+	Each <a href="./plugin">plugin</a> can include a number of tests, using the <em>unit_test</em> hook in the main plugin file.
+</p>
+
+<h4>Example</h4>
+
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+    case 'info':
+        $info = array(
+            'name'       => 'example',
+            'version'    => '1.0.0',
+            'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
+            'hooks'      => array('unit_test' => 1)
+            );
+
+        break;
+    case 'unit_test':
+		// Form values to be send
+		$post = array(
+			'foo'         => 'bar',
+			'form-submit' => 'Submit',
+			'auth_token'  => $model->authToken
+			);
+
+		// Simulate submitting a form with a POST request		
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . '/example/', $post);
+
+		// Check if the form was handled correctly and the value has been saved
+		$model->db->sql('
+			SELECT
+				*
+			FROM `' . $model->db->prefix . 'example`
+			WHERE
+				`foo` = "bar"
+			LIMIT 1
+			;', FALSE);
+
+		// Return the test result
+		$params[] = array(
+			'test' => 'Saving a value in <code>/example/</code>.',
+			'pass' => ( bool ) $model->db->result
+			);
+
+        break;
+}
+?>
+</pre>
+
+This test simulates a form being submitted on the page <code>/example/</code>. If the page handled the request
+correctly the value "bar" was saved, which can be confirmed by checking the database.

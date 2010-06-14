@@ -6,6 +6,14 @@
 	Plug-in to format dates/times and adjust them to the user's time zone.
 </p>
 
+<h4>Example</h4>
+
+<pre>
+<?php
+echo $model->format_date(gmdate(), 'date');
+?>
+</pre>
+
 <h3>Class</h3>
 
 <p>
@@ -17,7 +25,8 @@
 <ul>
 	<li>
 		<code>$model-&gt;time-&gt;format_date ( <em>string</em> $date [, <em>string</em> $type ] )</code><br/>
-		Format a date as $type (one of 'date', 'datetime' (default) or 'time'), adjusted to the user's time zone (default is GMT).
+		Format a date as $type (one of <em>date</em>, <em>datetime</em> (default) or <em>time</em>), adjusted to the user's time zone (default is GMT).
+		Do not call this function directly, use <code>$model-&gt;format_date()</code> instead.
 	</li>
 </ul>
 

@@ -1,19 +1,21 @@
-<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+<div class="no-grid">
+	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
-<form class="hide" id="formConfirm" method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
-	<fieldset>
-		<p class="message notice">
-			<?php echo $model->t($view->notice) ?>
+	<form class="hide" id="formConfirm" method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
+		<fieldset>
+			<p class="message notice">
+				<?php echo $model->t($view->notice) ?>
 
-			<br/><br/>
+				<br/><br/>
 
-			<input type="hidden" name="get_data" value="<?php echo $view->getData ?>"/>
+				<input type="hidden" name="get_data" value="<?php echo $view->getData ?>"/>
 
-			<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
 
-			<input type="submit" name="confirm" id="confirm" value="<?php echo $model->t('Yes, proceed') ?>"/>
+				<input type="submit" name="confirm" id="confirm" value="<?php echo $model->t('Yes, proceed') ?>"/>
 
-			<a href="javascript: void(0);" onclick="history.go(-1);"><?php echo $model->t('No, go back') ?></a>
-		</p>
-	</fieldset>
-</form>
+				<a href="javascript: void(0);" onclick="history.go(-1);"><?php echo $model->t('No, go back') ?></a>
+			</p>
+		</fieldset>
+	</form>
+</div>

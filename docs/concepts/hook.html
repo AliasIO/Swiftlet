@@ -1,7 +1,7 @@
 <h2>Hooks</h2>
 
 <p>
-	A hook is a point in the code (usually in the <a href="?model">Model</a>) where <a href="?plugin">plug-ins</a> can be inserted (hooked).
+	A hook is a point in the code (usually in the <a href="./model">Model</a>) where <a href="./plugin">plugins</a> can be inserted (hooked).
 </p>
 
 <h4>List of available hooks</h4>
@@ -9,7 +9,7 @@
 <ul>
 	<li>
 		<code>admin</code> (<code>/admin/index.php</code>)<br/>
-		Use to register adminstration pages (see <a href="?admin_pages">Administration pages</a>).
+		Use to register adminstration pages (see <a href="../manual/admin_page">Administration pages</a>).
 	</li>
 	<li>
 		<code>cache</code> (<code>/_plugins/classes/buffer.php</code>)<br/>
@@ -18,6 +18,10 @@
 	<li>
 		<code>clear_cache</code> (<code>/_model/model.class.php</code>)<br/>
 		Clear the cache.
+	</li>
+	<li>
+		<code>email</code> (<code>/_model/model.class.php</code>)<br/>
+		Use to send e-mails.
 	</li>
 	<li>
 		<code>end</code> (<code>/_model/model.class.php</code>)<br/>
@@ -33,7 +37,7 @@
 	</li>
 	<li>
 		<code>init</code> (<code>/_model/model.class.php</code>)<br/>
-		Use to extend the <a href="?model">Model</a>. This hook is called on every page, when the Model (core code) is initialized. 
+		Use to extend the <a href="./model">Model</a>. This hook is called on every page, when the Model (core code) is initialized. 
 	</li>
 	<li>
 		<code>input_sanitize</code> (<code>/_model/model.class.php</code>)<br/>
@@ -67,5 +71,5 @@
 
 <p>
 	In most cases these hooks are all you need. If however you need to create a new hook, use <code>$model-&gt;hook('hook_name')</code>
-	(see <a href="?model">Model</a>).
+	(see <a href="./model">Model</a>).
 </p>

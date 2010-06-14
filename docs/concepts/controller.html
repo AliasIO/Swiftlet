@@ -1,6 +1,6 @@
 <h2>Controllers</h2>
 
-<p>Each page consists of a Controller (logic, PHP code) and a <a href="?view">View</a> (presentation, HTML code).</p>
+<p>Each page consists of a Controller (logic, PHP code) and a <a href="./view">View</a> (presentation, HTML code).</p>
 
 <h4>Example Controller (<code>/index.php</code>)</h4>
 
@@ -56,7 +56,7 @@ $model->end();
 	</li>
 	<li>
 		<code>inAdmin</code><br/>		
-		Used for <a href="?admin_pages">adminstration pages</a>.
+		Used for <a href="../manual/admin_page">adminstration pages</a>.
 	</li>
 	<li>
 		<code>standAlone</code><br/>		
@@ -72,7 +72,7 @@ $model->end();
 <p>After <code>$contrSetup</code> the <code>/_model/init.php</code> file needs to be included.</p>
 
 <p>
-	<code>$model->check_dependencies()</code> can be used to check if any required plug-ins are ready. If not ready,
+	<code>$model->check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
 	an error message will be displayed.
 </p>
 
@@ -113,6 +113,6 @@ $model->end();
 	</li>
 	<li>
 		<code>$contr-&gt;inAdmin</code><br/>
-		Used for <a href="?admin_pages">adminstration pages</a>.
+		Used for <a href="../manual/admin_page">adminstration pages</a>.
 	</li>
 </ul>

@@ -30,14 +30,14 @@ if ( !empty($model->GET_raw['file']) && is_file($file = $contr->viewPath . $mode
 			{
 				list($k, $v) = explode(':', $pair);
 
-				$css = str_replace('var(' . trim($k) . ')', trim($v), $css);
+				$css = trim(str_replace($m[0], '', str_replace('var(' . trim($k) . ')', trim($v), $css)));
 			}
 		}
-
-		header('Content-type: text/css');
-
-		echo trim(str_replace($m[0], '', $css));
 	}
+
+	header('Content-type: text/css');
+
+	echo $css;
 }
 
 $model->end();

@@ -1,15 +1,17 @@
-<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+<div class="no-grid">
+	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
 
-<?php if ( !empty($view->error) ): ?>
-<p class="message error"><?php echo $view->error ?></p>
-<?php endif ?>
+	<?php if ( !empty($view->error) ): ?>
+	<p class="message error"><?php echo $view->error ?></p>
+	<?php endif ?>
 
-<?php if ( !empty($view->notice) ): ?>
-<p class="message notice"><?php echo $view->notice ?></p>
-<?php endif ?>
+	<?php if ( !empty($view->notice) ): ?>
+	<p class="message notice"><?php echo $view->notice ?></p>
+	<?php endif ?>
+</div>
 
-<div class="wrap-column-left">
-	<div class="column">
+<div class="grid">
+	<div class="span-7">
 		<?php if ( $view->pages ): ?>
 		<?php foreach ( $view->pages as $group => $pages ): ?>
 		<h2><?php echo $group ?></h2>
@@ -29,10 +31,8 @@
 		<?php endforeach ?>
 		<?php endif ?>
 	</div>
-</div>
 
-<div class="wrap-column-right">
-	<div class="column">
+	<div class="span-5">
 		<h2><?php echo $model->t('Installation details') ?></h2>
 		
 		<dl>
@@ -60,5 +60,3 @@
 		</dl>
 	</div>
 </div>
-
-<div style="clear: both;"></div>

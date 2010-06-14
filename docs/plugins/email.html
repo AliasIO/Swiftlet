@@ -1,0 +1,46 @@
+<h2>E-mail</h2>
+
+<p><code>/_plugins/email.php</code></p>
+
+<p>
+	A plug-in to send e-mail.
+</p>
+
+<h4>Example</h4>
+
+<pre>
+<?php
+$model->email(
+	'recipient@example.com',
+	'Subject',
+	'<p>Body</p>',
+	array(
+		'From'     => 'sender@example.com',
+		'Reply-To' => 'sender@example.com'
+		)
+	);
+?>
+</pre>
+
+<h3>Class</h3>
+
+<p>
+	<code>$model-&gt;email</code>
+</p>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$model-&gt;log-&gt;send ( <em>array</em> $params )</code><br/>
+		This function should not be called directly. Use <code>$model-&gt;email()</code> instead (see <code><a href="../concepts/model">Model</a></code>).
+	</li>
+</ul>
+
+<h3>See also</h3>
+
+<ul>
+	<li>
+		<a href="../concepts/model">Model</a>
+	</li>
+</ul>

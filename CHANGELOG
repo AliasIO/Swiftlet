@@ -4,6 +4,10 @@
 # Added documentation plug-in
 # Added clear_cache hook
 # Several interface changes
+# Added adminEmail to /_config.php
+# Added email plugin
+# Added CSS grid
+# Several minor fixes and improvements
 #
 #
 # 1.2.0.B1 - 1.2.0.B2

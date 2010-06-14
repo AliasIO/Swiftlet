@@ -1,6 +1,6 @@
-<h2>Plug-ins</h2>
+<h2>Plugins</h2>
 
-<p>This is a basic example of a plug-in:</p>
+<p>This is a basic example of a plugin:</p>
 
 <pre>
 <?php
@@ -26,21 +26,21 @@ switch ( $hook )
 </pre>
 
 <p>
-	Plug-ins are stored in the <code>/_plugins/</code> directory. The <a href="?model">Model</a> scans this directory
-	when a page is loaded and includes every plug-in it finds, executing the code in the <code>case 'info'</code>
+	Plugins are stored in the <code>/_plugins/</code> directory. The <a href="./model">Model</a> scans this directory
+	when a page is loaded and includes every plugin it finds, executing the code in the <code>case 'info'</code>
 	block (this is where hooks are registered and version and compatibility information is provided).
 </p>
 
 <p>
-	Every time a hook is called, the plug-in is included again executing the code in the matching <code>case</code>
+	Every time a hook is called, the plugin is included again executing the code in the matching <code>case</code>
 	block.
 </p>
 
 <h3>Creating database tables</h3>
 
 <p>
-	Plug-ins that need database tables to be created have to be installed through the plug-in installer
-	(<code>/installer/</code>). Here is a more elaborate example of a plug-in:
+	Plugins that need database tables to be created have to be installed through the plugin installer
+	(<code>/installer/</code>). Here is a more elaborate example of a plugin:
 </p>
 
 <pre>
@@ -89,20 +89,20 @@ switch ( $hook )
 </pre>
 
 <p>
-	The <code>case 'install'</code> and <code>case 'upgrade'</code> blocks are used by the plug-in installer.
-	Plug-ins can only be upgraded if the version matches the values in <code>$info['upgradable']</code> (to go
+	The <code>case 'install'</code> and <code>case 'upgrade'</code> blocks are used by the plugin installer.
+	Plugins can only be upgraded if the version matches the values in <code>$info['upgradable']</code> (to go
 	from version 1.0.x to 3.0.x, you usually have to upgrade to version 2.0.x first).
 </p>
 
 <h3>Classes</h3>
 
 <p>
-	It's usually a good idea to put plug-in functionality in a separate class (these are stored in the
+	It's usually a good idea to put plugin functionality in a separate class (these are stored in the
 	<code>/_plugins/classes</code> directory).
 </p>
 
 <p>
-	This is a basic example of a plug-in class:
+	This is a basic example of a plugin class:
 </p>
 
 <pre>
@@ -132,12 +132,12 @@ class foo
 </pre>
 
 <p>
-	An instance of <code>$model</code> should be passed to each class in order to access the <a href="?model">Model</a> inside
+	An instance of <code>$model</code> should be passed to each class in order to access the <a href="./model">Model</a> inside
 	the class.
 </p>
 
 <p>
-	If the plug-in is required by other plug-ins or pages the <code>$ready</code> variable is checked using
+	If the plugin is required by other plugins or pages the <code>$ready</code> variable is checked using
 	<code>$model->check_dependencies()</code>. The variable should always be set.
 </p>
 
@@ -152,23 +152,23 @@ class foo
 <ul>
 	<li>
 		<code>$model->pluginsLoaded['plugin_name']->hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
-		Hook a plug-in into the code.
+		Hook a plugin into the code.
 	</li>
 	<li>
 		<code>$model->pluginsLoaded['plugin_name']->install ( )</code><br/>
-		Install a plug-in (call the 'install' hook).
+		Install a plugin (call the 'install' hook).
 	</li>
 	<li>
 		<code>$model->pluginsLoaded['plugin_name']->upgrade ( )</code><br/>
-		Upgrade a plug-in (call the 'upgrade' hook).
+		Upgrade a plugin (call the 'upgrade' hook).
 	</li>
 	<li>
 		<code>$model->pluginsLoaded['plugin_name']->remove ( )</code><br/>
-		Remove a plug-in (call the 'remove' hook).
+		Remove a plugin (call the 'remove' hook).
 	</li>
 	<li>
 		<code>$model->pluginsLoaded['plugin_name']->get_version ( )</code><br/>
-		Get version number of a plug-in.
+		Get version number of a plugin.
 	</li>
 </ul>
 
@@ -176,6 +176,6 @@ class foo
 
 <ul>
 	<li>
-		<a href="?unit_tests">Unit tests</a>
+		<a href="./unit_test">Unit tests</a>
 	</li>
 </ul>

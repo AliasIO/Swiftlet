@@ -1,0 +1,50 @@
+<h2>Dashboard</h2>
+
+<p><code>/_plugins/dashboard.php</code></p>
+
+<p>
+	A simple plug-in that lists adminstrative pages and displays installation details.
+</p>
+
+<h5>Example adminstration plugin</h5>
+
+<p>
+	TODO
+</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+	case 'info':
+		$info = array(
+			'name'       => 'example',
+			'version'    => '1.0.0',
+			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'hooks'      => array('dashboard' => 1)
+			);
+
+		break;	
+	case 'admin':
+		$params[] = array(
+			'name'        => 'Example',
+			'description' => 'Example adminstration page',
+			'group'       => 'Examples',
+			'path'        => 'admin/example/',
+			'auth'        => 'admin example access'
+			);
+
+		break;
+}
+?>
+</pre>
+
+<h3>See also</h3>
+
+<ul>
+	<li>
+		<a href="?admin_pages">Administation pages</a>
+	</li>
+</ul>

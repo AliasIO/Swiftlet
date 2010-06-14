@@ -42,7 +42,7 @@
 <p>
 	Information send as GET does not have an auth token to ensure its integrity and can't be trusted. When using GET to
 	perform adminstrative tasks (like deleting a page using a link as <code>?id=1&amp;action=delete</code>), confirmation
-	should be requested from the user using the <code>$model->confirm()</code> function (see <a href="?model">Model</a>).
+	should be requested from the user using the <code>$model->confirm()</code> function (see <a href="../concepts/model">Model</a>).
 </p>
 
 <h5>Example</h5>
@@ -69,7 +69,7 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 <p>
 	The <code>$model->confirm()</code> function exits the code and displays a form to the user with an option to proceed
 	or cancel. If the user chooses to proceed the page is reloaded and <code>$model->POST_valid['confirm']</code> is set
-	to <code>TRUE</code> (this requires the <a href="?form">Form plug-in</a>).
+	to <code>TRUE</code> (this requires the <a href="../plugins/form">Form plug-in</a>).
 </p>
 
 <h3>Handling user input</h3>
@@ -100,5 +100,5 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 <h3>See also</h3>
 
 <ul>
-	<li><a href="?form">Form (plug-in)</a></li>
+	<li><a href="../plugins/form">Form (plug-in)</a></li>
 </ul>

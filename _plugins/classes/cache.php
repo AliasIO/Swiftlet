@@ -158,8 +158,13 @@ class cache
 			while ( $filename = readdir($handle) )
 			{
 				if ( is_file($contr->rootPath . 'cache/' . $filename) )
-				{					
-					@unlink($contr->rootPath . 'cache/' . $filename);
+				{
+					$r = @unlink($contr->rootPath . 'cache/' . $filename);
+
+					if ( !$r )
+					{
+						$this->model->error(FALSE, 'Could not deleted cached file "/cache/' . $filename . '", please check permissions or the delete the file manually.', __FILE__, __LINE__);
+					}
 				}
 			}
 
