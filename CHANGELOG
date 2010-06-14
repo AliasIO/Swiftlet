@@ -8,6 +8,9 @@
 # Added email plugin
 # Added CSS grid
 # Several minor fixes and improvements
+# Fixed a bug causing nodes getting mixed up on node delete
+# Allowing duplicate file uploads
+# Saving relative path for images inserted with CKEditor
 #
 #
 # 1.2.0.B1 - 1.2.0.B2

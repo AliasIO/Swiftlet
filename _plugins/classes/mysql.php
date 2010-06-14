@@ -48,41 +48,44 @@ class mysql
 			$this->link = mysql_connect($host, $user, $pass)
 				or $model->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
-			mysql_select_db($name, $this->link)
-				or $model->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
+			if ( is_resource($this->link) )
+			{
+				mysql_select_db($name, $this->link)
+					or $model->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
-			$this->ready = TRUE;
-			
-			$this->sql('SHOW TABLES;');
-			
-			if ( $r = $this->result )
-			{
-				foreach ( $r as $d )
+				$this->ready = TRUE;
+				
+				$this->sql('SHOW TABLES;');
+				
+				if ( $r = $this->result )
 				{
-					$this->tables[$d[0]] = $d[0];
+					foreach ( $r as $d )
+					{
+						$this->tables[$d[0]] = $d[0];
+					}
 				}
-			}
-			
-			/**
-			 * Check if the cache tables exists
-			 */
-			if ( in_array($this->prefix . 'cache_queries', $this->tables) && in_array($this->prefix . 'cache_tables', $this->tables) )
-			{
+				
 				/**
-				 * Clear cache
+				 * Check if the cache tables exists
 				 */
-				$this->sql('
-					DELETE
-						cq, ct
-					FROM      `' . $this->prefix . 'cache_queries` AS cq
-					LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
-					WHERE
-						cq.`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
-					;');
-			}
-			else
-			{
-				$model->caching = FALSE;
+				if ( in_array($this->prefix . 'cache_queries', $this->tables) && in_array($this->prefix . 'cache_tables', $this->tables) )
+				{
+					/**
+					 * Clear cache
+					 */
+					$this->sql('
+						DELETE
+							cq, ct
+						FROM      `' . $this->prefix . 'cache_queries` AS cq
+						LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
+						WHERE
+							cq.`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
+						;');
+				}
+				else
+				{
+					$model->caching = FALSE;
+				}
 			}
 		}
 	}

@@ -27,7 +27,7 @@ $model->db->sql('
 	SELECT
 		f.`title`,
 		f.`extension`,
-		f.`file_hash`,
+		f.`filename`,
 		f.`mime_type`
 	FROM      `' . $model->db->prefix . 'nodes` AS n
 	LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
@@ -38,7 +38,7 @@ $model->db->sql('
 
 if ( $model->db->result && $r = $model->db->result[0] )
 {
-	if ( is_file($file = $contr->rootPath . 'uploads/files/' . ( $thumb ? 'thumbs/' : '' ) . $r['file_hash']) )
+	if ( is_file($file = $contr->rootPath . 'uploads/files/' . ( $thumb ? 'thumbs/' : '' ) . $r['filename']) )
 	{
 		if ( substr($r['mime_type'], 0, 5) == 'image' )
 		{

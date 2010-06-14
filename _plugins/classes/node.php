@@ -256,6 +256,15 @@ class node
 
 			$model->db->sql('
 				UPDATE `' . $model->db->prefix . 'nodes` SET
+					`left_id`   = `left_id` - 2,
+					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
+				WHERE
+					`left_id`  > ' . $leftId  . ' AND
+					`right_id` > ' . $rightId . '
+				;');
+
+			$model->db->sql('
+				UPDATE `' . $model->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
@@ -270,15 +279,6 @@ class node
 				WHERE
 					`left_id`  > ' . $leftId  . ' AND
 					`right_id` < ' . $rightId . '
-				;');
-
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
-					`left_id`  = `left_id` - 2,
-					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
-				WHERE
-					`left_id`  > ' . $leftId  . ' AND
-					`right_id` > ' . $rightId . '
 				;');
 
 			$model->db->sql('

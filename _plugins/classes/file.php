@@ -45,17 +45,17 @@ class file
 
 	/**
 	 * Create a thumbnail
-	 * @param string $hash
+	 * @param string $filename
 	 * @param string $mimeType
 	 * @param string $width
 	 * @param string $height
 	 * @return string
 	 */
-	function thumb($hash, $mimeType, $width, $height)
+	function thumb($filename, $mimeType, $width, $height)
 	{
 		$contr = $this->contr;
 
-		if ( is_file($file = $contr->rootPath . 'uploads/files/' . $hash) )
+		if ( is_file($file = $contr->rootPath . 'uploads/files/' . $filename) )
 		{
 			$size = 120;
 
@@ -137,7 +137,7 @@ class file
 						);
 				}
 
-				imagepng($thumb, $contr->rootPath . 'uploads/files/thumbs/' . $hash);
+				imagepng($thumb, $contr->rootPath . 'uploads/files/thumbs/' . $filename);
 			}
 		}
 	}

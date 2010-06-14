@@ -105,7 +105,7 @@
 				<td>
 					<a
 						href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-						onclick="callback'<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');"
+						onclick="callback('<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');"
 						>
 						<?php echo $file['title'] ?>
 					</a>
@@ -145,6 +145,8 @@
 		}
 
 		function callback(url) {
+			url = url.replace(/^<?php echo preg_quote($view->rootPath, '/') ?>/, '');
+
 			if ( validCallback ) {
 				window.opener.<?php echo $view->callback ?>(url);
 

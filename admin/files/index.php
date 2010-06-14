@@ -62,77 +62,70 @@ if ( $model->POST_valid['form-submit'] )
 			switch ( $_FILES['file']['error'][$i] )
 			{
 				case UPLOAD_ERR_OK:
-					$hash = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]));
-					
-					if ( is_file($contr->rootPath . 'uploads/files/' . $hash) )
+					$filename = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]) . time());
+
+					$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'uploads/files/' . $filename);
+
+					if ( $r )
 					{
-						$model->form->errors['file'][$i] = $model->t('This file has already been uploaded.');
+						$width  = '';
+						$height = '';
+
+						if ( $image = getimagesize($file) )
+						{
+							list($width, $height) = $image;
+
+							$model->file->thumb($filename, $_FILES['file']['type'][$i], $width, $height);
+						}
+
+						$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
+
+						$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
+
+						$permalink = $model->node->permalink($title);
+
+						$nodeId = $model->node->create($title, $permalink, $filesNodeId);
+
+						if ( $nodeId )
+						{
+							$model->db->sql('
+								INSERT INTO `' . $model->db->prefix . 'files` (
+									`node_id`,
+									`title`,
+									`extension`,
+									`image`,
+									`filename`,
+									`mime_type`,
+									`width`,
+									`height`,
+									`size`,
+									`date`,
+									`date_edit`
+									)
+								VALUES (
+									 ' . ( int ) $nodeId                                         . ',
+									"' . $model->db->escape($title)                              . '",
+									"' . $model->db->escape($extension)                          . '",
+									 ' . ( !empty($image) ? 1 : 0 )                              . ',
+									"' . $model->db->escape($filename)                           . '",
+									"' . $model->db->escape($_FILES['file']['type'][$i])         . '",
+									 ' . ( int ) $width                                          . ',
+									 ' . ( int ) $height                                         . ',
+									 ' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
+									"' . gmdate('Y-m-d H:i:s')                                   . '",
+									"' . gmdate('Y-m-d H:i:s')                                   . '"
+									)
+								;');
+
+							if ( $model->db->result )
+							{
+								$uploads[] = '<a href="' . $model->route('file/' . $permalink . $extension) . '" onclick="callback(\'' . $model->route('file/' . $permalink . $extension) . '\');">' . $model->h($title) . '</a>';
+							}
+						}
 					}
 					else
 					{
-						$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'uploads/files/' . $hash);
-
-						if ( $r )
-						{
-							$width  = '';
-							$height = '';
-
-							if ( $image = getimagesize($file) )
-							{
-								list($width, $height) = $image;
-
-								$model->file->thumb($hash, $_FILES['file']['type'][$i], $width, $height);
-							}
-
-							$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
-
-							$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
-
-							$permalink = $model->node->permalink($title);
-
-							$nodeId = $model->node->create($title, $permalink, $filesNodeId);
-
-							if ( $nodeId )
-							{
-								$model->db->sql('
-									INSERT INTO `' . $model->db->prefix . 'files` (
-										`node_id`,
-										`title`,
-										`extension`,
-										`image`,
-										`file_hash`,
-										`mime_type`,
-										`width`,
-										`height`,
-										`size`,
-										`date`,
-										`date_edit`
-										)
-									VALUES (
-										' . ( int ) $nodeId . ',
-										"' . $model->db->escape($title) . '",
-										"' . $model->db->escape($extension) . '",
-										' . ( !empty($image) ? 1 : 0 ) . ',
-										"' . $model->db->escape($hash) . '",
-										"' . $model->db->escape($_FILES['file']['type'][$i]) . '",
-										' . ( int ) $width . ',
-										' . ( int ) $height . ',
-										' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
-										"' . gmdate('Y-m-d H:i:s') . '",
-										"' . gmdate('Y-m-d H:i:s') . '"
-										)
-									;');
-
-								if ( $model->db->result )
-								{
-									$uploads[] = '<a href="' . $model->route('file/' . $permalink . $extension) . '" onclick="callback(\'' . $model->route('file/' . $permalink . $extension) . '\');">' . $model->h($title) . '</a>';
-								}
-							}
-						}
-						else
-						{
-							$model->form->errors['file'][$i] = $model->t('Could not move file to destined location.');
-						}
+						$model->form->errors['file'][$i] = $model->t('Could not move file to destined location.');
 					}
 
 					break;
@@ -193,7 +186,7 @@ if ( ( int ) $id )
 				{
 					$model->db->sql('
 						SELECT
-							`file_hash`
+							`filename`
 						FROM `' . $model->db->prefix . 'files`
 						WHERE
 							`node_id` = ' . ( int ) $id . '
@@ -202,14 +195,14 @@ if ( ( int ) $id )
 					
 					if ( $r = $model->db->result )
 					{
-						$hash = $r[0]['file_hash'];
+						$filename = $r[0]['filename'];
 
-						if ( is_file($file = $contr->rootPath . 'uploads/files/' . $hash) )
+						if ( is_file($file = $contr->rootPath . 'uploads/files/' . $filename) )
 						{
 							unlink($file);
 						}
 
-						if ( is_file($file = $contr->rootPath . 'uploads/files/thumbs/' . $hash) )
+						if ( is_file($file = $contr->rootPath . 'uploads/files/thumbs/' . $filename) )
 						{
 							unlink($file);
 						}
@@ -267,7 +260,7 @@ if ( $nodes )
 			ORDER BY f.`date` DESC
 			LIMIT ' . count($nodeIds) . '
 			;');
-		
+
 		if ( $r = $model->db->result )
 		{
 			foreach ( $r as $d )

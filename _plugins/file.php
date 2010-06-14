@@ -29,7 +29,7 @@ switch ( $hook )
 					`title`     VARCHAR(255)        NOT NULL,
 					`extension` VARCHAR(255)            NULL,
 					`image`     TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-					`file_hash` VARCHAR(40)         NOT NULL,
+					`filename`  VARCHAR(40)         NOT NULL,
 					`mime_type` VARCHAR(255)        NOT NULL,
 					`width`     INT(10)    UNSIGNED     NULL,
 					`height`    INT(10)    UNSIGNED     NULL,
