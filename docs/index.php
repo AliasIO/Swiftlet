@@ -12,7 +12,7 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$file = '';
+$file = 'intro.html';
 
 if ( isset($model->routeParts[1]) )
 {
@@ -24,6 +24,13 @@ $contents = '';
 if ( is_file ( $file ) )
 {
 	$contents = @file_get_contents($file);
+
+	preg_match('/<h2>(.+?)<\/h2>/', $contents, $m);
+
+	if ( $m )
+	{
+		$view->pageTitle = $model->h($m[1]);
+	}
 
 	/*
 	 * Code syntax markup

@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->model) ) die('Direct access to this file is not allowed');
 
 /**
  * Session
@@ -29,11 +29,12 @@ class session
 
 	/**
 	 * Initialize session
-	 * @param object $model
+	 * @param object $this->model
 	 */
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		/**
@@ -47,12 +48,12 @@ class session
 
 			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-			$this->hash = sha1($model->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->contr->absPath);
+			$this->hash = sha1($this->model->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->contr->absPath);
 
 			/**
 			 * Delete expired sessions
 			 */
-			$this->model->db->sql('
+			$model->db->sql('
 				DELETE
 				FROM `' . $this->model->db->prefix . 'sessions`
 				WHERE
@@ -67,7 +68,7 @@ class session
 				$model->db->sql('
 					SELECT
 						`contents`
-					FROM `' . $model->db->prefix . 'sessions`
+					FROM `' . $this->model->db->prefix . 'sessions`
 					WHERE
 						`id`   = '  . $this->id   . ' AND
 						`hash` = "' . $this->hash . '"
@@ -159,14 +160,12 @@ class session
 	 */
 	function end()
 	{
-		$model = $this->model;
-
-		if ( in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		if ( in_array($this->model->db->prefix . 'sessions', $this->model->db->tables) )
 		{
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'sessions`
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'sessions`
 				SET
-					`contents` = "' . $model->db->escape(serialize($this->contents)) . '",
+					`contents` = "' . $this->model->db->escape(serialize($this->contents)) . '",
 					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 				WHERE
 					`id` = ' . $this->id . '

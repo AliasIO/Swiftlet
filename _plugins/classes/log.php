@@ -19,6 +19,7 @@ class log
 
 	private
 		$model,
+		$view,
 		$contr
 		;
 
@@ -29,6 +30,7 @@ class log
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		$this->ready = TRUE;
@@ -39,21 +41,19 @@ class log
 	 */
 	function write($filename, $contents)
 	{
-		$contr = $this->contr;
-
-		if ( !is_dir($contr->rootPath . 'log') )
+		if ( !is_dir($this->contr->rootPath . 'log') )
 		{
 			$this->model->error(FALSE, 'Directory "/log" does not exist.', __FILE__, __LINE__);
 		}
 
-		if ( !is_writable($contr->rootPath . 'log') )
+		if ( !is_writable($this->contr->rootPath . 'log') )
 		{
 			$this->model->error(FALSE, 'Directory "/log" is not writable.', __FILE__, __LINE__);
 		}
 
 		$contents = date('M d H:i:s') . "\t" . $contents . "\n";
 
-		if ( !$handle = fopen($contr->rootPath . 'log/' . $filename, 'a+') )
+		if ( !$handle = fopen($this->contr->rootPath . 'log/' . $filename, 'a+') )
 		{
 			$this->model->error(FALSE, 'Could not open file "/log/' . $filename . '".', __FILE__, __LINE__);
 		}

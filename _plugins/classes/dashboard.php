@@ -18,20 +18,12 @@ class dashboard
 		$ready
 		;
 
-	private
-		$model,
-		$contr
-		;
-
 	/**
 	 * Initialize
 	 * @param object $model
 	 */
 	function __construct($model)
 	{
-		$this->model = $model;
-		$this->contr = $model->contr;
-
 		$pages = array();
 
 		$model->hook('dashboard', $pages);

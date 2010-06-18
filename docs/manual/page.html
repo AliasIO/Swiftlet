@@ -1,38 +1,70 @@
-<h2>Pages</h2>
+<h2>Creating pages</h2>
 
 <p>
-	This page is about creating dynamic (scripted) pages. To learn about adding static content, see the documentation
-	for the <a href="../plugins/page">Page plug-in</a>.
+	The easiest way to add a page to your website is using the <a href="../plugins/page">Page</a> plugin.
+	After installation you'll find a link on the <a href="../plugins/dashboard">Dashboard</a> where you can add
+	and edit pages. These pages can only contain static content such as text and images and are useful for simple
+	documents and articles.
 </p>
 
-<ol>
-	<li>
-		To create a new page, create a <a href="../concepts/controller">Controller</a> (PHP file) and <a href="../concepts/view">View</a> (HTML file)
-		as described on the linked pages. The Controller in the root (<code>/</code>) or a sub directory and the View in
-		<code>/_view/</code>.
-		<br/><br/>
-		The reason for the two files is to seperate logic from presentation. You always need to create two files, even if
-		the page only contains static content. 
-	</li>
-	<li>
-		The next step is to make sure the correct root path is set in the Controller. This should be a relative path from
-		the Controller to the root of the installation (e.g. <code>./</code> or <code>../../</code>). The root path is
-		defined in the <code>$contrSetup</code> array on top of the file (<code>rootPath</code>) and can never be empty.
-	</li>
-	<li>
-		Check if the View file is linked correctly (e.g. <code>$view->load('index.html.php')</code>. The path should be
-		relative to the <code>/_view/</code> directory.
-	</li>
-	<li>
-		If needed you can add PHP code to the Controller. To pass variables to the View, the <code>$view</code> object should
-		be used (e.g. <code>$view->foo = 'bar'</code>. All static content (text, images etc.) goes into the View file.
-	<li>
-		Open the Controller file in your web browser to see the page.
-	</li>
-</ol>
+<p>
+	To add a dynamic (scripted) page you need to create two files, a
+	<a href="../concepts/controller">Controller</a> and a <a href="../concepts/view">View</a>.
+</p>
+
+<h4>Example Controller (<code>/hello.php</code>)</h4>
+
+<pre>
+<?php
+$contrSetup = array(
+    'rootPath'  => './',
+    'pageTitle' => 'Hello'
+    );
+
+require($contrSetup['rootPath'] . '_model/init.php');
+
+// Your code goes here
+
+$view->load('hello.html.php');
+
+$model->end();
+?>
+</pre>
+
+<p>
+	The <code>$contrSetup</code> variable is a requirement that lets you configure the Controller. The value of <code>rootPath</code>
+	is the relative path to the root directory, in this case <code>./</code>. If you place the controller in a subdirectory it should
+	be <code>../</code> or perhaps <code>../../</code>.
+</p>
+
+<p>
+	The next step is to initialize <a href="../concepts/model">Model</a> by including <code>/_model/init.php</code>. Without the Model
+	you won't be able to use any of Swiftlet's functions.
+</p>
+
+<p>
+	At this point you can add your own PHP code.
+</p>
+
+<p>
+	Now you can load the View file with <code>$view->load()</code>. This file will contain all the HTML and other UI elements. This way
+	logic is separated from design which will make it easier to maintain.
+</p>
+
+<p>
+	Finally you need to call <code>$model->end()</code> to finalize the request. This will make sure database connections are closed,
+	sessions are saved and output is sent to the browser.
+</p>
+
+<p>
+	When you browse to the Controller (<code>/hello.php</code>) in your web browser the page should appear.
+</p>
 
 <h3>See also</h3>
 
 <ul>
-	<li><a href="../plugins/page">Page (plug-in)</a></li>
+	<li><a href="../concepts/model"     >Model</a></li>
+	<li><a href="../concepts/controller">Controller</a></li>
+	<li><a href="../concepts/view"      >View</a></li>
+	<li><a href="../plugins/page"       >Page (plug-in)</a></li>
 </ul>

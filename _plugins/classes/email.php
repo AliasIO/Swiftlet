@@ -19,6 +19,7 @@ class email
 
 	private
 		$model,
+		$view,
 		$contr
 		;
 
@@ -29,6 +30,7 @@ class email
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		$this->ready = TRUE;
@@ -39,11 +41,9 @@ class email
 	 */
 	function send($params)
 	{
-		$model = $this->model;
-
 		$headers = array(
 			'To'           => '<' . $params['to'] . '>',
-			'From'         => $model->siteName . ' <' . $model->adminEmail . '>',
+			'From'         => $this->model->siteName . ' <' . $this->model->adminEmail . '>',
 			'MIME-Version' => '1.0',
 			'Content-type' => 'text/html; charset=UTF-8',
 			'X-Mailer'     => 'Swiftlet - http://swiftlet.org'

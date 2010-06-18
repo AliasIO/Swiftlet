@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->model) ) die('Direct access to this file is not allowed');
 
 /**
  * Authorisation
@@ -24,16 +24,18 @@ class user
 
 	private
 		$model,
+		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize authorisation
-	 * @param object $model
+	 * @param object $this->model
 	 */
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		if ( !empty($model->db->ready) )
@@ -88,32 +90,30 @@ class user
 	 */
 	function login($username, $password)
 	{
-		$model = $this->model;
-
-		if ( $model->session->get('user id') !== FALSE )
+		if ( $this->model->session->get('user id') !== FALSE )
 		{
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'users` SET
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'users` SET
 					`date_login_attempt` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
-					`username` = "' . $model->db->escape($username) . '"
+					`username` = "' . $this->model->db->escape($username) . '"
 				LIMIT 1
 				;');
 
 			if ( $this->validate_password($username, $password) )
 			{
-				$model->db->sql('
+				$this->model->db->sql('
 					SELECT
 						*
-					FROM `' . $model->db->prefix . 'users`
+					FROM `' . $this->model->db->prefix . 'users`
 					WHERE
-						`username` = "' . $model->db->escape($username) . '"
+						`username` = "' . $this->model->db->escape($username) . '"
 					LIMIT 1
 					;', FALSE);
 
-				if ( !empty($model->db->result[0]) && $r = $model->db->result[0] )
+				if ( !empty($this->model->db->result[0]) && $r = $this->model->db->result[0] )
 				{
-					$model->session->put(array(
+					$this->model->session->put(array(
 						'user id'       => $r['id'],
 						'user username' => $r['username'],
 						'user email'    => $r['email'],
@@ -132,10 +132,10 @@ class user
 	 */
 	function logout()
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 		
-		$model->session->reset();
-		$model->session->end();
+		$this->model->session->reset();
+		$this->model->session->end();
 	}
 
 	/**
@@ -146,18 +146,18 @@ class user
 	 */
 	function validate_password($username, $password)
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 
-		$model->db->sql('
+		$this->model->db->sql('
 			SELECT
 				`pass_hash`
-			FROM `' . $model->db->prefix . 'users`
+			FROM `' . $this->model->db->prefix . 'users`
 			WHERE
-				`username` = "' . $model->db->escape($username) . '"
+				`username` = "' . $this->model->db->escape($username) . '"
 			LIMIT 1
 			;', FALSE);
 
-		if ( !empty($model->db->result[0]) && $r = $model->db->result[0] )
+		if ( !empty($this->model->db->result[0]) && $r = $this->model->db->result[0] )
 		{
 			$salt     = substr($r['pass_hash'], 0, 64);
 			$passHash = $salt . $password;
@@ -173,11 +173,11 @@ class user
 			{
 				$passHash = $this->make_pass_hash($username, $password); 
 
-				$model->db->sql('
-					UPDATE `' . $model->db->prefix . 'users` SET
+				$this->model->db->sql('
+					UPDATE `' . $this->model->db->prefix . 'users` SET
 						`pass_hash` = "' . $passHash . '"
 					WHERE
-						`username` = "' . $model->db->escape($username) . '"
+						`username` = "' . $this->model->db->escape($username) . '"
 					LIMIT 1
 					;');
 				
@@ -214,23 +214,23 @@ class user
 	 */
 	function save_pref($params)
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 		
-		$model->db->sql('
-			INSERT INTO `' . $model->db->prefix . 'user_prefs` (
+		$this->model->db->sql('
+			INSERT INTO `' . $this->model->db->prefix . 'user_prefs` (
 				`pref`,
 				`type`,
 				`match`,
 				`options`
 				)
 			VALUES (
-				"' . $model->db->escape($params['pref'])    . '",
-				"' . $model->db->escape($params['type'])    . '",
-				"' . $model->db->escape($params['match'])   . '",
-				"' . $model->db->escape($params['options']) . '"
+				"' . $this->model->db->escape($params['pref'])    . '",
+				"' . $this->model->db->escape($params['type'])    . '",
+				"' . $this->model->db->escape($params['match'])   . '",
+				"' . $this->model->db->escape($params['options']) . '"
 				)
 			ON DUPLICATE KEY UPDATE
-				`options` = "' . $model->db->escape($params['options']) . '"
+				`options` = "' . $this->model->db->escape($params['options']) . '"
 			;');
 	}
 
@@ -240,15 +240,15 @@ class user
 	 */
 	function delete_pref($pref)
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 
-		$model->db->sql('
+		$this->model->db->sql('
 			DELETE
 				up, upx
-			FROM      `' . $model->db->prefix . 'user_prefs`      AS up
-			LEFT JOIN `' . $model->db->prefix . 'user_prefs_xref` AS upx ON up.`id` = upx.`pref_id`
+			FROM      `' . $this->model->db->prefix . 'user_prefs`      AS up
+			LEFT JOIN `' . $this->model->db->prefix . 'user_prefs_xref` AS upx ON up.`id` = upx.`pref_id`
 			WHERE
-				up.`pref` = "' . $model->db->escape($pref) . '"
+				up.`pref` = "' . $this->model->db->escape($pref) . '"
 			;');
 	}
 
@@ -258,10 +258,10 @@ class user
 	 */
 	function save_pref_value($params)
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 
-		$model->db->sql('
-			INSERT INTO `' . $model->db->prefix . 'user_prefs_xref` (
+		$this->model->db->sql('
+			INSERT INTO `' . $this->model->db->prefix . 'user_prefs_xref` (
 				`user_id`,
 				`pref_id`,
 				`value`
@@ -269,13 +269,13 @@ class user
 			VALUES (
 				' . ( int ) $params['user_id'] . ',
 				' . ( int ) $this->prefs[$params['pref']]['id'] . ',
-				"' . $model->db->escape($params['value']) . '"
+				"' . $this->model->db->escape($params['value']) . '"
 				)
 			ON DUPLICATE KEY UPDATE
-				`value` = "' . $model->db->escape($params['value']) . '"
+				`value` = "' . $this->model->db->escape($params['value']) . '"
 			;');
 
-		if ( $model->db->result )
+		if ( $this->model->db->result )
 		{
 			$params = array(
 				'pref'  => $params['pref'],
@@ -290,23 +290,23 @@ class user
 	 */
 	function get_pref_values($userId)
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 		
 		$prefs = array();
 
 		if ( ( int ) $userId )
 		{
-			$model->db->sql('
+			$this->model->db->sql('
 				SELECT
 					uo.`pref`,
 					uox.`value`
-				FROM      `' . $model->db->prefix . 'user_prefs`      AS uo
-				LEFT JOIN `' . $model->db->prefix . 'user_prefs_xref` AS uox ON uo.`id` = uox.`pref_id`
+				FROM      `' . $this->model->db->prefix . 'user_prefs`      AS uo
+				LEFT JOIN `' . $this->model->db->prefix . 'user_prefs_xref` AS uox ON uo.`id` = uox.`pref_id`
 				WHERE
 					uox.`user_id` = ' . ( int ) $userId . '
 				;');
 
-			if ( $r = $model->db->result )
+			if ( $r = $this->model->db->result )
 			{
 				foreach ( $r as $d )
 				{

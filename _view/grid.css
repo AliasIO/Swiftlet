@@ -12,10 +12,6 @@
 	margin: 0 10px;
 }
 
-.last {
-	margin-right: 0;
-}
-
 .span-1  { width:  60px; }
 .span-2  { width: 140px; }
 .span-3  { width: 220px; }
@@ -28,3 +24,11 @@
 .span-10 { width: 780px; }
 .span-11 { width: 860px; }
 .span-12 { width: 940px; }
+
+.first {
+	margin-left: 0;
+}
+
+.last {
+	margin-right: 0;
+}

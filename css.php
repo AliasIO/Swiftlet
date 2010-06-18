@@ -16,11 +16,19 @@ require($contrSetup['rootPath'] . '_model/init.php');
 /*
  * Parse CSS files so we can use variables
  */
-if ( !empty($model->GET_raw['file']) && is_file($file = $contr->viewPath . $model->GET_raw['file'] . '.css') )
+if ( !empty($model->GET_raw['files']) )
 {
-	$css = file_get_contents($file);
+	$css = '';
 
-	preg_match('/@variables \{([^}]+)\}/s', $css, $m);
+	foreach ( explode(',', $model->GET_raw['files']) as $filename )
+	{
+		if ( is_file($file = $contr->viewPath . $filename) )
+		{
+			$css .= '/* ' . $filename . ' */' . "\n\n" . trim(file_get_contents($file)) . "\n\n";
+		}
+	}
+
+	preg_match('/@variables \{([^}]+)\}\s*/s', $css, $m);
 
 	if ( isset($m[1]) )
 	{
@@ -34,10 +42,10 @@ if ( !empty($model->GET_raw['file']) && is_file($file = $contr->viewPath . $mode
 			}
 		}
 	}
-
-	header('Content-type: text/css');
-
-	echo $css;
 }
+
+header('Content-type: text/css');
+
+echo $css;
 
 $model->end();

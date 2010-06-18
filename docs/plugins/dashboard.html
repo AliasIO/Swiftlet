@@ -3,14 +3,15 @@
 <p><code>/_plugins/dashboard.php</code></p>
 
 <p>
-	A simple plug-in that lists adminstrative pages and displays installation details.
+	The dashboard provides easy access to administrative pages and displays details about your Swiftlet installation.
+	The dashboard can be accessed at <code>/admin/dashboard/</code>.
 </p>
-
-<h5>Example adminstration plugin</h5>
 
 <p>
-	TODO
+	This plugin comes with an additional <a href="../concepts/hook">hook</a> for other plugins to hook into. 
 </p>
+
+<h5>Example</h5>
 
 <pre>
 <?php
@@ -27,13 +28,13 @@ switch ( $hook )
 			);
 
 		break;	
-	case 'admin':
+	case 'dashboard':
 		$params[] = array(
 			'name'        => 'Example',
-			'description' => 'Example adminstration page',
+			'description' => 'Example page',
 			'group'       => 'Examples',
 			'path'        => 'admin/example/',
-			'auth'        => 'admin example access'
+			'perm'        => 'admin example access'
 			);
 
 		break;
@@ -41,10 +42,6 @@ switch ( $hook )
 ?>
 </pre>
 
-<h3>See also</h3>
-
-<ul>
-	<li>
-		<a href="?admin_pages">Administation pages</a>
-	</li>
-</ul>
+<p>
+	TODO
+</p>

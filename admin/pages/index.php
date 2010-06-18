@@ -21,7 +21,8 @@ $model->form->validate(array(
 	'title'       => 'string',
 	'body'        => '/.*/',
 	'published'   => 'bool',
-	'parent'      => 'int'
+	'parent'      => 'int',
+	'home'        => 'bool'
 	));
 
 $id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
@@ -54,6 +55,14 @@ if ( $model->POST_valid['form-submit'] )
 	}
 	else
 	{
+		if ( $model->POST_valid['home'] )
+		{
+			$model->db->sql('
+				UPDATE `' . $model->db->prefix . 'nodes` SET
+					`home` = 0
+				;');
+		}
+
 		switch ( $action )
 		{
 			case 'edit':
@@ -67,7 +76,8 @@ if ( $model->POST_valid['form-submit'] )
 					$model->db->sql('
 						UPDATE `' . $model->db->prefix . 'nodes` SET
 							`title`     = "' . $model->POST_db_safe['title']['English US'] . '",
-							`permalink` = "' . $permalink . '"
+							`permalink` = "' . $permalink                                  . '",
+							`home`      =  ' . ( $model->POST_raw['home'] ? 1 : 0 )        . '
 						WHERE
 							`id` = ' . $id . '
 						LIMIT 1
@@ -98,9 +108,9 @@ if ( $model->POST_valid['form-submit'] )
 						{
 							$model->db->sql('
 								UPDATE `' . $model->db->prefix . 'pages` SET
-									`title`     = "' . $model->POST_db_safe['title'][$language] . '",
-									`body`      = "' . $model->POST_db_safe['body'][$language] . '",
-									`published` = ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
+									`title`     = "' . $model->POST_db_safe['title'][$language]  . '",
+									`body`      = "' . $model->POST_db_safe['body'][$language]   . '",
+									`published` =  ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
 									`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 								WHERE
 									`node_id` = ' . $id . ' AND
@@ -121,13 +131,13 @@ if ( $model->POST_valid['form-submit'] )
 									`date_edit`
 									)
 								VALUES (
-									' . $id . ',
-									"' . $model->POST_db_safe['title'][$language] . '",
-									"' . $model->POST_db_safe['body'][$language] . '",
-									' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
-									"' . $model->db->escape($language) . '",
-									"' . gmdate('Y-m-d H:i:s') . '",
-									"' . gmdate('Y-m-d H:i:s') . '"
+									 ' . $id                                       . ',
+									"' . $model->POST_db_safe['title'][$language]  . '",
+									"' . $model->POST_db_safe['body'][$language]   . '",
+									 ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
+									"' . $model->db->escape($language)             . '",
+									"' . gmdate('Y-m-d H:i:s')                     . '",
+									"' . gmdate('Y-m-d H:i:s')                     . '"
 									)
 								;');
 						}
@@ -151,6 +161,17 @@ if ( $model->POST_valid['form-submit'] )
 
 					if ( $node_id )
 					{
+						if ( $model->POST_raw['home'] )
+						{
+							$model->db->sql('
+								UPDATE `' . $model->db->prefix . 'nodes` SET
+									`home` = 1
+								WHERE
+									`id` = ' . ( $node_id ) . '
+								LIMIT 1
+								;');
+						}
+						
 						foreach ( $languages as $language )
 						{
 							$model->db->sql('
@@ -164,13 +185,13 @@ if ( $model->POST_valid['form-submit'] )
 									`date_edit`
 									)
 								VALUES (
-									' . $node_id . ',
-									"' . $model->POST_db_safe['title'][$language] . '",
-									"' . $model->POST_db_safe['body'][$language] . '",
-									' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
-									"' . $model->db->escape($language) . '",
-									"' . gmdate('Y-m-d H:i:s') . '",
-									"' . gmdate('Y-m-d H:i:s') . '"
+									 ' . $node_id                                  . ',
+									"' . $model->POST_db_safe['title'][$language]  . '",
+									"' . $model->POST_db_safe['body'][$language]   . '",
+									 ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
+									"' . $model->db->escape($language)             . '",
+									"' . gmdate('Y-m-d H:i:s')                     . '",
+									"' . gmdate('Y-m-d H:i:s')                     . '"
 									)
 								;');
 						}
@@ -222,7 +243,8 @@ switch ( $action )
 						p.`lang`,
 						n.`left_id`,
 						n.`right_id`,
-						n.`permalink`
+						n.`permalink`,
+						n.`home`
 					FROM      `' . $model->db->prefix . 'nodes` AS n
 					LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 					WHERE
@@ -244,6 +266,7 @@ switch ( $action )
 
 					$model->POST_html_safe['parent']    = $node['parents'][count($node['parents']) - 1]['id'];
 					$model->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
+					$model->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
 				}
 			}
 		}

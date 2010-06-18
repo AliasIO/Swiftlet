@@ -19,6 +19,7 @@ class form
 	
 	private
 		$model,
+		$view,
 		$contr,
 
 		$typesRegex = array(
@@ -37,6 +38,7 @@ class form
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 		
 		$this->ready = TRUE;
@@ -48,23 +50,21 @@ class form
 	 */
 	function validate($vars)
 	{
-		$model = $this->model;
-
 		$this->errors = array();
 		
 		$vars['confirm'] = 'bool';
 
 		foreach ( $vars as $var => $types )
 		{
-			if ( !isset($model->POST_raw[$var]) )
+			if ( !isset($this->model->POST_raw[$var]) )
 			{
-				$model->POST_raw[$var]       = FALSE;
-				$model->POST_html_safe[$var] = FALSE;
-				$model->POST_valid[$var]     = FALSE;
+				$this->model->POST_raw[$var]       = FALSE;
+				$this->model->POST_html_safe[$var] = FALSE;
+				$this->model->POST_valid[$var]     = FALSE;
 			}
 			else
 			{
-				$model->POST_valid[$var] = FALSE;
+				$this->model->POST_valid[$var] = FALSE;
 
 				$regexes = array();
 
@@ -75,9 +75,9 @@ class form
 					$regexes[] = isset($this->typesRegex[$type]) ? $this->typesRegex[$type] : $type;
 				}
 
-				$model->POST_valid[$var] = $this->check($model->POST_raw[$var], $regexes);
+				$this->model->POST_valid[$var] = $this->check($this->model->POST_raw[$var], $regexes);
 
-				if ( $model->POST_valid[$var] === FALSE )
+				if ( $this->model->POST_valid[$var] === FALSE )
 				{
 					$this->errors[$var] = TRUE;
 				}

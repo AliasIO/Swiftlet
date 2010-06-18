@@ -14,9 +14,9 @@
 			<ul>
 				<li><a href="<?php echo $view->rootPath ?>docs/manual/install"   >Installation</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/manual/config"    >Configuration</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/page"      >Pages</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/admin_page">Adminstation pages</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/page"      >Creating pages</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/manual/form"      >Forms</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/manual/faq"       >FAQ</a></li>
 			</ul>
 			
 			<h2>Concepts</h2>

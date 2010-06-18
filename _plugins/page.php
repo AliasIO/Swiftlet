@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('dashboard' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
+			'hooks'        => array('dashboard' => 1, 'home' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
 			);
 
 		break;
@@ -102,12 +102,19 @@ switch ( $hook )
 
 		break;
 	case 'route':
-		if ( $model->page->ready )
+		if ( !empty($model->page->ready) )
 		{
 			if ( $params['parts'][0] == 'p' )
 			{
 				$params['path'] = 'page.php';
 			}
+		}
+
+		break;
+	case 'home':
+		if ( !empty($model->page->ready) )
+		{
+			$params['route'] = $model->page->get_home();
 		}
 
 		break;

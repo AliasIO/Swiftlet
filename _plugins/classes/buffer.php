@@ -19,6 +19,7 @@ class buffer
 
 	private
 		$model,
+		$view,
 		$contr
 		;
 
@@ -29,6 +30,7 @@ class buffer
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 	}
 
@@ -50,15 +52,13 @@ class buffer
 	 */
 	function flush()
 	{
-		$model = $this->model;
-
 		if ( $this->ready )
 		{
 			$contents = ob_get_contents();
 
 			$params['contents'] = &$contents;
 
-			$model->hook('cache', $params);
+			$this->model->hook('cache', $params);
 
  			if ( ob_get_length() > 0 )
 			{

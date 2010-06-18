@@ -9,6 +9,7 @@
 	page-background-color: #FFF;
 	content-background-color: #FFF;
 	text-color: #2E2D2B;
+	spacing: 25px;
 }
 
 /* Normalize */
@@ -39,7 +40,7 @@ body {
 	color: var(text-color);
 	font-family: Verdana, Arial;
 	font-size: 13px;
-	line-height: 1.5em;
+	line-height: 20px;
 	text-align: center;
 }
 
@@ -138,7 +139,6 @@ a:hover {
 		height: 120px;
 		overflow: hidden;
 		text-indent: -99999%;
-		/*width: 175px;*/
 		width: 400px;
 	}
 
@@ -150,47 +150,47 @@ a:hover {
 }
 
 #content {
-	padding: 2em 0 .5em 0;
+	padding: var(spacing) 0 0 0;
 }
 
 	#content p {
-		margin-bottom: 1.5em;
+		margin-bottom: var(spacing);
+	}
+
+	#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+		line-height: 1em;
+		margin-bottom: 15px;
 	}
 
 	#content h1 {
-		font-size: 2em;
-		line-height: 1em;
-		margin-bottom: .7em;
+		font-size: 26px;
+		margin-bottom: 20px;
 	}
 
 	#content h2 {
 		font-size: 15px;
 		font-weight: bold;
-		margin-bottom: .6em;
 		text-transform: uppercase;
 	}
 
 	#content h3 {
 		font-size: 13px;
 		font-weight: bold;
-		margin-bottom: .6em;
 		text-transform: uppercase;
 	}
 
 	#content h4 {
 		font-size: 13px;
 		font-weight: bold;
-		margin-bottom: .6em;
 	}
 
-	#content h5 {
+	#content h5, #content h6 {
 		font-size: 11px;
 		font-weight: bold;
-		margin-bottom: .6em;
 	}
 
 	#content ul, #content ol {
-		margin-bottom: 1.5em;
+		margin-bottom: var(spacing);
 	}
 	
 		#content ul ul, #content ol ol, #content ul ol, #content ol ul {
@@ -204,18 +204,18 @@ a:hover {
 
 	#content dl {
 		clear: both;
-		margin-bottom: 1.5em;
+		margin-bottom: var(spacing);
 	}
 
 	#content dt {
 		display: block;
 		float: left;
 		margin-right: 1em;
-		width: 160px;
+		width: 140px;
 	}
 
 	#content dd {
-		margin-left: 160px;
+		margin-left: 140px;
 	}
 
 	#content .message {
@@ -238,7 +238,7 @@ a:hover {
 		}
 	
 	#content .crumbs {
-		float: left;
+		margin-bottom: 10px;
 	}
 
 		#content .crumbs li {
@@ -250,11 +250,11 @@ a:hover {
 	
 	#content .admin-toolbox {
 		float: right;
+		margin-bottom: 10px;
 	}
 
 		#content .admin-toolbox li {
 			display: inline;
-			font-size: .9em;
 			margin-left: 0;
 		}
 
@@ -263,7 +263,7 @@ a:hover {
 	#content .syntax {
 		background: var(form-background-color);
 		font-family: monospace;
-		margin-bottom: 1.5em;
+		margin-bottom: var(spacing);
 		overflow-x: auto;
 		width: 100%;
 		white-space: nowrap;
@@ -286,7 +286,7 @@ a:hover {
 
 #footer {
 	font-size: 11px;
-	padding: 1em 1em 2em 0;
+	padding: 20px 0;
 	text-align: center;
 	text-transform: uppercase;
 }
@@ -298,7 +298,7 @@ table {
 	border-color: var(form-border-color);
 	border-style: solid;
 	border-width: 1px 0 0 1px;
-	margin-bottom: 1.5em;
+	margin-bottom: var(spacing);
 	text-align: left;
 	width: 100%;
 }
@@ -327,7 +327,7 @@ td {
 /* Form elements */
 
 form {
-	margin-bottom: 1.5em;
+	margin-bottom: var(spacing);
 }
 
 	form.hide {
@@ -402,7 +402,7 @@ input, textarea, select, button {
 }
 
 input, textarea, select {
-	width: 20em;
+	width: 300px;
 }
 
 input[type="checkbox"], input[type="radio"] {
@@ -427,8 +427,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 textarea.large {
-	height: 25em;
-	width: 50em;
+	height: 220px;
+	width: 540px;
 }
 
 textarea.code {

@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->model) ) die('Direct access to this file is not allowed');
 
 /**
  * Permissions
@@ -31,11 +31,12 @@ class perm
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $this->model
 	 */
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		/**
@@ -43,7 +44,7 @@ class perm
 		 */
 		if ( in_array($model->db->prefix . 'perms', $model->db->tables) )
 		{
-			$model->db->sql('
+			$this->model->db->sql('
 				SELECT
 					p.`name`  AS `permission`,
 					pr.`name` AS `role`,
@@ -87,9 +88,7 @@ class perm
 	 */
 	function check($name)
 	{
-		$model = $this->model;
-
-		return $model->session->get('user is owner') or $model->session->get('perm ' . $name);
+		return $this->model->session->get('user is owner') or $this->model->session->get('perm ' . $name);
 	}
 
 	/**
@@ -101,18 +100,16 @@ class perm
 	 */
 	function create($group, $name, $description)
 	{
-		$model = $this->model;
-
-		$model->db->sql('
-			INSERT IGNORE INTO `' . $model->db->prefix . 'perms` (
+		$this->model->db->sql('
+			INSERT IGNORE INTO `' . $this->model->db->prefix . 'perms` (
 				`name`,
 				`desc`,
 				`group`
 				)
 			VALUES (
-				"' . $model->db->escape($name) . '",
-				"' . $model->db->escape($description) . '",
-				"' . $model->db->escape($group) . '"
+				"' . $this->model->db->escape($name) . '",
+				"' . $this->model->db->escape($description) . '",
+				"' . $this->model->db->escape($group) . '"
 				)
 			;');
 	}
@@ -124,29 +121,27 @@ class perm
 	 */
 	function delete($name)
 	{
-		$model = $this->model;
-
-		$model->db->sql('
+		$this->model->db->sql('
 			SELECT
 				`id`
-			FROM `' . $model->db->prefix . 'perms`
+			FROM `' . $this->model->db->prefix . 'perms`
 			WHERE
-				`name` = "' . $model->db->escape($name) . '"
+				`name` = "' . $this->model->db->escape($name) . '"
 			LIMIT 1
 			;');
 
-		if ( $model->db->result && $id = $model->db->result[0]['id'] )
+		if ( $this->model->db->result && $id = $this->model->db->result[0]['id'] )
 		{
-			$model->db->sql('
+			$this->model->db->sql('
 				DELETE
 					p, prx
-				FROM      `' . $model->db->prefix . 'perms`            AS p
-				LEFT JOIN `' . $model->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
+				FROM      `' . $this->model->db->prefix . 'perms`            AS p
+				LEFT JOIN `' . $this->model->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
 				WHERE
 					p.`id` = ' . ( int ) $id . '
 				;');
 
-			return !empty($model->db->result);
+			return !empty($this->model->db->result);
 		}
 	}
 }

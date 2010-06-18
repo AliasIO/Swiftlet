@@ -14,15 +14,9 @@ switch ( $hook )
 			'name'       => 'doc',
 			'version'    => '1.0.0',
 			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'hooks'      => array('dashboard' => 999, 'init' => 1, 'route' => 1)
+			'hooks'      => array('dashboard' => 999, 'route' => 1)
 			);
 
-		break;
-	case 'init':
-		require($contr->classPath . 'doc.php');
-
-		$model->doc = new doc($model);
-		
 		break;
 	case 'dashboard':
 		$params[] = array(
@@ -34,12 +28,9 @@ switch ( $hook )
 
 		break;
 	case 'route':
-		if ( $model->doc->ready )
+		if ( $params['parts'][0] == 'docs' )
 		{
-			if ( $params['parts'][0] == 'docs' )
-			{
-				$params['path'] = 'docs/index.php';
-			}
+			$params['path'] = 'docs/index.php';
 		}
 
 		break;

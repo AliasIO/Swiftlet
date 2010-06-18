@@ -32,7 +32,7 @@ CKEDITOR.config.filebrowserWindowWidth  = '1000';
 CKEDITOR.config.filebrowserWindowHeight = '75%';
 
 function fileBrowserCallback(url) {
-	CKEDITOR.tools.callFunction(2, url);
+	CKEDITOR.tools.callFunction(1, url);
 }
 <?php
 

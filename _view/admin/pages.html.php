@@ -71,6 +71,14 @@
 		</fieldset>
 		<fieldset>
 			<dl>
+				<dt><label for="home"><?php echo $model->t('Set as home page') ?></label></dt>
+				<dd>
+					<input type="checkbox" name="home" id="home" value="1"<?php echo $model->POST_html_safe['home'] ? ' checked="checked"' : '' ?>/>
+				</dd>
+			</dl>
+		</fieldset>
+		<fieldset>
+			<dl>
 				<dt><br/></dt>
 				<dd>
 					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>

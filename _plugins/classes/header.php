@@ -18,20 +18,12 @@ class header
 		$ready
 		;
 
-	private
-		$model,
-		$contr
-		;
-
 	/**
 	 * Initialize
 	 * @param object $model
 	 */
 	function __construct($model)
 	{
-		$this->model = $model;
-		$this->contr = $model->contr;
-
 		$this->ready = TRUE;
 
 		$model->hook('menu', $this->menu);

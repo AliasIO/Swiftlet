@@ -5,17 +5,6 @@
 	<p class="message error"><?php echo $view->error ?></p>
 	<?php endif ?>
 
-	<?php if ( isset($view->body) ): ?>
-	<ul class="crumbs">
-		<li><a href="<?php echo $view->rootPath ?>"><?php echo $model->t('Home') ?></a> &rsaquo;</li>
-		<?php if ( $view->parents ): ?>
-		<?php foreach ( $view->parents as $permalink => $title ): ?>
-		<li><a href="<?php echo $model->route('p/' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>
-		<?php endforeach ?>
-		<?php endif ?>
-		<li><?php echo $view->pageTitle ?></li>
-	</ul>
-
 	<?php if ( $model->perm->check('admin page edit') || $model->perm->check('admin page delete') ): ?>
 	<ul class="admin-toolbox">
 		<?php if ( $model->perm->check('admin page edit') ): ?>
@@ -27,7 +16,15 @@
 	</ul>
 	<?php endif ?>
 
-	<div style="clear: both;"></div>
+	<?php if ( isset($view->body) ): ?>
+	<?php if ( $view->parents ): ?>
+	<ul class="crumbs">
+		<?php foreach ( $view->parents as $permalink => $title ): ?>
+		<li><a href="<?php echo $model->route('p/' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>
+		<?php endforeach ?>
+		<li><?php echo $view->pageTitle ?></li>
+	</ul>
+	<?php endif ?>
 
 	<h1><?php echo $view->pageTitle ?></h1>
 

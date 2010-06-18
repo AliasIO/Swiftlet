@@ -19,6 +19,7 @@ class file
 
 	private
 		$model,
+		$view,
 		$contr
 		;
 
@@ -29,6 +30,7 @@ class file
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		if ( !empty($model->db->ready) )
@@ -53,9 +55,7 @@ class file
 	 */
 	function thumb($filename, $mimeType, $width, $height)
 	{
-		$contr = $this->contr;
-
-		if ( is_file($file = $contr->rootPath . 'uploads/files/' . $filename) )
+		if ( is_file($file = $this->contr->rootPath . 'uploads/files/' . $filename) )
 		{
 			$size = 120;
 
@@ -137,7 +137,7 @@ class file
 						);
 				}
 
-				imagepng($thumb, $contr->rootPath . 'uploads/files/thumbs/' . $filename);
+				imagepng($thumb, $this->contr->rootPath . 'uploads/files/thumbs/' . $filename);
 			}
 		}
 	}

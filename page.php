@@ -23,7 +23,8 @@ if ( isset($model->routeParts[1]) )
 			p.`id`,
 			p.`node_id`,
 			p.`title`,
-			p.`body`
+			p.`body`,
+			n.`home`
 		FROM      `' . $model->db->prefix . 'pages` AS p
 		LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 		WHERE
@@ -38,6 +39,7 @@ if ( isset($model->routeParts[1]) )
 		$view->pageTitle = $d['title'];
 		$view->nodeId    = $d['node_id'];
 		$view->body      = $d['body'];
+		$view->home      = $d['home'];
 
 		/*
 		 * Prefix relative links with the path to the root
@@ -49,15 +51,19 @@ if ( isset($model->routeParts[1]) )
 		/*
 		 * Create a breadcrumb trail
 		 */
-		$nodes = $model->node->get_parents($d['node_id']);
-
 		$view->parents = array();
 
-		foreach ( $nodes['parents'] as $d )
+		if ( !$d['home'] )
 		{
-			if ( $d['id'] != node::rootId && $d['permalink'] != 'pages' )
+			$nodes = $model->node->get_parents($d['node_id']);
+
+			
+			foreach ( $nodes['parents'] as $d )
 			{
-				$view->parents[$d['permalink']] = $d['title'];
+				if ( $d['id'] != node::rootId && $d['permalink'] != 'pages' )
+				{
+					$view->parents[$d['permalink']] = $d['title'];
+				}
 			}
 		}
 	}

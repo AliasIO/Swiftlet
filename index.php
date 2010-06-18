@@ -22,6 +22,17 @@ if ( !empty($model->GET_raw['q']) )
 
 if ( !$route )
 {
+	$params = array(
+		'route' => ''
+		);
+
+	$model->hook('home', $params);
+
+	$route = $params['route'];
+}
+
+if ( !$route )
+{
 	chdir($contr->rootPath);
 
 	require('home.php');

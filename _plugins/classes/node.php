@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->model) ) die('Direct access to this file is not allowed');
 
 /**
  * Nodes
@@ -23,16 +23,19 @@ class node
 
 	private
 		$model,
+		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize nodes
-	 * @param object $model
+	 * @param object $this->model
 	 */
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
+		$this->contr = $model->contr;
 
 		if ( !empty($model->db->ready) )
 		{
@@ -53,24 +56,22 @@ class node
 	 */
 	function permalink($title, $id = FALSE)
 	{
-		$model = $this->model;
-
 		$permalink = trim(preg_replace('/__+/', '_', preg_replace('/[^a-z0-9_-]/', '_', strtolower($title))), '_');
 
 		$i = 0;
 
 		while ( TRUE )
 		{
-			$model->db->sql('
+			$this->model->db->sql('
 				SELECT
 					`permalink`
-				FROM `' . $model->db->prefix . 'nodes`
+				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
 					`permalink` = "' . $permalink . ( $i ? '_' . $i : '' ) . '"' . ( $id ? ' AND `id` != ' . $id : '' ) . '
 				LIMIT 1
 				;');
 
-			if ( !$model->db->result ) return $permalink . ( $i ? '_' . $i : '' );
+			if ( !$this->model->db->result ) return $permalink . ( $i ? '_' . $i : '' );
 
 			$i ++;
 		}
@@ -85,40 +86,38 @@ class node
 	 */
 	function create($title, $permalink, $parentId)
 	{
-		$model = $this->model;
-		
-		$model->db->sql('
+		$this->model->db->sql('
 			SELECT
 				`left_id`,
 				`right_id`
-			FROM `' . $model->db->prefix . 'nodes`
+			FROM `' . $this->model->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $parentId . '
 			LIMIT 1
 			;');
 		
-		if ( $model->db->result )
+		if ( $this->model->db->result )
 		{
-			$parentNode = $model->db->result[0];
+			$parentNode = $this->model->db->result[0];
 			
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` + 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`left_id` > ' . ( int ) $parentNode['left_id'] . '
 				;');
 
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` + 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . ( int ) $parentNode['left_id'] . '
 				;');
 
-			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'nodes` (
+			$this->model->db->sql('
+				INSERT INTO `' . $this->model->db->prefix . 'nodes` (
 					`left_id`,
 					`right_id`,
 					`title`,
@@ -136,7 +135,7 @@ class node
 					)
 				;');
 
-			return $model->db->result;
+			return $this->model->db->result;
 		}
 
 		return FALSE;
@@ -150,8 +149,6 @@ class node
 	 */
 	function move($id, $parentId)
 	{
-		$model = $this->model;
-
 		// Root node can not be moved
 		if ( $id == node::rootId )
 		{
@@ -170,8 +167,8 @@ class node
 		$diff = count($node['all']) * 2;
 
 		// Sync parents
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'nodes` SET
+		$this->model->db->sql('
+			UPDATE `' . $this->model->db->prefix . 'nodes` SET
 				`right_id` = `right_id` - ' . $diff . '
 			WHERE
 				`left_id`  < ' . ( int ) $node['right_id'] . ' AND
@@ -179,8 +176,8 @@ class node
 			;');
 
 		// Sync righthand side of tree
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'nodes` SET
+		$this->model->db->sql('
+			UPDATE `' . $this->model->db->prefix . 'nodes` SET
 				`left_id`  = `left_id`  - ' . $diff . ',
 				`right_id` = `right_id` - ' . $diff . '
 			WHERE
@@ -190,8 +187,8 @@ class node
 		$parentNode = $this->get($parentId);
 
 		// Sync new parents
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'nodes` SET
+		$this->model->db->sql('
+			UPDATE `' . $this->model->db->prefix . 'nodes` SET
 				`right_id` = `right_id` + ' . $diff . '
 			WHERE
 				' . $parentNode['right_id'] . ' BETWEEN `left_id` AND `right_id` AND
@@ -199,8 +196,8 @@ class node
 			;');
 
 		// Sync righthand side of tree
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'nodes` SET
+		$this->model->db->sql('
+			UPDATE `' . $this->model->db->prefix . 'nodes` SET
 				`left_id`  = `left_id`  + ' . $diff . ',
 				`right_id` = `right_id` + ' . $diff . '
 			WHERE
@@ -220,8 +217,8 @@ class node
 			$diff = '- ' . abs($parentNode['right_id'] - $node['right_id'] - 1);
 		}
 
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'nodes` SET
+		$this->model->db->sql('
+			UPDATE `' . $this->model->db->prefix . 'nodes` SET
 				`left_id`  = `left_id`  ' . $diff . ',
 				`right_id` = `right_id` ' . $diff . '
 			WHERE
@@ -237,25 +234,25 @@ class node
 	 */
 	function delete($id)
 	{
-		$model = $this->model;
+		$this->model = $this->model;
 
-		$model->db->sql('
+		$this->model->db->sql('
 			SELECT
 				`left_id`,
 				`right_id`
-			FROM `' . $model->db->prefix . 'nodes`
+			FROM `' . $this->model->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $id . '
 			LIMIT 1
 			;');
 
-		if ( $model->db->result )
+		if ( $this->model->db->result )
 		{
-			$leftId  = $model->db->result[0]['left_id'];
-			$rightId = $model->db->result[0]['right_id'];
+			$leftId  = $this->model->db->result[0]['left_id'];
+			$rightId = $this->model->db->result[0]['right_id'];
 
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
@@ -263,16 +260,16 @@ class node
 					`right_id` > ' . $rightId . '
 				;');
 
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . $rightId . '
 				;');
 
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
+			$this->model->db->sql('
+				UPDATE `' . $this->model->db->prefix . 'nodes` SET
 					`left_id`   = `left_id`  - 1,
 					`right_id`  = `right_id` - 1,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
@@ -281,15 +278,15 @@ class node
 					`right_id` < ' . $rightId . '
 				;');
 
-			$model->db->sql('
+			$this->model->db->sql('
 				DELETE
-				FROM `' . $model->db->prefix . 'nodes`
+				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
 					`id` = ' . ( int ) $id . '
 				LIMIT 1
 				;');
 
-			return $model->db->result;
+			return $this->model->db->result;
 		}
 	}
 
@@ -300,22 +297,20 @@ class node
 	 */
 	function get($id)
 	{
-		$model = $this->model;
-
 		$node = array();	
 
-		$model->db->sql('
+		$this->model->db->sql('
 			SELECT
 				*
-			FROM `' . $model->db->prefix . 'nodes`
+			FROM `' . $this->model->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $id . '
 			LIMIT 1
 			;');
 
-		if ( isset($model->db->result[0]) )
+		if ( isset($this->model->db->result[0]) )
 		{
-			$node = $model->db->result[0];
+			$node = $this->model->db->result[0];
 		}
 
 		return $node;
@@ -328,27 +323,25 @@ class node
 	 */
 	function get_parents($id)
 	{
-		$model = $this->model;
-
 		$node = array();	
 
 		if ( $node = $this->get($id) )
 		{
 			$node['parents'] = array();
 			
-			$model->db->sql('
+			$this->model->db->sql('
 				SELECT
 					*
-				FROM `' . $model->db->prefix . 'nodes`
+				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
 					`left_id`  < ' . ( int ) $node['left_id']  . ' AND
 					`right_id` > ' . ( int ) $node['right_id'] . '
 				ORDER BY `left_id` ASC
 				;');
 
-			if ( $model->db->result )
+			if ( $this->model->db->result )
 			{
-				foreach ( $model->db->result as $d )
+				foreach ( $this->model->db->result as $d )
 				{
 					$node['parents'][] = $d;
 				}
@@ -365,32 +358,30 @@ class node
 	 */
 	function get_children($id)
 	{
-		$model = $this->model;
-		
 		if ( $node = $this->get($id) )
 		{
 			$node['children'] = array();
 
-			$model->db->sql('
+			$this->model->db->sql('
 				SELECT
 					*
-				FROM `' . $model->db->prefix . 'nodes`
+				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
 					`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
 				ORDER BY `left_id` ASC
 				;');
 
-			if ( $model->db->result )
+			if ( $this->model->db->result )
 			{
 				$nodes    = array();
 				$children = array();
 
-				foreach ( $model->db->result as $d )
+				foreach ( $this->model->db->result as $d )
 				{
 					$children[] = $d['id'];
 				}
 
-				foreach ( $model->db->result as $d )
+				foreach ( $this->model->db->result as $d )
 				{
 					$nodes[] = $d;
 				}

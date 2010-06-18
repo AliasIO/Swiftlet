@@ -21,20 +21,12 @@ class time
 		$timeOffset = 0
 		;
 
-	private
-		$model,
-		$contr
-		;
-
 	/**
 	 * Initialize
 	 * @param object $model
 	 */
 	function __construct($model)
 	{
-		$this->model = $model;
-		$this->contr = $model->contr;
-
 		if ( !empty($model->session->ready) )
 		{
 			if ( $d = $model->session->get('pref_values') )

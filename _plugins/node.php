@@ -29,10 +29,12 @@ switch ( $hook )
 					`right_id`  INT(10) UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)     NOT NULL,
 					`permalink` VARCHAR(255)     NOT NULL,
+					`home`      TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 					`date`      DATETIME         NOT NULL,
 					`date_edit` DATETIME         NOT NULL,
 					INDEX `left_id`  (`left_id`),
 					INDEX `right_id` (`right_id`),
+					INDEX `home`     (`home`),
 					UNIQUE `permalink` (`permalink`),
 					PRIMARY KEY (`id`)
 					)

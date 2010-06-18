@@ -21,6 +21,7 @@ class lang
 
 	private
 		$model,
+		$view,
 		$contr,
 		$translation = array()
 		;
@@ -32,9 +33,8 @@ class lang
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
-
-		$contr = $this->contr;
 
 		$this->check_languages();
 		
@@ -59,14 +59,11 @@ class lang
 	 */
 	function check_languages()
 	{
-		$model = $this->model;
-		$contr = $this->contr;
-
-		if ( !empty($model->user->ready) )
+		if ( !empty($this->model->user->ready) )
 		{
 			$this->languages = array('English US' => 'English US');
 
-			if ( is_dir($dir = $contr->rootPath . 'lang/') )
+			if ( is_dir($dir = $this->contr->rootPath . 'lang/') )
 			{
 				if ( $handle = opendir($dir) )
 				{
@@ -86,7 +83,7 @@ class lang
 
 			arsort($this->languages);
 
-			if ( !isset($model->user->prefs['Language']['options']) || $this->languages != $model->user->prefs['Language']['options'] )
+			if ( !isset($this->model->user->prefs['Language']['options']) || $this->languages != $this->model->user->prefs['Language']['options'] )
 			{
 				$model->user->save_pref(array(
 					'pref'    => 'Language',
@@ -103,13 +100,11 @@ class lang
 	 */
 	function load()
 	{
-		$contr = $this->contr;
-
 		$this->translation = array();
 
 		if ( $this->language )
 		{
-			if ( is_dir($dir = $contr->rootPath . 'lang/' . $this->language . '/') )
+			if ( is_dir($dir = $this->contr->rootPath . 'lang/' . $this->language . '/') )
 			{
 				if ( $handle = opendir($dir) )
 				{

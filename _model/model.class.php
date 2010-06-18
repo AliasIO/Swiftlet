@@ -467,7 +467,7 @@ class model
 	{
 		$view = $this->view;
 
-		$route = $view->rootPath . ( $this->urlRewrite ? '' : '?' ) . $route;
+		$route = $view->rootPath . ( $this->urlRewrite ? '' : '?q=' ) . $route;
 
 		return $route;
 	}

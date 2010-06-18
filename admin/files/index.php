@@ -64,14 +64,14 @@ if ( $model->POST_valid['form-submit'] )
 				case UPLOAD_ERR_OK:
 					$filename = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]) . time());
 
-					$r = move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'uploads/files/' . $filename);
+					$r = @move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'uploads/files/' . $filename);
 
 					if ( $r )
 					{
 						$width  = '';
 						$height = '';
 
-						if ( $image = getimagesize($file) )
+						if ( $image = @getimagesize($file) )
 						{
 							list($width, $height) = $image;
 

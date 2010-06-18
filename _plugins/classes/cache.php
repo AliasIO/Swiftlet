@@ -19,6 +19,7 @@ class cache
 
 	private
 		$model,
+		$view,
 		$contr,
 
 		$cacheLifeTime = 3600
@@ -31,6 +32,7 @@ class cache
 	function __construct($model)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		$this->ready = TRUE;
@@ -44,40 +46,37 @@ class cache
 	 */
 	private function read()
 	{
-		$model = $this->model;
-		$contr = $model->contr;
-
-		if ( !empty($model->session->ready) && !empty($model->user->ready) && $model->session->get('user id') != user::guestId )
+		if ( !empty($this->model->session->ready) && !empty($this->model->user->ready) && $this->model->session->get('user id') != user::guestId )
 		{
 			return;
 		}
 
-		if ( $model->caching && empty($model->POST_raw) && empty($_POST) )
+		if ( $this->model->caching && empty($this->model->POST_raw) && empty($_POST) )
 		{
 			if ( $handle = opendir($contr->rootPath . 'cache') )
 			{
 				while ( $filename = readdir($handle) )
 				{
-					if ( is_file($contr->rootPath . 'cache/' . $filename) )
+					if ( is_file($this->contr->rootPath . 'cache/' . $filename) )
 					{					
 						list($time, $hash) = explode('_', $filename);
 
 						if ( $time <= time() )
 						{
-							@unlink($contr->rootPath . 'cache/' . $filename);
+							@unlink($this->contr->rootPath . 'cache/' . $filename);
 						}
 						else
 						{
 							if ( $hash == sha1($_SERVER['REQUEST_URI']) )
 							{
-								if ( $model->debugMode )
+								if ( $this->model->debugMode )
 								{
-									echo '<!-- Served from cache -->' . "\n";
+									header('X-Swiftlet-Cache: HIT');
 								}
 								
-								echo file_get_contents($contr->rootPath . 'cache/' . $filename);
+								echo file_get_contents($this->contr->rootPath . 'cache/' . $filename);
 
-								$model->buffer->flush();
+								$this->model->buffer->flush();
 
 								exit;
 							}
@@ -96,10 +95,7 @@ class cache
 	 */
 	function write(&$contents)
 	{
-		$model = $this->model;
-		$contr = $model->contr;
-
-		if ( !empty($model->session->ready) && !empty($model->user->ready) && $model->session->get('user id') != user::guestId )
+		if ( !empty($this->model->session->ready) && !empty($this->model->user->ready) && $this->model->session->get('user id') != user::guestId )
 		{
 			return;
 		}
@@ -115,7 +111,7 @@ class cache
 			}
 		}
 
-		if ( $model->caching && empty($model->POST_raw) )
+		if ( $this->model->caching && empty($this->model->POST_raw) )
 		{
 			if ( !is_dir($contr->rootPath . 'cache') )
 			{
@@ -150,16 +146,13 @@ class cache
 	 */
 	function clear()
 	{
-		$model = $this->model;
-		$contr = $model->contr;
-		
-		if ( $handle = opendir($contr->rootPath . 'cache') )
+		if ( $handle = opendir($this->contr->rootPath . 'cache') )
 		{
 			while ( $filename = readdir($handle) )
 			{
-				if ( is_file($contr->rootPath . 'cache/' . $filename) )
+				if ( is_file($this->contr->rootPath . 'cache/' . $filename) )
 				{
-					$r = @unlink($contr->rootPath . 'cache/' . $filename);
+					$r = @unlink($this->contr->rootPath . 'cache/' . $filename);
 
 					if ( !$r )
 					{

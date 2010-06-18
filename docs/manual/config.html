@@ -1,6 +1,10 @@
 <h2>Configuration</h2>
 
 <p>
+	Swiftlet requires very little configuration. In fact, Swiftlet will work with no configuration at all.
+</p>
+
+<p>
 	The configuration file is located at <code>/_config.php</code>.
 </p>
 
@@ -28,18 +32,25 @@
 		Keywords describing the website.
 	</li>
 	<li>
+		<code>adminEmail</code><br/>
+		E-mail address of the website administrator (you). This e-mail address is displayed when an error
+		occurs so users can contact you. It can also used by plugins to send e-mails (for instance the
+		<a href="../plugins/email">E-mail</a> plugin).
+	</li>
+	<li>
 		<code>sysPassword</code><br/>
-		System password, required for some operations such as installing plugins. This should always be set to a unique value
-		which is difficult to guess.
+		System password, required for some operations such as installing plugins. This should always be
+		set to a unique value which is difficult to guess.
 	</li>
 	<li>
 		<code>caching</code><br/>
-		Turn caching on or off. Caching improves performance.
+		Turn caching on or off. Caching improves performance by reducing server load but can result in
+		outdated information being displayed on the site.
 	</li>
 	<li>
 		<code>debugMode</code><br/>
-		Turn debugging on or off (error reporting etc.). Debug mode should always be turned off in a production environment as
-		it may expose details about your installation.
+		Turn debugging on or off (error reporting etc.). Debug mode should always be turned off in a
+		production environment as it may expose details about your installation.
 	</li>
 	<li>
 		<code>urlRewrite</code><br/>

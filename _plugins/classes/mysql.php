@@ -15,6 +15,7 @@ class mysql
 {
 	private
 		$model,
+		$view,
 		$contr
 		;
 
@@ -37,6 +38,7 @@ class mysql
 	function __construct($model, $host, $user, $pass = FALSE, $name = FALSE, $prefix = FALSE)
 	{
 		$this->model = $model;
+		$this->view  = $model->view;
 		$this->contr = $model->contr;
 
 		$this->prefix = $prefix;
@@ -96,11 +98,9 @@ class mysql
 	 */
 	function sql($sql, $cache = TRUE)
 	{
-		$model = $this->model;
-
 		if ( !$this->ready )
 		{
-			$model->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
+			$this->model->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
 		}
 
 		$this->result = array();
@@ -148,9 +148,7 @@ class mysql
 	 */
 	private function read($cache)
 	{
-		$model = $this->model;
-
-		$model->debugOutput['mysql queries']['reads'] ++;
+		$this->model->debugOutput['mysql queries']['reads'] ++;
 
 		$tables = $this->get_tables();
 
@@ -159,7 +157,7 @@ class mysql
 		 */
 		$hash = sha1($this->sql);
 
-		if ( $model->caching && $cache && $tables )
+		if ( $this->model->caching && $cache && $tables )
 		{
 			$sql = $this->sql;
 
@@ -237,7 +235,7 @@ class mysql
 		/**
 		 * Cache results
 		 */
-		if ( $this->result && $model->caching && $cache && $tables )
+		if ( $this->result && $this->model->caching && $cache && $tables )
 		{
 			$result = $this->result;
 
@@ -285,16 +283,14 @@ class mysql
 	 */
 	private function write()
 	{
-		$model = $this->model;
-		
-		$model->debugOutput['mysql queries']['writes'] ++;
+		$this->model->debugOutput['mysql queries']['writes'] ++;
 
 		/**
 		 * Clear cache
 		 */
 		$tables = $this->get_tables();
 
-		if ( $model->caching && $tables )
+		if ( $this->model->caching && $tables )
 		{
 			$sql = $this->sql;
 			
