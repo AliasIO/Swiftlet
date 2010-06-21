@@ -85,14 +85,14 @@ class model
 
 		$model->authToken = sha1(session_id() . phpversion() . $model->sysPassword . $model->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
 
-		if ( ( !empty($_POST) && !isset($_POST['auth_token']) ) || ( isset($_POST['auth_token']) && $_POST['auth_token'] != $model->authToken ) )
+		if ( ( !empty($_POST) && !isset($_POST['auth-token']) ) || ( isset($_POST['auth-token']) && $_POST['auth-token'] != $model->authToken ) )
 		{
 			$model->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
 		}
 
-		if ( isset($_POST['auth_token']) )
+		if ( isset($_POST['auth-token']) )
 		{
-			unset($_POST['auth_token']);
+			unset($_POST['auth-token']);
 		}
 
 		/*
@@ -264,9 +264,9 @@ class model
 		/*
 		 * Check integrety of confirmed information (see $model->confirm())
 		 */
-		if ( isset($_POST['confirm']) && !empty($_POST['get_data']) && !empty($_GET) )
+		if ( isset($_POST['confirm']) && !empty($_POST['get-data']) && !empty($_GET) )
 		{
-			if ( unserialize($_POST['get_data']) != $_GET )
+			if ( unserialize($_POST['get-data']) != $_GET )
 			{
 				unset($_POST['confirm']);
 			}

@@ -38,14 +38,14 @@ if ( !$route )
 	require('home.php');
 }
 
-$model->routeParts = explode('/', $route);
-
 $params = array(
-	'parts' => $model->routeParts,
+	'parts' => explode('/', $route),
 	'path'  => ''
 	);
 
 $model->hook('route', $params);
+
+$model->routeParts = $params['parts'];
 
 if ( $path = $params['path'] )
 {

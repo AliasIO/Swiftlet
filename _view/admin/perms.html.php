@@ -35,7 +35,7 @@
 			<dl>
 				<dt><br/></dt>
 				<dd>
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Save role') ?>"/>
 
@@ -102,7 +102,7 @@
 					<dl>
 						<dt><br/></dt>
 						<dd>
-							<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+							<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 							<input type="submit" name="form-submit-2" id="form-submit-2" value="<?php echo $model->t('Add user') ?>"/>
 
@@ -185,7 +185,7 @@
 			<dl>
 				<dt><br/></dt>
 				<dd>
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit-3" id="form-submit-3" value="<?php echo $model->t('Save permissions') ?>"/>
 				</dd>

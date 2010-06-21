@@ -20,6 +20,7 @@ $model->form->validate(array(
 	'delete'      => 'bool',
 	'title'       => 'string',
 	'body'        => '/.*/',
+	'path'        => '/^(([a-z0-9_\-]+\/)*[a-z0-9_\-]+)*$/i',
 	'published'   => 'bool',
 	'parent'      => 'int',
 	'home'        => 'bool'
@@ -49,6 +50,11 @@ if ( $model->POST_valid['form-submit'] )
 		}
 	}
 
+	if ( isset($model->form->errors['path']) )
+	{
+		$model->form->errors['path'] = $model->t('Invalid path. Please use alphanumeric characters, underscores, dashes and slashes only (e.g. "some/path").');
+	}
+
 	if ( $model->form->errors )
 	{
 		$view->error = $model->t('Please correct the errors below.');
@@ -68,16 +74,11 @@ if ( $model->POST_valid['form-submit'] )
 			case 'edit':
 				if ( $model->perm->check('admin page edit') )
 				{
-					// Update page
-					$permalink = $model->node->permalink($model->POST_db_safe['title']['English US'], $id);
-					
-					$view->permalink = $permalink;
-
 					$model->db->sql('
 						UPDATE `' . $model->db->prefix . 'nodes` SET
-							`title`     = "' . $model->POST_db_safe['title']['English US'] . '",
-							`permalink` = "' . $permalink                                  . '",
-							`home`      =  ' . ( $model->POST_raw['home'] ? 1 : 0 )        . '
+							`title`      = "' . $model->POST_db_safe['title']['English US'] . '",
+							`home`       =  ' . ( $model->POST_raw['home'] ? 1 : 0 )        . ',
+							`path`       = "' . $model->POST_db_safe['path']                . '"
 						WHERE
 							`id` = ' . $id . '
 						LIMIT 1
@@ -145,7 +146,9 @@ if ( $model->POST_valid['form-submit'] )
 
 					$model->node->move($id, $model->POST_raw['parent']);
 
-					header('Location: ?action=edit&id=' . $id . '&permalink=' . $permalink . '&notice=updated');
+					$path = !empty($model->POST_raw['path']) ? $model->POST_raw['path'] : 'node/' . $id;
+
+					header('Location: ?action=edit&id=' . $id . '&path=' . rawurlencode($path) . '&notice=updated');
 
 					$model->end();
 				}
@@ -154,23 +157,18 @@ if ( $model->POST_valid['form-submit'] )
 			default:
 				if ( $model->perm->check('admin page create') )
 				{
-					// Create page
-					$permalink = $model->node->permalink($model->POST_db_safe['title']['English US']);
+					$nodeId = $model->node->create($model->POST_db_safe['title']['English US'], 'page', $model->POST_raw['parent']);
 
-					$node_id = $model->node->create($model->POST_db_safe['title']['English US'], $permalink, $model->POST_raw['parent']);
-
-					if ( $node_id )
+					if ( $nodeId )
 					{
-						if ( $model->POST_raw['home'] )
-						{
-							$model->db->sql('
-								UPDATE `' . $model->db->prefix . 'nodes` SET
-									`home` = 1
-								WHERE
-									`id` = ' . ( $node_id ) . '
-								LIMIT 1
-								;');
-						}
+						$model->db->sql('
+							UPDATE `' . $model->db->prefix . 'nodes` SET
+								`home` =  ' . ( $model->POST_raw['home'] ? 1 : 0 ) . ',
+								`path` = "' . $model->POST_db_safe['path']         . '"
+							WHERE
+								`id` = ' . ( $nodeId ) . '
+							LIMIT 1
+							;');
 						
 						foreach ( $languages as $language )
 						{
@@ -185,7 +183,7 @@ if ( $model->POST_valid['form-submit'] )
 									`date_edit`
 									)
 								VALUES (
-									 ' . $node_id                                  . ',
+									 ' . $nodeId                                   . ',
 									"' . $model->POST_db_safe['title'][$language]  . '",
 									"' . $model->POST_db_safe['body'][$language]   . '",
 									 ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
@@ -198,7 +196,9 @@ if ( $model->POST_valid['form-submit'] )
 
 						if ( $model->db->result )
 						{
-							header('Location: ?action=edit&id=' . $node_id . '&permalink=' . $permalink . '&notice=created');
+							$path = !empty($model->POST_raw['path']) ? $model->POST_raw['path'] : 'node/' . $nodeId;
+
+							header('Location: ?action=edit&id=' . $nodeId . '&path=' . rawurlencode($path) . '&notice=created');
 
 							exit;
 						}
@@ -212,11 +212,11 @@ else if ( isset($model->GET_raw['notice']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'created':
-			$view->notice = $model->t('The page has been created (%1$sview%2$s).', array('<a href="' . $model->route('p/' . $model->h($model->GET_raw['permalink'])) . '">', '</a>'));
+			$view->notice = $model->t('The page has been created (%1$sview%2$s).', array('<a href="' . $model->route($model->h($model->GET_raw['path'])) . '">', '</a>'));
 			
 			break;
 		case 'updated':
-			$view->notice = $model->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $model->route('p/' . $model->h($model->GET_raw['permalink'])) . '">', '</a>'));
+			$view->notice = $model->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $model->route($model->h($model->GET_raw['path'])) . '">', '</a>'));
 			
 			break;
 		case 'deleted':
@@ -243,8 +243,8 @@ switch ( $action )
 						p.`lang`,
 						n.`left_id`,
 						n.`right_id`,
-						n.`permalink`,
-						n.`home`
+						n.`home`,
+						n.`path`
 					FROM      `' . $model->db->prefix . 'nodes` AS n
 					LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 					WHERE
@@ -256,8 +256,6 @@ switch ( $action )
 					$editLeftId  = $r[0]['left_id'];
 					$editRightId = $r[0]['right_id'];
 
-					$view->permalink = $r[0]['permalink'];
-
 					foreach ( $r as $d )
 					{
 						$model->POST_html_safe['title'][$d['lang']] = $d['title'];
@@ -267,6 +265,7 @@ switch ( $action )
 					$model->POST_html_safe['parent']    = $node['parents'][count($node['parents']) - 1]['id'];
 					$model->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
 					$model->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
+					$model->POST_html_safe['path']      = $model->h($r[0]['path']);
 				}
 			}
 		}
@@ -323,58 +322,21 @@ foreach ( $languages as $language )
 $list        = array();
 $listParents = array();
 
-$model->db->sql('
-	SELECT
-		*
-	FROM `' . $model->db->prefix . 'nodes` AS n
-	WHERE
-		`permalink` = "pages"
-	LIMIT 1
-	;');
+$nodes = $model->node->get_children(node::rootId, 'page');
 
-if ( $r = $model->db->result )
+$model->node->nodes_to_array($nodes, $list);
+
+$listParents = $list;
+
+// A page can not be a child of itself or a descendant, remove those pages from dropdown
+if ( $action == 'edit' )
 {
-	$nodePages = $r[0];
-
-	$list = array(
-		0 => array(
-			'id'        => $nodePages['id'],
-			'left_id'   => $nodePages['left_id'],
-			'right_id'  => $nodePages['right_id'],
-			'title'     => $nodePages['title'],
-			'date'      => $nodePages['date'],
-			'permalink' => 'pages',
-			'level'     => 0
-			)
-		);
-
-	$nodes = $model->node->get_children($nodePages['id']);
-
-	if ( !empty($nodes['children']) )
+	foreach ( $listParents as $i => $d )
 	{
-		$model->node->nodes_to_array($nodes['children'], $list);
-	}
-
-	$listParents = $list;
-
-	// Remove the main pages node from the editable pages dropdown
-	array_shift($list);
-
-	foreach ( $list as $i => $item )
-	{
-		$list[$i]['level'] = $list[$i]['level'] - 1;
-	}
-
-	// A page can not be a child of itself or a descendant, remove those pages from dropdown
-	if ( $action == 'edit' )
-	{
-		foreach ( $listParents as $i => $d )
+		if ( $d['left_id'] >= $editLeftId && $d['right_id'] <= $editRightId )
 		{
-			if ( $d['left_id'] >= $editLeftId && $d['right_id'] <= $editRightId )
-			{
-				unset($listParents[$i]);
-			}			
-		}
+			unset($listParents[$i]);
+		}			
 	}
 }
 
@@ -383,11 +345,7 @@ $pagination = $model->paginate('pages', count($list), 10);
 $view->nodesParents    = $listParents;
 $view->nodes           = array_splice($list, $pagination['from'], 10);
 $view->nodesPagination = $pagination;
-
-if ( !isset($view->permalink) )
-{
-	$view->permalink = '';
-}
+$view->path            = !empty($view->path) ? $view->path : 'node/' . $id;
 
 $view->id        = $id;
 $view->action    = $action;

@@ -22,6 +22,8 @@ class node
 		;
 
 	private
+		$paths = array(),
+
 		$model,
 		$view,
 		$contr
@@ -44,37 +46,73 @@ class node
 			 */
 			if ( in_array($model->db->prefix . 'nodes', $model->db->tables) )
 			{
+				$model->db->sql('
+					SELECT
+						`id`,
+						`path`
+					FROM `' . $model->db->prefix . 'nodes`
+					WHERE
+						`path` != ""
+					;');
+
+				if ( $r = $model->db->result )
+				{
+					foreach ( $r as $d )
+					{
+						$this->paths[$d['id']] = $d['path'];
+					}
+				}
+
 				$this->ready = TRUE;
 			}
 		}
 	}
 
 	/**
-	 * Create a URL friendly title
-	 * @param string $title
+	 * Get the path for a route
+	 * @param array $params
 	 * @return string
 	 */
-	function permalink($title, $id = FALSE)
+	function route($params)
 	{
-		$permalink = trim(preg_replace('/__+/', '_', preg_replace('/[^a-z0-9_-]/', '_', strtolower($title))), '_');
+		$nodeId = array_search(implode('/', $params['parts']), $this->paths);
 
-		$i = 0;
+		if ( !$nodeId && count($params['parts']) == 2 && $params['parts'][0] == 'node' && ( int ) $params['parts'][1] )
+		{
+			$nodeId = ( int ) $params['parts'][1];
+		}
 
-		while ( TRUE )
+		if ( $nodeId )
 		{
 			$this->model->db->sql('
 				SELECT
-					`permalink`
+					`type`
 				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
-					`permalink` = "' . $permalink . ( $i ? '_' . $i : '' ) . '"' . ( $id ? ' AND `id` != ' . $id : '' ) . '
+					`id` = ' . ( int ) $nodeId . '
 				LIMIT 1
 				;');
 
-			if ( !$this->model->db->result ) return $permalink . ( $i ? '_' . $i : '' );
+			if ( $r = $this->model->db->result )
+			{
+				$params = array(
+					'type' => $r['0']['type'],
+					'path' => ''
+					);
 
-			$i ++;
+				$this->model->hook('display_node', $params);
+
+				if ( $params['path'] )
+				{
+					return array(
+						'parts' => array('node', $nodeId),
+						'path'  => $params['path']
+						);
+				}
+			}
 		}
+
+		return $params;
 	}
 
 	/**
@@ -84,7 +122,7 @@ class node
 	 * @param bool $move
 	 * @return int
 	 */
-	function create($title, $permalink, $parentId)
+	function create($title, $type, $parentId)
 	{
 		$this->model->db->sql('
 			SELECT
@@ -120,18 +158,18 @@ class node
 				INSERT INTO `' . $this->model->db->prefix . 'nodes` (
 					`left_id`,
 					`right_id`,
+					`type`,
 					`title`,
-					`permalink`,
 					`date`,
 					`date_edit`
 					)
 				VALUES (
-					' . ( ( int ) $parentNode['left_id'] + 1 ) . ',
-					' . ( ( int ) $parentNode['left_id'] + 2 ) . ',
-					"' . $title . '",
-					"' . $permalink . '",
-					"' . gmdate('Y-m-d H:i:s') . '",
-					"' . gmdate('Y-m-d H:i:s') . '"
+					 ' . ( ( int ) $parentNode['left_id'] + 1 ) . ',
+					 ' . ( ( int ) $parentNode['left_id'] + 2 ) . ',
+					"' . $type                                  . '",
+					"' . $title                                 . '",
+					"' . gmdate('Y-m-d H:i:s')                  . '",
+					"' . gmdate('Y-m-d H:i:s')                  . '"
 					)
 				;');
 
@@ -159,7 +197,7 @@ class node
 		$parentNode = $this->get($parentId);
 
 		// Node can not be moved to a decendant of its own
-		if ( $node['left_id'] <= $parentNode['left_id'] && $node['right_id'] >= $parentNode['right_id'] )
+		if ( $node[0]['left_id'] <= $parentNode['left_id'] && $node[0]['right_id'] >= $parentNode['right_id'] )
 		{
 			return;
 		}
@@ -171,8 +209,8 @@ class node
 			UPDATE `' . $this->model->db->prefix . 'nodes` SET
 				`right_id` = `right_id` - ' . $diff . '
 			WHERE
-				`left_id`  < ' . ( int ) $node['right_id'] . ' AND
-				`right_id` > ' . ( int ) $node['right_id'] . '
+				`left_id`  < ' . ( int ) $node[0]['right_id'] . ' AND
+				`right_id` > ' . ( int ) $node[0]['right_id'] . '
 			;');
 
 		// Sync righthand side of tree
@@ -181,7 +219,7 @@ class node
 				`left_id`  = `left_id`  - ' . $diff . ',
 				`right_id` = `right_id` - ' . $diff . '
 			WHERE
-				`left_id` > ' . $node['right_id'] . '
+				`left_id` > ' . $node[0]['right_id'] . '
 			;');
 
 		$parentNode = $this->get($parentId);
@@ -208,13 +246,13 @@ class node
 		// Sync moved branch
 		$parentNode['right_id'] += $diff;
 		
-		if ( $parentNode['right_id'] > $node['right_id'] )
+		if ( $parentNode['right_id'] > $node[0]['right_id'] )
 		{
-			$diff = '+ ' . ( $parentNode['right_id'] - $node['right_id'] - 1 );
+			$diff = '+ ' . ( $parentNode['right_id'] - $node[0]['right_id'] - 1 );
 		}
 		else
 		{
-			$diff = '- ' . abs($parentNode['right_id'] - $node['right_id'] - 1);
+			$diff = '- ' . abs($parentNode['right_id'] - $node[0]['right_id'] - 1);
 		}
 
 		$this->model->db->sql('
@@ -356,7 +394,7 @@ class node
 	 * @param int $id
 	 * @return array
 	 */
-	function get_children($id)
+	function get_children($id, $type = '')
 	{
 		if ( $node = $this->get($id) )
 		{
@@ -368,6 +406,7 @@ class node
 				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
 					`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
+					' . ( $type ? 'AND `type` = "' . $this->model->db->escape($type) . '"' : '' ) . '
 				ORDER BY `left_id` ASC
 				;');
 
@@ -413,17 +452,17 @@ class node
 				array_pop($stack);
 			}
 
+			$node['level'] = count($stack);
+				
 			if ( count($stack) > 0 )
 			{
-				$node['level'] = count($stack);
-				
 				$stack[count($stack) - 1]['children'][] = &$node;
 			}
 
 			$stack[] = &$node;
 		}
 
-		return $stack[0];
+		return array($stack[0]);
 	}
 
 	/**
@@ -433,6 +472,8 @@ class node
 	 */
 	function nodes_to_array($nodes, &$list)
 	{
+		unset($nodes['all']);
+		
 		if ( $nodes )
 		{
 			foreach ( $nodes as $node )

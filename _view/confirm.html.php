@@ -8,9 +8,9 @@
 
 				<br/><br/>
 
-				<input type="hidden" name="get_data" value="<?php echo $view->getData ?>"/>
+				<input type="hidden" name="get-data" value="<?php echo $view->getData ?>"/>
 
-				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+				<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 				<input type="submit" name="confirm" id="confirm" value="<?php echo $model->t('Yes, proceed') ?>"/>
 

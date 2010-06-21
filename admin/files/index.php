@@ -13,7 +13,7 @@ $contrSetup = array(
 
 require($contrSetup['rootPath'] . '_model/init.php');
 
-$model->check_dependencies(array('db', 'form', 'node', 'perm'));
+$model->check_dependencies(array('db', 'form', 'perm'));
 
 $model->form->validate(array(
 	'form-submit' => 'bool',
@@ -29,21 +29,6 @@ if ( !$model->perm->check('admin file access') )
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$model->end();
-}
-
-// Get files root node
-$model->db->sql('
-	SELECT
-		`id`
-	FROM `' . $model->db->prefix . 'nodes`
-	WHERE
-		`permalink` = "files"
-	LIMIT 1
-	;');
-
-if ( $r = $model->db->result )
-{
-	$filesNodeId = $r[0]['id'];
 }
 
 if ( $model->POST_valid['form-submit'] )
@@ -82,45 +67,36 @@ if ( $model->POST_valid['form-submit'] )
 
 						$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
 
-						$permalink = $model->node->permalink($title);
+						$model->db->sql('
+							INSERT INTO `' . $model->db->prefix . 'files` (
+								`title`,
+								`extension`,
+								`image`,
+								`filename`,
+								`mime_type`,
+								`width`,
+								`height`,
+								`size`,
+								`date`,
+								`date_edit`
+								)
+							VALUES (
+								"' . $model->db->escape($title)                              . '",
+								"' . $model->db->escape($extension)                          . '",
+								 ' . ( !empty($image) ? 1 : 0 )                              . ',
+								"' . $model->db->escape($filename)                           . '",
+								"' . $model->db->escape($_FILES['file']['type'][$i])         . '",
+								 ' . ( int ) $width                                          . ',
+								 ' . ( int ) $height                                         . ',
+								 ' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
+								"' . gmdate('Y-m-d H:i:s')                                   . '",
+								"' . gmdate('Y-m-d H:i:s')                                   . '"
+								)
+							;');
 
-						$nodeId = $model->node->create($title, $permalink, $filesNodeId);
-
-						if ( $nodeId )
+						if ( $id = $model->db->result )
 						{
-							$model->db->sql('
-								INSERT INTO `' . $model->db->prefix . 'files` (
-									`node_id`,
-									`title`,
-									`extension`,
-									`image`,
-									`filename`,
-									`mime_type`,
-									`width`,
-									`height`,
-									`size`,
-									`date`,
-									`date_edit`
-									)
-								VALUES (
-									 ' . ( int ) $nodeId                                         . ',
-									"' . $model->db->escape($title)                              . '",
-									"' . $model->db->escape($extension)                          . '",
-									 ' . ( !empty($image) ? 1 : 0 )                              . ',
-									"' . $model->db->escape($filename)                           . '",
-									"' . $model->db->escape($_FILES['file']['type'][$i])         . '",
-									 ' . ( int ) $width                                          . ',
-									 ' . ( int ) $height                                         . ',
-									 ' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
-									"' . gmdate('Y-m-d H:i:s')                                   . '",
-									"' . gmdate('Y-m-d H:i:s')                                   . '"
-									)
-								;');
-
-							if ( $model->db->result )
-							{
-								$uploads[] = '<a href="' . $model->route('file/' . $permalink . $extension) . '" onclick="callback(\'' . $model->route('file/' . $permalink . $extension) . '\');">' . $model->h($title) . '</a>';
-							}
+							$uploads[] = '<a href="' . $model->route('file/' . $id . $extension) . '" onclick="callback(\'' . $model->route('file/' . $id . $extension) . '\');">' . $model->h($title) . '</a>';
 						}
 					}
 					else
@@ -182,45 +158,42 @@ if ( ( int ) $id )
 			else
 			{
 				// Delete file
-				if ( $model->node->delete(( int ) $id) )
+				$model->db->sql('
+					SELECT
+						`filename`
+					FROM `' . $model->db->prefix . 'files`
+					WHERE
+						`id` = ' . ( int ) $id . '
+					LIMIT 1
+					;');
+				
+				if ( $r = $model->db->result )
 				{
+					$filename = $r[0]['filename'];
+
+					if ( is_file($file = $contr->rootPath . 'uploads/files/' . $filename) )
+					{
+						unlink($file);
+					}
+
+					if ( is_file($file = $contr->rootPath . 'uploads/files/thumbs/' . $filename) )
+					{
+						unlink($file);
+					}
+
 					$model->db->sql('
-						SELECT
-							`filename`
+						DELETE
 						FROM `' . $model->db->prefix . 'files`
 						WHERE
-							`node_id` = ' . ( int ) $id . '
+							`id` = ' . ( int ) $id . '
 						LIMIT 1
 						;');
-					
-					if ( $r = $model->db->result )
+
+					if ( $model->db->result )
 					{
-						$filename = $r[0]['filename'];
+						header('Location: ?callback=' . rawurlencode($callback) . '&notice=deleted');
 
-						if ( is_file($file = $contr->rootPath . 'uploads/files/' . $filename) )
-						{
-							unlink($file);
-						}
-
-						if ( is_file($file = $contr->rootPath . 'uploads/files/thumbs/' . $filename) )
-						{
-							unlink($file);
-						}
-
-						$model->db->sql('
-							DELETE
-							FROM `' . $model->db->prefix . 'files`
-							WHERE
-								`node_id` = ' . ( int ) $id . '
-							LIMIT 1
-							;');
-
-						if ( $model->db->result )
-						{
-							header('Location: ?callback=' . rawurlencode($callback) . '&notice=deleted');
-
-							$model->end();
-						}
+						$model->end();
 					}
 				}
 			}
@@ -232,44 +205,14 @@ if ( ( int ) $id )
 // Create a list of all files
 $files = array();
 
-$nodes = $filesNodeId ? $model->node->get_children($filesNodeId) : array();
+$model->db->sql('
+	SELECT
+		*
+	FROM `' . $model->db->prefix . 'files`
+	ORDER BY `date` DESC
+	;');
 
-if ( $nodes )
-{
-	$nodeIds = array();
-	
-	if ( !empty($nodes['children']) )
-	{
-		foreach ( $nodes['children'] as $d )
-		{
-			$nodeIds[] = $d['id'];
-		}
-	}
-	
-	if ( $nodeIds )
-	{
-		$model->db->sql('
-			SELECT
-				n.`permalink`,
-				f.*
-			FROM      `' . $model->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
-			WHERE
-				f.`id` AND
-				n.`id` IN ( ' . implode(', ', $nodeIds) . ' )
-			ORDER BY f.`date` DESC
-			LIMIT ' . count($nodeIds) . '
-			;');
-
-		if ( $r = $model->db->result )
-		{
-			foreach ( $r as $d )
-			{
-				$files[] = $d;
-			}
-		}
-	}
-}
+$files = $model->db->result;
 
 $pagination = $model->paginate('files', count($files), 10);
 

@@ -19,8 +19,8 @@
 	<?php if ( isset($view->body) ): ?>
 	<?php if ( $view->parents ): ?>
 	<ul class="crumbs">
-		<?php foreach ( $view->parents as $permalink => $title ): ?>
-		<li><a href="<?php echo $model->route('p/' . $permalink) ?>"><?php echo $title ?></a> &rsaquo;</li>
+		<?php foreach ( $view->parents as $path => $title ): ?>
+		<li><a href="<?php echo $model->route($path) ?>"><?php echo $title ?></a> &rsaquo;</li>
 		<?php endforeach ?>
 		<li><?php echo $view->pageTitle ?></li>
 	</ul>

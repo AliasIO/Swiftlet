@@ -43,11 +43,6 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($model->node->ready) )
-		{
-			$model->node->create('Files', 'files', node::rootId);
-		}
-
 		if ( !empty($model->perm->ready) )
 		{
 			$model->perm->create('Files', 'admin file access', 'Manage files');
@@ -62,23 +57,6 @@ switch ( $hook )
 			$model->db->sql('
 				DROP TABLE `' . $model->db->prefix . 'files`
 				;');
-		}
-
-		if ( !empty($model->node->ready) )
-		{
-			$model->db->sql('
-				SELECT
-					`id`
-				FROM `' . $model->db->prefix . 'nodes`
-				WHERE
-					`permalink` = "files"
-				LIMIT 1
-				;');
-
-			if ( $model->db->result && $nodeId = $model->db->result[0]['id'] )
-			{
-				$model->node->delete($nodeId);
-			}
 		}
 
 		if ( !empty($model->perm->ready) )
@@ -124,18 +102,17 @@ switch ( $hook )
 			'title[0]'    => 'Unit Test File',
 			'file[0]'     => '@' . $contr->rootPath . 'favicon.ico',
 			'form-submit' => 'Submit',
-			'auth_token'  => $model->authToken
+			'auth-token'  => $model->authToken
 			);
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/', $post);
 
 		$model->db->sql('
 			SELECT
-				f.*
-			FROM      `' . $model->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
+				*
+			FROM `' . $model->db->prefix . 'files`
 			WHERE
-				n.`title` = "Unit Test File"
+				`title` = "Unit Test File"
 			LIMIT 1
 			;', FALSE);
 
@@ -143,33 +120,32 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Uploading a file in <code>/admin/files/</code>.',
-			'pass' => ( bool ) $file['node_id']
+			'pass' => ( bool ) $file['id']
 			);
 
 		/**
 		 * Deleting a file
 		 */
-		if ( $file['node_id'] )
+		if ( $file['id'] )
 		{
 			$post = array(
 				'get_data'   => serialize(array(
-					'id'     => ( int ) $file['node_id'],
+					'id'     => ( int ) $file['id'],
 					'action' => 'delete'
 					)),
 				'confirm'    => '1',
-				'auth_token' => $model->authToken
+				'auth-token' => $model->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/?id=' . ( int ) $file['node_id'] . '&action=delete', $post);
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/?id=' . ( int ) $file['id'] . '&action=delete', $post);
 		}
 
 		$model->db->sql('
 			SELECT
-				n.`id`
-			FROM      `' . $model->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
+				`id`
+			FROM `' . $model->db->prefix . 'files`
 			WHERE
-				f.`id` = ' . ( int ) $file['id'] . '
+				`id` = ' . ( int ) $file['id'] . '
 			LIMIT 1
 			;', FALSE);
 

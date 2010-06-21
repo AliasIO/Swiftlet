@@ -9,14 +9,14 @@
 		</div>
 		
 		<div class="span-3">
-			<h2>Manual</h2>
+			<h2>Guides</h2>
 
 			<ul>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/install"   >Installation</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/config"    >Configuration</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/page"      >Creating pages</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/form"      >Forms</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/manual/faq"       >FAQ</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/install">Installation</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/config" >Configuration</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/page"   >Creating pages</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/form"   >Forms</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/faq"    >FAQ</a></li>
 			</ul>
 			
 			<h2>Concepts</h2>
@@ -39,7 +39,7 @@
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/email"     >E-mail</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/file"      >File</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/form"      >Form</a></li>
-				<li><a href="<?php echo $view->rootPath ?>docs/plugins/lang"      >Lang</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/language"  >Language</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/log"       >Log</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/mysql"     >MySQL</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/node"      >Node</a></li>

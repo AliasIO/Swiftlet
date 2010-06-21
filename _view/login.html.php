@@ -28,7 +28,7 @@
 			<dl>
 				<dt><br/></dt>
 				<dd>
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Login') ?>"/>
 				</dd>

@@ -3,6 +3,8 @@
 # Updated CKEditor to verseion 3.3.1
 # Combine CSS files into 1, share variables
 # Fixed URL rewrite bug
+# No longer using nodes for files
+# Improved routing for nodes
 #
 #
 # 1.2.0.B2 - 1.2.0.B3

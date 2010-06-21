@@ -16,7 +16,7 @@
 		<dl>
 			<dt><br/></dt>
 			<dd>
-				<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+				<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 				<input type="submit" class="button" name="submit" id="submit" value="Submit"/>
 			</dd>
@@ -28,20 +28,20 @@
 <h3>Auth token</h3>
 
 <p>
-	Forms can not be processed if the <code>auth_token</code> field is missing (a security measure to prevent
+	Forms can not be processed if the <code>auth-token</code> field is missing (a security measure to prevent
 	<a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">cross-site request forgery</a>). Always include the
 	following line when creating forms that are send as POST:
 </p>
 
 <pre>
-<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 </pre>
 
 <h3>Confirmation</h3>
 
 <p>
 	Information send as GET does not have an auth token to ensure its integrity and can't be trusted. When using GET to
-	perform adminstrative tasks (like deleting a page using a link as <code>?id=1&amp;action=delete</code>), confirmation
+	perform administrative tasks (like deleting a page using a link as <code>?id=1&amp;action=delete</code>), confirmation
 	should be requested from the user using the <code>$model->confirm()</code> function (see <a href="../concepts/model">Model</a>).
 </p>
 
@@ -74,7 +74,7 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 
 <h3>Handling user input</h3>
 
-<p>For security reasons <code>$_GET</code> and <code>$_POST</code> can not be used. It is better to use the filtered altenatives below.</p>
+<p>For security reasons <code>$_GET</code> and <code>$_POST</code> can not be used. It is better to use the filtered alternatives below.</p>
 
 <h5>Safe for HTML</h5>
 

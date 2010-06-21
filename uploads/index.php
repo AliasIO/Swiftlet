@@ -19,20 +19,19 @@ if ( !isset($model->routeParts[1]) )
 }
 
 $thumb = isset($model->routeParts[1]) && isset($model->routeParts[2]) && $model->routeParts[1] == 'thumb';
-$name  = $thumb && isset($model->routeParts[2]) ? $model->routeParts[2] : $model->routeParts[1];
+$id    = $thumb && isset($model->routeParts[2]) ? $model->routeParts[2] : $model->routeParts[1];
 
-$name = basename($name, strstr($name, '.'));
+$id = basename($id, strstr($id, '.'));
 
 $model->db->sql('
 	SELECT
-		f.`title`,
-		f.`extension`,
-		f.`filename`,
-		f.`mime_type`
-	FROM      `' . $model->db->prefix . 'nodes` AS n
-	LEFT JOIN `' . $model->db->prefix . 'files` AS f ON n.`id` = f.`node_id`
+		`title`,
+		`extension`,
+		`filename`,
+		`mime_type`
+	FROM `' . $model->db->prefix . 'files`
 	WHERE
-		n.`permalink` = "' . $model->db->escape($name) . '"
+		id = ' . ( int ) $id . '
 	LIMIT 1
 	;');
 

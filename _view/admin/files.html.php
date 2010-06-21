@@ -47,7 +47,7 @@
 			<dl>
 				<dt><br/></dt>
 				<dd>
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
 
@@ -95,17 +95,17 @@
 				<td>
 					<?php if ( $file['image'] ): ?>
 					<a
-						href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-						onclick="callback('<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');"
+						href="<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>"
+						onclick="callback('<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>');"
 						>
-						<img src="<?php echo $model->route('file/thumb/' . $file['permalink'] . $file['extension']) ?>" width="120" height="120" alt="">
+						<img src="<?php echo $model->route('file/thumb/' . $file['id'] . $file['extension']) ?>" width="120" height="120" alt="">
 					</a>
 					<?php endif ?>
 				</td>
 				<td>
 					<a
-						href="<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>"
-						onclick="callback('<?php echo $model->route('file/' . $file['permalink'] . $file['extension']) ?>');"
+						href="<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>"
+						onclick="callback('<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>');"
 						>
 						<?php echo $file['title'] ?>
 					</a>
@@ -115,7 +115,7 @@
 				<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : $model->t('n/a') ?></td>
 				<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 				<td>
-					<a class="button" href="?id=<?php echo $file['node_id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>
+					<a class="button" href="?id=<?php echo $file['id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>
 				</td>
 				</td>
 			</tr>

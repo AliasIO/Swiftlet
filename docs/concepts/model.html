@@ -1,12 +1,12 @@
 <h2>The Model</h2>
 
 <p>
-	The Model is the core of the framework which ties everything together.
+	The Model is the core of the framework. Without it none of Swiftlet functions will work.
 </p>
 
 <p>
-	The Model can be accessed using the <code>$model</code> object, an instance of the Model class (<code>/_model/model.class.php</code>)
-	which should be available throughout the entire code.	Most global functions and variables are stored here (e.g. <code>$model-&gt;siteName</code>).
+	The Model can be accessed through the <code>$model</code> object, an instance of the Model class (<code>/_model/model.class.php</code>)
+	which should be available throughout the entire code. Most global functions and values are stored here (e.g. <code>$model-&gt;siteName</code>).
 </p>
 
 <h3>Class</h3>
@@ -28,8 +28,8 @@
 	</li>
 	<li>
 		<code>$model-&gt;check_dependencies ( <em>array</em> $dependencies )</code><br/>
-		Use to see if an instance of a plug-in class exists (e.g. <code>$model-&gt;check_dependencies(array('db'))</code> to check if the
-		database is ready to be used. If not, an error message is displayed.
+		Use to make sure a required plugin is installed and ready (e.g. <code>$model-&gt;check_dependencies(array('db'))</code> if database
+		access is needed). If not, an error message is displayed.
 	</li>
 	<li>
 		<code>$model-&gt;h ( <em>string</em> $v )</code><br/>
@@ -37,23 +37,24 @@
 	</li>
 	<li>
 		<code>$model-&gt;t ( <em>string</em> $v )</code><br/>
-		Used to translate strings. This requires a translation plug-in.
+		Translates a string. Requires a <a href="../plugins/language">Language</a> plugin.
 	</li>
 	<li>
 		<code>$model-&gt;format_date ( <em>string</em> $date [ , <em>string</em> $type ] )</code><br/>
-		Used to format dates. <code>$type</code> can be "date", "time" or "datetime" (default).
+		Formats a date and time. <code>$type</code> can be <em>date</em>, <em>time</em> or <em>datetime</em> (default). Also see <a href="../plugins/time">Time</a>.
 	</li>
 	<li>
 		<code>$model-&gt;email ( <em>string</em> $to, <em>string</em> $subject, <em>string</em> $body [ , <em>array</em> $headers ] )</code><br/>
-		Used to format dates. <code>$type</code> can be "date", "time" or "datetime" (default).
+		Send an e-mail. Requires an <a href="../plugins/email">E-mail</a> plugin.
 	</li>
 	<li>
 		<code>$model-&gt;route ( <em>string</em> $route )</code><br/>
-		Used to route URLs. This requires a working .htaccess file (on a Apache web server).
+		Create a route ("pretty URL") to a page or file. This works best with URL rewrites enabled in <code>/_config.php</code> and on the server.
 	</li>
 	<li>
 		<code>$model-&gt;confirm ( <em>string</em> $notice )</code><br/>
-		Used to confirm permanent changes (like deleting a page). See <a href="../plugins/form#confirmation">Forms</a>.
+		Displays a confirmation page. This can be used to get confirmation from the user when making permanent changes like deleting a page.
+		See <a href="../plugins/form#confirmation">Forms</a>.
 	</li>
 	<li>
 		<code>$model-&gt;error ( <em>string</em> $errNo, <em>string</em> $errStr [, <em>string</em> $errFile ] [, <em>string</em> $errLine ] [, <em>array</em> $errCont ] )</code><br/>
@@ -90,6 +91,10 @@
 		<code>debugMode</code> is set to <code>TRUE</code> in <code>/_config.php</code>. The notices can be used to track down bugs.
 	</li>
 </ul>
+
+<p>
+	Every value of the <a href="../guides/config">configuration</a> file is also available as a variable, e.g. <code>$model->debugMode</code>.
+</p>
 
 <h4>Constants</h4>
 

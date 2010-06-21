@@ -85,7 +85,7 @@ class lang
 
 			if ( !isset($this->model->user->prefs['Language']['options']) || $this->languages != $this->model->user->prefs['Language']['options'] )
 			{
-				$model->user->save_pref(array(
+				$this->model->user->save_pref(array(
 					'pref'    => 'Language',
 					'type'    => 'select',
 					'match'   => '/.*/',

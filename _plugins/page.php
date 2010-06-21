@@ -15,7 +15,7 @@ switch ( $hook )
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('db', 'node', 'perm'),
-			'hooks'        => array('dashboard' => 1, 'home' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
+			'hooks'        => array('dashboard' => 1, 'display_node' => 1, 'home' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 			);
 
 		break;
@@ -39,11 +39,6 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($model->node->ready) )
-		{
-			$model->node->create('Pages', 'pages', node::rootId);
-		}
-
 		if ( !empty($model->perm->ready) )
 		{
 			$model->perm->create('Pages', 'admin page access', 'Manage pages');
@@ -57,23 +52,6 @@ switch ( $hook )
 		if ( in_array($model->db->prefix . 'pages', $model->db->tables) )
 		{
 			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'pages`;');
-		}
-
-		if ( !empty($model->node->ready) )
-		{
-			$model->db->sql('
-				SELECT
-					`id`
-				FROM `' . $model->db->prefix . 'nodes`
-				WHERE
-					`permalink` = "pages"
-				LIMIT 1
-				;');
-			
-			if ( $model->db->result && $nodeId = $model->db->result[0]['id'] )
-			{
-				$model->node->delete($nodeId);
-			}
 		}
 
 		if ( !empty($model->perm->ready) )
@@ -101,10 +79,10 @@ switch ( $hook )
 			);
 
 		break;
-	case 'route':
+	case 'display_node':
 		if ( !empty($model->page->ready) )
 		{
-			if ( $params['parts'][0] == 'p' )
+			if ( $params['type'] == 'page' )
 			{
 				$params['path'] = 'page.php';
 			}
@@ -122,21 +100,11 @@ switch ( $hook )
 		/**
 		 * Creating a page
 		 */
-		$model->db->sql('
-			SELECT
-				`id`
-			FROM `' . $model->db->prefix . 'nodes`
-			WHERE
-				`permalink` = "pages"
-			LIMIT 1
-			;');
-
-		$parentId = isset($model->db->result[0]) ? $model->db->result[0]['id'] : FALSE;
-
 		$post = array(
-			'parent'      => $parentId,
+			'parent'      => node::rootId,
+			'path'        => '',
 			'form-submit' => 'Submit',
-			'auth_token'  => $model->authToken
+			'auth-token'  => $model->authToken
 			);
 
 		$languages = !empty($model->lang->ready) ? $model->lang->languages : array('English US');
@@ -155,7 +123,8 @@ switch ( $hook )
 			FROM      `' . $model->db->prefix . 'nodes` AS n
 			LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 			WHERE
-				n.`title` = "Unit Test Page" AND
+				n.`type`  = "page"           AND
+				p.`title` = "Unit Test Page" AND
 				p.`lang`  = "English US"
 			LIMIT 1
 			;', FALSE);
@@ -173,15 +142,16 @@ switch ( $hook )
 		if ( $page['node_id'] )
 		{
 			$post = array(
-				'parent'      => $parentId,
+				'parent'      => node::rootId,
+				'path'        => '',
 				'form-submit' => 'Submit',
-				'auth_token'  => $model->authToken
+				'auth-token'  => $model->authToken
 				);
 
 			foreach ( $languages as $language )
 			{
 				$post['title[' . $model->h($language) . ']'] = 'Unit Test Page';
-				$post['body[' . $model->h($language) . ']']  = 'Unit Test Page - Edit';
+				$post['body['  . $model->h($language) . ']'] = 'Unit Test Page - Edit';
 			}
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=edit', $post);
@@ -205,7 +175,7 @@ switch ( $hook )
 
 		/**
 		 * Deleting a page
-		 */
+		 *//*
 		if ( $page['node_id'] )
 		{
 			$post = array(
@@ -214,7 +184,7 @@ switch ( $hook )
 					'action' => 'delete'
 					)),
 				'confirm'    => '1',
-				'auth_token' => $model->authToken
+				'auth-token' => $model->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=delete', $post);
@@ -233,7 +203,7 @@ switch ( $hook )
 		$params[] = array(
 			'test' => 'Deleting a page in <code>/admin/pages/</code>.',
 			'pass' => !$model->db->result
-			);
+			);*/
 		
 		break;
 }

@@ -1,23 +1,28 @@
 <h2>Hooks</h2>
 
 <p>
-	A hook is a point in the code (usually in the <a href="./model">Model</a>) where <a href="./plugin">plugins</a> can be inserted (hooked).
+	A hook is a point in the code (usually in the <a href="./model">Model</a>) where plugins can be inserted (hooked)
+	to add or override functionality. See <a href="./plugin">Plugins</a> for information on how to use hooks.
 </p>
 
 <h4>List of available hooks</h4>
 
 <ul>
 	<li>
-		<code>admin</code> (<code>/admin/index.php</code>)<br/>
-		Use to register adminstration pages (see <a href="../manual/admin_page">Administration pages</a>).
-	</li>
-	<li>
 		<code>cache</code> (<code>/_plugins/classes/buffer.php</code>)<br/>
-		Use to write HTML output to cache.
+		Use to write HTML output to cache (see <a href="../plugins/buffer">Buffer</a>).
 	</li>
 	<li>
 		<code>clear_cache</code> (<code>/_model/model.class.php</code>)<br/>
 		Clear the cache.
+	</li>
+	<li>
+		<code>dashboard</code> (<code>/_plugins/classes/dashboard.php</code>)<br/>
+		Adds a link to the dashboard (see <a href="../plugins/dashboard">Dashboard</a>).
+	</li>
+	<li>
+		<code>display_node</code> (<code>/_plugins/classes/nodes.php</code>)<br/>
+		Display a node (see <a href="../plugins/node">Node</a>).
 	</li>
 	<li>
 		<code>email</code> (<code>/_model/model.class.php</code>)<br/>
@@ -34,6 +39,10 @@
 	<li>
 		<code>header</code> (<code>/_model/init.php</code>)<br/>
 		Use to include code on top of each page. Skipped when <code>$contr-&gt;standAlone</code> is set.
+	</li>
+	<li>
+		<code>home</code> (<code>/index.php</code>)<br/>
+		Use to change the home page.
 	</li>
 	<li>
 		<code>init</code> (<code>/_model/model.class.php</code>)<br/>

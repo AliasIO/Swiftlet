@@ -198,8 +198,15 @@ a:hover {
 		}
 	
 	#content li {
-		list-style: outside disc;
 		margin-left: 3em;
+	}
+	
+	#content ul li {
+		list-style: outside disc;
+	}
+	
+	#content ol li {
+		list-style: outside decimal;
 	}
 
 	#content dl {

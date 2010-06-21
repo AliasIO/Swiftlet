@@ -60,7 +60,7 @@
 				<dd>
 					<input type="hidden" name="mode" value="install"/>
 
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Install') ?>"/>
 				</dd>
@@ -127,7 +127,7 @@
 				<dd>
 					<input type="hidden" name="mode" value="upgrade"/>
 
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upgrade') ?>"/>
 				</dd>
@@ -190,7 +190,7 @@
 				<dd>
 					<input type="hidden" name="mode" value="remove"/>
 
-					<input type="hidden" name="auth_token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Remove') ?>"/>
 				</dd>

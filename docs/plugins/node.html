@@ -4,7 +4,7 @@
 
 <p>
 	<a href="http://en.wikipedia.org/wiki/Node_(computer_science)">Nodes</a> are used to built linked data structures (trees).
-	They can be used to store a references to pages or files hierarchally.
+	They can be used to store a references to pages or files hierarchically.
 </p>
 
 <h3>Class</h3>
@@ -17,11 +17,15 @@
 
 <ul>
 	<li>
+		<code>$model-&gt;node-&gt;route ( <em>array</em> $params )</code><br/>
+		Find the node id for a route and let the appropriate plugin to handle the route further.
+	</li>
+	<li>
 		<code>$model-&gt;node-&gt;permalink ( <em>string</em> $title [ , <em>int</em> $id ] )</code><br/>
 		Create a machine-readable version of the title of a node.
 	</li>
 	<li>
-		<code>$model-&gt;node-&gt;create ( <em>string</em> $title, <em>string</em> $permalink, <em>int</em> $parentId )</code><br/>
+		<code>$model-&gt;node-&gt;create ( <em>string</em> $title, <em>string</em> $type, <em>int</em> $parentId )</code><br/>
 		Create a new node.
 	</li>
 	<li>

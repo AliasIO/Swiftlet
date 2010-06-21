@@ -65,18 +65,19 @@ class page
 	{
 		$this->model->db->sql('
 			SELECT
-				n.`permalink`
+				n.`id`
 			FROM      `' . $this->model->db->prefix . 'pages` AS p
 			LEFT JOIN `' . $this->model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 			WHERE
-				p.`published` = 1 AND
+				p.`published` = 1      AND
+				n.`type`      = "page" AND
 				n.`home`      = 1
 			LIMIT 1
 			;');
 
 		if ( $r = $this->model->db->result )
 		{
-			return $this->rewrite('page/?page=' . $r[0]['permalink']);
+			return $this->rewrite('node/' . $r[0]['id']);
 		}
 	}
 

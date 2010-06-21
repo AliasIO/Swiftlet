@@ -28,8 +28,9 @@ if ( isset($model->routeParts[1]) )
 		FROM      `' . $model->db->prefix . 'pages` AS p
 		LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 		WHERE
-			n.`permalink` = "' . $model->db->escape($model->routeParts[1]) . '" AND
-			p.`published` = 1 AND
+			n.`id`        = "' . ( int ) $model->routeParts[1] . '" AND
+			n.`type`      = "page"                                  AND
+			p.`published` = 1                                       AND
 			p.`lang`      = "' . $model->db->escape($language) . '"
 		LIMIT 1
 		;');
@@ -57,12 +58,11 @@ if ( isset($model->routeParts[1]) )
 		{
 			$nodes = $model->node->get_parents($d['node_id']);
 
-			
 			foreach ( $nodes['parents'] as $d )
 			{
-				if ( $d['id'] != node::rootId && $d['permalink'] != 'pages' )
+				if ( $d['id'] != node::rootId )
 				{
-					$view->parents[$d['permalink']] = $d['title'];
+					$view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
 				}
 			}
 		}

@@ -156,7 +156,7 @@ switch ( $hook )
 			'new_password_confirm' => '123',
 			'owner'                => '0',
 			'form-submit'          => 'Submit',
-			'auth_token'           => $model->authToken
+			'auth-token'           => $model->authToken
 			);
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?action=create', $post);
@@ -188,7 +188,7 @@ switch ( $hook )
 				'owner'       => $user['owner'],
 				'email'       => 'unit@test.com',
 				'form-submit' => 'Submit',
-				'auth_token'  => $model->authToken
+				'auth-token'  => $model->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?id=' . ( int ) $user['id'], $post);
@@ -221,7 +221,7 @@ switch ( $hook )
 					'action' => 'delete'
 					)),
 				'confirm'    => '1',
-				'auth_token' => $model->authToken
+				'auth-token' => $model->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?id=' . ( int ) $user['id'] . '&action=delete', $post);
