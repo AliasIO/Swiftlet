@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'         => 'file',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'node', 'perm'),
+			'dependencies' => array('db', 'perm'),
 			'hooks'        => array('dashboard' => 2, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
 			);
 

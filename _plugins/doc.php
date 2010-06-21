@@ -21,7 +21,7 @@ switch ( $hook )
 	case 'dashboard':
 		$params[] = array(
 			'name'        => 'Documentation',
-			'description' => 'Source code documentation and manual',
+			'description' => 'Source code documentation and guides',
 			'group'       => 'Developer',
 			'path'        => 'docs/',
 			);
