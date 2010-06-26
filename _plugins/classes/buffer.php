@@ -67,6 +67,30 @@ class buffer
 
 			$this->ready = FALSE;
 
+			// Output debug messages
+			ob_start();
+
+			if ( $this->model->debugMode )
+			{
+				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
+				
+				print_r($this->model->debugOutput);
+				
+				echo "\n-->";
+			}
+
+			$contents .= ob_get_contents();
+
+			ob_end_clean();
+
+			// gZIP compression
+			if ( strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') )
+			{
+				$contents = gzencode($contents);
+
+				header('Content-Encoding: gzip');
+			}
+
 			echo $contents;
 		}
 	}

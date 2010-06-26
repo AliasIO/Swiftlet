@@ -1,11 +1,14 @@
 <h2>Views</h2>
 
-<h3>Creating a View</h3>
+<p>
+	Views are files that contain layout elements for pages, written in HTML.
+	PHP code can be used but should be limited to presentational logic, all other
+	code belongs in the accompanied <a href="./controller">Controller</a>. View are
+	always loaded by a Controller and never called directly.
+</p>
 
 <p>
-	Views (stored in <code>/_views/</code>) contain layout elements for pages, mostly HTML, images and
-	JavaScript. PHP code can be used but should be limited to presentational logic (all other code should
-	go in the <a href="./controller">Controller</a>).
+	Views are stored in the <code>_view</code> directory.
 </p>
 
 <h5>Example View</h5>
@@ -26,7 +29,7 @@
 	<li>
 		<code>$view-&gt;rootPath</code><br/>
 		Absolute path to the root. Note that this can be different from <code>$contr->rootPath</code> (e.g. when URL rewrites or AJAX
-		are used).
+		is used).
 	</li>
 	<li>
 		<code>$view-&gt;viewPath</code><br/>
@@ -61,7 +64,7 @@
 	</li>
 	<li>
 		<code>$view-&gt;inAdmin</code><br/>
-		If set to <code>TRUE</code> the current page is an <a href="../manual/admin_page">administration page</a>.
+		Used to distinguish between regular and administrative pages.
 	</li>
 </ul>
 
@@ -70,6 +73,6 @@
 <ul>
 	<li>
 		<code>$view-&gt;load ( <em>string</em> $file )</code><br/>
-		Used to load a View (an HTML file in the <code>/view/</code> directory).
+		Loads a View.
 	</li>
 </ul>

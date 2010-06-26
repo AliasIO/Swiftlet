@@ -1,10 +1,11 @@
 # 1.2.0.B3 - 1.2.0.B4
 #
-# Updated CKEditor to verseion 3.3.1
+# Updated CKEditor to version 3.3.1
 # Combine CSS files into 1, share variables
 # Fixed URL rewrite bug
 # No longer using nodes for files
 # Improved routing for nodes
+# Added gZIP compression
 #
 #
 # 1.2.0.B2 - 1.2.0.B3

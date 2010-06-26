@@ -15,6 +15,7 @@
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/install">Installation</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/config" >Configuration</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/page"   >Creating pages</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/theme"  >Theming</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/form"   >Forms</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/faq"    >FAQ</a></li>
 			</ul>
@@ -41,6 +42,7 @@
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/form"      >Form</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/language"  >Language</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/log"       >Log</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/plugins/menu"      >Menu</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/mysql"     >MySQL</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/node"      >Node</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/plugins/page"      >Page</a></li>

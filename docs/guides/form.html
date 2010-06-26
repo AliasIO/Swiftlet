@@ -1,5 +1,9 @@
 <h2>Forms</h2>
 
+<p>
+	Forms are used to handle user input. 
+</p>
+
 <h5>Example</h5>
 
 <pre>
@@ -25,12 +29,22 @@
 </form>
 </pre>
 
+<p>
+	The best way to handle forms is using the <a href="../plugins/form">Form</a> plugin. This plugin takes care of input
+	validation.
+</p>
+
 <h3>Auth token</h3>
 
 <p>
-	Forms can not be processed if the <code>auth-token</code> field is missing (a security measure to prevent
-	<a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">cross-site request forgery</a>). Always include the
-	following line when creating forms that are send as POST:
+	As a security measure to prevent
+	<a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">cross-site request forgery</a> it is required
+	to include an authentication token in forms. If the <code>auth-token</code> field is missing the form will not
+	be processed and an error message is displayed.
+</p>
+
+<p>	
+	Include the following line when creating forms that are send as POST:
 </p>
 
 <pre>
@@ -40,9 +54,9 @@
 <h3>Confirmation</h3>
 
 <p>
-	Information send as GET does not have an auth token to ensure its integrity and can't be trusted. When using GET to
-	perform administrative tasks (like deleting a page using a link as <code>?id=1&amp;action=delete</code>), confirmation
-	should be requested from the user using the <code>$model->confirm()</code> function (see <a href="../concepts/model">Model</a>).
+	Information send as GET does not require an authentication token to verify its integrity and can therefore not be trusted.
+	When using a link to perform administrative tasks (e.g. <code>?id=1&amp;action=delete</code> to delete a page)
+	confirmation should be requested from the user using <code>$model->confirm()</code>. The request is then resubmitted using POST.
 </p>
 
 <h5>Example</h5>
@@ -67,9 +81,9 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 </pre>
 
 <p>
-	The <code>$model->confirm()</code> function exits the code and displays a form to the user with an option to proceed
-	or cancel. If the user chooses to proceed the page is reloaded and <code>$model->POST_valid['confirm']</code> is set
-	to <code>TRUE</code> (this requires the <a href="../plugins/form">Form plug-in</a>).
+	The <code>$model->confirm()</code> function terminates the code and displays a form to the user with an option to either
+	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$model->POST_valid['confirm']</code> is set
+	to <code>TRUE</code> (this requires the <a href="../plugins/form">Form</a> plugin).
 </p>
 
 <h3>Handling user input</h3>

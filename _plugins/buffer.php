@@ -32,15 +32,6 @@ switch ( $hook )
 			$model->debugOutput['buffer output size'] = round(strlen(ob_get_contents()) / 1024 / 1024, 3) . ' MB';
 
 			$model->buffer->flush();
-
-			if ( $model->debugMode && !$contr->standAlone )
-			{
-				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
-
-				print_r($model->debugOutput);
-
-				echo "\n-->";
-			}
 		}
 
 		break;
