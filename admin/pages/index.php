@@ -112,9 +112,9 @@ if ( $model->POST_valid['form-submit'] )
 									`title`     = "' . $model->POST_db_safe['title'][$language]  . '",
 									`body`      = "' . $model->POST_db_safe['body'][$language]   . '",
 									`published` =  ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
-									`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
+									`date_edit` = "' . gmdate('Y-m-d H:i:s')                     . '"
 								WHERE
-									`node_id` = ' . $id . ' AND
+									`node_id` =  ' . $id . ' AND
 									`lang`    = "' . $model->db->escape($language) . '"
 								LIMIT 1
 								;');
@@ -146,9 +146,9 @@ if ( $model->POST_valid['form-submit'] )
 
 					$model->node->move($id, $model->POST_raw['parent']);
 
-					$path = !empty($model->POST_raw['path']) ? $model->POST_raw['path'] : 'node/' . $id;
+					$path = !empty($model->POST_raw['path']) ? $model->POST_raw['path'] : 'node/' . ( int ) $id;
 
-					header('Location: ?action=edit&id=' . $id . '&path=' . rawurlencode($path) . '&notice=updated');
+					header('Location: ?action=edit&id=' . ( int ) $id . '&path=' . rawurlencode($path) . '&notice=updated');
 
 					$model->end();
 				}
@@ -157,7 +157,7 @@ if ( $model->POST_valid['form-submit'] )
 			default:
 				if ( $model->perm->check('admin page create') )
 				{
-					$nodeId = $model->node->create($model->POST_db_safe['title']['English US'], 'page', $model->POST_raw['parent']);
+					$nodeId = $model->node->create($model->POST_raw['title']['English US'], 'page', $model->POST_raw['parent']);
 
 					if ( $nodeId )
 					{
@@ -169,6 +169,8 @@ if ( $model->POST_valid['form-submit'] )
 								`id` = ' . ( $nodeId ) . '
 							LIMIT 1
 							;');
+
+						$model->db->result = FALSE;
 						
 						foreach ( $languages as $language )
 						{
@@ -183,7 +185,7 @@ if ( $model->POST_valid['form-submit'] )
 									`date_edit`
 									)
 								VALUES (
-									 ' . $nodeId                                   . ',
+									 ' . ( int ) $nodeId                           . ',
 									"' . $model->POST_db_safe['title'][$language]  . '",
 									"' . $model->POST_db_safe['body'][$language]   . '",
 									 ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
@@ -201,6 +203,10 @@ if ( $model->POST_valid['form-submit'] )
 							header('Location: ?action=edit&id=' . $nodeId . '&path=' . rawurlencode($path) . '&notice=created');
 
 							exit;
+						}
+						else
+						{
+							$model->node->delete($nodeId);
 						}
 					}
 			}
@@ -229,6 +235,9 @@ else if ( isset($model->GET_raw['notice']) )
 switch ( $action )
 {
 	case 'edit':
+		$editLeftId  = 0;
+		$editRightId = 0;
+
 		if ( $model->perm->check('admin page edit') )
 		{
 			$node = $model->node->get_parents($id);
@@ -325,6 +334,13 @@ $listParents = array();
 $nodes = $model->node->get_children(node::rootId, 'page');
 
 $model->node->nodes_to_array($nodes, $list);
+
+array_shift($list);
+
+foreach ( $list as $i => $item )
+{
+	$list[$i]['level'] --;
+}
 
 $listParents = $list;
 

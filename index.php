@@ -7,8 +7,7 @@
 
 $contrSetup = array(
 	'rootPath'   => './',
-	'pageTitle'  => 'Route',
-	'standAlone' => TRUE
+	'pageTitle'  => 'Route'
 	);
 
 require($contrSetup['rootPath'] . '_model/init.php');

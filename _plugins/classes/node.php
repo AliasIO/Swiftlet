@@ -124,6 +124,11 @@ class node
 	 */
 	function create($title, $type, $parentId)
 	{
+		if ( !$parentId )
+		{
+			return FALSE;
+		}
+
 		$this->model->db->sql('
 			SELECT
 				`left_id`,
@@ -166,8 +171,8 @@ class node
 				VALUES (
 					 ' . ( ( int ) $parentNode['left_id'] + 1 ) . ',
 					 ' . ( ( int ) $parentNode['left_id'] + 2 ) . ',
-					"' . $type                                  . '",
-					"' . $title                                 . '",
+					"' . $this->model->db->escape($type)        . '",
+					"' . $this->model->db->escape($title)       . '",
 					"' . gmdate('Y-m-d H:i:s')                  . '",
 					"' . gmdate('Y-m-d H:i:s')                  . '"
 					)
@@ -216,10 +221,10 @@ class node
 		// Sync righthand side of tree
 		$this->model->db->sql('
 			UPDATE `' . $this->model->db->prefix . 'nodes` SET
-				`left_id`  = `left_id`  - ' . $diff . ',
-				`right_id` = `right_id` - ' . $diff . '
+				`left_id`  = `left_id`  - ' . ( int ) $diff . ',
+				`right_id` = `right_id` - ' . ( int ) $diff . '
 			WHERE
-				`left_id` > ' . $node[0]['right_id'] . '
+				`left_id` > ' . ( int ) $node[0]['right_id'] . '
 			;');
 
 		$parentNode = $this->get($parentId);
@@ -236,10 +241,10 @@ class node
 		// Sync righthand side of tree
 		$this->model->db->sql('
 			UPDATE `' . $this->model->db->prefix . 'nodes` SET
-				`left_id`  = `left_id`  + ' . $diff . ',
-				`right_id` = `right_id` + ' . $diff . '
+				`left_id`  = `left_id`  + ' . ( int ) $diff . ',
+				`right_id` = `right_id` + ' . ( int ) $diff . '
 			WHERE
-				`left_id` > ' . $parentNode['right_id'] . ' AND
+				`left_id` > ' . ( int ) $parentNode['right_id'] . ' AND
 				`id` NOT IN ( ' . implode(', ', $node['all']) . ' )
 			;');
 
@@ -248,11 +253,11 @@ class node
 		
 		if ( $parentNode['right_id'] > $node[0]['right_id'] )
 		{
-			$diff = '+ ' . ( $parentNode['right_id'] - $node[0]['right_id'] - 1 );
+			$diff = '+ ' . ( ( int ) $parentNode['right_id'] - ( int ) $node[0]['right_id'] - 1 );
 		}
 		else
 		{
-			$diff = '- ' . abs($parentNode['right_id'] - $node[0]['right_id'] - 1);
+			$diff = '- ' . abs(( int ) $parentNode['right_id'] - ( int ) $node[0]['right_id'] - 1);
 		}
 
 		$this->model->db->sql('
@@ -286,16 +291,16 @@ class node
 
 		if ( $this->model->db->result )
 		{
-			$leftId  = $this->model->db->result[0]['left_id'];
-			$rightId = $this->model->db->result[0]['right_id'];
+			$leftId  = ( int ) $this->model->db->result[0]['left_id'];
+			$rightId = ( int ) $this->model->db->result[0]['right_id'];
 
 			$this->model->db->sql('
 				UPDATE `' . $this->model->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
-					`left_id`  > ' . $leftId  . ' AND
-					`right_id` > ' . $rightId . '
+					`left_id`  > ' . ( int ) $leftId  . ' AND
+					`right_id` > ' . ( int ) $rightId . '
 				;');
 
 			$this->model->db->sql('
@@ -303,7 +308,7 @@ class node
 					`right_id`  = `right_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
-					`right_id` > ' . $rightId . '
+					`right_id` > ' . ( int ) $rightId . '
 				;');
 
 			$this->model->db->sql('
@@ -312,8 +317,8 @@ class node
 					`right_id`  = `right_id` - 1,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
-					`left_id`  > ' . $leftId  . ' AND
-					`right_id` < ' . $rightId . '
+					`left_id`  > ' . ( int ) $leftId  . ' AND
+					`right_id` < ' . ( int ) $rightId . '
 				;');
 
 			$this->model->db->sql('
@@ -405,8 +410,10 @@ class node
 					*
 				FROM `' . $this->model->db->prefix . 'nodes`
 				WHERE
-					`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
-					' . ( $type ? 'AND `type` = "' . $this->model->db->escape($type) . '"' : '' ) . '
+					`id` = ' . ( int ) $id . ' OR (
+						`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
+						' . ( $type ? 'AND `type` = "' . $this->model->db->escape($type) . '"' : '' ) . '
+						)
 				ORDER BY `left_id` ASC
 				;');
 
@@ -417,7 +424,7 @@ class node
 
 				foreach ( $this->model->db->result as $d )
 				{
-					$children[] = $d['id'];
+					$children[] = ( int ) $d['id'];
 				}
 
 				foreach ( $this->model->db->result as $d )

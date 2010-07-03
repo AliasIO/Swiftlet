@@ -72,7 +72,7 @@
 				<a class="button" href="./?id=<?php echo $role['id'] ?>&action=edit"  ><?php echo $model->t('Edit this role') ?></a>
 				<?php endif ?>
 				<?php if ( $model->perm->check('admin perm delete') ): ?>
-				<a class="button" href="./?id=<?php echo $role['id'] ?>&action=delete"><?php echo $model->t('Delete this role') ?></a>
+				<a class="button caution" href="./?id=<?php echo $role['id'] ?>&action=delete"><?php echo $model->t('Delete this role') ?></a>
 				<?php endif ?>
 			</p>
 			<?php endif ?>

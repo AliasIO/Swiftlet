@@ -4,8 +4,13 @@
 
 <p>
 	Buffers provide more control over generated output. Pages can be stored in a variable and manipulated before being send to
-	the browser (e.g. compressed or cached for better performance or parsed by a templating engine) or output can be cancelled
-	in case of an error to prevent broken pages from being displayed.
+	the browser (e.g. compressed or cached for better performance) or output can be cancelled in case of an error to prevent
+	broken pages from being displayed.
+</p>
+
+<p>
+	This plugin automatically enables gZIP compression for supported browsers and appends debug messages to the HTML code if
+	<code>debugMode</code> is enabled in <code>/_config.php</code>.
 </p>
 
 <h3>Class</h3>

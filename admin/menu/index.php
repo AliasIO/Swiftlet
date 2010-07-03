@@ -157,8 +157,8 @@ if ( $r = $model->db->result )
 		{
 			if ( ( in_array($item['node_id'], $nodeIds) && isset($paths[$item['node_id']]) ) || !in_array($item['node_id'], $nodeIds) )
 			{
-				$path = isset($paths[$item['node_id']]) ? $paths[$item['node_id']] : ( $item['path'] ? $item['path'] : 'node/' . $item['node_id'] );
-				
+				$path = !empty($paths[$item['node_id']]) ? $paths[$item['node_id']] : ( $item['path'] ? $item['path'] : 'node/' . $item['node_id'] );
+
 				$v .= $item['title'] . ( $item['title'] ? '|' : '' ) . $path . "\n";
 			}
 		}

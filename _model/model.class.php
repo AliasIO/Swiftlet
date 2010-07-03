@@ -29,38 +29,38 @@ class model
 	function __construct($contr)
 	{
 		$model = $this;
+		
+		$this->contr = $contr;
 
-		$model->contr = $contr;
+		set_error_handler(array($this, 'error'), E_ALL);
 
-		set_error_handler(array($model, 'error'), E_ALL);
+		$this->timerStart = $this->timer_start();
 
-		$model->timerStart = $model->timer_start();
-
-		$model->debugOutput['version'] = model::version;
+		$this->debugOutput['version'] = model::version;
 
 		/**
 		 * Get the user's real IP address
 		 */
-		$model->userIp = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : ( !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '' ) );
+		$this->userIp = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : ( !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : ( !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '' ) );
 
 		/*
 		 * Load configuration
 		 */
-		if ( is_file($contr->rootPath . '_config.php') )
+		if ( is_file($this->contr->rootPath . '_config.php') )
 		{
-			require($contr->rootPath . '_config.php');
+			require($this->contr->rootPath . '_config.php');
 		}
 		else
 		{
-			if ( is_file($contr->rootPath . '_config.default.php') )
+			if ( is_file($this->contr->rootPath . '_config.default.php') )
 			{
-				require($contr->rootPath . '_config.default.php');
+				require($this->contr->rootPath . '_config.default.php');
 
-				$model->configMissing = TRUE;
+				$this->configMissing = TRUE;
 			}
 			else
 			{			
-				$model->error(FALSE, 'Missing configuration file.');
+				$this->error(FALSE, 'Missing configuration file.');
 			}
 		}
 
@@ -68,7 +68,7 @@ class model
 		{
 			foreach ( $config as $k => $v )
 			{
-				$model->{$k} = $v;
+				$this->{$k} = $v;
 			}
 
 			unset($config);
@@ -83,11 +83,11 @@ class model
 			session_start();
 		}
 
-		$model->authToken = sha1(session_id() . phpversion() . $model->sysPassword . $model->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
+		$this->authToken = sha1(session_id() . phpversion() . $this->sysPassword . $this->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
 
-		if ( ( !empty($_POST) && !isset($_POST['auth-token']) ) || ( isset($_POST['auth-token']) && $_POST['auth-token'] != $model->authToken ) )
+		if ( ( !empty($_POST) && !isset($_POST['auth-token']) ) || ( isset($_POST['auth-token']) && $_POST['auth-token'] != $this->authToken ) )
 		{
-			$model->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
+			$this->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
 		}
 
 		if ( isset($_POST['auth-token']) )
@@ -100,22 +100,20 @@ class model
 		 */
 		if ( !class_exists('view') )
 		{
-			require($contr->rootPath . '_model/view.class.php');
+			require($this->contr->rootPath . '_model/view.class.php');
 		}
 
-		$view = new view($model);
-
-		$this->view = $view;
+		$this->view = new view($this);
 
 		/*
 		 * Plug-ins
 		 */
 		if ( !class_exists('plugin') )
 		{
-			require($contr->rootPath . '_model/plugin.class.php');
+			require($this->contr->rootPath . '_model/plugin.class.php');
 		}
 
-		if ( $handle = opendir($dir = $contr->pluginPath) )
+		if ( $handle = opendir($dir = $this->contr->pluginPath) )
 		{
 			while ( ( $file = readdir($handle) ) !== FALSE )
 			{
@@ -128,7 +126,7 @@ class model
 			closedir($handle);
 		}
 
-		$model->hook('init');
+		$this->hook('init');
 
 		$this->input_sanitize();
 	}
@@ -262,7 +260,7 @@ class model
 		}
 
 		/*
-		 * Check integrety of confirmed information (see $model->confirm())
+		 * Check integrety of confirmed information (see $this->confirm())
 		 */
 		if ( isset($_POST['confirm']) && !empty($_POST['get-data']) && !empty($_GET) )
 		{
@@ -274,7 +272,7 @@ class model
 
 		/*
 		 * $_POST and $_GET values can't be trusted
-		 * If neccesary, access them through $model->POST_raw and $model->GET_raw
+		 * If neccesary, access them through $this->POST_raw and $this->GET_raw
 		 */
 		$this->POST_raw = isset($_POST) ? $_POST : array();
 		$this->GET_raw  = isset($_GET)  ? $_GET  : array();
@@ -303,11 +301,9 @@ class model
 	 */
 	function paginate($id, $rows, $maxRows, $exclude = array())
 	{
-		$model = $this;
+		$pageNum = isset($this->GET_raw['p_' . $id]) ? $this->GET_raw['p_' . $id] : 1;
 
-		$pageNum = isset($model->GET_raw['p_' . $id]) ? $model->GET_raw['p_' . $id] : 1;
-
-		$query = !empty($model->GET_raw) ? $model->GET_raw : array();
+		$query = !empty($this->GET_raw) ? $this->GET_raw : array();
 
 		unset($query['p_' . $id]);
 
@@ -332,7 +328,7 @@ class model
 
 		if ( $pageNum > 1 )
 		{
-			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . $model->t('previous') . '</a> ';
+			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . $this->t('previous') . '</a> ';
 		}
 		
 		for ( $i = 1; $i <= 3; $i ++ )
@@ -348,7 +344,7 @@ class model
 
 		if ( $pageNum > 7 )
 		{
-			$pagination .= '&hellip ';
+			$pagination .= '&hellip; ';
 		}
 
 		for ( $i = $pageNum - 3; $i <= $pageNum + 3; $i ++ )
@@ -361,7 +357,7 @@ class model
 
 		if ( $pageNum < $pages - 6 )
 		{
-			$pagination .= '&hellip ';
+			$pagination .= '&hellip; ';
 		}
 
 		if ( $pages > 3 )
@@ -377,10 +373,10 @@ class model
 
 		if ( $pageNum < $pages )
 		{
-			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . $model->t('next') . '</a> ';
+			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . $this->t('next') . '</a> ';
 		}
 
-		$pagination = $model->t('Go to page') . ': ' . $pagination;
+		$pagination = $this->t('Go to page') . ': ' . $pagination;
 
 		return array('from' => ( $pageNum - 1 ) * $maxRows, 'to' => ( $pageNum * $maxRows < $rows ? ( $pageNum * $maxRows) : $rows ), 'html' => $pagination);
 	}
@@ -465,9 +461,7 @@ class model
 	 */
 	function route($route)
 	{
-		$view = $this->view;
-
-		$route = $view->rootPath . ( $this->urlRewrite ? '' : '?q=' ) . $route;
+		$route = $this->view->rootPath . ( $this->urlRewrite ? '' : '?q=' ) . $route;
 
 		return $route;
 	}
@@ -478,16 +472,12 @@ class model
 	 */
 	function confirm($notice)
 	{
-		$model = $this;
-		$contr = $this->contr;
-		$view  = $this->view;
+		$this->view->notice  = $notice;
+		$this->view->getData = $this->h(serialize($this->GET_raw));
 
-		$view->notice  = $notice;
-		$view->getData = $model->h(serialize($model->GET_raw));
+		$this->view->load('confirm.html.php');
 
-		$view->load('confirm.html.php');
-
-		$model->end();
+		$this->end();
 	}
 
 	/**
@@ -514,21 +504,17 @@ class model
 	 */
 	function end()
 	{
-		$model = $this;
-		$contr = $this->contr;
-		$view  = $this->view;
-		
-		if ( empty($contr->standAlone) )
+		if ( empty($this->contr->standAlone) )
 		{
-			$model->hook('footer');
+			$this->hook('footer');
 		}
 
-		$view->output();
+		$this->view->output();
 
-		$model->debugOutput['execution time']['all'] = $model->timer_end($model->timerStart);
-		$model->debugOutput['peak memory usage']     = round(memory_get_peak_usage() / 1024 / 1024, 3) . ' MB';
+		$this->debugOutput['execution time']['all'] = $this->timer_end($this->timerStart);
+		$this->debugOutput['peak memory usage']     = round(memory_get_peak_usage() / 1024 / 1024, 3) . ' MB';
 
-		$model->hook('end');
+		$this->hook('end');
 
 		exit;
 	}
@@ -544,7 +530,7 @@ class model
 	function error($errNo, $errStr, $errFile = '', $errLine = '', $errCont = array())
 	{
 		$this->hook('error');
-		
+
 		// If error has been supressed with @
 		if ( !error_reporting() )
 		{

@@ -115,7 +115,7 @@
 				<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : $model->t('n/a') ?></td>
 				<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 				<td>
-					<a class="button" href="?id=<?php echo $file['id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>
+					<a class="button caution" href="?id=<?php echo $file['id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>
 				</td>
 				</td>
 			</tr>

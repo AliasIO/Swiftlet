@@ -70,12 +70,12 @@ class buffer
 			// Output debug messages
 			ob_start();
 
-			if ( $this->model->debugMode )
+			if ( $this->model->debugMode && !$this->contr->standAlone )
 			{
 				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
-				
+
 				print_r($this->model->debugOutput);
-				
+
 				echo "\n-->";
 			}
 
@@ -84,7 +84,7 @@ class buffer
 			ob_end_clean();
 
 			// gZIP compression
-			if ( strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') )
+			if ( !empty($_SERVER['HTTP_ACCEPT_ENCODING']) && strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') )
 			{
 				$contents = gzencode($contents);
 

@@ -83,6 +83,8 @@ class form
 				}
 			}
 		}
+
+		$this->model->hook('input_sanitize');
 	}
 	
 	private function check($var, $regexes)

@@ -10,9 +10,6 @@
 		<?php if ( $model->perm->check('admin page edit') ): ?>
 		<li><a class="button" href="<?php echo $view->rootPath ?>admin/pages/?action=edit&id=<?php   echo $view->nodeId ?>"><?php echo $model->t('Edit') ?></a></li>
 		<?php endif ?>
-		<?php if ( $model->perm->check('admin page delete') ): ?>
-		<li><a class="button" href="<?php echo $view->rootPath ?>admin/pages/?action=delete&id=<?php echo $view->nodeId ?>"><?php echo $model->t('Delete') ?></a></li>
-		<?php endif ?>
 	</ul>
 	<?php endif ?>
 

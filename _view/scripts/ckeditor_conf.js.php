@@ -17,7 +17,7 @@ require($contrSetup['rootPath'] . '_model/init.php');
 CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $contr->absPath ?>';
 CKEDITOR.config.height      = '400';
 CKEDITOR.config.bodyId      = 'content';
-CKEDITOR.config.contentsCss = '<?php echo $view->rootPath ?>css.php?files=global.css,grid.css,ckeditor.css'
+CKEDITOR.config.contentsCss = '<?php echo $view->rootPath ?>css.php?files=global.css,grid.css,ckeditor.css';
 CKEDITOR.config.toolbar     = [
 	['Format'],
 	['Bold', 'Italic', 'Strike'],

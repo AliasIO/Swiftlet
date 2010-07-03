@@ -27,6 +27,7 @@
 	padding: 0;
 	text-align: inherit;
 	text-decoration: none;
+	text-rendering: optimizeLegibility;
 }
 
 /* Main */
@@ -244,6 +245,13 @@ a:hover {
 			border-color: #D77;
 		}
 	
+	#content .separator {
+		border-top: 1px solid var(form-border-color);
+		height: 1px;
+		margin-bottom: var(spacing);
+		overflow: hidden;
+	}
+	
 	#content .crumbs {
 		margin-bottom: 10px;
 	}
@@ -293,7 +301,7 @@ a:hover {
 
 #footer {
 	font-size: 11px;
-	padding: 20px 0;
+	padding: 20px 0 40px 0;
 	text-align: center;
 	text-transform: uppercase;
 }
@@ -466,6 +474,7 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border: 1px solid var(form-border-color);
+	color: var(text-color);
 	display: inline-block;
 	font-size: 11px;
 	line-height: 25px;
@@ -479,6 +488,15 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 a:hover.button {
 	border: 1px solid var(text-color);
 }
+	
+	a.button.caution {
+		color: var(form-border-color);
+	}
+
+	a:hover.button.caution {
+		border: 1px solid #C00;
+		color: #C00;
+	}
 
 /* Table elements in forms */
 
@@ -508,5 +526,5 @@ form tbody th {
 }
 
 .dependency-fail {
-	color: #900;
+	color: #C00;
 }

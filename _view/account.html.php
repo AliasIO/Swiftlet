@@ -8,7 +8,7 @@
 	<p>
 		<a class="button" href="./?action=create"><?php echo $model->t('Create a new account') ?></a> 
 		<?php if ( $model->session->get('user id') != $view->userId ): ?>
-		<a class="button" href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $model->t('Delete this account') ?></a>
+		<a class="button caution" href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $model->t('Delete this account') ?></a>
 		<?php endif ?>
 	</p>
 

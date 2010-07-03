@@ -18,7 +18,7 @@
 		<?php endif ?>
 		<a class="button" href="<?php echo $model->route($view->path) ?>"><?php echo $model->t('View this page') ?></a>
 		<?php if ( $model->perm->check('admin page delete') ): ?>
-		<a class="button" href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
+		<a class="button caution" href="./?action=delete&id=<?php echo $view->id ?>"><?php echo $model->t('Delete this page') ?></a>
 		<?php endif ?>
 	</p>
 	<?php elseif ( $model->perm->check('admin page create') ): ?>
@@ -138,7 +138,7 @@
 					<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=edit"><?php echo $model->t('Edit') ?></a>
 					<?php endif ?>
 					<?php if ( $model->perm->check('admin page delete') ): ?>
-					<a class="button" href="?id=<?php echo $node['id'] ?>&amp;action=delete"><?php echo $model->t('Delete') ?></a>
+					<a class="button caution" href="?id=<?php echo $node['id'] ?>&amp;action=delete"><?php echo $model->t('Delete') ?></a>
 					<?php endif ?>
 				</td>
 			</tr>
@@ -151,7 +151,7 @@
 	</p>
 	<?php else: ?>
 	<p>
-		<em>No pages</em>
+		<em><?php echo $model->t('No pages') ?></em>
 	</p>
 	<?php endif ?>
 

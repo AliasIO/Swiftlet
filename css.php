@@ -14,12 +14,13 @@ $contrSetup = array(
 require($contrSetup['rootPath'] . '_model/init.php');
 
 /*
- * Parse CSS files so we can use variables
+ * Parse CSS files
  */
 if ( !empty($model->GET_raw['files']) )
 {
 	$css = '';
 
+	// Combine files
 	foreach ( explode(',', $model->GET_raw['files']) as $filename )
 	{
 		if ( is_file($file = $contr->viewPath . $filename) )
@@ -28,6 +29,7 @@ if ( !empty($model->GET_raw['files']) )
 		}
 	}
 
+	// Parse variables
 	preg_match('/@variables \{([^}]+)\}\s*/s', $css, $m);
 
 	if ( isset($m[1]) )
@@ -46,6 +48,10 @@ if ( !empty($model->GET_raw['files']) )
 
 header('Content-type: text/css');
 
-echo $css;
+// Leverage browser caching
+header('Expires: ' . gmdate('r', time() + 60 * 60 * 24 * 30));
+
+// Minify output
+echo preg_replace('/\s*([{}:;,])\s*/', '\1', preg_replace('/\s+/', ' ', $css));
 
 $model->end();
