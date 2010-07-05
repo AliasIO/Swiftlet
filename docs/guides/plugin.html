@@ -1,0 +1,162 @@
+<h2>Creating plugins</h2>
+
+<p>
+	Swiftlet is very modular by design. Almost all of it's functionality can be replaced or extended with plugins.	
+</p>
+
+<p>
+	To create a plugin, copy an existing plugin or start with an empty file in the <code>/_plugins</code> directory.
+	By convention, the name of the file should be the name of the plugin.
+</p>
+
+<h4>Example plugin (<code>/_plugins/example.php</code>)</h4>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+	case 'info':
+		$info = array(
+			'name'       => 'example',
+			'version'    => '1.0.0',
+			'compatible' => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'hooks'      => array('init' => 1)
+			);
+
+		break;	
+	case 'init':
+		$view->load('example.html.php');
+
+		break;
+}
+?>
+</pre>
+
+<p>
+	The first line is to make sure the plugin isn't being called directly from the browser.
+</p>
+
+<p>
+	Initially the <a href="./model">Model</a> will use the <em>info</em> hook to gather information about the plugin.
+	This includes the plugin's name, version number and compatibility info (Swiftlet version numbers). This is also
+	where other <a href="./hook">hooks</a> are registered, in the example's case only the <em>init</em> hook.
+</p>
+
+<p>
+	When the <em>init</em> hook is called the plugin is reloaded, this time executing the code in the <em>init</em> block.
+</p>
+
+<h3>Creating database tables</h3>
+
+<p>
+	In many cases plugins need access to the database and new tables need to be created. This can be done using the
+	<em>install</em> hook. These plugins need to be installed through the plugin installer at <code>/installer/</code>.
+	Here is a more elaborate example of a plugin:
+</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+switch ( $hook )
+{
+	case 'load':
+		$info = array(
+			'name'         => 'example',
+			'description'  => 'Description here.',
+			'version'      => '1.0.0',
+			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
+			'upgradable'   => array('from' => '1.1.0', 'to' => '1.1.*'),
+			'dependencies' => array('db'),
+			'hooks'        => array('init' => 1, 'install' => 1)
+			);
+
+		break;
+	case 'install':
+		$model->db->sql('
+			CREATE TABLE `' . $model->db->prefix . 'example` (
+				`id`  INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+				`foo` VARCHAR(256)     NOT NULL,
+				PRIMARY KEY (`id`)
+				)
+			;');
+
+		break;
+	case 'upgrade':
+		$model->db->sql('
+			UPDATE `' . $model->db->prefix . 'example` SET
+				`foo` = "bar"
+			;');
+
+		break;
+	case 'init':
+		require($contr->classPath . 'example.php');
+
+		$model->example = new example($model);
+
+		break;
+}
+?>
+</pre>
+
+<p>
+	The <em>install</em> and <em>upgrade</em> hooks are used by the plugin installer.
+	Plugins can only be upgraded if the Swiftlet version matches the values in <code>$info['upgradable']</code>
+	(to go from version 1.0.x to 3.0.x, you usually have to upgrade to version 2.0.x first).
+</p>
+
+<p>
+	Because this plugin requires a database, the <em>db</em> plugin should be declared as a dependency. This
+	ensures the plugin will not be installed unless the <a href="../plugins/mysql">Database</a> plugin is
+	installed and ready.
+</p>
+
+<h3>Classes</h3>
+
+<p>
+	It's good practice to put plugin functionality in a separate class (these are stored in the
+	<code>/_plugins/classes</code> directory). This way functions are more or less sandboxed and won't
+	interfere with other plugins or the global scope.
+</p>
+
+<p>
+	This is a basic example of a plugin class:
+</p>
+
+<pre>
+<?php
+if ( !isset($model) ) die('Direct access to this file is not allowed');
+
+class example 
+{
+	public
+		$ready
+		;
+	
+	function __construct($model)
+	{
+		$this->ready = TRUE;
+	}
+}
+?>
+</pre>
+
+<p>
+	An instance of <code>$model</code> should be passed to each class in order to access the <a href="./model">Model</a> inside
+	the class.
+</p>
+
+<p>
+	If the plugin is required by other plugins or pages the <code>$ready</code> variable is checked using
+	<code>$model->check_dependencies()</code>. The variable should always be set.
+</p>
+
+<h3>See also</h3>
+
+<ul>
+	<li>
+		<a href="../concepts/plugin">Plugins</a>
+	</li>
+</ul>

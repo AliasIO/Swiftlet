@@ -155,7 +155,7 @@ switch ( $hook )
 				'pref'    => 'Time zone',
 				'type'    => 'select',
 				'match'   => '/.*/',
-				'options' => serialize($timeZones)
+				'options' => $timeZones
 				));
 		}
 		

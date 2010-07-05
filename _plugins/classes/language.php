@@ -89,7 +89,7 @@ class lang
 					'pref'    => 'Language',
 					'type'    => 'select',
 					'match'   => '/.*/',
-					'options' => serialize($this->languages)
+					'options' => $this->languages
 					));
 			}
 		}

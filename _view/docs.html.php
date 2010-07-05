@@ -17,6 +17,8 @@
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/page"   >Creating pages</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/theme"  >Theming</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/form"   >Forms</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/plugin" >Creating plugins</a></li>
+				<li><a href="<?php echo $view->rootPath ?>docs/guides/ajax"   >AJAX</a></li>
 				<li><a href="<?php echo $view->rootPath ?>docs/guides/faq"    >FAQ</a></li>
 			</ul>
 			

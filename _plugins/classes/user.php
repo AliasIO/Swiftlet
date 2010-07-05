@@ -214,7 +214,12 @@ class user
 	 */
 	function save_pref($params)
 	{
-		$this->model = $this->model;
+		$params = array_merge(array(
+			'pref'    => '',
+			'type'    => 'text',
+			'match'   => '/.*/',
+			'options' => array() 
+			), $params);
 		
 		$this->model->db->sql('
 			INSERT INTO `' . $this->model->db->prefix . 'user_prefs` (
@@ -227,10 +232,10 @@ class user
 				"' . $this->model->db->escape($params['pref'])    . '",
 				"' . $this->model->db->escape($params['type'])    . '",
 				"' . $this->model->db->escape($params['match'])   . '",
-				"' . $this->model->db->escape($params['options']) . '"
+				"' . $this->model->db->escape(serialize($params['options'])) . '"
 				)
 			ON DUPLICATE KEY UPDATE
-				`options` = "' . $this->model->db->escape($params['options']) . '"
+				`options` = "' . $this->model->db->escape(serialize($params['options'])) . '"
 			;');
 	}
 

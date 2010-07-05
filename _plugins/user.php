@@ -240,6 +240,48 @@ switch ( $hook )
 			'test' => 'Deleting a user account <code>/account/</code>.',
 			'pass' => !$model->db->result
 			);
+
+		/**
+		 * Creating a user preference
+		 */
+		$model->user->save_pref(array(
+			'pref'    => 'Unit Test',
+			'type'    => 'text',
+			'match'   => '/.*/'
+			));
+
+		$model->db->sql('
+			SELECT
+				`id`
+			FROM `' . $model->db->prefix . 'user_prefs`
+			WHERE
+				`pref` = "Unit Test"
+			LIMIT 1
+			;', FALSE);
+
+		$params[] = array(
+			'test' => 'Creating a user preference.',
+			'pass' => $model->db->result
+			);
+
+		/**
+		 * Deleting a user preference
+		 */
+		$model->user->delete_pref('Unit Test');
 		
+		$model->db->sql('
+			SELECT
+				`id`
+			FROM `' . $model->db->prefix . 'user_prefs`
+			WHERE
+				`pref` = "Unit Test"
+			LIMIT 1
+			;', FALSE);
+
+		$params[] = array(
+			'test' => 'Deleting a user preference.',
+			'pass' => !$model->db->result
+			);
+
 		break;
 }
