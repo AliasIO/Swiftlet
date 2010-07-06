@@ -137,7 +137,7 @@ class file
 						);
 				}
 
-				imagepng($thumb, $this->contr->rootPath . 'uploads/files/thumbs/' . $filename);
+				imagepng($thumb, $this->contr->rootPath . 'uploads/thumbs/' . $filename);
 			}
 		}
 	}

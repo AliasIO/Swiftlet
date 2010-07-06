@@ -176,7 +176,7 @@ if ( ( int ) $id )
 						unlink($file);
 					}
 
-					if ( is_file($file = $contr->rootPath . 'uploads/files/thumbs/' . $filename) )
+					if ( is_file($file = $contr->rootPath . 'uploads/thumbs/' . $filename) )
 					{
 						unlink($file);
 					}

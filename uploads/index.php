@@ -37,7 +37,7 @@ $model->db->sql('
 
 if ( $model->db->result && $r = $model->db->result[0] )
 {
-	if ( is_file($file = $contr->rootPath . 'uploads/files/' . ( $thumb ? 'thumbs/' : '' ) . $r['filename']) )
+	if ( is_file($file = $contr->rootPath . 'uploads/' . ( $thumb ? 'thumbs/' : 'files/' ) . $r['filename']) )
 	{
 		if ( substr($r['mime_type'], 0, 5) == 'image' )
 		{
