@@ -85,7 +85,7 @@ switch ( $hook )
 
 		break;
 	case 'route':
-		if ( $model->file->ready )
+		if ( !empty($model->file->ready) )
 		{
 			if ( $params['parts'][0] == 'file' )
 			{

@@ -59,7 +59,7 @@ class menu
 
 		if ( $r = $this->model->db->result )
 		{
-			$items = unserialize($r[0]['items']);
+			$items = @unserialize($r[0]['items']);
 
 			if ( is_array($items) )
 			{

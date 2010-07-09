@@ -65,7 +65,7 @@ if ( $model->POST_valid['form-submit'] )
 			}
 			else
 			{
-				$r = $model->user->login($model->POST_raw['username'], $model->POST_raw['password']);
+				$r = $model->user->login($model->POST_html_safe['username'], $model->POST_raw['password']);
 
 				if ( $r )
 				{
@@ -128,7 +128,7 @@ if ( isset($model->GET_raw['notice']) )
 		case 'login':
 			if ( $model->session->get('user id') != user::guestId )
 			{
-				$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->h($model->session->get('user username')));
+				$view->notice = $model->t('Hello %1$s, you are now logged in.', $model->session->get('user username'));
 			}
 
 			break;

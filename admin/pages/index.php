@@ -76,9 +76,9 @@ if ( $model->POST_valid['form-submit'] )
 				{
 					$model->db->sql('
 						UPDATE `' . $model->db->prefix . 'nodes` SET
-							`title`      = "' . $model->POST_db_safe['title']['English US'] . '",
-							`home`       =  ' . ( $model->POST_raw['home'] ? 1 : 0 )        . ',
-							`path`       = "' . $model->POST_db_safe['path']                . '"
+							`title` = "' . $model->POST_db_safe['title']['English US'] . '",
+							`home`  =  ' . ( $model->POST_raw['home'] ? 1 : 0 )        . ',
+							`path`  = "' . $model->POST_db_safe['path']                . '"
 						WHERE
 							`id` = ' . $id . '
 						LIMIT 1
@@ -262,8 +262,8 @@ switch ( $action )
 
 				if ( $r = $model->db->result )
 				{
-					$editLeftId  = $r[0]['left_id'];
-					$editRightId = $r[0]['right_id'];
+					$editLeftId  = ( int ) $r[0]['left_id'];
+					$editRightId = ( int ) $r[0]['right_id'];
 
 					foreach ( $r as $d )
 					{
@@ -271,10 +271,10 @@ switch ( $action )
 						$model->POST_html_safe['body'][$d['lang']]  = $d['body'];
 					}
 
-					$model->POST_html_safe['parent']    = $node['parents'][count($node['parents']) - 1]['id'];
+					$model->POST_html_safe['parent']    = ( int ) $node['parents'][count($node['parents']) - 1]['id'];
 					$model->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
 					$model->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
-					$model->POST_html_safe['path']      = $model->h($r[0]['path']);
+					$model->POST_html_safe['path']      = $r[0]['path'];
 				}
 			}
 		}

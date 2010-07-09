@@ -23,6 +23,23 @@
 	<code>$view</code>
 </p>
 
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>$view-&gt;load ( <em>string</em> $file )</code><br/>
+		Loads a View.
+	</li>
+	<li>
+		<code>$view-&gt;output ( )</code><br/>
+		Output loaded views.
+	</li>
+	<li>
+		<code>$view-&gt;allow_html ( <em>string</em> $v )</code><br/>
+		Decode an HTML entity encoded string.
+	</li>
+</ul>
+
 <h4>Public variables</h4>
 
 <ul>
@@ -65,14 +82,5 @@
 	<li>
 		<code>$view-&gt;inAdmin</code><br/>
 		Used to distinguish between regular and administrative pages.
-	</li>
-</ul>
-
-<h4>Public functions</h4>
-
-<ul>
-	<li>
-		<code>$view-&gt;load ( <em>string</em> $file )</code><br/>
-		Loads a View.
 	</li>
 </ul>

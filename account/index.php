@@ -146,8 +146,8 @@ if ( $model->POST_valid['form-submit'] )
 		{
 			$model->form->errors['username'] = $model->t('Please provide a username');
 		}
-
-		if ( strtolower($model->POST_raw['username']) != strtolower($user['username']) )
+		
+		if ( strtolower($model->POST_html_safe['username']) != strtolower($user['username']) )
 		{
 			$model->db->sql('
 				SELECT
@@ -233,10 +233,10 @@ if ( $model->POST_valid['form-submit'] )
 				$model->db->sql('
 					UPDATE `' . $model->db->prefix . 'users` SET
 						`username`  = "' . $model->db->escape($username) . '",
-						`email`     = "' . $email . '",
-						`owner`     = ' . ( int ) $owner . ',
-						`date_edit` = "' . gmdate('Y-m-d H:i:s') . '",
-						`pass_hash` = "' . $passHash . '"
+						`email`     = "' . $email                        . '",
+						`owner`     =  ' . ( int ) $owner                . ',
+						`date_edit` = "' . gmdate('Y-m-d H:i:s')         . '",
+						`pass_hash` = "' . $passHash                     . '"
 					WHERE
 						`id` = ' . ( int ) $user['id'] . '
 					LIMIT 1
@@ -278,13 +278,13 @@ else
 	/**
 	 * Default form values
 	 */
-	$model->POST_html_safe['username'] = $model->h($user['username']);
-	$model->POST_html_safe['email']    = $model->h($user['email']);
-	$model->POST_html_safe['owner']    = ( int ) ($user['owner']);
+	$model->POST_html_safe['username'] = $user['username'];
+	$model->POST_html_safe['email']    = $user['email'];
+	$model->POST_html_safe['owner']    = ( int ) $user['owner'];
 
 	foreach ( $model->user->prefs as $d )
 	{
-		$model->POST_html_safe['pref-' . $d['id']] = $model->h($user['pref-' . $d['id']]);
+		$model->POST_html_safe['pref-' . $d['id']] = $user['pref-' . $d['id']];
 	}
 }
 
@@ -347,7 +347,7 @@ if ( isset($model->GET_raw['notice']) )
 }
 
 $view->userId       = $user['id'];
-$view->userUsername = $model->h($user['username']);
+$view->userUsername = $user['username'];
 
 if ( $model->session->get('user is owner') )
 {

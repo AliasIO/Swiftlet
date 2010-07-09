@@ -73,14 +73,10 @@ switch ( $hook )
 
 		break;
 	case 'input_sanitize':
-		foreach ( $model->POST_raw as $k => $v )
+		if ( !empty($model->db->ready) )
 		{
-			$model->POST_db_safe[$k] = $model->db->escape($v);
-		}
-
-		foreach ( $model->GET_raw as $k => $v )
-		{
-			$model->GET_db_safe[$k] = $model->db->escape($v);
+			$model->POST_db_safe = $model->db->sanitize($model->POST_raw);
+			$model->GET_db_safe  = $model->db->sanitize($model->GET_raw);
 		}
 
 		break;

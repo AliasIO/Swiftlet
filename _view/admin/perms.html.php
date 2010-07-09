@@ -64,7 +64,7 @@
 	<ul>
 		<?php foreach ( $view->roles as $role ): ?>
 		<li>
-			<h3><?php echo $model->h($model->t($role['name'])) ?></h3>
+			<h3><?php echo $model->t($role['name']) ?></h3>
 
 			<?php if ( $model->perm->check('admin perm edit') || $model->perm->check('admin perm delete') ): ?>
 			<p>
@@ -91,7 +91,7 @@
 								<option value=""><?php echo $model->t('Select a user') ?></option>
 								<?php if ( $view->users ): ?>
 								<?php foreach ( $view->users as $user ): ?>
-								<option value="<?php echo $user['id'] ?>"><?php echo $model->h($user['username']) ?></option>
+								<option value="<?php echo $user['id'] ?>"><?php echo $user['username'] ?></option>
 								<?php endforeach ?>
 								<?php endif ?>
 							</select>
@@ -123,7 +123,7 @@
 			<ul>
 				<?php foreach ( $role['users'] as $user ): ?>
 				<li>
-					<a class="button" href=".?id=<?php echo $role['id'] ?>&user_id=<?php echo $user['id'] ?>&action=remove"><?php echo $model->t('Remove') ?></a>
+					<a class="button caution" href="./?id=<?php echo $role['id'] ?>&user_id=<?php echo $user['id'] ?>&action=remove"><?php echo $model->t('Remove') ?></a>
 					<?php echo $user['username'] ?>
 				</li>
 				<?php endforeach ?>
@@ -147,7 +147,7 @@
 					<tr>
 						<th><?php $model->t('Permission') ?></th>
 						<?php foreach ( $view->roles as $role ): ?>
-						<th><?php echo $model->h($model->t($role['name'])) ?></th>
+						<th><?php echo $model->t($role['name']) ?></th>
 						<?php endforeach ?>
 					</tr>
 				</thead>
@@ -155,7 +155,7 @@
 					<?php foreach ( $view->permsGroups as $group => $perms ): ?>
 					<tr>
 						<th>
-							<strong><?php echo $model->h($model->t($group)) ?></strong>
+							<strong><?php echo $model->t($group) ?></strong>
 						</th>
 						<?php foreach ( $view->roles as $role ): ?>
 						<td><br/></td>
@@ -164,7 +164,7 @@
 					<?php foreach ( $perms as $perm ): ?>
 					<tr>
 						<th>
-							<?php echo $model->h($model->t($perm['desc'])) ?>
+							<?php echo $model->t($perm['desc']) ?>
 						</th>
 						<?php foreach ( $view->roles as $role ): ?>
 						<td>

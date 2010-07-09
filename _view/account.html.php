@@ -120,7 +120,7 @@
 							break;
 						case 'checkbox':
 							?>
-							<input type="checkbox" name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>" value="1" <?php echo $model->POST_html_safe['pref-' . $pref['id']] ? 'checked="checked"' : '' ?>"/>
+							<input type="checkbox" name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>" value="1" <?php echo $model->POST_html_safe['pref-' . $pref['id']] ? 'checked="checked"' : '' ?>/>
 							<?php
 
 							break;

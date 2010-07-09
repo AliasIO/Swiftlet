@@ -356,7 +356,7 @@ class mysql
 	/**
 	 * Escape values for safe database insertion
 	 * @param mixed $v
-	 * @return string $v
+	 * @return mixed $v
 	 */
 	function escape($v)
 	{
@@ -370,6 +370,23 @@ class mysql
 			{
 				return mysql_real_escape_string($v);
 			}
+		}
+	}
+
+	/**
+	 * Sanitize user input
+	 * @params mixed $v
+	 * @return mixed
+	 */
+	function sanitize($v)
+	{
+		if ( is_array($v) )
+		{
+			return array_map(array($this, 'sanitize'), $v);
+		}
+		else
+		{
+			return $this->escape($this->model->h($v));
 		}
 	}
 

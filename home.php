@@ -57,14 +57,6 @@ else
 			);
 	}
 
-	if ( is_dir($contr->rootPath . 'unit_tests') )
-	{
-		$view->notices[] = $model->t(
-			'Please remove the %1$s directory when running in a production environment.',
-			'<a href="' . $view->rootPath . 'unit_tests/"><code>/unit_tests/</code></a>'
-			);
-	}
-
 	if ( !$model->sysPassword )
 	{
 		$view->notices[] = $model->t(

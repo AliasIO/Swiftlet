@@ -67,7 +67,7 @@ class view
 	}
 
 	/*
-	 * Load a View file
+	 * Load a view 
 	 * @param $file
 	 */
 	function load($file)
@@ -76,7 +76,7 @@ class view
 	}
 
 	/*
-	 * Output loaded View files
+	 * Output loaded views 
 	 */
 	function output()
 	{
@@ -95,5 +95,14 @@ class view
 				$model->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`.');
 			}
 		}
+	}
+
+	/*
+	 * Allow HTML
+	 * @param string $v
+	 */
+	function allow_html($v)
+	{
+		return html_entity_decode($v, ENT_QUOTES, 'UTF-8');
 	}
 }

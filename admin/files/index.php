@@ -65,7 +65,7 @@ if ( $model->POST_valid['form-submit'] )
 
 						$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
 
-						$title = $model->POST_valid['title'][$i] ? $model->POST_raw['title'][$i] : basename($_FILES['file']['name'][$i], $extension);
+						$title = $model->POST_valid['title'][$i] ? $model->POST_html_safe['title'][$i] : $model->h(basename($_FILES['file']['name'][$i], $extension));
 
 						$model->db->sql('
 							INSERT INTO `' . $model->db->prefix . 'files` (
@@ -96,7 +96,7 @@ if ( $model->POST_valid['form-submit'] )
 
 						if ( $id = $model->db->result )
 						{
-							$uploads[] = '<a href="' . $model->route('file/' . $id . $extension) . '" onclick="callback(\'' . $model->route('file/' . $id . $extension) . '\');">' . $model->h($title) . '</a>';
+							$uploads[] = '<a href="' . $model->route('file/' . $id . $extension) . '" onclick="callback(\'' . $model->route('file/' . $id . $extension) . '\');">' . $title . '</a>';
 						}
 					}
 					else
@@ -131,7 +131,7 @@ if ( $model->POST_valid['form-submit'] )
 
 		if ( $uploads )
 		{
-			$view->notice = $model->t('The following files have been uploaded:<br/><br/>%1$s', implode('<br/>', $uploads));
+			$view->notice = $model->t('The following files have been uploaded:%1$s', '<br/><br/>' . implode('<br/>', $uploads));
 		}
 	}
 }

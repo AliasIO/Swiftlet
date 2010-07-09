@@ -39,7 +39,7 @@ if ( isset($model->routeParts[1]) )
 	{
 		$view->pageTitle = $d['title'];
 		$view->nodeId    = $d['node_id'];
-		$view->body      = $d['body'];
+		$view->body      = $view->allow_html($d['body']);
 		$view->home      = $d['home'];
 
 		/*

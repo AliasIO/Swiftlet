@@ -65,6 +65,10 @@ if ( $r = $model->db->result )
 		Use to escape strings for safe database insertion. Note that <code>$model->POST_db_safe</code> values are already escaped.
 	</li>
 	<li>
+		<code>$model-&gt;db-&gt;sanitize ( <em>string|array</em> $v )</code><br/>
+		Sanitize user input (make safe for HTML and database insertion).	
+	</li>
+	<li>
 		<code>$model-&gt;db-&gt;query ( <em>string</em> $sql )</code><br/>
 		Use to execute an SQL query.
 	</li>

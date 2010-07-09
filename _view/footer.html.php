@@ -2,7 +2,7 @@
 		</div><!--/#page-->
 
 		<div id="footer">
-			<!-- You may remove this line.. But I appreciate it if you leave it here. :) -->
+			<!-- You are awesome. Thanks for keeping the link! -->
 			<p class="powered-by">Powered by <a href="http://swiftlet.org/">Swiftlet</a></p>
 		</div>
 

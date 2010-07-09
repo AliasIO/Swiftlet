@@ -169,12 +169,12 @@ class node
 					`date_edit`
 					)
 				VALUES (
-					 ' . ( ( int ) $parentNode['left_id'] + 1 ) . ',
-					 ' . ( ( int ) $parentNode['left_id'] + 2 ) . ',
-					"' . $this->model->db->escape($type)        . '",
-					"' . $this->model->db->escape($title)       . '",
-					"' . gmdate('Y-m-d H:i:s')                  . '",
-					"' . gmdate('Y-m-d H:i:s')                  . '"
+					 ' . ( ( int ) $parentNode['left_id'] + 1 )            . ',
+					 ' . ( ( int ) $parentNode['left_id'] + 2 )            . ',
+					"' . $this->model->db->escape($type)                   . '",
+					"' . $this->model->db->escape($this->model->h($title)) . '",
+					"' . gmdate('Y-m-d H:i:s')                             . '",
+					"' . gmdate('Y-m-d H:i:s')                             . '"
 					)
 				;');
 

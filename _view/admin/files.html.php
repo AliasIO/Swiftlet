@@ -110,9 +110,9 @@
 						<?php echo $file['title'] ?>
 					</a>
 				</td>
-				<td><?php echo $file['mime_type'] . ' (' . ltrim(strtoupper($file['extension']), '.') . ')' ?></td>
+				<td><?php echo $model->h($file['mime_type'] . ' (' . ltrim(strtoupper($file['extension']), '.') . ')') ?></td>
 				<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : '' ?></td>
-				<td><?php echo $file['width'] && $file['height'] ? $file['width'] . 'x' . $file['height'] : $model->t('n/a') ?></td>
+				<td><?php echo $file['width'] && $file['height'] ? ( int ) $file['width'] . 'x' . ( int ) $file['height'] : $model->t('n/a') ?></td>
 				<td><?php echo $model->format_date($file['date'], 'date') ?></td>
 				<td>
 					<a class="button caution" href="?id=<?php echo $file['id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>

@@ -37,7 +37,7 @@ if ( $model->POST_valid['form-submit'] )
 	{
 		$items = array();
 
-		foreach ( explode("\n", $model->POST_raw['items']) as $item )
+		foreach ( explode("\n", $model->POST_html_safe['items']) as $item )
 		{
 			if ( trim($item) )
 			{
@@ -117,7 +117,7 @@ $model->db->sql('
 
 if ( $r = $model->db->result )
 {
-	if ( $items = unserialize($r[0]['items']) )
+	if ( $items = @unserialize($r[0]['items']) )
 	{
 		$nodeIds = array();
 		$paths   = array();
@@ -163,7 +163,7 @@ if ( $r = $model->db->result )
 			}
 		}
 
-		$model->POST_html_safe['items'] = $model->h(trim($v));
+		$model->POST_html_safe['items'] = trim($v);
 	}
 }
 

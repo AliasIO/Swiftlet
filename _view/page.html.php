@@ -8,7 +8,7 @@
 	<?php if ( $model->perm->check('admin page edit') || $model->perm->check('admin page delete') ): ?>
 	<ul class="admin-toolbox">
 		<?php if ( $model->perm->check('admin page edit') ): ?>
-		<li><a class="button" href="<?php echo $view->rootPath ?>admin/pages/?action=edit&id=<?php   echo $view->nodeId ?>"><?php echo $model->t('Edit') ?></a></li>
+		<li><a class="button" href="<?php echo $view->rootPath ?>admin/pages/?action=edit&id=<?php echo $view->nodeId ?>"><?php echo $model->t('Edit') ?></a></li>
 		<?php endif ?>
 	</ul>
 	<?php endif ?>

@@ -399,12 +399,12 @@ class model
 	function t($v, $args = '')
 	{
 		$params = array(
-			'string' => $v
+			'string' => $this->h($v)
 			);
 
 		$this->hook('translate', $params);
 
-		return is_array($args) ? vsprintf($params['string'], $args) : sprintf($params['string'], $args);
+		return $args ? ( is_array($args) ? vsprintf($params['string'], $args) : sprintf($params['string'], $args) ) : $v;
 	}
 
 	/**

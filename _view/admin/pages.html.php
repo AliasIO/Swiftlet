@@ -31,7 +31,7 @@
 		<?php foreach ( $view->languages as $i => $language ): ?>
 		<fieldset>
 			<dl>
-				<strong><?php echo $model->h($model->t($language)) ?></strong>
+				<strong><?php echo $model->t($language) ?></strong>
 			</dl>
 			<dl>
 				<dt><label for="title_<?php echo $i ?>"><?php echo $model->t('Title') ?></label></dt>

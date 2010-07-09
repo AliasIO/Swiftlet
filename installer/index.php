@@ -220,15 +220,15 @@ if ( isset($model->GET_raw['notice']) && isset($model->GET_raw['plugins']) )
 	switch ( $model->GET_raw['notice'] )
 	{
 		case 'installed':
-			$view->notice = $model->t('The following plug-in(s) have been successfully installed:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+			$view->notice = $model->t('The following plug-in(s) have been successfully installed:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
 
 			break;
 		case 'upgraded':
-			$view->notice = $model->t('The following plug-in(s) have been successfully upgraded:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+			$view->notice = $model->t('The following plug-in(s) have been successfully upgraded:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
 
 			break;
 		case 'removed':
-			$view->notice = $model->t('The following plug-in(s) have been successfully removed:<br/><br/>%1$s', str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+			$view->notice = $model->t('The following plug-in(s) have been successfully removed:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
 
 			break;
 	}

@@ -478,11 +478,13 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 	display: inline-block;
 	font-size: 11px;
 	line-height: 25px;
+	margin: 1px 0;
 	padding: 0 1em 0 1em;
 	text-decoration: none;
 	text-transform: uppercase;
 	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, .1);
 	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+	white-space: nowrap;
 }
 
 a:hover.button {

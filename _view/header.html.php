@@ -40,7 +40,7 @@
 					<?php if ( !empty($model->header->menu) ): ?>
 					<?php foreach ( $model->header->menu as $item => $path ): ?>
 					<li>
-						<a href="<?php echo $model->h($path) ?>"><?php echo $model->h($model->t($item)) ?></a>
+						<a href="<?php echo $path ?>"><?php echo $model->t($item) ?></a>
 					</li>
 					<?php endforeach ?>
 					<?php endif ?>

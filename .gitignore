@@ -1,2 +1,4 @@
 _config.php
 cache/*
+uploads/files/*
+uploads/thumbs/*

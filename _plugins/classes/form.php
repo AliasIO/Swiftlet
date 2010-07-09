@@ -79,7 +79,7 @@ class form
 
 				if ( $this->model->POST_valid[$var] === FALSE )
 				{
-					$this->errors[$var] = TRUE;
+					$this->errors[$var] = $this->model->t('Invalid value');
 				}
 			}
 		}

@@ -51,6 +51,22 @@ switch ( $hook )
 	case 'remove':
 		if ( in_array($model->db->prefix . 'pages', $model->db->tables) )
 		{
+			// Remove nodes
+			$model->db->sql('
+				SELECT
+					`node_id`
+				FROM `' . $model->db->prefix . 'pages`
+				;');
+
+			if ( $r = $model->db->result )
+			{
+				foreach ( $r as $d )
+				{
+					$model->node->delete($d['node_id']);
+				}
+
+			}
+
 			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'pages`;');
 		}
 

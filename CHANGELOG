@@ -6,6 +6,8 @@
 # No longer using nodes for files
 # Improved routing for nodes
 # Added gZIP compression
+# Added a default message for form errors
+# Store all values safe for HTML by default
 #
 #
 # 1.2.0.B2 - 1.2.0.B3
