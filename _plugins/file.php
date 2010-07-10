@@ -39,7 +39,7 @@ switch ( $hook )
 					INDEX `node_id` (`node_id`),
 					INDEX `image`   (`image`),
 					PRIMARY KEY (`id`)
-					)
+					) TYPE = INNODB
 				;');
 		}
 

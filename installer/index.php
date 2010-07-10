@@ -7,7 +7,7 @@
 
 $contrSetup = array(
 	'rootPath'  => '../',
-	'pageTitle' => 'Plug-in installer'
+	'pageTitle' => 'Plugin installer'
 	);
 
 require($contrSetup['rootPath'] . '_model/init.php');
@@ -20,6 +20,8 @@ $model->form->validate(array(
 	'mode'            => 'string',
 	'form-submit'     => 'bool',
 	));
+
+$authenticated = isset($_SESSION['swiftlet authenticated']);
 
 $view->newPlugins       = array();
 $view->outdatedPlugins  = array();
@@ -94,121 +96,138 @@ else
 {
 	if ( $model->POST_valid['form-submit'] )
 	{
+		/*
+		 * Delay the script to prevent brute-force attacks
+		 */
+		sleep(1);
+
 		if ( $model->form->errors )
 		{
 			$view->error = $model->t('Incorrect system password.');
 		}
-		elseif ( $model->POST_valid['plugin'] && is_array($model->POST_valid['plugin']) )
+		else
 		{
-			if ( $model->POST_raw['mode'] == 'install' ) 
+			if ( $model->POST_raw['mode'] == 'authenticate' )
 			{
-				/**
-				 * Create plug-in versions table
-				 */			
-				if ( !in_array($model->db->prefix . 'versions', $model->db->tables) )
-				{
-					$model->db->sql('
-						CREATE TABLE `' . $model->db->prefix . 'versions` (
-							`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-							`plugin`      VARCHAR(256)     NOT NULL,
-							`version`     VARCHAR(10)      NOT NULL,
-							PRIMARY KEY  (`id`)
-							);
-						');				
-				}
+				$_SESSION['swiftlet authenticated'] = TRUE;
 
-				$pluginsInstalled = array();
-
-				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
-				{
-					if ( isset($view->newPlugins[$pluginName]) && !in_array(0, $view->newPlugins[$pluginName]['dependency_status']) )
-					{
-						$model->pluginsLoaded[$pluginName]->install();
-
-						$model->db->sql('
-							INSERT INTO `' . $model->db->prefix . 'versions` (
-								`plugin`,
-								`version`
-								)
-							VALUES (
-								"' . $model->db->escape($pluginName) . '",
-								"' . $view->newPlugins[$pluginName]['version'] . '"
-								)
-							;');
-
-						$pluginsInstalled[] = $pluginName;
-
-						unset($view->newPlugins[$pluginName]);
-					}
-				}
-
-				if ( $pluginsInstalled )
-				{
-					header('Location: ?notice=installed&plugins=' . implode('|', $pluginsInstalled));
-
-					$model->end();
-				}
+				$authenticated = TRUE;
 			}
-			else if ( $model->POST_raw['mode'] == 'upgrade' )
+			else if ( $authenticated && $model->POST_valid['plugin'] && is_array($model->POST_valid['plugin']) )
 			{
-				$pluginsUpgraded = array();
-
-				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+				switch ( $model->POST_raw['mode'] )
 				{
-					if ( isset($view->outdatedPlugins[$pluginName]) )
-					{
-						$model->pluginsLoaded[$pluginName]->upgrade();
+					case 'install': 
+						/**
+						 * Create plug-in versions table
+						 */			
+						if ( !in_array($model->db->prefix . 'versions', $model->db->tables) )
+						{
+							$model->db->sql('
+								CREATE TABLE `' . $model->db->prefix . 'versions` (
+									`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+									`plugin`      VARCHAR(256)     NOT NULL,
+									`version`     VARCHAR(10)      NOT NULL,
+									PRIMARY KEY (`id`)
+									) TYPE = INNODB
+								;');				
+						}
 
-						$model->db->sql('
-							UPDATE `' . $model->db->prefix . 'versions` SET
-								`version` = "' . $view->outdatedPlugins[$pluginName]['version'] . '"
-							WHERE
-								`plugin` = "' . $pluginName . '"
-							LIMIT 1
-							;');
+						$pluginsInstalled = array();
 
-						$pluginsUpgraded[] = $pluginName;
+						foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+						{
+							if ( isset($view->newPlugins[$pluginName]) && !in_array(0, $view->newPlugins[$pluginName]['dependency_status']) )
+							{
+								$model->pluginsLoaded[$pluginName]->install();
 
-						unset($view->outdatedPlugins[$pluginName]);
-					}
-				}
+								$model->db->sql('
+									INSERT INTO `' . $model->db->prefix . 'versions` (
+										`plugin`,
+										`version`
+										)
+									VALUES (
+										"' . $model->db->escape($pluginName)           . '",
+										"' . $view->newPlugins[$pluginName]['version'] . '"
+										)
+									;');
 
-				if ( $pluginsUpgraded )
-				{
-					header('Location: ?notice=upgraded&plugins=' . implode('|', $pluginsUpgraded));
+								$pluginsInstalled[] = $pluginName;
 
-					$model->end();
-				}
-			}		
-			else if (	$model->POST_raw['mode'] == 'remove' )
-			{
-				$pluginsRemoved = array();
+								unset($view->newPlugins[$pluginName]);
+							}
+						}
 
-				foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
-				{
-					if ( isset($view->installedPlugins[$pluginName]) && !in_array(1, $view->installedPlugins[$pluginName]['required_by_status']) )
-					{
-						$model->db->sql('
-							DELETE
-							FROM `' . $model->db->prefix . 'versions`
-							WHERE
-								`plugin` = "' . $model->db->escape($pluginName) . '"
-							LIMIT 1
-							;');
+						if ( $pluginsInstalled )
+						{
+							header('Location: ?notice=installed&plugins=' . implode('|', $pluginsInstalled));
 
-						$model->pluginsLoaded[$pluginName]->remove();
+							$model->end();
+						}
+						
+						break;
+					case 'upgrade':
+						$pluginsUpgraded = array();
 
-						$pluginsRemoved[] = $pluginName;
+						foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+						{
+							if ( isset($view->outdatedPlugins[$pluginName]) )
+							{
+								$model->pluginsLoaded[$pluginName]->upgrade();
 
-						unset($view->installedPlugins[$pluginName]);
-					}
-				}
+								$model->db->sql('
+									UPDATE `' . $model->db->prefix . 'versions` SET
+										`version` = "' . $view->outdatedPlugins[$pluginName]['version'] . '"
+									WHERE
+										`plugin` = "' . $pluginName . '"
+									LIMIT 1
+									;');
 
-				if ( $pluginsRemoved )
-				{
-					header('Location: ?notice=removed&plugins=' . implode('|', $pluginsRemoved));
+								$pluginsUpgraded[] = $pluginName;
 
-					$model->end();
+								unset($view->outdatedPlugins[$pluginName]);
+							}
+						}
+
+						if ( $pluginsUpgraded )
+						{
+							header('Location: ?notice=upgraded&plugins=' . implode('|', $pluginsUpgraded));
+
+							$model->end();
+						}
+
+						break;
+					case 'remove':
+						$pluginsRemoved = array();
+
+						foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+						{
+							if ( isset($view->installedPlugins[$pluginName]) && !in_array(1, $view->installedPlugins[$pluginName]['required_by_status']) )
+							{
+								$model->db->sql('
+									DELETE
+									FROM `' . $model->db->prefix . 'versions`
+									WHERE
+										`plugin` = "' . $model->db->escape($pluginName) . '"
+									LIMIT 1
+									;');
+
+								$model->pluginsLoaded[$pluginName]->remove();
+
+								$pluginsRemoved[] = $pluginName;
+
+								unset($view->installedPlugins[$pluginName]);
+							}
+						}
+
+						if ( $pluginsRemoved )
+						{
+							header('Location: ?notice=removed&plugins=' . implode('|', $pluginsRemoved));
+
+							$model->end();
+						}
+
+						break;
 				}
 			}
 		}
@@ -233,6 +252,8 @@ if ( isset($model->GET_raw['notice']) && isset($model->GET_raw['plugins']) )
 			break;
 	}
 }
+
+$view->authenticated = $authenticated;
 
 $view->load('installer.html.php');
 

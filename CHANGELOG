@@ -8,6 +8,8 @@
 # Added gZIP compression
 # Added a default message for form errors
 # Store all values safe for HTML by default
+# Using INNODB database engine
+# Added authentication screen to plugin installer
 #
 #
 # 1.2.0.B2 - 1.2.0.B3

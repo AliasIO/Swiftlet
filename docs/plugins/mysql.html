@@ -58,11 +58,11 @@ if ( $r = $model->db->result )
 <ul>
 	<li>
 		<code>$model-&gt;db-&gt;close ( <em>resource</em> $link )</code><br/>
-		Use to close a database connection.
+		Close a database connection.
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;escape ( <em>string|array</em> $v )</code><br/>
-		Use to escape strings for safe database insertion. Note that <code>$model->POST_db_safe</code> values are already escaped.
+		Escape strings for safe database insertion. Note that <code>$model->POST_db_safe</code> values are already escaped.
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;sanitize ( <em>string|array</em> $v )</code><br/>
@@ -70,7 +70,7 @@ if ( $r = $model->db->result )
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;query ( <em>string</em> $sql )</code><br/>
-		Use to execute an SQL query.
+		Execute an SQL query.
 	</li>
 </ul>
 
@@ -83,6 +83,7 @@ if ( $r = $model->db->result )
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;result</code><br/>
-		Returned result from query that was executed last.
+		Returned result from query that was executed last (depending on the type of query this is either an array of returned rows,
+		the id of the last inserted row or the number of affected rows).
 	</li>
 </ul>

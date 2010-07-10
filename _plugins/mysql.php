@@ -31,7 +31,7 @@ switch ( $hook )
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`),
 					INDEX `date_expire` (`date_expire`)
-					)
+					) TYPE = INNODB
 				;');
 		}
 
@@ -45,7 +45,7 @@ switch ( $hook )
 					PRIMARY KEY (`id`),
 					INDEX `query_id` (`query_id`),
 					INDEX `table`    (`table`)
-					)
+					) TYPE = INNODB
 				;');
 		}
 

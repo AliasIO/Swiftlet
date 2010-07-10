@@ -35,7 +35,7 @@ switch ( $hook )
 					`pass_hash`          VARCHAR(128)        NOT NULL,
 					UNIQUE `username` (`username`),
 					PRIMARY KEY (`id`)
-					)
+					) TYPE = INNODB
 				;');
 
 			$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . 'admin');
@@ -77,7 +77,7 @@ switch ( $hook )
 					`options` TEXT                 NULL,
 					UNIQUE `pref` (`pref`),
 					PRIMARY KEY (`id`)
-					)
+					) TYPE = INNODB
 				;');
 		}
 
@@ -91,7 +91,7 @@ switch ( $hook )
 					`value`   VARCHAR(255)     NOT NULL,
 					UNIQUE `user_pref_id` (`user_id`, `pref_id`),
 					PRIMARY KEY (`id`)
-					)
+					) TYPE = INNODB
 				;');
 		}
 

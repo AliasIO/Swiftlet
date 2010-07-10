@@ -39,7 +39,7 @@ switch ( $hook )
 					INDEX `home`       (`home`),
 					INDEX `path`       (`path`),
 					PRIMARY KEY (`id`)
-					)
+					) TYPE = INNODB
 				;');
 
 			$model->db->sql('

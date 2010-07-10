@@ -35,7 +35,7 @@ switch ( $hook )
 					INDEX `node_id`   (`node_id`),
 					INDEX `published` (`published`),
 					PRIMARY KEY (`id`)
-					)
+					) TYPE = MyISAM
 				;');
 		}
 

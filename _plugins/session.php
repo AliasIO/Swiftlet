@@ -31,7 +31,7 @@ switch ( $hook )
 					`date_expire` DATETIME         NOT NULL,
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`)
-					)
+					) TYPE = INNODB
 				;');
 		}
 

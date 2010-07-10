@@ -25,7 +25,7 @@ switch ( $hook )
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'menu` (
 					`items` TEXT NULL
-					)
+					) TYPE = INNODB
 				;');
 			
 			$model->db->sql('

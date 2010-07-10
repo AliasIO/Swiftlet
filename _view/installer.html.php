@@ -9,14 +9,14 @@
 	<p class="message notice"><?php echo $view->notice ?></p>
 	<?php endif ?>
 
+	<?php if ( $view->authenticated ): ?>
 	<p>
-		<?php echo $model->t('Select the plug-ins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
+		<?php echo $model->t('Select the plugins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
 	</p>
 
 	<h2><?php echo $model->t('Install') ?></h2>
 
 	<?php if ( $view->newPlugins ): ?>
-
 	<form id="formInstaller" method="post" action="./">
 		<fieldset>
 			<?php foreach ( $view->newPlugins as $plugin => $v ): ?>
@@ -36,7 +36,7 @@
 						<?php echo $model->t('Depends on') ?>:
 						
 						<?php foreach ( $v['dependency_status'] as $dependency => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $model->t('Ready') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $model->t('Not ready') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
+						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $model->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $model->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
 						<?php endforeach ?>
 					</em>
 					<?php endif ?>
@@ -75,17 +75,14 @@
 		/* ]]> */ -->
 	</script>
 	<?php else: ?>
-
 	<p>
-		<em><?php echo $model->t('There are no plug-ins to be installed.') ?></em>
+		<em><?php echo $model->t('There are no plugins to be installed.') ?></em>
 	</p>
-
 	<?php endif ?>
 
 	<h2><?php echo $model->t('Upgrade') ?></h2>
 
 	<?php if ( $view->outdatedPlugins ): ?>
-
 	<form id="formLogin" method="post" action="./">
 		<fieldset>
 			<?php foreach ( $view->outdatedPlugins as $plugin => $v ): ?>
@@ -134,18 +131,18 @@
 			</dl>
 		</fieldset>
 	</form>
-
 	<?php else: ?>
-
 	<p>
-		<em><?php echo $model->t('There are no plug-ins to be upgraded.') ?></em>
+		<em><?php echo $model->t('There are no plugins to be upgraded.') ?></em>
 	</p>
-
 	<?php endif ?>
 
 	<h2><?php echo $model->t('Remove') ?></h2>
 
 	<?php if ( $view->installedPlugins ): ?>
+	<p>
+		<?php echo $model->t('Removing a plugin will <em>permanently remove all data</em> associated with it. Backup your database first!') ?>
+	</p>
 
 	<form id="formInstaller" method="post" action="./">
 		<fieldset>
@@ -166,7 +163,7 @@
 						<?php echo $model->t('Required by') ?>:
 
 						<?php foreach ( $v['required_by_status'] as $requiredBy => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $model->t('Ready') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $model->t('Not ready') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
+						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $model->t('Active') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $model->t('Not active') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
 						<?php endforeach ?>
 					</em>
 					<?php endif ?>
@@ -197,12 +194,40 @@
 			</dl>
 		</fieldset>
 	</form>
+	<?php else: ?>
+	<p>
+		<em><?php echo $model->t('There are no plugins to be removed.') ?></em>
+	</p>
+	<?php endif ?>
 
 	<?php else: ?>
-
 	<p>
-		<em><?php echo $model->t('There are no plug-ins to be removed.') ?></em>
+		<?php echo $model->t('Please authenticate with the system password (stored in %1$s).', '<code>/_config.php</code>') ?>
 	</p>
 
+	<form id="formLogin" method="post" action="./">
+		<fieldset>
+			<dl>
+				<dt>
+					<label for="system_password"><?php echo $model->t('system password') ?></label>
+				</dt>
+				<dd>
+					<input type="password" name="system-password" id="system-password-3"/>
+				</dd>
+			</dl>
+		</fieldset>
+		<fieldset>
+			<dl>
+				<dt><br/></dt>
+				<dd>
+					<input type="hidden" name="mode" value="authenticate"/>
+
+					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
+
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Authenticate') ?>"/>
+				</dd>
+			</dl>
+		</fieldset>
+	</form>
 	<?php endif ?>
 </div>
