@@ -7,7 +7,7 @@
 
 $contrSetup = array(
 	'rootPath'  => '../',
-	'pageTitle' => ( isset($_GET['logout']) ? 'Logout' : 'Login' )
+	'pageTitle' => ( isset($_GET['logout']) ? 'Log out' : 'Log in' )
 	);
 
 require($contrSetup['rootPath'] . '_model/init.php');
@@ -25,7 +25,7 @@ if ( isset($model->GET_raw['logout']) )
 {
 	if ( !$model->POST_valid['confirm'] )
 	{
-		$model->confirm($model->t('Do you want to logout?'));
+		$model->confirm($model->t('Do you want to log out?'));
 	}
 	else
 	{
@@ -61,7 +61,7 @@ if ( $model->POST_valid['form-submit'] )
 		{
 			if ( strtotime($r['date_login_attempt']) > gmmktime() - 3 )
 			{
-				$view->error = $model->t('Only one login attempt per 3 seconds allowed, please try again.');
+				$view->error = $model->t('Only one log in attempt per 3 seconds allowed, please try again.');
 			}
 			else
 			{
@@ -100,7 +100,7 @@ if ( $model->POST_valid['form-submit'] )
 
 if ( isset($model->GET_raw['ref']) && empty($view->error) )
 {
-	$view->notice = $model->t('Please login with an authenticated account.');
+	$view->notice = $model->t('Please log in with an authenticated account.');
 }
 
 if ( $model->session->get('user id') == user::guestId )

@@ -86,7 +86,7 @@ class menu
 							`id` IN (' . implode(', ', $nodeIds) . ')
 						LIMIT ' . count($nodeIds) .'
 						;');
-					
+
 					if ( $r = $this->model->db->result )
 					{
 						foreach ( $r as $d )
@@ -98,7 +98,7 @@ class menu
 						}
 					}
 				}
-				
+
 				foreach ( $items as $item )
 				{
 					if ( ( in_array($item['node_id'], $nodeIds) && isset($nodes[$item['node_id']]) ) || !in_array($item['node_id'], $nodeIds) )
@@ -106,7 +106,7 @@ class menu
 						$path  = $item['path']  ? $item['path']  : ( !empty($nodes[$item['node_id']]['path'])  ? $nodes[$item['node_id']]['path']  : '' );
 						$title = $item['title'] ? $item['title'] : ( !empty($nodes[$item['node_id']]['title']) ? $nodes[$item['node_id']]['title'] : $item['path'] );
 
-						if ( !preg_match('/^http:\/\//', $path) )
+						if ( !preg_match('/^[a-z]+:\/\//', $path) )
 						{
 							$path = $this->view->rootPath . $path;
 						}

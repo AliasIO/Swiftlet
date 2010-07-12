@@ -3,7 +3,17 @@
 <p><code>/_plugins/file.php</code></p>
 
 <p>
-	TODO
+	This plugin is mainly used by the <code>/admin/files/</code> controller to create thumbnails for
+	uploaded images.
+</p>
+
+<p>
+	Uploaded files are stored in the <code>/uploads/files/</code> directory. Generated thumbnails
+	are stored in <code>/uploads/thumbs/</code>
+</p>
+
+<p>
+	The <code>/uploads/</code> folder and sub-folders need to be writable.
 </p>
 
 <h3>Class</h3>
@@ -17,6 +27,6 @@
 <ul>
 	<li>
 		<code>$model-&gt;file-&gt;thumb ( <em>string</em> $filename, <em>string</em> $mimeType, <em>string</em> $width, <em>string</em> $height )</code><br/>
-		Create a thumbnail of an uploaded image. Thumbnails are stored in <code>/file/uploads/thumbs/</code>.
+		Creates a thumbnail of an uploaded image. Thumbnails are stored in <code>/file/uploads/thumbs/</code>.
 	</li>
 </ul>

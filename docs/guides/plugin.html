@@ -1,7 +1,7 @@
 <h2>Creating plugins</h2>
 
 <p>
-	Swiftlet is very modular by design. Almost all of it's functionality can be replaced or extended with plugins.	
+	Swiftlet is very modular by design. Almost all of it's functionality can be replaced or extended with plugins.
 </p>
 
 <p>
@@ -25,7 +25,7 @@ switch ( $hook )
 			'hooks'      => array('init' => 1)
 			);
 
-		break;	
+		break;
 	case 'init':
 		$view->load('example.html.php');
 
@@ -129,12 +129,12 @@ switch ( $hook )
 <?php
 if ( !isset($model) ) die('Direct access to this file is not allowed');
 
-class example 
+class example
 {
 	public
 		$ready
 		;
-	
+
 	function __construct($model)
 	{
 		$this->ready = TRUE;
@@ -150,7 +150,7 @@ class example
 
 <p>
 	If the plugin is required by other plugins or pages the <code>$ready</code> variable is checked using
-	<code>$model->check_dependencies()</code>. The variable should always be set.
+	<code>$model-&gt;check_dependencies()</code>. The variable should always be set.
 </p>
 
 <h3>See also</h3>

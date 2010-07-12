@@ -3,13 +3,21 @@
 <p><code>/_plugins/menu.php</code></p>
 
 <p>
-	TODO
+	This plugin returns items of the main menu. By default the main menu appears at the top of the website,
+	in the header.
+</p>
+
+<p>
+	Custom menu items can be managed at <code>/admin/menu/</code>. To add a menu item, add a relative path
+	(from the website root, e.g. <em>node/21</em>) or a URL on a separate line in the text area. If the path
+	links to a node the node's title will automatically appear in the menu. To use a custom title, use
+	<em>Title|path</em> (e.g. <em>Example|http://example.com</em>).
 </p>
 
 <h3>Class</h3>
 
 <p>
-	<code>$model->menu</code>
+	<code>$model-&gt;menu</code>
 </p>
 
 <h4>Public functions</h4>
@@ -19,4 +27,11 @@
 		<code>$model-&gt;menu-&gt;get_items ( )</code><br/>
 		Returns a list of menu items.
 	</li>
+</ul>
+
+<h3>See also</h3>
+
+<ul>
+	<li><a href="./page">Page (plugin)</a></li>
+	<li><a href="./node">Node (plugin)</a></li>
 </ul>

@@ -84,13 +84,13 @@ if ( isset($model->db) )
 
 ksort($view->newPlugins);
 
-if ( empty($model->db->ready) )
-{
-	$view->error = $model->t('No database connected (required). You may need to change the database settings in %1$s.', '<code>/_config.php</code>');
-}
-elseif ( !$model->sysPassword )
+if ( !$model->sysPassword )
 {
 	$view->error = $model->t('%1$s has no value in %2$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
+}
+elseif ( empty($model->db->ready) )
+{
+	$view->error = $model->t('No database connected (required). You may need to change the database settings in %1$s.', '<code>/_config.php</code>');
 }
 else
 {

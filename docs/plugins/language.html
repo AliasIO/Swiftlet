@@ -3,12 +3,12 @@
 <p><code>/_plugins/language.php</code></p>
 
 <p>
-	Plug-in to handle translations. This plug-in hooks into to the 'translate' <a href="../concepts/hook.html">hook</a> and can be called
+	Plugin to handle translations. This plugin hooks into to the <em>translate</em> <a href="../concepts/hook.html">hook</a> and can be called
 	with <code>$model-&gt;t()</code>.
 </p>
 
 <p>
-	Language files are placed in the <code>/lang/</code> directory. Each language has it's own directory named after the
+	Language files are placed in the <code>/lang/</code> directory. Each language has its own directory named after the
 	language with as many files as needed.
 </p>
 
@@ -47,15 +47,15 @@ $translation = array(
 <ul>
 	<li>
 		<code>$model-&gt;lang-&gt;check_languages ( )</code><br/>
-		Scan the <code>/lang/</code> directory for installed languages. 
+		Scans the <code>/lang/</code> directory for installed languages.
 	</li>
 	<li>
 		<code>$model-&gt;lang-&gt;load ( )</code><br/>
-		Load a language file.
+		Loads a language file.
 	</li>
 	<li>
 		<code>$model-&gt;lang-&gt;translate ( <em>string</em> $v )</code><br/>
-		Translate a string (this function should not be called directly, use <code>$model->t()</code> instead.
+		Translates a string (this function should not be called directly, use <code>$model-&gt;t()</code> instead.
 	</li>
 </ul>
 

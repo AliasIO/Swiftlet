@@ -37,12 +37,12 @@ class lang
 		$this->contr = $model->contr;
 
 		$this->check_languages();
-		
+
 		if ( !empty($model->session->ready) )
 		{
 			if ( $d = $model->session->get('pref_values') )
 			{
-				if ( isset($d['Language']) )
+				if ( !empty($d['Language']) )
 				{
 					$this->language = $d['Language'];
 				}

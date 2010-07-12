@@ -78,7 +78,7 @@ switch ( $hook )
 		break;
 	case 'init':
 		if ( !empty($model->db->ready) && !empty($model->node->ready) )
-		{		
+		{
 			require($contr->classPath . 'page.php');
 
 			$model->page = new page($model);
@@ -191,7 +191,7 @@ switch ( $hook )
 
 		/**
 		 * Deleting a page
-		 *//*
+		 */
 		if ( $page['node_id'] )
 		{
 			$post = array(
@@ -219,7 +219,7 @@ switch ( $hook )
 		$params[] = array(
 			'test' => 'Deleting a page in <code>/admin/pages/</code>.',
 			'pass' => !$model->db->result
-			);*/
-		
+			);
+
 		break;
 }

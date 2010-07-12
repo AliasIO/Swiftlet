@@ -37,7 +37,7 @@ $model->end();
 
 <ul>
 	<li>
-		<code>rootPath</code> (required)<br/>		
+		<code>rootPath</code> (required)<br/>
 		Relative path to the root, i.e. <code>./</code> or <code>../../</code>. The root path can not be empty, and should never be
 		set to <code>/</code> (this defeats the purpose of the root path and can break the installation if it's moved to another
 		directory).
@@ -55,11 +55,11 @@ $model->end();
 		Keywords relevant to the contents of the page (for search engine optimization).
 	</li>
 	<li>
-		<code>inAdmin</code><br/>		
+		<code>inAdmin</code><br/>
 		Used for administrative pages.
 	</li>
 	<li>
-		<code>standAlone</code><br/>		
+		<code>standAlone</code><br/>
 		If set to <code>TRUE</code> the "header" and "footer" hooks will be excluded.
 	</li>
 </ul>
@@ -72,7 +72,7 @@ $model->end();
 <p>After <code>$contrSetup</code> the <code>/_model/init.php</code> file needs to be included.</p>
 
 <p>
-	<code>$model->check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
+	<code>$model-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
 	an error message will be displayed.
 </p>
 

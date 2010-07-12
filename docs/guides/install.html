@@ -2,18 +2,29 @@
 
 <p>
 	Installing Swiftlet is as easy as extracting the archive and putting the files on your web server. Browse
-	to the Swiftlet directory in your browser and you should be greeted with a welcome message.	
+	to the Swiftlet directory in your browser and you should be greeted with a welcome message.
 </p>
 
 <p>
 	The next step is the create a configuration file by copying <code>/_config.default.php</code> to
-	<code>/_config.php</code>. Review the new file and make changes if desired.
+	<code>/_config.php</code>. Review the new file and make changes if desired (see
+	<a href="./config">Configuration</a>).
 </p>
 
 <p>
 	If you configured a database in <code>/_config.php</code> you can now active some or all of the bundled
 	plugins that require installation by going to <code>/installer/</code>.
 </p>
+
+<p>
+	The following folders (including its files and sub-folders) should be made writable:
+</p>
+
+<ul>
+	<li><code>/cache/</code></li>
+	<li><code>/log/</code></li>
+	<li><code>/uploads/</code></li>
+</ul>
 
 <h3>Prerequisites</h3>
 
@@ -25,3 +36,9 @@
 <p>
 	A MySQL database server is optional but required by some plugins.
 </p>
+
+<h3>See also</h3>
+
+<ul>
+	<li><a href="./config">Configuration</a></li>
+</ul>

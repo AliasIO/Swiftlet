@@ -47,12 +47,12 @@ $model->end();
 </p>
 
 <p>
-	Now you can load the View file with <code>$view->load()</code>. This file will contain all the HTML and other UI elements. This way
+	Now you can load the View file with <code>$view-&gt;load()</code>. This file will contain all the HTML and other UI elements. This way
 	logic is separated from design which will make it easier to maintain.
 </p>
 
 <p>
-	Finally you need to call <code>$model->end()</code> to finalize the request. This will make sure database connections are closed,
+	Finally you need to call <code>$model-&gt;end()</code> to finalize the request. This will make sure database connections are closed,
 	sessions are saved and output is sent to the browser.
 </p>
 
@@ -66,5 +66,5 @@ $model->end();
 	<li><a href="../concepts/model"     >Model</a></li>
 	<li><a href="../concepts/controller">Controllers</a></li>
 	<li><a href="../concepts/view"      >Views</a></li>
-	<li><a href="../plugins/page"       >Page (plug-in)</a></li>
+	<li><a href="../plugins/page"       >Page (plugin)</a></li>
 </ul>

@@ -5,6 +5,7 @@
 	<p class="message error"><?php echo $view->error ?></p>
 	<?php endif ?>
 
+	<?php if ( isset($view->body) ): ?>
 	<?php if ( $model->perm->check('admin page edit') || $model->perm->check('admin page delete') ): ?>
 	<ul class="admin-toolbox">
 		<?php if ( $model->perm->check('admin page edit') ): ?>
@@ -13,7 +14,6 @@
 	</ul>
 	<?php endif ?>
 
-	<?php if ( isset($view->body) ): ?>
 	<?php if ( $view->parents ): ?>
 	<ul class="crumbs">
 		<?php foreach ( $view->parents as $path => $title ): ?>

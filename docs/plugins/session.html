@@ -4,7 +4,7 @@
 
 <p>
 	This plug-in manages user session data and can be used to temporarily store preferences and other information. This plug-in
-	requires a database and depends on the <a href="?mysql">MySQL</a> (or any other database) plug-in. 
+	requires a database and depends on the <a href="?mysql">MySQL</a> (or any other database) plug-in.
 </p>
 
 <h3>Class</h3>
@@ -18,20 +18,20 @@
 <ul>
 	<li>
 		<code>$model-&gt;session-&gt;get ( <em>string</em> $k [, <em>string</em> $default ] )</code><br/>
-		Use to retrieve a session value (e.g. <code>$model->session->get('user id')</code>). If no value is set,
+		Retrieves a session value (e.g. <code>$model-&gt;session-&gt;get('user id')</code>). If no value is set,
 		<code>$default</code> is returned (optional).
 	</li>
 	<li>
 		<code>$model-&gt;session-&gt;put ( <em>string|array</em> $k [, <em>string</em> $v ] )</code><br/>
-		Use to create or update a session value.
+		Creates or updates a session value.
 	</li>
 	<li>
 		<code>$model-&gt;session-&gt;reset ( )</code><br/>
-		Use to clear all session values.
+		Clears all session values.
 	</li>
 	<li>
 		<code>$model-&gt;session-&gt;end ( )</code><br/>
-		Use to store the session in the database and set a session cookie ("sw_session").
+		Stores the session in the database and set a session cookie ("sw_session").
 	</li>
 </ul>
 

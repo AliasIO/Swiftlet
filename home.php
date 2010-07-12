@@ -71,7 +71,7 @@ else
 	if ( empty($model->db->ready) )
 	{
 		$view->notices[] = $model->t(
-			'No database connected (required for some plug-ins). You may need to change the database settings in %s.',
+			'No database connected (required for some plugins). You may need to change the database settings in %s.',
 			'<code>/_config.php</code>'
 			);
 	}

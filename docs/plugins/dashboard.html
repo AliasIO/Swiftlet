@@ -8,7 +8,7 @@
 </p>
 
 <p>
-	This plugin comes with an additional <a href="../concepts/hook">hook</a> for other plugins to hook into. 
+	This plugin comes with an additional <a href="../concepts/hook">hook</a> for other plugins to hook into.
 </p>
 
 <h5>Example</h5>
@@ -27,7 +27,7 @@ switch ( $hook )
 			'hooks'      => array('dashboard' => 1)
 			);
 
-		break;	
+		break;
 	case 'dashboard':
 		$params[] = array(
 			'name'        => 'Example',
@@ -43,5 +43,28 @@ switch ( $hook )
 </pre>
 
 <p>
-	TODO
+	To add a link to the dashboard, use the <em>dashboard</em> hook with the following parameters:
 </p>
+
+<ul>
+	<li>
+		<code>name</code><br/>
+		The name of link as shown on the dashboard.
+	</li>
+	<li>
+		<code>description</code><br/>
+		A brief description of the link, ideally not more than a few words.
+	</li>
+	<li>
+		<code>group</code><br/>
+		Links using the same group name a grouped together.
+	</li>
+	<li>
+		<code>path</code><br/>
+		Path of the link, relative to the root of the website.
+	</li>
+	<li>
+		<code>perm</code><br/>
+		Links will only be shown if the user has the right permission.
+	</li>
+</ul>

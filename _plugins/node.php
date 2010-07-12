@@ -24,20 +24,20 @@ switch ( $hook )
 		{
 			$model->db->sql('
 				CREATE TABLE `' . $model->db->prefix . 'nodes` (
-					`id`         INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
-					`left_id`    INT(10)    UNSIGNED NOT NULL,
-					`right_id`   INT(10)    UNSIGNED NOT NULL,
-					`type`       VARCHAR(255)        NOT NULL,
-					`title`      VARCHAR(255)        NOT NULL,
-					`home`       TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-					`path`       VARCHAR(255)        NOT NULL,
-					`date`       DATETIME            NOT NULL,
-					`date_edit`  DATETIME            NOT NULL,
-					INDEX `left_id`    (`left_id`),
-					INDEX `right_id`   (`right_id`),
-					INDEX `type`       (`type`),
-					INDEX `home`       (`home`),
-					INDEX `path`       (`path`),
+					`id`        INT(10)      UNSIGNED NOT NULL AUTO_INCREMENT,
+					`left_id`   INT(10)      UNSIGNED NOT NULL,
+					`right_id`  INT(10)      UNSIGNED NOT NULL,
+					`type`      VARCHAR(255)          NOT NULL,
+					`title`     VARCHAR(255)          NOT NULL,
+					`home`      TINYINT(1)   UNSIGNED NOT NULL DEFAULT 0,
+					`path`      VARCHAR(255)          NOT NULL,
+					`date`      DATETIME              NOT NULL,
+					`date_edit` DATETIME              NOT NULL,
+					INDEX `left_id`  (`left_id`),
+					INDEX `right_id` (`right_id`),
+					INDEX `type`     (`type`),
+					INDEX `home`     (`home`),
+					INDEX `path`     (`path`),
 					PRIMARY KEY (`id`)
 					) TYPE = INNODB
 				;');
@@ -72,9 +72,9 @@ switch ( $hook )
 		break;
 	case 'init':
 		if ( !empty($model->db->ready) )
-		{		
+		{
 			require($contr->classPath . 'node.php');
-			
+
 			$model->node = new node($model);
 		}
 

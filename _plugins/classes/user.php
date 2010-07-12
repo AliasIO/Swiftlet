@@ -52,7 +52,7 @@ class user
 					$model->db->sql('
 						SELECT
 							*
-						FROM `' . $model->db->prefix . 'user_prefs' . '`							
+						FROM `' . $model->db->prefix . 'user_prefs' . '`
 						;');
 
 					if ( $r = $model->db->result )
@@ -133,7 +133,7 @@ class user
 	function logout()
 	{
 		$this->model = $this->model;
-		
+
 		$this->model->session->reset();
 		$this->model->session->end();
 	}
@@ -161,7 +161,7 @@ class user
 		{
 			$salt     = substr($r['pass_hash'], 0, 64);
 			$passHash = $salt . $password;
-	
+
 			for ( $i = 0; $i < 100000; $i ++ )
 			{
 				$passHash = hash('sha256', $passHash);
@@ -171,7 +171,7 @@ class user
 
 			if ( $passHash == $r['pass_hash'] )
 			{
-				$passHash = $this->make_pass_hash($username, $password); 
+				$passHash = $this->make_pass_hash($username, $password);
 
 				$this->model->db->sql('
 					UPDATE `' . $this->model->db->prefix . 'users` SET
@@ -180,7 +180,7 @@ class user
 						`username` = "' . $this->model->db->escape($username) . '"
 					LIMIT 1
 					;');
-				
+
 				return true;
 			}
 		}
@@ -196,13 +196,13 @@ class user
 	{
 		$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . strtolower($username));
 		$passHash = $salt . $password;
-		
+
 		// Let's slow things down by hashing it a bunch of times
 		for ( $i = 0; $i < 100000; $i ++ )
 		{
 			$passHash = hash('sha256', $passHash);
 		}
-		
+
 		$passHash = $salt . $passHash;
 
 		return $passHash;
@@ -218,9 +218,9 @@ class user
 			'pref'    => '',
 			'type'    => 'text',
 			'match'   => '/.*/',
-			'options' => array() 
+			'options' => array()
 			), $params);
-		
+
 		$this->model->db->sql('
 			INSERT INTO `' . $this->model->db->prefix . 'user_prefs` (
 				`pref`,
@@ -296,7 +296,7 @@ class user
 	function get_pref_values($userId)
 	{
 		$this->model = $this->model;
-		
+
 		$prefs = array();
 
 		if ( ( int ) $userId )
@@ -319,7 +319,7 @@ class user
 				}
 			}
 		}
-		
+
 		return $prefs;
 	}
 }

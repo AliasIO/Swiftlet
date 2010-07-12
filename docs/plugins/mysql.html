@@ -9,7 +9,7 @@
 <h3>SQL queries</h3>
 
 <p>
-	Use <code>$model->db->sql()</code> to execute SQL queries and <code>$model->db->result</code> to access
+	Use <code>$model-&gt;db-gt;sql()</code> to execute SQL queries and <code>$model-&gt;db-&gt;result</code> to access
 	the result. The type of result depends on the type of query:
 </p>
 
@@ -58,19 +58,19 @@ if ( $r = $model->db->result )
 <ul>
 	<li>
 		<code>$model-&gt;db-&gt;close ( <em>resource</em> $link )</code><br/>
-		Close a database connection.
+		Closes a database connection.
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;escape ( <em>string|array</em> $v )</code><br/>
-		Escape strings for safe database insertion. Note that <code>$model->POST_db_safe</code> values are already escaped.
+		Escapes strings for safe database insertion and HTML. Note that <code>$model-&gt;POST_db_safe</code> values are already escaped.
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;sanitize ( <em>string|array</em> $v )</code><br/>
-		Sanitize user input (make safe for HTML and database insertion).	
+		Sanitizes user input (make safe for HTML and database insertion).
 	</li>
 	<li>
 		<code>$model-&gt;db-&gt;query ( <em>string</em> $sql )</code><br/>
-		Execute an SQL query.
+		Executes an SQL query.
 	</li>
 </ul>
 

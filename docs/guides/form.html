@@ -1,7 +1,7 @@
 <h2>Forms</h2>
 
 <p>
-	Forms are used to handle user input. 
+	Forms are used to handle user input.
 </p>
 
 <h5>Example</h5>
@@ -43,7 +43,7 @@
 	be processed and an error message is displayed.
 </p>
 
-<p>	
+<p>
 	Include the following line when creating forms that are send as POST:
 </p>
 
@@ -56,7 +56,7 @@
 <p>
 	Information send as GET does not require an authentication token to verify its integrity and can therefore not be trusted.
 	When using a link to perform administrative tasks (e.g. <code>?id=1&amp;action=delete</code> to delete a page)
-	confirmation should be requested from the user using <code>$model->confirm()</code>. The request is then resubmitted using POST.
+	confirmation should be requested from the user using <code>$model-&gt;confirm()</code>. The request is then resubmitted using POST.
 </p>
 
 <h5>Example</h5>
@@ -81,8 +81,8 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 </pre>
 
 <p>
-	The <code>$model->confirm()</code> function terminates the code and displays a form to the user with an option to either
-	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$model->POST_valid['confirm']</code> is set
+	The <code>$model-&gt;confirm()</code> function terminates the code and displays a form to the user with an option to either
+	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$model-&gt;POST_valid['confirm']</code> is set
 	to <code>TRUE</code> (this requires the <a href="../plugins/form">Form</a> plugin).
 </p>
 
@@ -93,26 +93,27 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 <h5>Safe for HTML</h5>
 
 <ul>
-	<li><code>$model->GET_html_safe</code></li>
-	<li><code>$model->POST_html_safe</code></li>
+	<li><code>$model-&gt;GET_html_safe</code></li>
+	<li><code>$model-&gt;POST_html_safe</code></li>
 </ul>
 
 <h5>Safe for database insertion (requires a database plug-in)</h5>
 
 <ul>
-	<li><code>$model->GET_db_safe</code></li>
-	<li><code>$model->POST_db_safe</code></li>
+	<li><code>$model-&gt;GET_db_safe</code></li>
+	<li><code>$model-&gt;POST_db_safe</code></li>
 </ul>
 
 <h5>Unfiltered (and unsafe!)</h5>
 
 <ul>
-	<li><code>$model->GET_raw</code></li>
-	<li><code>$model->POST_raw</code></li>
+	<li><code>$model-&gt;GET_raw</code></li>
+	<li><code>$model-&gt;POST_raw</code></li>
 </ul>
 
 <h3>See also</h3>
 
 <ul>
-	<li><a href="../plugins/form">Form (plug-in)</a></li>
+	<li><a href="../plugins/form">Form (plugin)</a></li>
+	<li><a href="./ajax">AJAX</a></li>
 </ul>

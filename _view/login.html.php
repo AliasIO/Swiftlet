@@ -30,7 +30,7 @@
 				<dd>
 					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Login') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Log in') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
