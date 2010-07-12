@@ -11,15 +11,15 @@ $contrSetup = array(
 	'pageTitle' => 'Hello world'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db')); // Use if database access is needed
+$app->check_dependencies(array('db')); // Use if database access is needed
 
 $view->hello = 'Hello world!';
 
 $view->load('index.html.php');
 
-$model->end();
+$app->end();
 ?>
 </pre>
 
@@ -69,14 +69,14 @@ $model->end();
 	<code>$contr-&gt;rootPath</code>).
 </p>
 
-<p>After <code>$contrSetup</code> the <code>/_model/init.php</code> file needs to be included.</p>
+<p>After <code>$contrSetup</code> the <code>/init.php</code> file needs to be included.</p>
 
 <p>
-	<code>$model-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
+	<code>$app-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
 	an error message will be displayed.
 </p>
 
-<p>At the end of the Controller, the <code>$model-&gt;end()</code> function need to be called.</p>
+<p>At the end of the Controller, the <code>$app-&gt;end()</code> function need to be called.</p>
 
 <h3>Class</h3>
 

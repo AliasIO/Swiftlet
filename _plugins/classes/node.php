@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($this->model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->app) ) die('Direct access to this file is not allowed');
 
 /**
  * Nodes
@@ -24,38 +24,38 @@ class node
 	private
 		$paths = array(),
 
-		$model,
+		$app,
 		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize nodes
-	 * @param object $this->model
+	 * @param object $this->app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
 			/**
 			 * Check if the nodes table exists
 			 */
-			if ( in_array($model->db->prefix . 'nodes', $model->db->tables) )
+			if ( in_array($app->db->prefix . 'nodes', $app->db->tables) )
 			{
-				$model->db->sql('
+				$app->db->sql('
 					SELECT
 						`id`,
 						`path`
-					FROM `' . $model->db->prefix . 'nodes`
+					FROM `' . $app->db->prefix . 'nodes`
 					WHERE
 						`path` != ""
 					;');
 
-				if ( $r = $model->db->result )
+				if ( $r = $app->db->result )
 				{
 					foreach ( $r as $d )
 					{
@@ -84,23 +84,23 @@ class node
 
 		if ( $nodeId )
 		{
-			$this->model->db->sql('
+			$this->app->db->sql('
 				SELECT
 					`type`
-				FROM `' . $this->model->db->prefix . 'nodes`
+				FROM `' . $this->app->db->prefix . 'nodes`
 				WHERE
 					`id` = ' . ( int ) $nodeId . '
 				LIMIT 1
 				;');
 
-			if ( $r = $this->model->db->result )
+			if ( $r = $this->app->db->result )
 			{
 				$params = array(
 					'type' => $r['0']['type'],
 					'path' => ''
 					);
 
-				$this->model->hook('display_node', $params);
+				$this->app->hook('display_node', $params);
 
 				if ( $params['path'] )
 				{
@@ -129,38 +129,38 @@ class node
 			return FALSE;
 		}
 
-		$this->model->db->sql('
+		$this->app->db->sql('
 			SELECT
 				`left_id`,
 				`right_id`
-			FROM `' . $this->model->db->prefix . 'nodes`
+			FROM `' . $this->app->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $parentId . '
 			LIMIT 1
 			;');
 		
-		if ( $this->model->db->result )
+		if ( $this->app->db->result )
 		{
-			$parentNode = $this->model->db->result[0];
+			$parentNode = $this->app->db->result[0];
 			
-			$this->model->db->sql('
-				UPDATE `' . $this->model->db->prefix . 'nodes` SET
+			$this->app->db->sql('
+				UPDATE `' . $this->app->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` + 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`left_id` > ' . ( int ) $parentNode['left_id'] . '
 				;');
 
-			$this->model->db->sql('
-				UPDATE `' . $this->model->db->prefix . 'nodes` SET
+			$this->app->db->sql('
+				UPDATE `' . $this->app->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` + 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . ( int ) $parentNode['left_id'] . '
 				;');
 
-			$this->model->db->sql('
-				INSERT INTO `' . $this->model->db->prefix . 'nodes` (
+			$this->app->db->sql('
+				INSERT INTO `' . $this->app->db->prefix . 'nodes` (
 					`left_id`,
 					`right_id`,
 					`type`,
@@ -171,14 +171,14 @@ class node
 				VALUES (
 					 ' . ( ( int ) $parentNode['left_id'] + 1 )            . ',
 					 ' . ( ( int ) $parentNode['left_id'] + 2 )            . ',
-					"' . $this->model->db->escape($type)                   . '",
-					"' . $this->model->db->escape($this->model->h($title)) . '",
+					"' . $this->app->db->escape($type)                   . '",
+					"' . $this->app->db->escape($this->app->h($title)) . '",
 					"' . gmdate('Y-m-d H:i:s')                             . '",
 					"' . gmdate('Y-m-d H:i:s')                             . '"
 					)
 				;');
 
-			return $this->model->db->result;
+			return $this->app->db->result;
 		}
 
 		return FALSE;
@@ -210,8 +210,8 @@ class node
 		$diff = count($node['all']) * 2;
 
 		// Sync parents
-		$this->model->db->sql('
-			UPDATE `' . $this->model->db->prefix . 'nodes` SET
+		$this->app->db->sql('
+			UPDATE `' . $this->app->db->prefix . 'nodes` SET
 				`right_id` = `right_id` - ' . $diff . '
 			WHERE
 				`left_id`  < ' . ( int ) $node[0]['right_id'] . ' AND
@@ -219,8 +219,8 @@ class node
 			;');
 
 		// Sync righthand side of tree
-		$this->model->db->sql('
-			UPDATE `' . $this->model->db->prefix . 'nodes` SET
+		$this->app->db->sql('
+			UPDATE `' . $this->app->db->prefix . 'nodes` SET
 				`left_id`  = `left_id`  - ' . ( int ) $diff . ',
 				`right_id` = `right_id` - ' . ( int ) $diff . '
 			WHERE
@@ -230,8 +230,8 @@ class node
 		$parentNode = $this->get($parentId);
 
 		// Sync new parents
-		$this->model->db->sql('
-			UPDATE `' . $this->model->db->prefix . 'nodes` SET
+		$this->app->db->sql('
+			UPDATE `' . $this->app->db->prefix . 'nodes` SET
 				`right_id` = `right_id` + ' . $diff . '
 			WHERE
 				' . $parentNode['right_id'] . ' BETWEEN `left_id` AND `right_id` AND
@@ -239,8 +239,8 @@ class node
 			;');
 
 		// Sync righthand side of tree
-		$this->model->db->sql('
-			UPDATE `' . $this->model->db->prefix . 'nodes` SET
+		$this->app->db->sql('
+			UPDATE `' . $this->app->db->prefix . 'nodes` SET
 				`left_id`  = `left_id`  + ' . ( int ) $diff . ',
 				`right_id` = `right_id` + ' . ( int ) $diff . '
 			WHERE
@@ -260,8 +260,8 @@ class node
 			$diff = '- ' . abs(( int ) $parentNode['right_id'] - ( int ) $node[0]['right_id'] - 1);
 		}
 
-		$this->model->db->sql('
-			UPDATE `' . $this->model->db->prefix . 'nodes` SET
+		$this->app->db->sql('
+			UPDATE `' . $this->app->db->prefix . 'nodes` SET
 				`left_id`  = `left_id`  ' . $diff . ',
 				`right_id` = `right_id` ' . $diff . '
 			WHERE
@@ -277,25 +277,25 @@ class node
 	 */
 	function delete($id)
 	{
-		$this->model = $this->model;
+		$this->app = $this->app;
 
-		$this->model->db->sql('
+		$this->app->db->sql('
 			SELECT
 				`left_id`,
 				`right_id`
-			FROM `' . $this->model->db->prefix . 'nodes`
+			FROM `' . $this->app->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $id . '
 			LIMIT 1
 			;');
 
-		if ( $this->model->db->result )
+		if ( $this->app->db->result )
 		{
-			$leftId  = ( int ) $this->model->db->result[0]['left_id'];
-			$rightId = ( int ) $this->model->db->result[0]['right_id'];
+			$leftId  = ( int ) $this->app->db->result[0]['left_id'];
+			$rightId = ( int ) $this->app->db->result[0]['right_id'];
 
-			$this->model->db->sql('
-				UPDATE `' . $this->model->db->prefix . 'nodes` SET
+			$this->app->db->sql('
+				UPDATE `' . $this->app->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
@@ -303,16 +303,16 @@ class node
 					`right_id` > ' . ( int ) $rightId . '
 				;');
 
-			$this->model->db->sql('
-				UPDATE `' . $this->model->db->prefix . 'nodes` SET
+			$this->app->db->sql('
+				UPDATE `' . $this->app->db->prefix . 'nodes` SET
 					`right_id`  = `right_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . ( int ) $rightId . '
 				;');
 
-			$this->model->db->sql('
-				UPDATE `' . $this->model->db->prefix . 'nodes` SET
+			$this->app->db->sql('
+				UPDATE `' . $this->app->db->prefix . 'nodes` SET
 					`left_id`   = `left_id`  - 1,
 					`right_id`  = `right_id` - 1,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
@@ -321,15 +321,15 @@ class node
 					`right_id` < ' . ( int ) $rightId . '
 				;');
 
-			$this->model->db->sql('
+			$this->app->db->sql('
 				DELETE
-				FROM `' . $this->model->db->prefix . 'nodes`
+				FROM `' . $this->app->db->prefix . 'nodes`
 				WHERE
 					`id` = ' . ( int ) $id . '
 				LIMIT 1
 				;');
 
-			return $this->model->db->result;
+			return $this->app->db->result;
 		}
 	}
 
@@ -342,18 +342,18 @@ class node
 	{
 		$node = array();	
 
-		$this->model->db->sql('
+		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->model->db->prefix . 'nodes`
+			FROM `' . $this->app->db->prefix . 'nodes`
 			WHERE
 				`id` = ' . ( int ) $id . '
 			LIMIT 1
 			;');
 
-		if ( isset($this->model->db->result[0]) )
+		if ( isset($this->app->db->result[0]) )
 		{
-			$node = $this->model->db->result[0];
+			$node = $this->app->db->result[0];
 		}
 
 		return $node;
@@ -372,19 +372,19 @@ class node
 		{
 			$node['parents'] = array();
 			
-			$this->model->db->sql('
+			$this->app->db->sql('
 				SELECT
 					*
-				FROM `' . $this->model->db->prefix . 'nodes`
+				FROM `' . $this->app->db->prefix . 'nodes`
 				WHERE
 					`left_id`  < ' . ( int ) $node['left_id']  . ' AND
 					`right_id` > ' . ( int ) $node['right_id'] . '
 				ORDER BY `left_id` ASC
 				;');
 
-			if ( $this->model->db->result )
+			if ( $this->app->db->result )
 			{
-				foreach ( $this->model->db->result as $d )
+				foreach ( $this->app->db->result as $d )
 				{
 					$node['parents'][] = $d;
 				}
@@ -405,29 +405,29 @@ class node
 		{
 			$node['children'] = array();
 
-			$this->model->db->sql('
+			$this->app->db->sql('
 				SELECT
 					*
-				FROM `' . $this->model->db->prefix . 'nodes`
+				FROM `' . $this->app->db->prefix . 'nodes`
 				WHERE
 					`id` = ' . ( int ) $id . ' OR (
 						`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
-						' . ( $type ? 'AND `type` = "' . $this->model->db->escape($type) . '"' : '' ) . '
+						' . ( $type ? 'AND `type` = "' . $this->app->db->escape($type) . '"' : '' ) . '
 						)
 				ORDER BY `left_id` ASC
 				;');
 
-			if ( $this->model->db->result )
+			if ( $this->app->db->result )
 			{
 				$nodes    = array();
 				$children = array();
 
-				foreach ( $this->model->db->result as $d )
+				foreach ( $this->app->db->result as $d )
 				{
 					$children[] = ( int ) $d['id'];
 				}
 
-				foreach ( $this->model->db->result as $d )
+				foreach ( $this->app->db->result as $d )
 				{
 					$nodes[] = $d;
 				}

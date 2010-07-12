@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Language
@@ -20,7 +20,7 @@ class lang
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr,
 		$translation = array()
@@ -28,19 +28,19 @@ class lang
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
 		$this->check_languages();
 
-		if ( !empty($model->session->ready) )
+		if ( !empty($app->session->ready) )
 		{
-			if ( $d = $model->session->get('pref_values') )
+			if ( $d = $app->session->get('pref_values') )
 			{
 				if ( !empty($d['Language']) )
 				{
@@ -59,7 +59,7 @@ class lang
 	 */
 	function check_languages()
 	{
-		if ( !empty($this->model->user->ready) )
+		if ( !empty($this->app->user->ready) )
 		{
 			$this->languages = array('English US' => 'English US');
 
@@ -83,9 +83,9 @@ class lang
 
 			arsort($this->languages);
 
-			if ( !isset($this->model->user->prefs['Language']['options']) || $this->languages != $this->model->user->prefs['Language']['options'] )
+			if ( !isset($this->app->user->prefs['Language']['options']) || $this->languages != $this->app->user->prefs['Language']['options'] )
 			{
-				$this->model->user->save_pref(array(
+				$this->app->user->save_pref(array(
 					'pref'    => 'Language',
 					'type'    => 'select',
 					'match'   => '/.*/',

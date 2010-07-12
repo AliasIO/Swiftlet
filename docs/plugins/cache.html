@@ -9,24 +9,24 @@
 <p>
 	Pages are cached if <code>caching</code> is set to <code>TRUE</code> in <code>/_config.php</code>, the user is
 	not logged in, no <code>Content-type</code> headers are being send and no POST request was made. Cached files
-	are stored in the <code>/cache/</code> directory. Requires the <a href="?buffer">Buffer</a> plug-in.
+	are stored in the <code>/cache/</code> directory. Requires the <a href="?buffer">Buffer</a> plugin.
 </p>
 
 <h3>Class</h3>
 
 <p>
-	<code>$model->cache</code>
+	<code>$app->cache</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;cache-&gt;write ( <em>string</em> $contents )</code><br/>
+		<code>$app-&gt;cache-&gt;write ( <em>string</em> $contents )</code><br/>
 		Writes buffered output to cache.
 	</li>
 	<li>
-		<code>$model-&gt;cache-&gt;clear ( )</code><br/>
+		<code>$app-&gt;cache-&gt;clear ( )</code><br/>
 		Delete all cached files.
 	</li>
 </ul>

@@ -3,13 +3,13 @@
 <p><code>/_plugins/buffer.php</code></p>
 
 <p>
-	This plug-in handles MySQL database connections and queries.
+	This plugin handles MySQL database connections and queries.
 </p>
 
 <h3>SQL queries</h3>
 
 <p>
-	Use <code>$model-&gt;db-gt;sql()</code> to execute SQL queries and <code>$model-&gt;db-&gt;result</code> to access
+	Use <code>$app-&gt;db-gt;sql()</code> to execute SQL queries and <code>$app-&gt;db-&gt;result</code> to access
 	the result. The type of result depends on the type of query:
 </p>
 
@@ -32,15 +32,15 @@
 
 <pre>
 <?php
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		*
-	FROM `' . $model->db->prefix . 'foo`
+	FROM `' . $app->db->prefix . 'foo`
 	WHERE
-		`bar` = "' . $model->db->escape($bar) . '"
+		`bar` = "' . $app->db->escape($bar) . '"
 	;');
 
-if ( $r = $model->db->result )
+if ( $r = $app->db->result )
 {
 	print_r($r);
 }
@@ -50,26 +50,26 @@ if ( $r = $model->db->result )
 <h3>Class</h3>
 
 <p>
-	<code>$model-&gt;db</code>
+	<code>$app-&gt;db</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;db-&gt;close ( <em>resource</em> $link )</code><br/>
+		<code>$app-&gt;db-&gt;close ( <em>resource</em> $link )</code><br/>
 		Closes a database connection.
 	</li>
 	<li>
-		<code>$model-&gt;db-&gt;escape ( <em>string|array</em> $v )</code><br/>
-		Escapes strings for safe database insertion and HTML. Note that <code>$model-&gt;POST_db_safe</code> values are already escaped.
+		<code>$app-&gt;db-&gt;escape ( <em>string|array</em> $v )</code><br/>
+		Escapes strings for safe database insertion and HTML. Note that <code>$app-&gt;POST_db_safe</code> values are already escaped.
 	</li>
 	<li>
-		<code>$model-&gt;db-&gt;sanitize ( <em>string|array</em> $v )</code><br/>
+		<code>$app-&gt;db-&gt;sanitize ( <em>string|array</em> $v )</code><br/>
 		Sanitizes user input (make safe for HTML and database insertion).
 	</li>
 	<li>
-		<code>$model-&gt;db-&gt;query ( <em>string</em> $sql )</code><br/>
+		<code>$app-&gt;db-&gt;query ( <em>string</em> $sql )</code><br/>
 		Executes an SQL query.
 	</li>
 </ul>
@@ -78,11 +78,11 @@ if ( $r = $model->db->result )
 
 <ul>
 	<li>
-		<code>$model-&gt;db-&gt;link</code><br/>
+		<code>$app-&gt;db-&gt;link</code><br/>
 		Database connection resource.
 	</li>
 	<li>
-		<code>$model-&gt;db-&gt;result</code><br/>
+		<code>$app-&gt;db-&gt;result</code><br/>
 		Returned result from query that was executed last (depending on the type of query this is either an array of returned rows,
 		the id of the last inserted row or the number of affected rows).
 	</li>

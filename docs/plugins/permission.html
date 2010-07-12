@@ -17,7 +17,7 @@
 
 <pre>
 <?php
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -31,16 +31,16 @@ switch ( $hook )
 
         break;
     case 'install':
-		if ( !empty($model->node->ready) )
+		if ( !empty($app->node->ready) )
 		{
-			$model->perm->create('Secrets', 'secret access', 'Access to secret');
+			$app->perm->create('Secrets', 'secret access', 'Access to secret');
 		}
 
         break;
     case 'remove':
-		if ( !empty($model->node->ready) )
+		if ( !empty($app->node->ready) )
 		{
-			$model->perm->delete('secret access');
+			$app->perm->delete('secret access');
 		}
 
         break;
@@ -54,7 +54,7 @@ switch ( $hook )
 
 <pre>
 <?php
-if ( $model->perm->check('secret access') )
+if ( $app->perm->check('secret access') )
 {
 	// User has access to secret
 }
@@ -64,22 +64,22 @@ if ( $model->perm->check('secret access') )
 <h3>Class</h3>
 
 <p>
-	<code>$model-&gt;perm</code>
+	<code>$app-&gt;perm</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;perm-&gt;check ( <em>string</em> $name )</code><br/>
+		<code>$app-&gt;perm-&gt;check ( <em>string</em> $name )</code><br/>
 		Checks if the current user has permission.
 	</li>
 	<li>
-		<code>$model-&gt;perm-&gt;create ( <em>string</em> $group, <em>string</em> $name, <em>string</em> $description )</code><br/>
+		<code>$app-&gt;perm-&gt;create ( <em>string</em> $group, <em>string</em> $name, <em>string</em> $description )</code><br/>
 		Creates a new permission.
 	</li>
 	<li>
-		<code>$model-&gt;perm-&gt;delete ( <em>string</em> $name )</code><br/>
+		<code>$app-&gt;perm-&gt;delete ( <em>string</em> $name )</code><br/>
 		Deletes a permission
 	</li>
 </ul>

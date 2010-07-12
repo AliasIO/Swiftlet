@@ -10,32 +10,32 @@ $contrSetup = array(
 	'pageTitle' => 'Page'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'node', 'page'));
+$app->check_dependencies(array('db', 'node', 'page'));
 
-if ( isset($model->routeParts[1]) )
+if ( isset($app->routeParts[1]) )
 {
-	$language = !empty($model->lang->ready) ? $model->lang->language : array('English US');
+	$language = !empty($app->lang->ready) ? $app->lang->language : array('English US');
 
-	$model->db->sql('
+	$app->db->sql('
 		SELECT
 			p.`id`,
 			p.`node_id`,
 			p.`title`,
 			p.`body`,
 			n.`home`
-		FROM      `' . $model->db->prefix . 'pages` AS p
-		LEFT JOIN `' . $model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
+		FROM      `' . $app->db->prefix . 'pages` AS p
+		LEFT JOIN `' . $app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 		WHERE
-			n.`id`        = "' . ( int ) $model->routeParts[1] . '" AND
+			n.`id`        = "' . ( int ) $app->routeParts[1] . '" AND
 			n.`type`      = "page"                                  AND
 			p.`published` = 1                                       AND
-			p.`lang`      = "' . $model->db->escape($language) . '"
+			p.`lang`      = "' . $app->db->escape($language) . '"
 		LIMIT 1
 		;');
 
-	if ( isset($model->db->result[0]) && $d = $model->db->result[0] )
+	if ( isset($app->db->result[0]) && $d = $app->db->result[0] )
 	{
 		$view->pageTitle = $d['title'];
 		$view->nodeId    = $d['node_id'];
@@ -47,7 +47,7 @@ if ( isset($model->routeParts[1]) )
 		 * This way internal links won't break when the site
 		 * is moved to another directory
 		 */
-		$model->page->parse_urls($view->body);
+		$app->page->parse_urls($view->body);
 
 		/*
 		 * Create a breadcrumb trail
@@ -56,7 +56,7 @@ if ( isset($model->routeParts[1]) )
 
 		if ( !$d['home'] )
 		{
-			$nodes = $model->node->get_parents($d['node_id']);
+			$nodes = $app->node->get_parents($d['node_id']);
 
 			foreach ( $nodes['parents'] as $d )
 			{
@@ -73,10 +73,10 @@ if ( !isset($view->nodeId) )
 {
 	header('HTTP/1.0 404 Not Found');
 
-	$view->pageTitle = $model->t('Page not found');
-	$view->error     = $model->t('The page you are looking for does not exist.');
+	$view->pageTitle = $app->t('Page not found');
+	$view->error     = $app->t('The page you are looking for does not exist.');
 }
 
 $view->load('page.html.php');
 
-$model->end();
+$app->end();

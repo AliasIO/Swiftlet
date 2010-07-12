@@ -1,3 +1,8 @@
+# 1.2.0.RC1 - 1.2.0.RC2
+#
+# Renamed model to app
+#
+#
 # 1.2.0.B3 - 1.2.0.RC1
 #
 # Updated CKEditor to version 3.3.1
@@ -15,7 +20,7 @@
 # 1.2.0.B2 - 1.2.0.B3
 #
 # Added callback to file browser
-# Added documentation plug-in
+# Added documentation plugin
 # Added clear_cache hook
 # Several interface changes
 # Added adminEmail to /_config.php
@@ -32,13 +37,13 @@
 # Fixed thumbnail creation for file uploads
 # Fixed scrollbar in CKEditior file manager popup
 # Fixed pagination in combination with routes
-# Added cache plug-in (caches HTML files)
+# Added cache plugin (caches HTML files)
 #
 #
 # 1.2.0.A4 - 1.2.0.B1
 #
 # Removed all global functions including t() and h() shorthands.
-# Renamed admin plug-in to dashboard
+# Renamed admin plugin to dashboard
 # Added testing environment variable to configuration
 # Extended the admin dashboard with installation details
 # UI changes
@@ -57,7 +62,7 @@
 # Using CSS selectors instead of classes for theming forms
 # Updated jQuery to v1.4.2
 # Using a default config file to prevent losing settings when overwriting files.
-# Added improved URL routing, replaced $model->rewriteUrl() to $model->route()
+# Added improved URL routing, replaced $app->rewriteUrl() to $app->route()
 #
 #
 # 1.2.0.A1 - 1.2.0.A2
@@ -72,18 +77,18 @@
 #
 # 1.1.0 - 1.2.0.A1
 #
-# Added translation plug-in
-# Added user preferences (plug-ins can add options to the user account page)
+# Added translation plugin
+# Added user preferences (plugins can add options to the user account page)
 # CSS changes (page to fixed width, buttons more obvious, rounded corners)
-# Changed "pages" plug-in to "page"
-# Page plug-in can now handle multiple languages (in combination with the lang plug-in)
+# Changed "pages" plugin to "page"
+# Page plugin can now handle multiple languages (in combination with the lang plugin)
 # Added index.html files to directories to prevent contents from being displayed
 # Added format_date hook
-# Added file plug-in for secure file uploads
-# Rewrote plug-in installer and /_model/plugin.class.php
+# Added file plugin for secure file uploads
+# Rewrote plugin installer and /_app/plugin.class.php
 # Fixed a bug in node plugin when deleting a node
 # Added .htaccess file to /file/uploads/ to disallow access
-# Added timezone plug-in
+# Added timezone plugin
 # Now storing all dates in GMT
 # Updated CKEditor to 3.1, created a config file in /_view/scripts/
 # Fixed issue with relative paths and rich text editors
@@ -103,7 +108,7 @@
 #
 # 1.1.0.RC1 - 1.1.0.RC2
 #
-# Bug #25 (reported by svenn.dhert) Fix a bug with $model->page->set_title()
+# Bug #25 (reported by svenn.dhert) Fix a bug with $app->page->set_title()
 #
 #
 # 1.1.0.B5 - 1.1.0.RC1
@@ -130,33 +135,33 @@
 # 1.1.0.B2 - 1.1.0.B3
 #
 # CSS changes
-# Removed /_view/logout.html.php, using $model->confirm() instead
-# Added $model->db->tables to check if a table exists to avoid many SHOW TABLE queries
+# Removed /_view/logout.html.php, using $app->confirm() instead
+# Added $app->db->tables to check if a table exists to avoid many SHOW TABLE queries
 # Added database caching
 #
 #
 # 1.1.0.B1 - 1.1.0.B2
 #
-# Added administration hook (admin), plug-in (/_plugins/admin.php) and controller (/admin/)
+# Added administration hook (admin), plugin (/_plugins/admin.php) and controller (/admin/)
 # Bug #17 (reported by svenn.dhert) Fixed a typo
 # Minor CSS changes
 #
 #
 # 1.1.0.A8 - 1.1.0.B1
 #
-# Replaced /_model/end.php with $model->end()
+# Replaced /_app/end.php with $app->end()
 # Added CSS for table elements
 # Only load CKEditor when on an admin page
-# Bug #16 (reported by svenn.dhert) Applied $model->rewrite_url() to crumbs
+# Bug #16 (reported by svenn.dhert) Applied $app->rewrite_url() to crumbs
 # Added jQuery library (linked from Google APIs)
 # Changes to /admin/pages/, can not select self or descendant as parent
-# Added $model->confirm() to ask user for confirmation on permanent changes (like deleting a page)
+# Added $app->confirm() to ask user for confirmation on permanent changes (like deleting a page)
 # User accounts can now be deleted
 #
 #
 # 1.1.0.A7 - 1.1.0.A8
 #
-# Added URL rewrite functionality ($urlConfig in /_config.php, $model->rewrite_url() function, rewrite_url hook)
+# Added URL rewrite functionality ($urlConfig in /_config.php, $app->rewrite_url() function, rewrite_url hook)
 # Hooks can now take parameters and act as a filter: $this->hook('hook_name', $params)
 # Added .htaccess file
 # Added /lib (library) directory for third party code
@@ -164,9 +169,9 @@
 # Added $contr->inAdmin for admin pages (and admin specific theming)
 # Template and CSS changes
 # Improvements to the /admin/pages controller
-# Added $model->t() (and shorthand t() for views) function and 'translate' hook for translation plug-ins
+# Added $app->t() (and shorthand t() for views) function and 'translate' hook for translation plugins
 # Applied t() function on all strings in views
-# Added $model->h() (and shorthand h() for views) function to make string HTML safe
+# Added $app->h() (and shorthand h() for views) function to make string HTML safe
 # Added ?ref parameter to login for redirects
 # Removed /_view/auth.html.php (now redirecting to login instead)
 # Many more minor changes
@@ -176,7 +181,7 @@
 #
 # Improved authenticity tokens, they no longer experire after one request (better AJAX compatibility)
 # Improved error reporting (less alarming appearance)
-# Added $model->h() function, shorthand for htmlentities($v, ENT_QUOTES, 'UTF-8')
+# Added $app->h() function, shorthand for htmlentities($v, ENT_QUOTES, 'UTF-8')
 # Fixed a small bug in /css.php
 # Changed inclusion order for /_plugins/mysql
 # Changed variable mysqlHost etc. to dbHost
@@ -198,20 +203,20 @@
 #
 # 1.1.0.A2 - 1.1.0.A3
 #
-# Added content plug-in
+# Added content plugin
 # Added controller /admin/content/index.php for creating dynamic pages
 # Added controller /p/index.php for displaying dynamic pages
 #
 #
 # 1.1.0.A1 - 1.1.0.A2
 #
-# Added node plug-in for storing structured data (like dynamic pages)
+# Added node plugin for storing structured data (like dynamic pages)
 #
 #
 # 1.0.4 - 1.1.0.A1
 #
 # Branched from version 1.0 to version 1.1
-# Check if buffer plug-in is ready before calling $model->buffer->clean() in /_plugins/buffer.php
+# Check if buffer plugin is ready before calling $app->buffer->clean() in /_plugins/buffer.php
 # Changed incorrect form field "user_level" to "auth" in /account/index.php
 # Fixed "int" form validation type to handle negative numbers in /_plugins/classes/form.php
 # Require password when username is changed, otherwise password hash will be incorrect and user won't be able to login
@@ -222,9 +227,9 @@
 #
 # 1.0.3 - 1.0.4
 #
-# No longer calling buffer plug-in from $model->error(), using error hook instead
+# No longer calling buffer plugin from $app->error(), using error hook instead
 # Replaced $contr->rootPath with $view->rootPath in /_view/header.html.php
-# Made site and page properties HTML safe in /_view/header.html.php with required changes in /_model/view.class.php
+# Made site and page properties HTML safe in /_view/header.html.php with required changes in /_app/view.class.php
 #
 #
 # 1.0.2 - 1.0.3
@@ -242,9 +247,9 @@
 #
 # 1.0.0 - 1.0.1
 #
-# Applied preg_quote() to password check in plug-in installer
+# Applied preg_quote() to password check in plugin installer
 # Added IPv6 check for local testing settings in /_config.php
-# Fixed a bug in undo_magic_quotes() function in /_model/model.class.php
+# Fixed a bug in undo_magic_quotes() function in /_app/model.class.php
 #
 #
 # 1.0.0.RC1 - 1.0.0
@@ -254,44 +259,44 @@
 #
 # 1.0.0.B2 - 1.0.0.RC1
 #
-# - Added $plugin_version variable to every plug-in (now required)
-# - Added upgrade functionality to the plug-in installer
+# - Added $plugin_version variable to every plugin (now required)
+# - Added upgrade functionality to the plugin installer
 # - Added $plugin->check_upgrade() function
-# - Added a hook to $model->error()
+# - Added a hook to $app->error()
 #
 #
 # 1.0.0.B1 - 1.0.0.B2
 #
 # - Account settings page now unavailable for guest users
-# - Added $model->check_dependencies() function to check if required plugins are ready
-# - Added $model->authToken variable for forms to prevent cross-site request forgery (CSRF) attacks
+# - Added $app->check_dependencies() function to check if required plugins are ready
+# - Added $app->authToken variable for forms to prevent cross-site request forgery (CSRF) attacks
 # - Changed session hash from md5 to sha1
 #
 #
 # 1.0.0.A14 - 1.0.0.B1
 #
-# - Added "view SQL" toggle to plug-in installer
+# - Added "view SQL" toggle to plugin installer
 # - Added account settings page
 #
 #
 # 1.0.0.A14 - 1.0.0.A15
 #
-# - Created plug-in installer
+# - Created plugin installer
 # - Removed /_plugins/schemas/ directory
-# - Plug-ins now contain SQL instructions for installation
-# - Improved checking if plug-ins are active with $model->[plugin]->ready variable
-# - Plug-in "user.php" creates an admin user on installation, username Admin and system password
+# - Plugins now contain SQL instructions for installation
+# - Improved checking if plugins are active with $app->[plugin]->ready variable
+# - Plugin "user.php" creates an admin user on installation, username Admin and system password
 #
 #
 # 1.0.0.A13 - 1.0.0.A14
 #
-# - Added auth plug-in
-# - Added $default parameter to $model->session->get() function
+# - Added auth plugin
+# - Added $default parameter to $app->session->get() function
 # - Prepended system directory names and config file with underscore
 # - Added sysPassword variable to /_config.php
-# - Added user authentication plug-in
+# - Added user authentication plugin
 # - Added login controller
-# - Improved session plug-in
+# - Improved session plugin
 # - Fixed $contr->absPath bug
 # - Changes to the default layout
 # - Input sanitizing now works with arrays
@@ -300,14 +305,14 @@
 # 0.12 - 1.0.0.A13
 #
 # - Added model::version constant
-# - Added compatibility check for plug-ins
+# - Added compatibility check for plugins
 # - Changed versioning from x.x (major, revision) to x.x.x (major, minor, revision)
 #
 #
 # 0.11 - 0.12
 #
 # - Added $contr->absPath variable containing the absolute path
-# - Added $model->session->lifeTime variable containing the session lifetime in seconds
+# - Added $app->session->lifeTime variable containing the session lifetime in seconds
 # - Added session cookies
 # - Made sessions faster by using id instead of hash when selecting from database
 #
@@ -327,14 +332,14 @@
 # - Added a debugMode notice on the welcome page
 # - Added session plugin
 # - Improved MySQL class
-# - Fixed a bug in $model->hook_sort() function
+# - Fixed a bug in $app->hook_sort() function
 # - Added mysqlPrefix variable to /config.php
 # - Added /plugins/schemas directory for SQL files
 #
 #
 # 0.7 - 0.8
 #
-# - Added $model->userIp variable containing the real internet IP address of the user
+# - Added $app->userIp variable containing the real internet IP address of the user
 # - Split MySQL settings into testing and production settings
 # - Allow multiple MySQL connections
 # - Added CSS code for form elements
@@ -348,8 +353,8 @@
 #
 # 0.5 - 0.6
 #
-# - Added $model->debugOutput variable
-# - Added $model->timer_start() and $model->timer_end() functions
+# - Added $app->debugOutput variable
+# - Added $app->timer_start() and $app->timer_end() functions
 # - Added /CHANGELOG file
 # - Moved Model files to /model directory
 # - Improved error handler output

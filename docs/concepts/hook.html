@@ -13,7 +13,7 @@
 		Use to write HTML output to cache (see <a href="../plugins/buffer">Buffer</a>).
 	</li>
 	<li>
-		<code>clear_cache</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>clear_cache</code> (<code>/_app/model.class.php</code>)<br/>
 		Clear the cache.
 	</li>
 	<li>
@@ -25,19 +25,19 @@
 		Display a node (see <a href="../plugins/node">Node</a>).
 	</li>
 	<li>
-		<code>email</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>email</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to send e-mails.
 	</li>
 	<li>
-		<code>end</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>end</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to include code at the bottom of each page.
 	</li>
 	<li>
-		<code>error</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>error</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to output errors.
 	</li>
 	<li>
-		<code>header</code> (<code>/_model/init.php</code>)<br/>
+		<code>header</code> (<code>/init.php</code>)<br/>
 		Use to include code on top of each page. Skipped when <code>$contr-&gt;standAlone</code> is set.
 	</li>
 	<li>
@@ -45,19 +45,19 @@
 		Use to change the home page.
 	</li>
 	<li>
-		<code>init</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>init</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to extend the <a href="./model">Model</a>. This hook is called on every page, when the Model (core code) is initialized. 
 	</li>
 	<li>
-		<code>input_sanitize</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>input_sanitize</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to filter user input (GET and POST).
 	</li>
 	<li>
-		<code>footer</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>footer</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to include code at the bottom of each page. Skipped when <code>$contr-&gt;standAlone</code> is set.
 	</li>
 	<li>
-		<code>format_date</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>format_date</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to format a date.
 	</li>
 	<li>
@@ -65,11 +65,11 @@
 		Use to add a item to the main navigation menu.
 	</li>
 	<li>
-		<code>route</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>route</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to route URLs. Requires a <code>/.htaccess</code> file witch matching settings.
 	</li>
 	<li>
-		<code>translate</code> (<code>/_model/model.class.php</code>)<br/>
+		<code>translate</code> (<code>/_app/model.class.php</code>)<br/>
 		Use to translate strings.
 	</li>
 	<li>
@@ -79,6 +79,6 @@
 </ul>
 
 <p>
-	In most cases these hooks are all you need. If however you need to create a new hook, use <code>$model-&gt;hook('hook_name')</code>
+	In most cases these hooks are all you need. If however you need to create a new hook, use <code>$app-&gt;hook('hook_name')</code>
 	(see <a href="./model">Model</a>).
 </p>

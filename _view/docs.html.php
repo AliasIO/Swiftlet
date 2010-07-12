@@ -1,5 +1,5 @@
 <div class="no-grid">
-	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+	<h1><?php echo $app->t($contr->pageTitle) ?></h1>
 </div>
 
 <div id="documentation">

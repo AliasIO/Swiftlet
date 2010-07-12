@@ -10,23 +10,23 @@ $contrSetup = array(
 	'pageTitle' => 'Unit tests'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'session', 'user'));
+$app->check_dependencies(array('db', 'session', 'user'));
 
-$model->form->validate(array(
+$app->form->validate(array(
 	));
 
-if ( !$model->session->get('user is owner') )
+if ( !$app->session->get('user is owner') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-if ( !$model->POST_valid['confirm'] )
+if ( !$app->POST_valid['confirm'] )
 {
-	$model->confirm($model->t('Do you want run unit tests?'));
+	$app->confirm($app->t('Do you want run unit tests?'));
 }
 else
 {
@@ -46,7 +46,7 @@ else
 		'pass' => $r['info']['http_code'] == '503'
 		);
 
-	$model->hook('unit_tests', $tests);
+	$app->hook('unit_tests', $tests);
 
 	$passes   = 0;
 	$failures = 0;
@@ -70,7 +70,7 @@ else
 	$view->load('unit_tests.html.php');
 }
 
-$model->end();
+$app->end();
 
 /**
  * Make a POST request
@@ -80,7 +80,7 @@ $model->end();
  */
 function post_request($url, $params, $guest = FALSE)
 {
-	global $model;
+	global $app;
 
 	if ( function_exists('curl_init') )
 	{
@@ -134,6 +134,6 @@ function post_request($url, $params, $guest = FALSE)
 	}
 	else
 	{
-		$model->error(FALSE, 'Your PHP installation does not support cURL, a requirement for some unit tests.');
+		$app->error(FALSE, 'Your PHP installation does not support cURL, a requirement for some unit tests.');
 	}
 }

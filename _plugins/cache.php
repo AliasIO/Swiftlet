@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -22,20 +22,20 @@ switch ( $hook )
 	case 'init':
 		require($contr->classPath . 'cache.php');
 
-		$model->cache = new cache($model);
+		$app->cache = new cache($app);
 
 		break;
 	case 'cache':
-		if ( !empty($model->cache->ready) )
+		if ( !empty($app->cache->ready) )
 		{
-			$model->cache->write($params['contents']);
+			$app->cache->write($params['contents']);
 		}
 
 		break;
 	case 'clear_cache':
-		if ( !empty($model->cache->ready) )
+		if ( !empty($app->cache->ready) )
 		{
-			$model->cache->clear();
+			$app->cache->clear();
 		}
 
 		break;

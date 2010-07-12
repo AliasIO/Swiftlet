@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Header
@@ -20,12 +20,12 @@ class header
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
 		$this->ready = TRUE;
 
-		$model->hook('menu', $this->menu);
+		$app->hook('menu', $this->menu);
 	}
 }

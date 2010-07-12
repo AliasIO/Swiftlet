@@ -10,13 +10,13 @@ $contrSetup = array(
 	'pageTitle' => 'Plugin installer'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('buffer', 'form'));
+$app->check_dependencies(array('buffer', 'form'));
 
-$model->form->validate(array(
+$app->form->validate(array(
 	'plugin'          => 'bool',
-	'system-password' => '/^' . preg_quote($model->sysPassword, '/') . '$/',
+	'system-password' => '/^' . preg_quote($app->sysPassword, '/') . '$/',
 	'mode'            => 'string',
 	'form-submit'     => 'bool',
 	));
@@ -27,11 +27,11 @@ $view->newPlugins       = array();
 $view->outdatedPlugins  = array();
 $view->installedPlugins = array();
 
-if ( isset($model->db) )
+if ( isset($app->db) )
 {
 	$requiredBy = array();
 
-	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
+	foreach ( $app->pluginsLoaded as $pluginName => $plugin )
 	{
 		foreach ( $plugin->info['dependencies'] as $dependency )
 		{
@@ -40,11 +40,11 @@ if ( isset($model->db) )
 				$requiredBy[$dependency] = array();
 			}
 
-			$requiredBy[$dependency][$pluginName] = !empty($model->{$dependency}->ready) && $plugin->get_version() ? 1 : 0;
+			$requiredBy[$dependency][$pluginName] = !empty($app->{$dependency}->ready) && $plugin->get_version() ? 1 : 0;
 		}
 	}
 
-	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
+	foreach ( $app->pluginsLoaded as $pluginName => $plugin )
 	{
 		$version = $plugin->get_version();
 
@@ -56,7 +56,7 @@ if ( isset($model->db) )
 
 				foreach ( $plugin->info['dependencies'] as $dependency )
 				{
-					$dependencyStatus[$dependency] = !empty($model->{$dependency}->ready) ? 1 : 0;
+					$dependencyStatus[$dependency] = !empty($app->{$dependency}->ready) ? 1 : 0;
 				}
 
 				$view->newPlugins[$pluginName]                      = $plugin->info;
@@ -84,47 +84,47 @@ if ( isset($model->db) )
 
 ksort($view->newPlugins);
 
-if ( !$model->sysPassword )
+if ( !$app->sysPassword )
 {
-	$view->error = $model->t('%1$s has no value in %2$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
+	$view->error = $app->t('%1$s has no value in %2$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
 }
-elseif ( empty($model->db->ready) )
+elseif ( empty($app->db->ready) )
 {
-	$view->error = $model->t('No database connected (required). You may need to change the database settings in %1$s.', '<code>/_config.php</code>');
+	$view->error = $app->t('No database connected (required). You may need to change the database settings in %1$s.', '<code>/_config.php</code>');
 }
 else
 {
-	if ( $model->POST_valid['form-submit'] )
+	if ( $app->POST_valid['form-submit'] )
 	{
 		/*
 		 * Delay the script to prevent brute-force attacks
 		 */
 		sleep(1);
 
-		if ( $model->form->errors )
+		if ( $app->form->errors )
 		{
-			$view->error = $model->t('Incorrect system password.');
+			$view->error = $app->t('Incorrect system password.');
 		}
 		else
 		{
-			if ( $model->POST_raw['mode'] == 'authenticate' )
+			if ( $app->POST_raw['mode'] == 'authenticate' )
 			{
 				$_SESSION['swiftlet authenticated'] = TRUE;
 
 				$authenticated = TRUE;
 			}
-			else if ( $authenticated && $model->POST_valid['plugin'] && is_array($model->POST_valid['plugin']) )
+			else if ( $authenticated && $app->POST_valid['plugin'] && is_array($app->POST_valid['plugin']) )
 			{
-				switch ( $model->POST_raw['mode'] )
+				switch ( $app->POST_raw['mode'] )
 				{
 					case 'install': 
 						/**
-						 * Create plug-in versions table
+						 * Create plugin versions table
 						 */			
-						if ( !in_array($model->db->prefix . 'versions', $model->db->tables) )
+						if ( !in_array($app->db->prefix . 'versions', $app->db->tables) )
 						{
-							$model->db->sql('
-								CREATE TABLE `' . $model->db->prefix . 'versions` (
+							$app->db->sql('
+								CREATE TABLE `' . $app->db->prefix . 'versions` (
 									`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 									`plugin`      VARCHAR(256)     NOT NULL,
 									`version`     VARCHAR(10)      NOT NULL,
@@ -135,19 +135,19 @@ else
 
 						$pluginsInstalled = array();
 
-						foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+						foreach ( $app->POST_valid['plugin'] as $pluginName => $v )
 						{
 							if ( isset($view->newPlugins[$pluginName]) && !in_array(0, $view->newPlugins[$pluginName]['dependency_status']) )
 							{
-								$model->pluginsLoaded[$pluginName]->install();
+								$app->pluginsLoaded[$pluginName]->install();
 
-								$model->db->sql('
-									INSERT INTO `' . $model->db->prefix . 'versions` (
+								$app->db->sql('
+									INSERT INTO `' . $app->db->prefix . 'versions` (
 										`plugin`,
 										`version`
 										)
 									VALUES (
-										"' . $model->db->escape($pluginName)           . '",
+										"' . $app->db->escape($pluginName)           . '",
 										"' . $view->newPlugins[$pluginName]['version'] . '"
 										)
 									;');
@@ -162,21 +162,21 @@ else
 						{
 							header('Location: ?notice=installed&plugins=' . implode('|', $pluginsInstalled));
 
-							$model->end();
+							$app->end();
 						}
 						
 						break;
 					case 'upgrade':
 						$pluginsUpgraded = array();
 
-						foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+						foreach ( $app->POST_valid['plugin'] as $pluginName => $v )
 						{
 							if ( isset($view->outdatedPlugins[$pluginName]) )
 							{
-								$model->pluginsLoaded[$pluginName]->upgrade();
+								$app->pluginsLoaded[$pluginName]->upgrade();
 
-								$model->db->sql('
-									UPDATE `' . $model->db->prefix . 'versions` SET
+								$app->db->sql('
+									UPDATE `' . $app->db->prefix . 'versions` SET
 										`version` = "' . $view->outdatedPlugins[$pluginName]['version'] . '"
 									WHERE
 										`plugin` = "' . $pluginName . '"
@@ -193,26 +193,26 @@ else
 						{
 							header('Location: ?notice=upgraded&plugins=' . implode('|', $pluginsUpgraded));
 
-							$model->end();
+							$app->end();
 						}
 
 						break;
 					case 'remove':
 						$pluginsRemoved = array();
 
-						foreach ( $model->POST_valid['plugin'] as $pluginName => $v )
+						foreach ( $app->POST_valid['plugin'] as $pluginName => $v )
 						{
 							if ( isset($view->installedPlugins[$pluginName]) && !in_array(1, $view->installedPlugins[$pluginName]['required_by_status']) )
 							{
-								$model->db->sql('
+								$app->db->sql('
 									DELETE
-									FROM `' . $model->db->prefix . 'versions`
+									FROM `' . $app->db->prefix . 'versions`
 									WHERE
-										`plugin` = "' . $model->db->escape($pluginName) . '"
+										`plugin` = "' . $app->db->escape($pluginName) . '"
 									LIMIT 1
 									;');
 
-								$model->pluginsLoaded[$pluginName]->remove();
+								$app->pluginsLoaded[$pluginName]->remove();
 
 								$pluginsRemoved[] = $pluginName;
 
@@ -224,7 +224,7 @@ else
 						{
 							header('Location: ?notice=removed&plugins=' . implode('|', $pluginsRemoved));
 
-							$model->end();
+							$app->end();
 						}
 
 						break;
@@ -234,20 +234,20 @@ else
 	}
 }
 
-if ( isset($model->GET_raw['notice']) && isset($model->GET_raw['plugins']) )
+if ( isset($app->GET_raw['notice']) && isset($app->GET_raw['plugins']) )
 {
-	switch ( $model->GET_raw['notice'] )
+	switch ( $app->GET_raw['notice'] )
 	{
 		case 'installed':
-			$view->notice = $model->t('The following plug-in(s) have been successfully installed:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+			$view->notice = $app->t('The following plugin(s) have been successfully installed:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $app->GET_html_safe['plugins']));
 
 			break;
 		case 'upgraded':
-			$view->notice = $model->t('The following plug-in(s) have been successfully upgraded:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+			$view->notice = $app->t('The following plugin(s) have been successfully upgraded:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $app->GET_html_safe['plugins']));
 
 			break;
 		case 'removed':
-			$view->notice = $model->t('The following plug-in(s) have been successfully removed:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $model->GET_html_safe['plugins']));
+			$view->notice = $app->t('The following plugin(s) have been successfully removed:%1$s', '<br/><br/>' . str_replace('|', '<br/>', $app->GET_html_safe['plugins']));
 
 			break;
 	}
@@ -257,4 +257,4 @@ $view->authenticated = $authenticated;
 
 $view->load('installer.html.php');
 
-$model->end();
+$app->end();

@@ -1,5 +1,5 @@
 <div class="no-grid">
-	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+	<h1><?php echo $app->t($contr->pageTitle) ?></h1>
 
 	<?php if ( !empty($view->error) ): ?>
 	<p class="message error"><?php echo $view->error ?></p>
@@ -13,12 +13,12 @@
 		<fieldset>
 			<dl>
 				<dt>
-					<label for="items"><?php echo $model->t('Items') ?></label>
+					<label for="items"><?php echo $app->t('Items') ?></label>
 
 					<em>Paths or URLs, each on a separate line (e.g. Title|node/21 or http://example.com)</em>
 				</dt>
 				<dd>
-					<textarea name="items" id="items" cols="25" rows="5"><?php echo $model->POST_html_safe['items'] ?></textarea>
+					<textarea name="items" id="items" cols="25" rows="5"><?php echo $app->POST_html_safe['items'] ?></textarea>
 				</dd>
 			</dl>
 		</fieldset>
@@ -26,9 +26,9 @@
 			<dl>
 				<dt><br/></dt>
 				<dd>
-					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $app->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Save menu') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $app->t('Save menu') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>

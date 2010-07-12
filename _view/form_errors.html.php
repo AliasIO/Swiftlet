@@ -1,8 +1,8 @@
-<?php if ( !empty($model->form->errors) ): ?>
+<?php if ( !empty($app->form->errors) ): ?>
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */
-	<?php foreach ( $model->form->errors as $k => $v ): ?>
-	$('#<?php echo $model->h($k) ?>').addClass('field-error');
+	<?php foreach ( $app->form->errors as $k => $v ): ?>
+	$('#<?php echo $app->h($k) ?>').addClass('field-error');
 	<?php endforeach ?>
 	/* ]]> */ -->
 </script>

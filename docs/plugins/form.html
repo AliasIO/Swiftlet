@@ -2,23 +2,23 @@
 
 <p><code>/_plugins/form.php</code></p>
 
-<p>This is a plug-in to validate input send through HTML forms (POST data).</p>
+<p>This is a plugin to validate input send through HTML forms (POST data).</p>
 
 <h4>Example</h4>
 
 <pre>
 <?php
-$model->form->validate(array(
+$app->form->validate(array(
 	'submit' => 'bool',
 	'name'   => 'string, empty'
 	'email'  => 'email'
 	));
 
-if ( $model->POST_valid['submit'] )
+if ( $app->POST_valid['submit'] )
 {
-	if ( $model->form->errors )
+	if ( $app->form->errors )
 	{
-		if ( $model->form->errors['email'] )
+		if ( $app->form->errors['email'] )
 		{
 			$view->error = 'Please provide a valid e-mail address.';
 		}
@@ -65,14 +65,14 @@ if ( $model->POST_valid['submit'] )
 <h3>Class</h3>
 
 <p>
-	<code>$model->form</code>
+	<code>$app->form</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;form-&gt;validate ( <em>array</em> $vars )</code><br/>
+		<code>$app-&gt;form-&gt;validate ( <em>array</em> $vars )</code><br/>
 	</li>
 </ul>
 
@@ -80,8 +80,8 @@ if ( $model->POST_valid['submit'] )
 
 <ul>
 	<li>
-		<code>$model-&gt;form-&gt;errors</code><br/>
-		Array containing all fields that failed validation (<code>$model->form->errors[$k] = TRUE</code>).
+		<code>$app-&gt;form-&gt;errors</code><br/>
+		Array containing all fields that failed validation (<code>$app->form->errors[$k] = TRUE</code>).
 	</li>
 </ul>
 

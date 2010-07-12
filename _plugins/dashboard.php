@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,32 +20,32 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->create('Administration', 'dashboard access', 'Access to the dashboard');
+			$app->perm->create('Administration', 'dashboard access', 'Access to the dashboard');
 		}
 
 		break;
 	case 'remove':
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->delete('dashboard access');
+			$app->perm->delete('dashboard access');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
 			require($contr->classPath . 'dashboard.php');
 
-			$model->dashboard = new dashboard($model);
+			$app->dashboard = new dashboard($app);
 		}
 
 		break;
 	case 'menu':
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			if ( $model->perm->check('dashboard access') )
+			if ( $app->perm->check('dashboard access') )
 			{
 				$params['Dashboard'] = $view->rootPath . 'admin/';
 			}

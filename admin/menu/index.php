@@ -11,33 +11,33 @@ $contrSetup = array(
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'form', 'menu', 'node', 'perm'));
+$app->check_dependencies(array('db', 'form', 'menu', 'node', 'perm'));
 
-$model->form->validate(array(
+$app->form->validate(array(
 	'form-submit' => 'bool',
 	'items'       => '/.*/',
 	));
 
-if ( !$model->perm->check('admin menu access') )
+if ( !$app->perm->check('admin menu access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-if ( $model->POST_valid['form-submit'] )
+if ( $app->POST_valid['form-submit'] )
 {
-	if ( $model->form->errors )
+	if ( $app->form->errors )
 	{
-		$view->error = $model->t('Please correct the errors below.');
+		$view->error = $app->t('Please correct the errors below.');
 	}
 	else
 	{
 		$items = array();
 
-		foreach ( explode("\n", $model->POST_html_safe['items']) as $item )
+		foreach ( explode("\n", $app->POST_html_safe['items']) as $item )
 		{
 			if ( trim($item) )
 			{
@@ -58,16 +58,16 @@ if ( $model->POST_valid['form-submit'] )
 
 				if ( $path )
 				{
-					$model->db->sql('
+					$app->db->sql('
 						SELECT
 							`id`
-						FROM `' . $model->db->prefix . 'nodes`
+						FROM `' . $app->db->prefix . 'nodes`
 						WHERE
-							`path` = "' . $model->db->escape($path) . '"
+							`path` = "' . $app->db->escape($path) . '"
 						LIMIT 1
 						;');
 
-					if ( $r = $model->db->result )
+					if ( $r = $app->db->result )
 					{
 						$nodeId = $r[0]['id'];
 						$path   = '';
@@ -82,40 +82,40 @@ if ( $model->POST_valid['form-submit'] )
 			}
 		}
 
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'menu` SET
-				`items` = "' . $model->db->escape(serialize($items)) . '"
+		$app->db->sql('
+			UPDATE `' . $app->db->prefix . 'menu` SET
+				`items` = "' . $app->db->escape(serialize($items)) . '"
 			LIMIT 1
 			;');
 
-		if ( $model->db->result )
+		if ( $app->db->result )
 		{
 			header('Location: ?notice=success');
 
-			$model->db->end();
+			$app->db->end();
 		}
 	}
 }
 
-else if ( isset($model->GET_raw['notice']) )
+else if ( isset($app->GET_raw['notice']) )
 {
-	switch ( $model->GET_raw['notice'] )
+	switch ( $app->GET_raw['notice'] )
 	{
 		case 'success':
-			$view->notice = $model->t('The changes have been saved.');
+			$view->notice = $app->t('The changes have been saved.');
 			
 			break;
 	}
 }
 
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		`items`
-	FROM `' . $model->db->prefix . 'menu`
+	FROM `' . $app->db->prefix . 'menu`
 	LIMIT 1
 	;');
 
-if ( $r = $model->db->result )
+if ( $r = $app->db->result )
 {
 	if ( $items = @unserialize($r[0]['items']) )
 	{
@@ -132,17 +132,17 @@ if ( $r = $model->db->result )
 
 		if ( $nodeIds )
 		{
-			$model->db->sql('
+			$app->db->sql('
 				SELECT
 					`id`,
 					`path`
-				FROM `' . $model->db->prefix . 'nodes`
+				FROM `' . $app->db->prefix . 'nodes`
 				WHERE
 					`id` IN ( ' . implode(',', $nodeIds) . ' )
 				LIMIT ' . count($nodeIds) . '
 				;');
 
-			if ( $r = $model->db->result )
+			if ( $r = $app->db->result )
 			{
 				foreach ( $r as $d )
 				{
@@ -163,10 +163,10 @@ if ( $r = $model->db->result )
 			}
 		}
 
-		$model->POST_html_safe['items'] = trim($v);
+		$app->POST_html_safe['items'] = trim($v);
 	}
 }
 
 $view->load('admin/menu.html.php');
 
-$model->end();
+$app->end();

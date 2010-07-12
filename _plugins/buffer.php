@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -21,24 +21,24 @@ switch ( $hook )
 	case 'init':
 		require($contr->classPath . 'buffer.php');
 
-		$model->buffer = new buffer($model);
+		$app->buffer = new buffer($app);
 
-		$model->buffer->start();
+		$app->buffer->start();
 
 		break;
 	case 'end':
-		if ( !empty($model->buffer->ready) )
+		if ( !empty($app->buffer->ready) )
 		{
-			$model->debugOutput['buffer output size'] = round(strlen(ob_get_contents()) / 1024 / 1024, 3) . ' MB';
+			$app->debugOutput['buffer output size'] = round(strlen(ob_get_contents()) / 1024 / 1024, 3) . ' MB';
 
-			$model->buffer->flush();
+			$app->buffer->flush();
 		}
 
 		break;
 	case 'error':
-		if ( !empty($model->buffer->ready) )
+		if ( !empty($app->buffer->ready) )
 		{
-			$model->buffer->clean();
+			$app->buffer->clean();
 		}
 
 		break;

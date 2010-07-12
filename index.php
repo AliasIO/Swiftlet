@@ -7,16 +7,17 @@
 
 $contrSetup = array(
 	'rootPath'   => './',
-	'pageTitle'  => 'Route'
+	'pageTitle'  => 'Route',
+	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
 $route = '';
 
-if ( !empty($model->GET_raw['q']) )
+if ( !empty($app->GET_raw['q']) )
 {
-	$route = $model->GET_raw['q'];
+	$route = $app->GET_raw['q'];
 }
 
 if ( !$route )
@@ -25,7 +26,7 @@ if ( !$route )
 		'route' => ''
 		);
 
-	$model->hook('home', $params);
+	$app->hook('home', $params);
 
 	$route = $params['route'];
 }
@@ -42,9 +43,9 @@ $params = array(
 	'path'  => ''
 	);
 
-$model->hook('route', $params);
+$app->hook('route', $params);
 
-$model->routeParts = $params['parts'];
+$app->routeParts = $params['parts'];
 
 if ( $path = $params['path'] )
 {
@@ -60,4 +61,4 @@ chdir($contr->rootPath);
 
 require('404.php');
 
-$model->end();
+$app->end();

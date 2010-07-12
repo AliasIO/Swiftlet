@@ -16,20 +16,20 @@ class model
 	const
 		version = '1.2.0'
 		;
-	
+
 	public
 		$configMissing = FALSE,
 		$debugMode     = TRUE
 		;
-	
+
 	/**
 	 * Initialize
 	 * @param object $contr
 	 */
 	function __construct($contr)
 	{
-		$model = $this;
-		
+		$app = $this;
+
 		$this->contr = $contr;
 
 		set_error_handler(array($this, 'error'), E_ALL);
@@ -59,7 +59,7 @@ class model
 				$this->configMissing = TRUE;
 			}
 			else
-			{			
+			{
 				$this->error(FALSE, 'Missing configuration file.');
 			}
 		}
@@ -100,17 +100,17 @@ class model
 		 */
 		if ( !class_exists('view') )
 		{
-			require($this->contr->rootPath . '_model/view.class.php');
+			require($this->contr->rootPath . '_app/view.class.php');
 		}
 
 		$this->view = new view($this);
 
 		/*
-		 * Plug-ins
+		 * Plugins
 		 */
 		if ( !class_exists('plugin') )
 		{
-			require($this->contr->rootPath . '_model/plugin.class.php');
+			require($this->contr->rootPath . '_app/plugin.class.php');
 		}
 
 		if ( $handle = opendir($dir = $this->contr->pluginPath) )
@@ -132,7 +132,7 @@ class model
 	}
 
 	/**
-	 * Initialize plug-in
+	 * Initialize plugin
 	 * @param string plugin
 	 */
 	private function plugin_load($file)
@@ -151,7 +151,7 @@ class model
 		if ( !empty($this->hooksRegistered[$hook]) )
 		{
 			/**
-			 * Hook plug-ins in the right order
+			 * Hook plugins in the right order
 			 */
 			usort($this->hooksRegistered[$hook], array($this, 'hook_sort'));
 
@@ -188,7 +188,7 @@ class model
 	}
 
 	/**
-	 * Check to see if required plug-ins are ready
+	 * Check to see if required plugins are ready
 	 * @param array $dependencies
 	 */
 	function check_dependencies($dependencies)
@@ -205,7 +205,7 @@ class model
 
 		if ( $missing )
 		{
-			$this->error(FALSE, 'Plug-ins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
+			$this->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
 		}
 	}
 
@@ -292,95 +292,6 @@ class model
 		$this->hook('input_sanitize');
 	}
 
-	/**
-	 * Create pagination
-	 * @param string $id
-	 * @param int $rows
-	 * @param int $maxRows
-	 * @return array
-	 */
-	function paginate($id, $rows, $maxRows, $exclude = array())
-	{
-		$pageNum = isset($this->GET_raw['p_' . $id]) ? $this->GET_raw['p_' . $id] : 1;
-
-		$query = !empty($this->GET_raw) ? $this->GET_raw : array();
-
-		unset($query['p_' . $id]);
-
-		$params = '';
-
-		if ( $query )
-		{
-			foreach ( $query as $k => $v )
-			{
-				if ( !in_array($k, $exclude) )
-				{
-					$params[] = $k . '=' . $v;
-				}
-			}
-		}
-
-		$url = '?' . ( $params ? implode('&', $params) . '&' : '' ) . 'p_' . $id . '=';
-
-		$pages = ceil($rows / $maxRows);
-
-		$pagination = '';
-
-		if ( $pageNum > 1 )
-		{
-			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . $this->t('previous') . '</a> ';
-		}
-		
-		for ( $i = 1; $i <= 3; $i ++ )
-		{
-			if ( $i > $pages )
-			{
-				break;
-			}
-
-			$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
-		}
-
-
-		if ( $pageNum > 7 )
-		{
-			$pagination .= '&hellip; ';
-		}
-
-		for ( $i = $pageNum - 3; $i <= $pageNum + 3; $i ++ )
-		{
-			if ( $i > 3 && $i < $pages - 2 )
-			{
-				$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
-			}
-		}
-
-		if ( $pageNum < $pages - 6 )
-		{
-			$pagination .= '&hellip; ';
-		}
-
-		if ( $pages > 3 )
-		{
-			for ( $i = $pages - 2; $i <= $pages; $i ++)
-			{
-				if ( $i > 3 )
-				{
-					$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
-				}
-			}
-		}
-
-		if ( $pageNum < $pages )
-		{
-			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . $this->t('next') . '</a> ';
-		}
-
-		$pagination = $this->t('Go to page') . ': ' . $pagination;
-
-		return array('from' => ( $pageNum - 1 ) * $maxRows, 'to' => ( $pageNum * $maxRows < $rows ? ( $pageNum * $maxRows) : $rows ), 'html' => $pagination);
-	}
-	
 	/**
 	 * Make a string HTML safe
 	 * @param string $v
@@ -485,7 +396,7 @@ class model
 	 * @return int
 	 */
 	function timer_start()
-	{	
+	{
 		return array_sum(explode(' ', microtime()));
 	}
 
@@ -546,7 +457,7 @@ class model
 			<html id="swiftlet_error">
 				<head>
 					<title>-</title>
-					
+
 					<style>
 						#swiftlet_error body {
 							color: #000;
@@ -575,7 +486,7 @@ class model
 							Oops! An error occured.
 						</p>
 
-						' . ( $this->debugMode ? '				
+						' . ( $this->debugMode ? '
 						<p>[
 							<a href="javascript: void(0);" onclick="
 								e = document.getElementById(\'error_debug_mode\');
@@ -583,7 +494,7 @@ class model
 								">
 								DEBUG MODE</a> ]
 						</p>
-						
+
 						<p id="error_debug_mode" style="display: block; margin-left: 2em;">
 							' . ( $errStr   ? 'MESSAGE: <strong><br/><br/>' . $errStr  . '</strong><br/><br/>' : '' ) . '
 							' . ( $errFile  ? 'FILE:    <strong>' . $errFile . '</strong><br/>' : '' ) . '
@@ -603,11 +514,11 @@ class model
 							e.style.display = e.style.display == \'none\' ? \'block\' : \'none\';
 							">BACKTRACE</a> ]
 					</p>
-					
+
 					<pre id="error_backtrace" style="display: none; margin-left: 2em;">';
-				
+
 				print_r(array_pop(debug_backtrace(FALSE)));
-				
+
 				echo '</pre>';
 			}
 

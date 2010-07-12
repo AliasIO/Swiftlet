@@ -11,17 +11,17 @@ $contrSetup = array(
 	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
 /*
  * Parse CSS files
  */
-if ( !empty($model->GET_raw['files']) )
+if ( !empty($app->GET_raw['files']) )
 {
 	$css = '';
 
 	// Combine files
-	foreach ( explode(',', $model->GET_raw['files']) as $filename )
+	foreach ( explode(',', $app->GET_raw['files']) as $filename )
 	{
 		if ( is_file($file = $contr->viewPath . $filename) )
 		{
@@ -54,4 +54,4 @@ header('Expires: ' . gmdate('r', time() + 60 * 60 * 24 * 30));
 // Minify output
 echo preg_replace('/\s*([{}:;,])\s*/', '\1', preg_replace('/\s+/', ' ', $css));
 
-$model->end();
+$app->end();

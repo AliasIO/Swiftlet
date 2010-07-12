@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Dashboard
@@ -20,17 +20,17 @@ class dashboard
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
 		$pages = array();
 
-		$model->hook('dashboard', $pages);
+		$app->hook('dashboard', $pages);
 
 		foreach ( $pages as $page )
 		{
-			if ( !isset($page['perm']) || $model->perm->check($page['perm']) )
+			if ( !isset($page['perm']) || $app->perm->check($page['perm']) )
 			{
 				if ( !isset($this->pages[$page['group']]) )
 				{

@@ -1,5 +1,5 @@
 <div class="no-grid">
-	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+	<h1><?php echo $app->t($contr->pageTitle) ?></h1>
 
 	<?php if ( !empty($view->error) ): ?>
 	<p class="message error"><?php echo $view->error ?></p>
@@ -20,9 +20,9 @@
 		<ul>
 			<?php foreach ( $pages as $page ): ?>
 			<li>
-				<strong><a href="<?php echo $view->rootPath . $page['path'] ?>"><?php echo $model->t($page['name']) ?></a></strong>
+				<strong><a href="<?php echo $view->rootPath . $page['path'] ?>"><?php echo $app->t($page['name']) ?></a></strong>
 				
-				&mdash; <?php echo $model->t($page['description']) ?>
+				&mdash; <?php echo $app->t($page['description']) ?>
 			</li>
 			<?php endforeach ?>
 		</ul>
@@ -33,30 +33,30 @@
 	</div>
 
 	<div class="span-5">
-		<h2><?php echo $model->t('Installation details') ?></h2>
+		<h2><?php echo $app->t('Installation details') ?></h2>
 		
 		<dl>
-			<dt><?php echo $model->t('Swiftlet version') ?></dt>
+			<dt><?php echo $app->t('Swiftlet version') ?></dt>
 			<dd><?php echo model::version ?></dd>
 			
-			<dt><?php echo $model->t('Plugins') ?></dt>
-			<dd><?php echo count($model->pluginsHooked) ?><?php echo $view->newPlugins ? ', ' . $model->t('%1$s not installed', $view->newPlugins) : '' ?> (<a href="<?php echo $view->rootPath ?>installer/"><?php echo $model->t('installer') ?></a>)</dd>
+			<dt><?php echo $app->t('Plugins') ?></dt>
+			<dd><?php echo count($app->pluginsHooked) ?><?php echo $view->newPlugins ? ', ' . $app->t('%1$s not installed', $view->newPlugins) : '' ?> (<a href="<?php echo $view->rootPath ?>installer/"><?php echo $app->t('installer') ?></a>)</dd>
 		</dl>
 		
-		<h2><?php echo $model->t('Configuration') ?></h2>
+		<h2><?php echo $app->t('Configuration') ?></h2>
 
 		<dl>			
-			<dt><?php echo $model->t('Environment') ?></dt>
-			<dd><?php echo $model->testing ? $model->t('Testing (%1$sunit tests%2$s)', array('<a href="' . $view->rootPath . 'unit_tests/">', '</a>')) : $model->t('Production') ?></dd>
+			<dt><?php echo $app->t('Environment') ?></dt>
+			<dd><?php echo $app->testing ? $app->t('Testing (%1$sunit tests%2$s)', array('<a href="' . $view->rootPath . 'unit_tests/">', '</a>')) : $app->t('Production') ?></dd>
 			
-			<dt><?php echo $model->t('Debug mode') ?></dt>
-			<dd><?php echo $model->debugMode ? $model->t('On') : $model->t('Off') ?></dd>
+			<dt><?php echo $app->t('Debug mode') ?></dt>
+			<dd><?php echo $app->debugMode ? $app->t('On') : $app->t('Off') ?></dd>
 			
-			<dt><?php echo $model->t('URL rewriting') ?></dt>
-			<dd><?php echo $model->urlRewrite ? $model->t('On') : $model->t('Off') ?></dd>
+			<dt><?php echo $app->t('URL rewriting') ?></dt>
+			<dd><?php echo $app->urlRewrite ? $app->t('On') : $app->t('Off') ?></dd>
 			
-			<dt><?php echo $model->t('Caching') ?></dt>
-			<dd><?php echo $model->caching ? $model->t('On (%1$sclear%2$s)', array('<a href="?action=clear_cache">', '</a>')) : $model->t('Off') ?></dd>
+			<dt><?php echo $app->t('Caching') ?></dt>
+			<dd><?php echo $app->caching ? $app->t('On (%1$sclear%2$s)', array('<a href="?action=clear_cache">', '</a>')) : $app->t('Off') ?></dd>
 		</dl>
 	</div>
 </div>

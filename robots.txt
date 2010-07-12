@@ -1,5 +1,5 @@
 User-agent: *
-Disallow: /_model/
+Disallow: /_app/
 Disallow: /_plugins/
 Disallow: /_view/
 Disallow: /admin/

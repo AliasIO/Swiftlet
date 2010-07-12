@@ -12,7 +12,7 @@
 		<dl>
 			<dt><label for="foo">Foo</label></dt>
 			<dd>
-				<input type="text" class="text" name="foo" id="foo" value="<?php echo $model->POST_html_safe['foo'] ?>"/>
+				<input type="text" class="text" name="foo" id="foo" value="<?php echo $app->POST_html_safe['foo'] ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -20,7 +20,7 @@
 		<dl>
 			<dt><br/></dt>
 			<dd>
-				<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
+				<input type="hidden" name="auth-token" value="<?php echo $app->authToken ?>"/>
 
 				<input type="submit" class="button" name="submit" id="submit" value="Submit"/>
 			</dd>
@@ -48,7 +48,7 @@
 </p>
 
 <pre>
-<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
+<input type="hidden" name="auth-token" value="<?php echo $app->authToken ?>"/>
 </pre>
 
 <h3>Confirmation</h3>
@@ -56,21 +56,21 @@
 <p>
 	Information send as GET does not require an authentication token to verify its integrity and can therefore not be trusted.
 	When using a link to perform administrative tasks (e.g. <code>?id=1&amp;action=delete</code> to delete a page)
-	confirmation should be requested from the user using <code>$model-&gt;confirm()</code>. The request is then resubmitted using POST.
+	confirmation should be requested from the user using <code>$app-&gt;confirm()</code>. The request is then resubmitted using POST.
 </p>
 
 <h5>Example</h5>
 
 <pre>
 <?php
-$model->form->validate(array(
+$app->form->validate(array(
 	));
 
-if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
+if ( isset($app->GET_raw['action']) && $app->GET_raw['action'] == 'delete' )
 {
-	if ( !$model->POST_valid['confirm'] )
+	if ( !$app->POST_valid['confirm'] )
 	{
-		$model->confirm('Are you sure you wish to delete this page?');
+		$app->confirm('Are you sure you wish to delete this page?');
 	}
 	else
 	{
@@ -81,8 +81,8 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 </pre>
 
 <p>
-	The <code>$model-&gt;confirm()</code> function terminates the code and displays a form to the user with an option to either
-	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$model-&gt;POST_valid['confirm']</code> is set
+	The <code>$app-&gt;confirm()</code> function terminates the code and displays a form to the user with an option to either
+	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$app-&gt;POST_valid['confirm']</code> is set
 	to <code>TRUE</code> (this requires the <a href="../plugins/form">Form</a> plugin).
 </p>
 
@@ -93,22 +93,22 @@ if ( isset($model->GET_raw['action']) && $model->GET_raw['action'] == 'delete' )
 <h5>Safe for HTML</h5>
 
 <ul>
-	<li><code>$model-&gt;GET_html_safe</code></li>
-	<li><code>$model-&gt;POST_html_safe</code></li>
+	<li><code>$app-&gt;GET_html_safe</code></li>
+	<li><code>$app-&gt;POST_html_safe</code></li>
 </ul>
 
-<h5>Safe for database insertion (requires a database plug-in)</h5>
+<h5>Safe for database insertion (requires a database plugin)</h5>
 
 <ul>
-	<li><code>$model-&gt;GET_db_safe</code></li>
-	<li><code>$model-&gt;POST_db_safe</code></li>
+	<li><code>$app-&gt;GET_db_safe</code></li>
+	<li><code>$app-&gt;POST_db_safe</code></li>
 </ul>
 
 <h5>Unfiltered (and unsafe!)</h5>
 
 <ul>
-	<li><code>$model-&gt;GET_raw</code></li>
-	<li><code>$model-&gt;POST_raw</code></li>
+	<li><code>$app-&gt;GET_raw</code></li>
+	<li><code>$app-&gt;POST_raw</code></li>
 </ul>
 
 <h3>See also</h3>

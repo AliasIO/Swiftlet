@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($this->model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->app) ) die('Direct access to this file is not allowed');
 
 /**
  * Page
@@ -18,27 +18,27 @@ class page
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize
-	 * @param object $this->model
+	 * @param object $this->app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
 			/**
 			 * Check if the pages table exists
 			 */
-			if ( in_array($model->db->prefix . 'pages', $model->db->tables) )
+			if ( in_array($app->db->prefix . 'pages', $app->db->tables) )
 			{
 				$this->ready = TRUE;
 			}
@@ -63,11 +63,11 @@ class page
 	 */
 	function get_home()
 	{
-		$this->model->db->sql('
+		$this->app->db->sql('
 			SELECT
 				n.`id`
-			FROM      `' . $this->model->db->prefix . 'pages` AS p
-			LEFT JOIN `' . $this->model->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
+			FROM      `' . $this->app->db->prefix . 'pages` AS p
+			LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 			WHERE
 				p.`published` = 1      AND
 				n.`type`      = "page" AND
@@ -75,7 +75,7 @@ class page
 			LIMIT 1
 			;');
 
-		if ( $r = $this->model->db->result )
+		if ( $r = $this->app->db->result )
 		{
 			return $this->rewrite('node/' . $r[0]['id']);
 		}

@@ -3,34 +3,34 @@
 <p><code>/_plugins/session.php</code></p>
 
 <p>
-	This plug-in manages user session data and can be used to temporarily store preferences and other information. This plug-in
-	requires a database and depends on the <a href="?mysql">MySQL</a> (or any other database) plug-in.
+	This plugin manages user session data and can be used to temporarily store preferences and other information. This plugin
+	requires a database and depends on the <a href="?mysql">MySQL</a> (or any other database) plugin.
 </p>
 
 <h3>Class</h3>
 
 <p>
-	<code>$model-&gt;session</code>
+	<code>$app-&gt;session</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;session-&gt;get ( <em>string</em> $k [, <em>string</em> $default ] )</code><br/>
-		Retrieves a session value (e.g. <code>$model-&gt;session-&gt;get('user id')</code>). If no value is set,
+		<code>$app-&gt;session-&gt;get ( <em>string</em> $k [, <em>string</em> $default ] )</code><br/>
+		Retrieves a session value (e.g. <code>$app-&gt;session-&gt;get('user id')</code>). If no value is set,
 		<code>$default</code> is returned (optional).
 	</li>
 	<li>
-		<code>$model-&gt;session-&gt;put ( <em>string|array</em> $k [, <em>string</em> $v ] )</code><br/>
+		<code>$app-&gt;session-&gt;put ( <em>string|array</em> $k [, <em>string</em> $v ] )</code><br/>
 		Creates or updates a session value.
 	</li>
 	<li>
-		<code>$model-&gt;session-&gt;reset ( )</code><br/>
+		<code>$app-&gt;session-&gt;reset ( )</code><br/>
 		Clears all session values.
 	</li>
 	<li>
-		<code>$model-&gt;session-&gt;end ( )</code><br/>
+		<code>$app-&gt;session-&gt;end ( )</code><br/>
 		Stores the session in the database and set a session cookie ("sw_session").
 	</li>
 </ul>
@@ -39,16 +39,16 @@
 
 <ul>
 	<li>
-		<code>$model-&gt;session-&gt;id</code><br/>
+		<code>$app-&gt;session-&gt;id</code><br/>
 		The session id.
 	</li>
 	<li>
-		<code>$model-&gt;session-&gt;lifeTime</code><br/>
+		<code>$app-&gt;session-&gt;lifeTime</code><br/>
 		Session lifetime in seconds. The default value is 3600 (2 hours). After this period of inactivity the session will be deleted
 		and the user will be logged out.
 	</li>
 	<li>
-		<code>$model-&gt;session-&gt;contents</code><br/>
+		<code>$app-&gt;session-&gt;contents</code><br/>
 		Array containing all session values.
 	</li>
 </ul>

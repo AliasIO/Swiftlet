@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * File
@@ -18,27 +18,27 @@ class file
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
 			/**
 			 * Check if the pages table exists
 			 */
-			if ( in_array($model->db->prefix . 'files', $model->db->tables) )
+			if ( in_array($app->db->prefix . 'files', $app->db->tables) )
 			{
 				$this->ready = TRUE;
 			}

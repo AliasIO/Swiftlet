@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Cache
@@ -18,7 +18,7 @@ class cache
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr,
 
@@ -27,13 +27,13 @@ class cache
 
 	/**
 	 * Initialize buffer
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
 		$this->ready = TRUE;
 
@@ -46,12 +46,12 @@ class cache
 	 */
 	private function read()
 	{
-		if ( !empty($this->model->session->ready) && !empty($this->model->user->ready) && $this->model->session->get('user id') != user::guestId )
+		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != user::guestId )
 		{
 			return;
 		}
 
-		if ( $this->model->caching && empty($this->model->POST_raw) && empty($_POST) )
+		if ( $this->app->caching && empty($this->app->POST_raw) && empty($_POST) )
 		{
 			if ( $handle = opendir($contr->rootPath . 'cache') )
 			{
@@ -69,14 +69,14 @@ class cache
 						{
 							if ( $hash == sha1($_SERVER['REQUEST_URI']) )
 							{
-								if ( $this->model->debugMode )
+								if ( $this->app->debugMode )
 								{
 									header('X-Swiftlet-Cache: HIT');
 								}
 								
 								echo file_get_contents($this->contr->rootPath . 'cache/' . $filename);
 
-								$this->model->buffer->flush();
+								$this->app->buffer->flush();
 
 								exit;
 							}
@@ -95,7 +95,7 @@ class cache
 	 */
 	function write(&$contents)
 	{
-		if ( !empty($this->model->session->ready) && !empty($this->model->user->ready) && $this->model->session->get('user id') != user::guestId )
+		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != user::guestId )
 		{
 			return;
 		}
@@ -111,28 +111,28 @@ class cache
 			}
 		}
 
-		if ( $this->model->caching && empty($this->model->POST_raw) )
+		if ( $this->app->caching && empty($this->app->POST_raw) )
 		{
 			if ( !is_dir($contr->rootPath . 'cache') )
 			{
-				$this->model->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
+				$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
 			}
 
 			if ( !is_writable($contr->rootPath . 'cache') )
 			{
-				$this->model->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
+				$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
 			}
 
 			$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
 
 			if ( !$handle = fopen($contr->rootPath . 'cache/' . $filename, 'a+') )
 			{
-				$this->model->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
+				$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
 			}
 
 			if ( fwrite($handle, $contents) === FALSE )
 			{
-				$this->model->error(FALSE, 'Could not write to file "/cache/' . $filename . '".', __FILE__, __LINE__);
+				$this->app->error(FALSE, 'Could not write to file "/cache/' . $filename . '".', __FILE__, __LINE__);
 			}
 
 			fclose($handle);
@@ -156,7 +156,7 @@ class cache
 
 					if ( !$r )
 					{
-						$this->model->error(FALSE, 'Could not deleted cached file "/cache/' . $filename . '", please check permissions or the delete the file manually.', __FILE__, __LINE__);
+						$this->app->error(FALSE, 'Could not deleted cached file "/cache/' . $filename . '", please check permissions or the delete the file manually.', __FILE__, __LINE__);
 					}
 				}
 			}

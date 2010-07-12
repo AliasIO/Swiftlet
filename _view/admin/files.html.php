@@ -1,9 +1,9 @@
 <div class="no-grid">
-	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+	<h1><?php echo $app->t($contr->pageTitle) ?></h1>
 
 	<?php if ( $view->action != 'upload' ): ?>
 	<p>
-		<a class="button" href="?action=upload&callback=<?php echo $view->callback ?>"><?php echo $model->t('Upload files') ?></a>
+		<a class="button" href="?action=upload&callback=<?php echo $view->callback ?>"><?php echo $app->t('Upload files') ?></a>
 	</p>
 	<?php endif ?>
 
@@ -16,28 +16,28 @@
 	<?php endif ?>
 
 	<?php if ( $view->action == 'upload' ): ?>
-	<h2><?php echo $model->t('Upload files') ?></h2>
+	<h2><?php echo $app->t('Upload files') ?></h2>
 
 	<form id="formFile" method="post" action="./?action=upload&callback=<?php echo $view->callback ?>" enctype="multipart/form-data">
 		<?php for ( $i = 0; $i < 5; $i ++ ): ?>
 		<fieldset>
 			<dl>
-				<dt><label for="title_<?php echo $i ?>"><?php echo $model->t('Title') ?></label></dt>
+				<dt><label for="title_<?php echo $i ?>"><?php echo $app->t('Title') ?></label></dt>
 				<dd>
-					<input type="text" name="title[<?php echo $i ?>]" id="title_<?php echo $i ?>" value="<?php echo $model->POST_html_safe['title'][$i] ?>"/>
+					<input type="text" name="title[<?php echo $i ?>]" id="title_<?php echo $i ?>" value="<?php echo $app->POST_html_safe['title'][$i] ?>"/>
 					
-					<?php if ( isset($model->form->errors['title'][$i]) ): ?>
-					<span class="error"><?php echo $model->form->errors['title'][$i] ?></span>
+					<?php if ( isset($app->form->errors['title'][$i]) ): ?>
+					<span class="error"><?php echo $app->form->errors['title'][$i] ?></span>
 					<?php endif ?>
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="file_<?php echo $i ?>"><?php echo $model->t('File') ?></label></dt>
+				<dt><label for="file_<?php echo $i ?>"><?php echo $app->t('File') ?></label></dt>
 				<dd>
 					<input type="file" name="file[<?php echo $i ?>]" id="file_<?php echo $i ?>"/>
 					
-					<?php if ( isset($model->form->errors['file'][$i]) ): ?>
-					<span class="error"><?php echo $model->form->errors['file'][$i] ?></span>
+					<?php if ( isset($app->form->errors['file'][$i]) ): ?>
+					<span class="error"><?php echo $app->form->errors['file'][$i] ?></span>
 					<?php endif ?>
 				</dd>
 			</dl>
@@ -47,12 +47,12 @@
 			<dl>
 				<dt><br/></dt>
 				<dd>
-					<input type="hidden" name="auth-token" value="<?php echo $model->authToken ?>"/>
+					<input type="hidden" name="auth-token" value="<?php echo $app->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $model->t('Upload files') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $app->t('Upload files') ?>"/>
 
 					<p>
-						<a href="?callback=<?php echo $view->callback ?>"><?php echo $model->t('Cancel') ?></a>
+						<a href="?callback=<?php echo $view->callback ?>"><?php echo $app->t('Cancel') ?></a>
 					</p>
 				</dd>
 			</dl>
@@ -69,7 +69,7 @@
 
 	<a name="files"></a>
 
-	<h2><?php echo $model->t('All files') ?></h2>
+	<h2><?php echo $app->t('All files') ?></h2>
 
 	<?php if ( $view->files ): ?>
 
@@ -80,13 +80,13 @@
 	<table>
 		<thead>
 			<tr>
-				<th><?php echo $model->t('Thumbnail')   ?></th>
-				<th><?php echo $model->t('Title')       ?></th>
-				<th><?php echo $model->t('File type')   ?></th>
-				<th><?php echo $model->t('File size')   ?></th>
-				<th><?php echo $model->t('Dimensions')  ?></th>
-				<th><?php echo $model->t('Uploaded on') ?></th>
-				<th><?php echo $model->t('Action')      ?></th>
+				<th><?php echo $app->t('Thumbnail')   ?></th>
+				<th><?php echo $app->t('Title')       ?></th>
+				<th><?php echo $app->t('File type')   ?></th>
+				<th><?php echo $app->t('File size')   ?></th>
+				<th><?php echo $app->t('Dimensions')  ?></th>
+				<th><?php echo $app->t('Uploaded on') ?></th>
+				<th><?php echo $app->t('Action')      ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -95,27 +95,27 @@
 				<td>
 					<?php if ( $file['image'] ): ?>
 					<a
-						href="<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>"
-						onclick="callback('<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>');"
+						href="<?php echo $app->route('file/' . $file['id'] . $file['extension']) ?>"
+						onclick="callback('<?php echo $app->route('file/' . $file['id'] . $file['extension']) ?>');"
 						>
-						<img src="<?php echo $model->route('file/thumb/' . $file['id'] . $file['extension']) ?>" width="120" height="120" alt="">
+						<img src="<?php echo $app->route('file/thumb/' . $file['id'] . $file['extension']) ?>" width="120" height="120" alt="">
 					</a>
 					<?php endif ?>
 				</td>
 				<td>
 					<a
-						href="<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>"
-						onclick="callback('<?php echo $model->route('file/' . $file['id'] . $file['extension']) ?>');"
+						href="<?php echo $app->route('file/' . $file['id'] . $file['extension']) ?>"
+						onclick="callback('<?php echo $app->route('file/' . $file['id'] . $file['extension']) ?>');"
 						>
 						<?php echo $file['title'] ?>
 					</a>
 				</td>
-				<td><?php echo $model->h($file['mime_type'] . ' (' . ltrim(strtoupper($file['extension']), '.') . ')') ?></td>
+				<td><?php echo $app->h($file['mime_type'] . ' (' . ltrim(strtoupper($file['extension']), '.') . ')') ?></td>
 				<td><?php echo $file['size'] ? number_format($file['size'] / 1024, 0) . ' kB' : '' ?></td>
-				<td><?php echo $file['width'] && $file['height'] ? ( int ) $file['width'] . 'x' . ( int ) $file['height'] : $model->t('n/a') ?></td>
-				<td><?php echo $model->format_date($file['date'], 'date') ?></td>
+				<td><?php echo $file['width'] && $file['height'] ? ( int ) $file['width'] . 'x' . ( int ) $file['height'] : $app->t('n/a') ?></td>
+				<td><?php echo $app->format_date($file['date'], 'date') ?></td>
 				<td>
-					<a class="button caution" href="?id=<?php echo $file['id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $model->t('Delete') ?></a>
+					<a class="button caution" href="?id=<?php echo $file['id'] ?>&action=delete&callback=<?php echo $view->callback ?>"><?php echo $app->t('Delete') ?></a>
 				</td>
 				</td>
 			</tr>
@@ -128,7 +128,7 @@
 	</p>
 	<?php else: ?>
 	<p>
-		<em><?php echo $model->t('No files') ?></em>
+		<em><?php echo $app->t('No files') ?></em>
 	</p>
 	<?php endif ?>
 

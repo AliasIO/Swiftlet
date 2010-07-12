@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
 	<head>
-		<title><?php echo $view->siteName ?> - <?php echo $model->t($view->pageTitle) ?></title>
+		<title><?php echo $view->siteName ?> - <?php echo $app->t($view->pageTitle) ?></title>
 
 		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->rootPath ?>css.php?files=global.css,grid.css"/>
 
@@ -11,7 +11,7 @@
 		<meta http-equiv="content-type"     content="text/html; charset=UTF-8"/>
 		<meta http-equiv="content-language" content="en-US"/>
 
-		<meta name="title"        content="<?php echo $view->siteName ?> - <?php echo $model->t($view->pageTitle) ?>"/>
+		<meta name="title"        content="<?php echo $view->siteName ?> - <?php echo $app->t($view->pageTitle) ?>"/>
 		<meta name="distribution" content="global"/>
 		<meta name="generator"    content="Swiftlet - http://swiftlet.org"/>
 		<meta name="copyright"    content="<?php echo $view->siteCopyright   ?>"/>
@@ -29,18 +29,18 @@
 	<body class="<?php echo $contr->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">
 			<h1 id="logo">
-				<a href="<?php echo $view->rootPath ?>" title="<?php echo $model->t('Home') ?>"><?php echo $view->siteName ?></a>
+				<a href="<?php echo $view->rootPath ?>" title="<?php echo $app->t('Home') ?>"><?php echo $view->siteName ?></a>
 			</h1>
 
 			<div id="menu">
 				<ul>
 					<li>
-						<a href="<?php echo $view->rootPath ?>"><?php echo $model->t('Home') ?></a>
+						<a href="<?php echo $view->rootPath ?>"><?php echo $app->t('Home') ?></a>
 					</li>
-					<?php if ( !empty($model->header->menu) ): ?>
-					<?php foreach ( $model->header->menu as $item => $path ): ?>
+					<?php if ( !empty($app->header->menu) ): ?>
+					<?php foreach ( $app->header->menu as $item => $path ): ?>
 					<li>
-						<a href="<?php echo $path ?>"><?php echo $model->t($item) ?></a>
+						<a href="<?php echo $path ?>"><?php echo $app->t($item) ?></a>
 					</li>
 					<?php endforeach ?>
 					<?php endif ?>
@@ -48,7 +48,7 @@
 				
 				<?php if ( $contr->inAdmin ): ?>
 				<p>
-					<?php echo $model->t('Administration') ?>
+					<?php echo $app->t('Administration') ?>
 				</p>
 				<?php endif ?>
 			</div>

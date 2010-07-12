@@ -16,22 +16,22 @@
 <h3>Class</h3>
 
 <p>
-	<code>$model->buffer</code>
+	<code>$app->buffer</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;buffer-&gt;start ( )</code><br/>
-		Start buffering. No output will be send to the browser until <code>$model->buffer->flush()</code> is called.
+		<code>$app-&gt;buffer-&gt;start ( )</code><br/>
+		Start buffering. No output will be send to the browser until <code>$app->buffer->flush()</code> is called.
 	</li>
 	<li>
-		<code>$model-&gt;buffer-&gt;flush ( )</code><br/>
+		<code>$app-&gt;buffer-&gt;flush ( )</code><br/>
 		Flush the buffer, send buffered contents to the browser.
 	</li>
 	<li>
-		<code>$model-&gt;buffer-&gt;clean ( )</code><br/>
+		<code>$app-&gt;buffer-&gt;clean ( )</code><br/>
 		Clean the buffer, buffered contents are erased and nothing is send to the browser. All output generated after calling
 		this function is send directly to the browser.
 	</li>

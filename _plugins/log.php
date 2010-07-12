@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -21,11 +21,11 @@ switch ( $hook )
 	case 'init':
 		require($contr->classPath . 'log.php');
 
-		$model->log = new log($model);
+		$app->log = new log($app);
 
 		break;
 	case 'unit_tests':
-		$model->log->write('unit_test', 'Test');
+		$app->log->write('unit_test', 'Test');
 
 		$params[] = array(
 			'test' => 'Writing a log file to <code>/log/</code>.',

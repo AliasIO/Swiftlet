@@ -11,7 +11,7 @@ SWIFTLET
 SERVER REQUIREMENTS
 
  - PHP 5.1
- - MySQL 5 (optional but required for some plug-ins)
+ - MySQL 5 (optional but required for some plugins)
 
 
 INSTALLATION

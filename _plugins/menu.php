@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,16 +20,16 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'menu', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'menu', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'menu` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'menu` (
 					`items` TEXT NULL
 					) TYPE = INNODB
 				;');
 			
-			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'menu` (
+			$app->db->sql('
+				INSERT INTO `' . $app->db->prefix . 'menu` (
 					`items`
 					)
 				VALUES (
@@ -38,28 +38,28 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->create('Menu', 'admin menu access', 'Manage menu items');
+			$app->perm->create('Menu', 'admin menu access', 'Manage menu items');
 		}
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'menu', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'menu', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'menu`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'menu`;');
 		}
 
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->delete('admin menu access');
+			$app->perm->delete('admin menu access');
 		}
 
 		break;
 	case 'init':
 		require($contr->classPath . 'menu.php');
 
-		$model->menu = new menu($model);
+		$app->menu = new menu($app);
 
 		break;
 	case 'dashboard':
@@ -73,9 +73,9 @@ switch ( $hook )
 
 		break;
 	case 'menu':
-		if ( !empty($model->menu->ready) )
+		if ( !empty($app->menu->ready) )
 		{
-			$model->menu->get_items($params);
+			$app->menu->get_items($params);
 		}
 
 		break;

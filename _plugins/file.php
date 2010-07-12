@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,10 +20,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'files', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'files', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'files` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'files` (
 					`id`        INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
 					`node_id`   INT(10)    UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)        NOT NULL,
@@ -43,34 +43,34 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->create('Files', 'admin file access', 'Manage files');
-			$model->perm->create('Files', 'admin file upload', 'Upload files');
-			$model->perm->create('Files', 'admin file delete', 'Delete files');
+			$app->perm->create('Files', 'admin file access', 'Manage files');
+			$app->perm->create('Files', 'admin file upload', 'Upload files');
+			$app->perm->create('Files', 'admin file delete', 'Delete files');
 		}
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'files', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'files', $app->db->tables) )
 		{
-			$model->db->sql('
-				DROP TABLE `' . $model->db->prefix . 'files`
+			$app->db->sql('
+				DROP TABLE `' . $app->db->prefix . 'files`
 				;');
 		}
 
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->delete('admin file access');
+			$app->perm->delete('admin file access');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->db->ready) && !empty($model->node->ready) )
+		if ( !empty($app->db->ready) && !empty($app->node->ready) )
 		{
 			require($contr->classPath . 'file.php');
 
-			$model->file = new file($model);
+			$app->file = new file($app);
 		}
 
 		break;
@@ -85,7 +85,7 @@ switch ( $hook )
 
 		break;
 	case 'route':
-		if ( !empty($model->file->ready) )
+		if ( !empty($app->file->ready) )
 		{
 			if ( $params['parts'][0] == 'file' )
 			{
@@ -102,21 +102,21 @@ switch ( $hook )
 			'title[0]'    => 'Unit Test File',
 			'file[0]'     => '@' . $contr->rootPath . 'favicon.ico',
 			'form-submit' => 'Submit',
-			'auth-token'  => $model->authToken
+			'auth-token'  => $app->authToken
 			);
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/', $post);
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				*
-			FROM `' . $model->db->prefix . 'files`
+			FROM `' . $app->db->prefix . 'files`
 			WHERE
 				`title` = "Unit Test File"
 			LIMIT 1
 			;', FALSE);
 
-		$file = isset($model->db->result[0]) ? $model->db->result[0] : FALSE;
+		$file = isset($app->db->result[0]) ? $app->db->result[0] : FALSE;
 
 		$params[] = array(
 			'test' => 'Uploading a file in <code>/admin/files/</code>.',
@@ -134,16 +134,16 @@ switch ( $hook )
 					'action' => 'delete'
 					)),
 				'confirm'    => '1',
-				'auth-token' => $model->authToken
+				'auth-token' => $app->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/?id=' . ( int ) $file['id'] . '&action=delete', $post);
 		}
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $model->db->prefix . 'files`
+			FROM `' . $app->db->prefix . 'files`
 			WHERE
 				`id` = ' . ( int ) $file['id'] . '
 			LIMIT 1
@@ -151,7 +151,7 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Deleting a file in <code>/admin/files/</code>.',
-			'pass' => !$model->db->result
+			'pass' => !$app->db->result
 			);
 
 		break;

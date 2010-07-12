@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Menu
@@ -18,27 +18,27 @@ class menu
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
 			/**
 			 * Check if the menu table exists
 			 */
-			if ( in_array($model->db->prefix . 'menu', $model->db->tables) )
+			if ( in_array($app->db->prefix . 'menu', $app->db->tables) )
 			{
 				$this->ready = TRUE;
 			}
@@ -50,14 +50,14 @@ class menu
 	 */
 	function get_items(&$params)
 	{
-		$this->model->db->sql('
+		$this->app->db->sql('
 			SELECT
 				`items`
-			FROM `' . $this->model->db->prefix . 'menu`
+			FROM `' . $this->app->db->prefix . 'menu`
 			LIMIT 1
 			;');
 
-		if ( $r = $this->model->db->result )
+		if ( $r = $this->app->db->result )
 		{
 			$items = @unserialize($r[0]['items']);
 
@@ -76,18 +76,18 @@ class menu
 
 				if ( $nodeIds )
 				{
-					$this->model->db->sql('
+					$this->app->db->sql('
 						SELECT
 							`id`,
 							`title`,
 							`path`
-						FROM `' . $this->model->db->prefix . 'nodes`
+						FROM `' . $this->app->db->prefix . 'nodes`
 						WHERE
 							`id` IN (' . implode(', ', $nodeIds) . ')
 						LIMIT ' . count($nodeIds) .'
 						;');
 
-					if ( $r = $this->model->db->result )
+					if ( $r = $this->app->db->result )
 					{
 						foreach ( $r as $d )
 						{

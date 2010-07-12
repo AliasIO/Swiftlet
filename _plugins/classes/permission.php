@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($this->model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->app) ) die('Direct access to this file is not allowed');
 
 /**
  * Permissions
@@ -25,41 +25,41 @@ class perm
 		;
 
 	private
-		$model,
+		$app,
 		$contr
 		;
 
 	/**
 	 * Initialize
-	 * @param object $this->model
+	 * @param object $this->app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
 		/**
 		 * Check if the permissions table exists
 		 */
-		if ( in_array($model->db->prefix . 'perms', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'perms', $app->db->tables) )
 		{
-			$this->model->db->sql('
+			$this->app->db->sql('
 				SELECT
 					p.`name`  AS `permission`,
 					pr.`name` AS `role`,
 					prx.`value`
-				FROM      `' . $model->db->prefix . 'perms_roles_users_xref` AS prux
-				LEFT JOIN `' . $model->db->prefix . 'perms_roles`            AS pr   ON prux.`role_id` = pr.`id`
-				LEFT JOIN `' . $model->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id` 
-				LEFT JOIN `' . $model->db->prefix . 'perms`                  AS p    ON prx.`perm_id`  = p.`id`
+				FROM      `' . $app->db->prefix . 'perms_roles_users_xref` AS prux
+				LEFT JOIN `' . $app->db->prefix . 'perms_roles`            AS pr   ON prux.`role_id` = pr.`id`
+				LEFT JOIN `' . $app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id` 
+				LEFT JOIN `' . $app->db->prefix . 'perms`                  AS p    ON prx.`perm_id`  = p.`id`
 				WHERE
 					p.`name`  IS NOT NULL AND
 					pr.`name` IS NOT NULL AND
-					prux.`user_id` = ' . ( int ) $model->session->get('user id') . '
+					prux.`user_id` = ' . ( int ) $app->session->get('user id') . '
 				', FALSE);
 
-			if ( $r = $model->db->result )
+			if ( $r = $app->db->result )
 			{
 				$perms = array();
 
@@ -73,7 +73,7 @@ class perm
 
 				foreach ( $perms as $name => $value )
 				{			
-					$model->session->put('perm ' . $name, ( $model->session->get('user id owner') or $value == 1 ) ? 1 : 0);
+					$app->session->put('perm ' . $name, ( $app->session->get('user id owner') or $value == 1 ) ? 1 : 0);
 				}			
 			}
 
@@ -88,7 +88,7 @@ class perm
 	 */
 	function check($name)
 	{
-		return $this->model->session->get('user is owner') or $this->model->session->get('perm ' . $name);
+		return $this->app->session->get('user is owner') or $this->app->session->get('perm ' . $name);
 	}
 
 	/**
@@ -100,16 +100,16 @@ class perm
 	 */
 	function create($group, $name, $description)
 	{
-		$this->model->db->sql('
-			INSERT IGNORE INTO `' . $this->model->db->prefix . 'perms` (
+		$this->app->db->sql('
+			INSERT IGNORE INTO `' . $this->app->db->prefix . 'perms` (
 				`name`,
 				`desc`,
 				`group`
 				)
 			VALUES (
-				"' . $this->model->db->escape($name) . '",
-				"' . $this->model->db->escape($description) . '",
-				"' . $this->model->db->escape($group) . '"
+				"' . $this->app->db->escape($name) . '",
+				"' . $this->app->db->escape($description) . '",
+				"' . $this->app->db->escape($group) . '"
 				)
 			;');
 	}
@@ -121,27 +121,27 @@ class perm
 	 */
 	function delete($name)
 	{
-		$this->model->db->sql('
+		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->model->db->prefix . 'perms`
+			FROM `' . $this->app->db->prefix . 'perms`
 			WHERE
-				`name` = "' . $this->model->db->escape($name) . '"
+				`name` = "' . $this->app->db->escape($name) . '"
 			LIMIT 1
 			;');
 
-		if ( $this->model->db->result && $id = $this->model->db->result[0]['id'] )
+		if ( $this->app->db->result && $id = $this->app->db->result[0]['id'] )
 		{
-			$this->model->db->sql('
+			$this->app->db->sql('
 				DELETE
 					p, prx
-				FROM      `' . $this->model->db->prefix . 'perms`            AS p
-				LEFT JOIN `' . $this->model->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
+				FROM      `' . $this->app->db->prefix . 'perms`            AS p
+				LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
 				WHERE
 					p.`id` = ' . ( int ) $id . '
 				;');
 
-			return !empty($this->model->db->result);
+			return !empty($this->app->db->result);
 		}
 	}
 }

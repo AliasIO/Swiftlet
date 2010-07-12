@@ -23,23 +23,23 @@
 
 <ul>
 	<li>
-		<code>$model-&gt;pluginsLoaded['plugin_name']-&gt;hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
+		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
 		Hook a plugin into the code.
 	</li>
 	<li>
-		<code>$model-&gt;pluginsLoaded['plugin_name']-&gt;install ( )</code><br/>
+		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;install ( )</code><br/>
 		Install a plugin (call the 'install' hook).
 	</li>
 	<li>
-		<code>$model-&gt;pluginsLoaded['plugin_name']-&gt;upgrade ( )</code><br/>
+		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;upgrade ( )</code><br/>
 		Upgrade a plugin (call the 'upgrade' hook).
 	</li>
 	<li>
-		<code>$model-&gt;pluginsLoaded['plugin_name']-&gt;remove ( )</code><br/>
+		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;remove ( )</code><br/>
 		Remove a plugin (call the 'remove' hook).
 	</li>
 	<li>
-		<code>$model-&gt;pluginsLoaded['plugin_name']-&gt;get_version ( )</code><br/>
+		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;get_version ( )</code><br/>
 		Get version number of a plugin.
 	</li>
 </ul>

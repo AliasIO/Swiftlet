@@ -11,18 +11,18 @@
 <h3>Class</h3>
 
 <p>
-	<code>$model-&gt;page</code>
+	<code>$app-&gt;page</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;page-&gt;nodes_to_list ( <em>array</em> $nodes, <em>array</em> $list )</code><br/>
+		<code>$app-&gt;page-&gt;nodes_to_list ( <em>array</em> $nodes, <em>array</em> $list )</code><br/>
 		Creates a flat array of nodes.
 	</li>
 	<li>
-		<code>$model-&gt;page-&gt;rewrite ( <em>string</em> $url )</code><br/>
+		<code>$app-&gt;page-&gt;rewrite ( <em>string</em> $url )</code><br/>
 		If <code>urlRewrite</code> is set to <code>TRUE</code> in <code>/_config.php</code> this function makes URLs more readable.
 		In this case it transforms <code>/page/?permalink=example</code> into <code>/p/example</code> (this requires a working
 		.htaccess file in the root directory).

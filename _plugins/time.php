@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,7 +20,7 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !empty($model->user->ready) )
+		if ( !empty($app->user->ready) )
 		{
 			$timeZones = array(
 				'Kwajalein'                      => '(GMT-12:00) International Date Line West',
@@ -151,7 +151,7 @@ switch ( $hook )
 				'Pacific/Tongatapu'              => '(GMT+13:00) Nukualofa'
 				);
 
-			$model->user->save_pref(array(
+			$app->user->save_pref(array(
 				'pref'    => 'Time zone',
 				'type'    => 'select',
 				'match'   => '/.*/',
@@ -161,22 +161,22 @@ switch ( $hook )
 		
 		break;
 	case 'remove':
-		$model->user->delete_pref('Time zone');
+		$app->user->delete_pref('Time zone');
 
 		break;
 	case 'init':
-		if ( !empty($model->db->ready) && !empty($model->node->ready) )
+		if ( !empty($app->db->ready) && !empty($app->node->ready) )
 		{
 			require($contr->classPath . 'time.php');
 
-			$model->time = new time($model);
+			$app->time = new time($app);
 		}
 
 		break;
 	case 'format_date':
-		if ( !empty($model->time->ready) )
+		if ( !empty($app->time->ready) )
 		{
-			$params['date'] = $model->time->format_date($params['date'], $params['type']);
+			$params['date'] = $app->time->format_date($params['date'], $params['type']);
 		}
 
 		break;

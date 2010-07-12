@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /*
  * Form
@@ -18,7 +18,7 @@ class form
 		;
 	
 	private
-		$model,
+		$app,
 		$view,
 		$contr,
 
@@ -33,13 +33,13 @@ class form
 
 	/**
 	 * Initialize form
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 		
 		$this->ready = TRUE;
 	}
@@ -56,15 +56,15 @@ class form
 
 		foreach ( $vars as $var => $types )
 		{
-			if ( !isset($this->model->POST_raw[$var]) )
+			if ( !isset($this->app->POST_raw[$var]) )
 			{
-				$this->model->POST_raw[$var]       = FALSE;
-				$this->model->POST_html_safe[$var] = FALSE;
-				$this->model->POST_valid[$var]     = FALSE;
+				$this->app->POST_raw[$var]       = FALSE;
+				$this->app->POST_html_safe[$var] = FALSE;
+				$this->app->POST_valid[$var]     = FALSE;
 			}
 			else
 			{
-				$this->model->POST_valid[$var] = FALSE;
+				$this->app->POST_valid[$var] = FALSE;
 
 				$regexes = array();
 
@@ -75,16 +75,16 @@ class form
 					$regexes[] = isset($this->typesRegex[$type]) ? $this->typesRegex[$type] : $type;
 				}
 
-				$this->model->POST_valid[$var] = $this->check($this->model->POST_raw[$var], $regexes);
+				$this->app->POST_valid[$var] = $this->check($this->app->POST_raw[$var], $regexes);
 
-				if ( $this->model->POST_valid[$var] === FALSE )
+				if ( $this->app->POST_valid[$var] === FALSE )
 				{
-					$this->errors[$var] = $this->model->t('Invalid value');
+					$this->errors[$var] = $this->app->t('Invalid value');
 				}
 			}
 		}
 
-		$this->model->hook('input_sanitize');
+		$this->app->hook('input_sanitize');
 	}
 	
 	private function check($var, $regexes)

@@ -6,20 +6,20 @@
  */
 
 $contrSetup = array(
-	'rootPath'  => './',
-	'pageTitle' => 'Installation successful'
+	'rootPath'   => './',
+	'pageTitle'  => 'Installation successful'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
 $newPlugins = 0;
 
-if ( isset($model->db) )
+if ( isset($app->db) )
 {
-	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
+	foreach ( $app->pluginsLoaded as $pluginName => $plugin )
 	{
 		$version = $plugin->get_version();
-		
+
 		if ( !$version )
 		{
 			if ( isset($plugin->info['hooks']['install']) )
@@ -32,9 +32,9 @@ if ( isset($model->db) )
 
 $view->notices = array();
 
-if ( $model->configMissing )
+if ( $app->configMissing )
 {
-	$view->notices[] = $model->t(
+	$view->notices[] = $app->t(
 		'No configuration file found. Please copy %1$s to %2$s.',
 		array(
 			'<code>/_config.default.php</code>',
@@ -44,9 +44,9 @@ if ( $model->configMissing )
 }
 else
 {
-	if ( $model->testing )
+	if ( $app->testing )
 	{
-		$view->notices[] = $model->t(
+		$view->notices[] = $app->t(
 			'%1$s is set to %2$s in %3$s. Be sure to change it to %4$s when running in a production environment.',
 			array(
 				'<code>testing</code>',
@@ -57,9 +57,9 @@ else
 			);
 	}
 
-	if ( !$model->sysPassword )
+	if ( !$app->sysPassword )
 	{
-		$view->notices[] = $model->t(
+		$view->notices[] = $app->t(
 			'%1$s has no value in %2$s. Please change it to a unique password (required for some operations).',
 			array(
 				'<code>sysPassword</code>',
@@ -68,9 +68,9 @@ else
 			);
 	}
 
-	if ( empty($model->db->ready) )
+	if ( empty($app->db->ready) )
 	{
-		$view->notices[] = $model->t(
+		$view->notices[] = $app->t(
 			'No database connected (required for some plugins). You may need to change the database settings in %s.',
 			'<code>/_config.php</code>'
 			);
@@ -78,8 +78,8 @@ else
 
 	if ( $newPlugins )
 	{
-		$view->notices[] = $model->t(
-			'%1$s Plug-in(s) require installation (go to %2$s).',
+		$view->notices[] = $app->t(
+			'%1$s Plugin(s) require installation (go to %2$s).',
 			array(
 				$newPlugins,
 				'<a href="' . $view->rootPath . 'installer/"><code>/installer/</code></a>'
@@ -90,4 +90,4 @@ else
 
 $view->load('home.html.php');
 
-$model->end();
+$app->end();

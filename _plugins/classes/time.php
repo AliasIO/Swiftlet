@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Time
@@ -23,13 +23,13 @@ class time
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		if ( !empty($model->session->ready) )
+		if ( !empty($app->session->ready) )
 		{
-			if ( $d = $model->session->get('pref_values') )
+			if ( $d = $app->session->get('pref_values') )
 			{
 				if ( isset($d['Time zone']) )
 				{

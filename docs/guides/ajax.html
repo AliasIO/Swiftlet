@@ -14,7 +14,7 @@
 <script type="text/javascript">
 	$('#result').load('ajax.php', {
 		'key': 'value',
-		'auth-token': '<?php echo $model->authToken ?>'
+		'auth-token': '<?php echo $app->authToken ?>'
 	}, function() {
 		alert('Success!');
 	});

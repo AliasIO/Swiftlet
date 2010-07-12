@@ -11,27 +11,27 @@ $contrSetup = array(
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'form', 'perm'));
+$app->check_dependencies(array('db', 'form', 'perm'));
 
-$model->form->validate(array(
+$app->form->validate(array(
 	'form-submit' => 'bool',
 	'title'       => 'string, empty'
 	));
 
-$id       = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
-$action   = isset($model->GET_raw['action'])   ? $model->GET_raw['action']   : FALSE;
-$callback = isset($model->GET_raw['callback']) ? $model->GET_raw['callback'] : FALSE;
+$id       = isset($app->GET_raw['id']) && ( int ) $app->GET_raw['id'] ? ( int ) $app->GET_raw['id'] : FALSE;
+$action   = isset($app->GET_raw['action'])   ? $app->GET_raw['action']   : FALSE;
+$callback = isset($app->GET_raw['callback']) ? $app->GET_raw['callback'] : FALSE;
 
-if ( !$model->perm->check('admin file access') )
+if ( !$app->perm->check('admin file access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-if ( $model->POST_valid['form-submit'] )
+if ( $app->POST_valid['form-submit'] )
 {
 	if ( isset($_FILES['file']) )
 	{
@@ -39,7 +39,7 @@ if ( $model->POST_valid['form-submit'] )
 
 		if ( !is_writable($contr->rootPath . 'uploads/files/') )
 		{
-			$model->error(FALSE, 'Directory "/uploads/files/" is not writable.', __FILE__, __LINE__);
+			$app->error(FALSE, 'Directory "/uploads/files/" is not writable.', __FILE__, __LINE__);
 		}
 
 		for ( $i = 0; $i < count($_FILES['file']['name']); $i ++ )
@@ -60,15 +60,15 @@ if ( $model->POST_valid['form-submit'] )
 						{
 							list($width, $height) = $image;
 
-							$model->file->thumb($filename, $_FILES['file']['type'][$i], $width, $height);
+							$app->file->thumb($filename, $_FILES['file']['type'][$i], $width, $height);
 						}
 
 						$extension = strtolower(strrchr($_FILES['file']['name'][$i], '.'));
 
-						$title = $model->POST_valid['title'][$i] ? $model->POST_html_safe['title'][$i] : $model->h(basename($_FILES['file']['name'][$i], $extension));
+						$title = $app->POST_valid['title'][$i] ? $app->POST_html_safe['title'][$i] : $app->h(basename($_FILES['file']['name'][$i], $extension));
 
-						$model->db->sql('
-							INSERT INTO `' . $model->db->prefix . 'files` (
+						$app->db->sql('
+							INSERT INTO `' . $app->db->prefix . 'files` (
 								`title`,
 								`extension`,
 								`image`,
@@ -81,49 +81,49 @@ if ( $model->POST_valid['form-submit'] )
 								`date_edit`
 								)
 							VALUES (
-								"' . $model->db->escape($title)                              . '",
-								"' . $model->db->escape($extension)                          . '",
+								"' . $app->db->escape($title)                              . '",
+								"' . $app->db->escape($extension)                          . '",
 								 ' . ( !empty($image) ? 1 : 0 )                              . ',
-								"' . $model->db->escape($filename)                           . '",
-								"' . $model->db->escape($_FILES['file']['type'][$i])         . '",
+								"' . $app->db->escape($filename)                           . '",
+								"' . $app->db->escape($_FILES['file']['type'][$i])         . '",
 								 ' . ( int ) $width                                          . ',
 								 ' . ( int ) $height                                         . ',
-								 ' . ( int ) $model->db->escape($_FILES['file']['size'][$i]) . ',
+								 ' . ( int ) $app->db->escape($_FILES['file']['size'][$i]) . ',
 								"' . gmdate('Y-m-d H:i:s')                                   . '",
 								"' . gmdate('Y-m-d H:i:s')                                   . '"
 								)
 							;');
 
-						if ( $id = $model->db->result )
+						if ( $id = $app->db->result )
 						{
-							$uploads[] = '<a href="' . $model->route('file/' . $id . $extension) . '" onclick="callback(\'' . $model->route('file/' . $id . $extension) . '\');">' . $title . '</a>';
+							$uploads[] = '<a href="' . $app->route('file/' . $id . $extension) . '" onclick="callback(\'' . $app->route('file/' . $id . $extension) . '\');">' . $title . '</a>';
 						}
 					}
 					else
 					{
-						$model->form->errors['file'][$i] = $model->t('Could not move file to destined location.');
+						$app->form->errors['file'][$i] = $app->t('Could not move file to destined location.');
 					}
 
 					break;
 				case UPLOAD_ERR_INI_SIZE:
 				case UPLOAD_ERR_FORM_SIZE:
-					$model->form->errors['file'][$i] = $model->t('The file is to big.');
+					$app->form->errors['file'][$i] = $app->t('The file is to big.');
 
 					break;
 				case UPLOAD_ERR_PARTIAL:
-					$model->form->errors['file'][$i] = $model->t('Upload failed, try again.');
+					$app->form->errors['file'][$i] = $app->t('Upload failed, try again.');
 
 					break;
 				case UPLOAD_ERR_NO_TMP_DIR:
-					$model->form->errors['file'][$i] = $model->t('Upload failed, missing a temporary folder.');
+					$app->form->errors['file'][$i] = $app->t('Upload failed, missing a temporary folder.');
 
 					break;
 				case UPLOAD_ERR_CANT_WRITE:
-					$model->form->errors['file'][$i] = $model->t('Upload failed, could not write to disk.');
+					$app->form->errors['file'][$i] = $app->t('Upload failed, could not write to disk.');
 
 					break;
 				case UPLOAD_ERR_EXTENSION:
-					$model->form->errors['file'][$i] = $model->t('File upload stopped by extension.');
+					$app->form->errors['file'][$i] = $app->t('File upload stopped by extension.');
 
 					break;
 			}
@@ -131,16 +131,16 @@ if ( $model->POST_valid['form-submit'] )
 
 		if ( $uploads )
 		{
-			$view->notice = $model->t('The following files have been uploaded:%1$s', '<br/><br/>' . implode('<br/>', $uploads));
+			$view->notice = $app->t('The following files have been uploaded:%1$s', '<br/><br/>' . implode('<br/>', $uploads));
 		}
 	}
 }
-else if ( isset($model->GET_raw['notice']) )
+else if ( isset($app->GET_raw['notice']) )
 {
-	switch ( $model->GET_raw['notice'] )
+	switch ( $app->GET_raw['notice'] )
 	{
 		case 'deleted':
-			$view->notice = $model->t('The file has been deleted.');
+			$view->notice = $app->t('The file has been deleted.');
 
 			break;
 	}
@@ -151,23 +151,23 @@ if ( ( int ) $id )
 	switch ( $action )
 	{
 		case 'delete':
-			if ( !$model->POST_valid['confirm'] )
+			if ( !$app->POST_valid['confirm'] )
 			{
-				$model->confirm($model->t('Are you sure you wish to delete this file?'));
+				$app->confirm($app->t('Are you sure you wish to delete this file?'));
 			}
 			else
 			{
 				// Delete file
-				$model->db->sql('
+				$app->db->sql('
 					SELECT
 						`filename`
-					FROM `' . $model->db->prefix . 'files`
+					FROM `' . $app->db->prefix . 'files`
 					WHERE
 						`id` = ' . ( int ) $id . '
 					LIMIT 1
 					;');
 				
-				if ( $r = $model->db->result )
+				if ( $r = $app->db->result )
 				{
 					$filename = $r[0]['filename'];
 
@@ -181,19 +181,19 @@ if ( ( int ) $id )
 						unlink($file);
 					}
 
-					$model->db->sql('
+					$app->db->sql('
 						DELETE
-						FROM `' . $model->db->prefix . 'files`
+						FROM `' . $app->db->prefix . 'files`
 						WHERE
 							`id` = ' . ( int ) $id . '
 						LIMIT 1
 						;');
 
-					if ( $model->db->result )
+					if ( $app->db->result )
 					{
 						header('Location: ?callback=' . rawurlencode($callback) . '&notice=deleted');
 
-						$model->end();
+						$app->end();
 					}
 				}
 			}
@@ -205,23 +205,23 @@ if ( ( int ) $id )
 // Create a list of all files
 $files = array();
 
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		*
-	FROM `' . $model->db->prefix . 'files`
+	FROM `' . $app->db->prefix . 'files`
 	ORDER BY `date` DESC
 	;');
 
-$files = $model->db->result;
+$files = $app->db->result;
 
-$pagination = $model->paginate('files', count($files), 10);
+$pagination = $view->paginate('files', count($files), 10);
 
 $view->files           = array_splice($files, $pagination['from'], 10);
 $view->filesPagination = $pagination;
-$view->callback        = $model->h($callback);
+$view->callback        = $app->h($callback);
 $view->id              = $id;
 $view->action          = $action;
 
 $view->load('admin/files.html.php');
 
-$model->end();
+$app->end();

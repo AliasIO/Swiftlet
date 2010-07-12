@@ -11,7 +11,7 @@ if ( !isset($contrSetup) ) die('Direct access to this file is not allowed');
  * Controller
  * @abstract
  */
-class contr
+class controller
 {
 	public
 		$pageDescription,
@@ -27,30 +27,28 @@ class contr
 	 */
 	function __construct($contrSetup)
 	{
-		$contr = $this;
-
 		foreach ( $contrSetup as $k => $v )
 		{
-			$contr->{$k} = $v;
+			$this->{$k} = $v;
 		}
 
-		if ( !$contr->rootPath )
+		if ( !$this->rootPath )
 		{
-			$contr->rootPath = './';
+			$this->rootPath = './';
 		}
 
-		if ( empty($contr->rootPathView) )
+		if ( empty($this->rootPathView) )
 		{
-			$contr->rootPathView = $contr->rootPath;
+			$this->rootPathView = $this->rootPath;
 		}
 
-		$this->viewPath   = $contr->rootPath . '_view/';
-		$this->pluginPath = $contr->rootPath . '_plugins/';
-		$this->classPath  = $contr->rootPath . '_plugins/classes/';
+		$this->viewPath   = $this->rootPath . '_view/';
+		$this->pluginPath = $this->rootPath . '_plugins/';
+		$this->classPath  = $this->rootPath . '_plugins/classes/';
 
 		/**
 		 * Find absolute path to the root
 		 */
-		$this->absPath = str_replace('//', '/', preg_replace('/([^\/]+\/){' . ( substr_count(( $contr->rootPath == './' ? '' : $contr->rootPath ), '/') ) . '}$/', '', dirname(str_replace('\\', '/', $_SERVER['PHP_SELF'])) . '/'));
+		$this->absPath = str_replace('//', '/', preg_replace('/([^\/]+\/){' . ( substr_count(( $this->rootPath == './' ? '' : $this->rootPath ), '/') ) . '}$/', '', dirname(str_replace('\\', '/', $_SERVER['PHP_SELF'])) . '/'));
 	}
 }

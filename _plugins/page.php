@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,10 +20,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'pages', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'pages', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'pages` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'pages` (
 					`id`        INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
 					`node_id`   INT(10)    UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)        NOT NULL,
@@ -39,49 +39,49 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->create('Pages', 'admin page access', 'Manage pages');
-			$model->perm->create('Pages', 'admin page create', 'Create pages');
-			$model->perm->create('Pages', 'admin page edit',   'Edit pages');
-			$model->perm->create('Pages', 'admin page delete', 'Delete pages');
+			$app->perm->create('Pages', 'admin page access', 'Manage pages');
+			$app->perm->create('Pages', 'admin page create', 'Create pages');
+			$app->perm->create('Pages', 'admin page edit',   'Edit pages');
+			$app->perm->create('Pages', 'admin page delete', 'Delete pages');
 		}
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'pages', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'pages', $app->db->tables) )
 		{
 			// Remove nodes
-			$model->db->sql('
+			$app->db->sql('
 				SELECT
 					`node_id`
-				FROM `' . $model->db->prefix . 'pages`
+				FROM `' . $app->db->prefix . 'pages`
 				;');
 
-			if ( $r = $model->db->result )
+			if ( $r = $app->db->result )
 			{
 				foreach ( $r as $d )
 				{
-					$model->node->delete($d['node_id']);
+					$app->node->delete($d['node_id']);
 				}
 
 			}
 
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'pages`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'pages`;');
 		}
 
-		if ( !empty($model->perm->ready) )
+		if ( !empty($app->perm->ready) )
 		{
-			$model->perm->delete('admin page access');
+			$app->perm->delete('admin page access');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->db->ready) && !empty($model->node->ready) )
+		if ( !empty($app->db->ready) && !empty($app->node->ready) )
 		{
 			require($contr->classPath . 'page.php');
 
-			$model->page = new page($model);
+			$app->page = new page($app);
 		}
 
 		break;
@@ -96,7 +96,7 @@ switch ( $hook )
 
 		break;
 	case 'display_node':
-		if ( !empty($model->page->ready) )
+		if ( !empty($app->page->ready) )
 		{
 			if ( $params['type'] == 'page' )
 			{
@@ -106,9 +106,9 @@ switch ( $hook )
 
 		break;
 	case 'home':
-		if ( !empty($model->page->ready) )
+		if ( !empty($app->page->ready) )
 		{
-			$params['route'] = $model->page->get_home();
+			$params['route'] = $app->page->get_home();
 		}
 
 		break;
@@ -120,24 +120,24 @@ switch ( $hook )
 			'parent'      => node::rootId,
 			'path'        => '',
 			'form-submit' => 'Submit',
-			'auth-token'  => $model->authToken
+			'auth-token'  => $app->authToken
 			);
 
-		$languages = !empty($model->lang->ready) ? $model->lang->languages : array('English US');
+		$languages = !empty($app->lang->ready) ? $app->lang->languages : array('English US');
 
 		foreach ( $languages as $language )
 		{
-			$post['title[' . $model->h($language) . ']'] = 'Unit Test Page';
-			$post['body['  . $model->h($language) . ']'] = 'Unit Test Page - Create';
+			$post['title[' . $app->h($language) . ']'] = 'Unit Test Page';
+			$post['body['  . $app->h($language) . ']'] = 'Unit Test Page - Create';
 		}
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/', $post);
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				p.*
-			FROM      `' . $model->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+			FROM      `' . $app->db->prefix . 'nodes` AS n
+			LEFT JOIN `' . $app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 			WHERE
 				n.`type`  = "page"           AND
 				p.`title` = "Unit Test Page" AND
@@ -145,7 +145,7 @@ switch ( $hook )
 			LIMIT 1
 			;', FALSE);
 
-		$page = isset($model->db->result[0]) ? $model->db->result[0] : FALSE;
+		$page = isset($app->db->result[0]) ? $app->db->result[0] : FALSE;
 
 		$params[] = array(
 			'test' => 'Creating a page in <code>/admin/pages/</code>.',
@@ -161,28 +161,28 @@ switch ( $hook )
 				'parent'      => node::rootId,
 				'path'        => '',
 				'form-submit' => 'Submit',
-				'auth-token'  => $model->authToken
+				'auth-token'  => $app->authToken
 				);
 
 			foreach ( $languages as $language )
 			{
-				$post['title[' . $model->h($language) . ']'] = 'Unit Test Page';
-				$post['body['  . $model->h($language) . ']'] = 'Unit Test Page - Edit';
+				$post['title[' . $app->h($language) . ']'] = 'Unit Test Page';
+				$post['body['  . $app->h($language) . ']'] = 'Unit Test Page - Edit';
 			}
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=edit', $post);
 		}
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`body`
-			FROM `' . $model->db->prefix . 'pages`
+			FROM `' . $app->db->prefix . 'pages`
 			WHERE
 				`id` = ' . ( int ) $page['id'] . '
 			LIMIT 1
 			;', FALSE);
 
-		$body = isset($model->db->result[0]) ? $model->db->result[0]['body'] : FALSE;
+		$body = isset($app->db->result[0]) ? $app->db->result[0]['body'] : FALSE;
 
 		$params[] = array(
 			'test' => 'Editing a page in <code>/admin/pages/</code>.',
@@ -200,17 +200,17 @@ switch ( $hook )
 					'action' => 'delete'
 					)),
 				'confirm'    => '1',
-				'auth-token' => $model->authToken
+				'auth-token' => $app->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=delete', $post);
 		}
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				n.`id`
-			FROM      `' . $model->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+			FROM      `' . $app->db->prefix . 'nodes` AS n
+			LEFT JOIN `' . $app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 			WHERE
 				p.`id` = ' . ( int ) $page['id'] . '
 			LIMIT 1
@@ -218,7 +218,7 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Deleting a page in <code>/admin/pages/</code>.',
-			'pass' => !$model->db->result
+			'pass' => !$app->db->result
 			);
 
 		break;

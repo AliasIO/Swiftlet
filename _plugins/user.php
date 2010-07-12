@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -21,10 +21,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'users', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'users', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'users` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'users` (
 					`id`                 INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
 					`username`           VARCHAR(255)        NOT NULL,
 					`email`              VARCHAR(255)            NULL,
@@ -39,7 +39,7 @@ switch ( $hook )
 				;');
 
 			$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . 'admin');
-			$passHash = $salt . $model->sysPassword;
+			$passHash = $salt . $app->sysPassword;
 
 			for ( $i = 0; $i < 100000; $i ++ )
 			{
@@ -48,8 +48,8 @@ switch ( $hook )
 
 			$passHash = $salt . $passHash;
 
-			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'users` (
+			$app->db->sql('
+				INSERT INTO `' . $app->db->prefix . 'users` (
 					`username`,
 					`owner`,
 					`date`,
@@ -66,10 +66,10 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !in_array($model->db->prefix . 'user_prefs', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'user_prefs', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'user_prefs` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'user_prefs` (
 					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`pref`    VARCHAR(255)     NOT NULL,
 					`type`    VARCHAR(255)     NOT NULL,
@@ -81,10 +81,10 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !in_array($model->db->prefix . 'user_prefs_xref', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'user_prefs_xref', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'user_prefs_xref` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'user_prefs_xref` (
 					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`user_id` INT(10)          NOT NULL,
 					`pref_id` INT(10)          NOT NULL,
@@ -97,42 +97,42 @@ switch ( $hook )
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'users', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'users', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'users`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'users`;');
 		}
 
-		if ( in_array($model->db->prefix . 'user_prefs', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'user_prefs', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'user_prefs`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'user_prefs`;');
 		}
 
-		if ( in_array($model->db->prefix . 'user_prefs_xref', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'user_prefs_xref', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'user_prefs_xref`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'user_prefs_xref`;');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->session->ready) )
+		if ( !empty($app->session->ready) )
 		{
 			require($contr->classPath . 'user.php');
 
-			$model->user = new user($model);
+			$app->user = new user($app);
 		}
 
 		break;
 	case 'menu':
-		if ( !empty($model->session->ready) )
+		if ( !empty($app->session->ready) )
 		{
-			if ( $model->session->get('user id') == user::guestId )
+			if ( $app->session->get('user id') == user::guestId )
 			{
 				$params['Login'] = $view->rootPath . 'login/';
 			}
 			else
 			{
 				$params['Account'] = $view->rootPath . 'account/';
-				$params['Log out (' .  $model->session->get('user username') . ')']  = $view->rootPath . 'login/?logout';
+				$params['Log out (' .  $app->session->get('user username') . ')']  = $view->rootPath . 'login/?logout';
 			}
 		}
 
@@ -156,21 +156,21 @@ switch ( $hook )
 			'new_password_confirm' => '123',
 			'owner'                => '0',
 			'form-submit'          => 'Submit',
-			'auth-token'           => $model->authToken
+			'auth-token'           => $app->authToken
 			);
 
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?action=create', $post);
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				*
-			FROM `' . $model->db->prefix . 'users`
+			FROM `' . $app->db->prefix . 'users`
 			WHERE
 				`username` = "Unit_Test"
 			LIMIT 1
 			;', FALSE);
 
-		$user = isset($model->db->result[0]) ? $model->db->result[0] : FALSE;
+		$user = isset($app->db->result[0]) ? $app->db->result[0] : FALSE;
 
 		$params[] = array(
 			'test' => 'Creating a user account in <code>/account/</code>.',
@@ -188,22 +188,22 @@ switch ( $hook )
 				'owner'       => $user['owner'],
 				'email'       => 'unit@test.com',
 				'form-submit' => 'Submit',
-				'auth-token'  => $model->authToken
+				'auth-token'  => $app->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?id=' . ( int ) $user['id'], $post);
 		}
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`email`
-			FROM `' . $model->db->prefix . 'users`
+			FROM `' . $app->db->prefix . 'users`
 			WHERE
 				`id` = ' . ( int ) $user['id'] . '
 			LIMIT 1
 			;', FALSE);
 
-		$email = isset($model->db->result[0]) ? $model->db->result[0]['email'] : FALSE;
+		$email = isset($app->db->result[0]) ? $app->db->result[0]['email'] : FALSE;
 
 		$params[] = array(
 			'test' => 'Editing a user account in <code>/account/</code>.',
@@ -221,16 +221,16 @@ switch ( $hook )
 					'action' => 'delete'
 					)),
 				'confirm'    => '1',
-				'auth-token' => $model->authToken
+				'auth-token' => $app->authToken
 				);
 
 			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?id=' . ( int ) $user['id'] . '&action=delete', $post);
 		}
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $model->db->prefix . 'users`
+			FROM `' . $app->db->prefix . 'users`
 			WHERE
 				`id` = ' . ( int ) $user['id'] . '
 			LIMIT 1
@@ -238,22 +238,22 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Deleting a user account <code>/account/</code>.',
-			'pass' => !$model->db->result
+			'pass' => !$app->db->result
 			);
 
 		/**
 		 * Creating a user preference
 		 */
-		$model->user->save_pref(array(
+		$app->user->save_pref(array(
 			'pref'    => 'Unit Test',
 			'type'    => 'text',
 			'match'   => '/.*/'
 			));
 
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $model->db->prefix . 'user_prefs`
+			FROM `' . $app->db->prefix . 'user_prefs`
 			WHERE
 				`pref` = "Unit Test"
 			LIMIT 1
@@ -261,18 +261,18 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Creating a user preference.',
-			'pass' => $model->db->result
+			'pass' => $app->db->result
 			);
 
 		/**
 		 * Deleting a user preference
 		 */
-		$model->user->delete_pref('Unit Test');
+		$app->user->delete_pref('Unit Test');
 		
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $model->db->prefix . 'user_prefs`
+			FROM `' . $app->db->prefix . 'user_prefs`
 			WHERE
 				`pref` = "Unit Test"
 			LIMIT 1
@@ -280,7 +280,7 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Deleting a user preference.',
-			'pass' => !$model->db->result
+			'pass' => !$app->db->result
 			);
 
 		break;

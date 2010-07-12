@@ -10,22 +10,22 @@ $contrSetup = array(
 	'pageTitle' => 'Account settings'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'session', 'user', 'form'));
+$app->check_dependencies(array('db', 'session', 'user', 'form'));
 
 // Get preferences
 $prefsValidate = array();
 
-if ( $model->user->prefs )
+if ( $app->user->prefs )
 {
-	foreach ( $model->user->prefs as $d )
+	foreach ( $app->user->prefs as $d )
 	{
 		$prefsValidate['pref-' . $d['id']] = $d['match'];
 	}
 }
 
-$model->form->validate(array(
+$app->form->validate(array(
 	'form-submit'          => 'bool',
 	'username'             => 'string, empty',
 	'password'             => 'string, empty',
@@ -35,33 +35,33 @@ $model->form->validate(array(
 	'owner'                => 'bool'
 	) + $prefsValidate);
 
-if ( $model->session->get('user id') == user::guestId )
+if ( $app->session->get('user id') == user::guestId )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-$id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
-$action = isset($model->GET_raw['action']) ? $model->GET_raw['action'] : 'edit';
+$id     = isset($app->GET_raw['id']) && ( int ) $app->GET_raw['id'] ? ( int ) $app->GET_raw['id'] : FALSE;
+$action = isset($app->GET_raw['action']) ? $app->GET_raw['action'] : 'edit';
 
-if ( $action != 'edit' && !$model->session->get('user is owner') )
+if ( $action != 'edit' && !$app->session->get('user is owner') )
 {
 	$action = 'edit';
 }
 
-if ( $id && ( $action == 'edit' || $action == 'delete' ) && $model->session->get('user is owner') )
+if ( $id && ( $action == 'edit' || $action == 'delete' ) && $app->session->get('user is owner') )
 {
-	$model->db->sql('
+	$app->db->sql('
 		SELECT
 			*
-		FROM `' . $model->db->prefix . 'users`
+		FROM `' . $app->db->prefix . 'users`
 		WHERE
 			`id` = ' . $id . '
 		LIMIT 1
 		;');
 
-	if ( $r = $model->db->result )
+	if ( $r = $app->db->result )
 	{
 		$user = array(
 			'id'       => $r[0]['id'],
@@ -87,114 +87,114 @@ if ( !isset($user) )
 			break;
 		case 'edit':
 			$user = array(
-				'id'       => $model->session->get('user id'),
-				'username' => $model->session->get('user username'),
-				'email'    => $model->session->get('user email'),
-				'owner'    => $model->session->get('user is owner')
+				'id'       => $app->session->get('user id'),
+				'username' => $app->session->get('user username'),
+				'email'    => $app->session->get('user email'),
+				'owner'    => $app->session->get('user is owner')
 				);
 	}
 }
 
 // Get user's preferences
-foreach ( $model->user->prefs as $pref )
+foreach ( $app->user->prefs as $pref )
 {
 	$user['pref-' . $pref['id']] = '';
 }
 
 if ( $user['id'] )
 {
-	$userprefs = $model->user->get_pref_values($user['id']);
+	$userprefs = $app->user->get_pref_values($user['id']);
 
 	if ( $userprefs )
 	{
 		foreach ( $userprefs as $k => $v )
 		{
-			$user['pref-' . $model->user->prefs[$k]['id']] = $v;
+			$user['pref-' . $app->user->prefs[$k]['id']] = $v;
 		}
 	}
 }
 
-if ( $model->POST_valid['form-submit'] )
+if ( $app->POST_valid['form-submit'] )
 {
 	if ( $action == 'edit' )
 	{		
-		if ( !$model->session->get('user is owner') || !$id || $model->session->get('user id') == $id )
+		if ( !$app->session->get('user is owner') || !$id || $app->session->get('user id') == $id )
 		{
-			if ( !$model->user->validate_password($model->session->get('user username'), $model->POST_raw['password']) )
+			if ( !$app->user->validate_password($app->session->get('user username'), $app->POST_raw['password']) )
 			{
-				$model->form->errors['password'] = $model->t('Incorrect password, try again');
+				$app->form->errors['password'] = $app->t('Incorrect password, try again');
 			}
 		}
 	}
 
-	if ( $action == 'create' && !$model->POST_valid['new_password'] )
+	if ( $action == 'create' && !$app->POST_valid['new_password'] )
 	{
-		$model->form->errors['new_password'] = $model->t('Please provide a password');
+		$app->form->errors['new_password'] = $app->t('Please provide a password');
 	}
 
-	if ( $model->POST_valid['new_password'] || $model->POST_valid['new_password_confirm'] )
+	if ( $app->POST_valid['new_password'] || $app->POST_valid['new_password_confirm'] )
 	{
-		if ( $model->POST_valid['new_password'] != $model->POST_valid['new_password_confirm'] )
+		if ( $app->POST_valid['new_password'] != $app->POST_valid['new_password_confirm'] )
 		{
-			$model->form->errors['new_password_repeat'] = $model->t('Passwords do not match');
+			$app->form->errors['new_password_repeat'] = $app->t('Passwords do not match');
 		}
 	}
 
-	if ( $model->session->get('user is owner') )
+	if ( $app->session->get('user is owner') )
 	{
-		if ( !$model->POST_valid['username'] )
+		if ( !$app->POST_valid['username'] )
 		{
-			$model->form->errors['username'] = $model->t('Please provide a username');
+			$app->form->errors['username'] = $app->t('Please provide a username');
 		}
 		
-		if ( strtolower($model->POST_html_safe['username']) != strtolower($user['username']) )
+		if ( strtolower($app->POST_html_safe['username']) != strtolower($user['username']) )
 		{
-			$model->db->sql('
+			$app->db->sql('
 				SELECT
 					`id`
-				FROM `' . $model->db->prefix . 'users`
+				FROM `' . $app->db->prefix . 'users`
 				WHERE
-					`username` = "' . $model->POST_db_safe['username'] . '"
+					`username` = "' . $app->POST_db_safe['username'] . '"
 				LIMIT 1
 				;');
 
-			if ( $model->db->result )
+			if ( $app->db->result )
 			{
-				$model->form->errors['username'] = $model->t('Username has already been taken');
+				$app->form->errors['username'] = $app->t('Username has already been taken');
 			}
 		}
 	}
 
-	if ( $model->form->errors )
+	if ( $app->form->errors )
 	{
-		$view->error = $model->t('Please correct the errors below.');
+		$view->error = $app->t('Please correct the errors below.');
 	}
 	else
 	{
 		$username = $user['username'];
 		$owner    = $user['owner'];
 
-		if ( $model->session->get('user is owner') )
+		if ( $app->session->get('user is owner') )
 		{
-			$username = $model->POST_db_safe['username'];
+			$username = $app->POST_db_safe['username'];
 
-			if ( $model->session->get('user id') != $user['id'] )
+			if ( $app->session->get('user id') != $user['id'] )
 			{
-				$owner = $model->POST_valid['owner'];
+				$owner = $app->POST_valid['owner'];
 			}
 		}
 
-		$password = $model->POST_valid['new_password'] ? $model->POST_valid['new_password'] : $model->POST_raw['password'];
+		$password = $app->POST_valid['new_password'] ? $app->POST_valid['new_password'] : $app->POST_raw['password'];
 		
-		$passHash = $model->user->make_pass_hash($username, $password);
+		$passHash = $app->user->make_pass_hash($username, $password);
 
-		$email = $model->POST_valid['email'] ? $model->POST_db_safe['email'] : FALSE;
+		$email = $app->POST_valid['email'] ? $app->POST_db_safe['email'] : FALSE;
 
 		switch ( $action )
 		{
 			case 'create':
-				$model->db->sql('
-					INSERT INTO `' . $model->db->prefix . 'users` (
+				$app->db->sql('
+					INSERT INTO `' . $app->db->prefix . 'users` (
 						`username`,
 						`email`,
 						`owner`,
@@ -203,7 +203,7 @@ if ( $model->POST_valid['form-submit'] )
 						`pass_hash`
 						)
 					VALUES (
-						"' . $model->db->escape($username) . '",
+						"' . $app->db->escape($username) . '",
 						"' . $email . '",
 						' . ( int ) $owner . ',
 						"' . gmdate('Y-m-d H:i:s') . '",
@@ -212,27 +212,27 @@ if ( $model->POST_valid['form-submit'] )
 						)
 						;');
 
-				if ( $newId = $model->db->result )
+				if ( $newId = $app->db->result )
 				{
-					foreach ( $model->user->prefs as $pref )
+					foreach ( $app->user->prefs as $pref )
 					{
-						$model->user->save_pref_value(array(
+						$app->user->save_pref_value(array(
 							'user_id' => ( int ) $newId,
 							'pref'    => $pref['pref'],
-							'value'   => $model->POST_db_safe['pref-' . $pref['id']]
+							'value'   => $app->POST_db_safe['pref-' . $pref['id']]
 							));
 					}
 
-					header('Location: ?id=' . $model->db->result . '&notice=created');
+					header('Location: ?id=' . $app->db->result . '&notice=created');
 
-					$model->end();
+					$app->end();
 				}
 			
 				break;
 			case 'edit':
-				$model->db->sql('
-					UPDATE `' . $model->db->prefix . 'users` SET
-						`username`  = "' . $model->db->escape($username) . '",
+				$app->db->sql('
+					UPDATE `' . $app->db->prefix . 'users` SET
+						`username`  = "' . $app->db->escape($username) . '",
 						`email`     = "' . $email                        . '",
 						`owner`     =  ' . ( int ) $owner                . ',
 						`date_edit` = "' . gmdate('Y-m-d H:i:s')         . '",
@@ -242,33 +242,33 @@ if ( $model->POST_valid['form-submit'] )
 					LIMIT 1
 					;');
 
-				if ( $model->db->result )
+				if ( $app->db->result )
 				{
-					if ( $model->session->get('user id') == $user['id'] )
+					if ( $app->session->get('user id') == $user['id'] )
 					{
-						$model->session->put(array(
+						$app->session->put(array(
 							'user username' => $username,
 							'user email'    => $email,
 							'user is owner' => ( int ) $owner
 							));
 					}
 
-					foreach ( $model->user->prefs as $pref )
+					foreach ( $app->user->prefs as $pref )
 					{
-						$model->user->save_pref_value(array(
+						$app->user->save_pref_value(array(
 							'user_id' => ( int ) $user['id'],
 							'pref'    => $pref['pref'],
-							'value'   => $model->POST_db_safe['pref-' . $pref['id']]
+							'value'   => $app->POST_db_safe['pref-' . $pref['id']]
 							));
 					}
 
 					header('Location: ?id=' . ( int ) $user['id'] . '&notice=saved');
 					
-					$model->end();
+					$app->end();
 				}
 				else
 				{
-					$view->notice = $model->t('There were no changes.');
+					$view->notice = $app->t('There were no changes.');
 				}
 		}
 	}
@@ -278,48 +278,48 @@ else
 	/**
 	 * Default form values
 	 */
-	$model->POST_html_safe['username'] = $user['username'];
-	$model->POST_html_safe['email']    = $user['email'];
-	$model->POST_html_safe['owner']    = ( int ) $user['owner'];
+	$app->POST_html_safe['username'] = $user['username'];
+	$app->POST_html_safe['email']    = $user['email'];
+	$app->POST_html_safe['owner']    = ( int ) $user['owner'];
 
-	foreach ( $model->user->prefs as $d )
+	foreach ( $app->user->prefs as $d )
 	{
-		$model->POST_html_safe['pref-' . $d['id']] = $user['pref-' . $d['id']];
+		$app->POST_html_safe['pref-' . $d['id']] = $user['pref-' . $d['id']];
 	}
 }
 
 switch ( $action )
 {
 	case 'delete':
-		if ( $user && $model->session->get('user is owner') )
+		if ( $user && $app->session->get('user is owner') )
 		{
-			if ( !$model->POST_valid['confirm'] )
+			if ( !$app->POST_valid['confirm'] )
 			{
-				$model->confirm($model->t('Are you sure you wish to delete this account?'));
+				$app->confirm($app->t('Are you sure you wish to delete this account?'));
 			}
 			else
 			{
 				// Delete account
-				$model->db->sql('
+				$app->db->sql('
 					DELETE
-					FROM `' . $model->db->prefix . 'users`
+					FROM `' . $app->db->prefix . 'users`
 					WHERE
 						`id` = ' . ( int ) $id . '
 					LIMIT 1
 					;');
 
-				if ( $model->db->result )
+				if ( $app->db->result )
 				{
-					$model->db->sql('
+					$app->db->sql('
 						DELETE
-						FROM `' . $model->db->prefix . 'user_prefs_xref`
+						FROM `' . $app->db->prefix . 'user_prefs_xref`
 						WHERE
 							`user_id` = ' . ( int ) $id . '
 						;');
 
 					header('Location: ?notice=deleted');
 
-					$model->end();
+					$app->end();
 				}
 			}
 		}
@@ -327,20 +327,20 @@ switch ( $action )
 		break;
 }
 
-if ( isset($model->GET_raw['notice']) )
+if ( isset($app->GET_raw['notice']) )
 {
-	switch ( $model->GET_raw['notice'] )
+	switch ( $app->GET_raw['notice'] )
 	{
 		case 'saved':
-			$view->notice = $model->t('Your changes have been saved.');
+			$view->notice = $app->t('Your changes have been saved.');
 
 			break;
 		case 'created':
-			$view->notice = $model->t('The account has been created.');
+			$view->notice = $app->t('The account has been created.');
 
 			break;
 		case 'deleted':
-			$view->notice = $model->t('The account has been deleted.');
+			$view->notice = $app->t('The account has been deleted.');
 
 			break;
 	}
@@ -349,28 +349,28 @@ if ( isset($model->GET_raw['notice']) )
 $view->userId       = $user['id'];
 $view->userUsername = $user['username'];
 
-if ( $model->session->get('user is owner') )
+if ( $app->session->get('user is owner') )
 {
-	$model->db->sql('
+	$app->db->sql('
 		SELECT
 			COUNT(`id`) as `count`
-		FROM `' . $model->db->prefix . 'users`
+		FROM `' . $app->db->prefix . 'users`
 		;');
 	
-	if ( $r = $model->db->result )
+	if ( $r = $app->db->result )
 	{
-		$usersPagination = $model->paginate('users', $r[0]['count'], 25);	
+		$usersPagination = $view->paginate('users', $r[0]['count'], 25);	
 	
-		$model->db->sql('
+		$app->db->sql('
 			SELECT
 				`id`,
 				`username`
-			FROM `' . $model->db->prefix . 'users`
+			FROM `' . $app->db->prefix . 'users`
 			ORDER BY `username`
 			LIMIT ' . $usersPagination['from'] . ', 25
 			;');
 
-		if ( $r = $model->db->result )
+		if ( $r = $app->db->result )
 		{
 			$view->users = array();
 			
@@ -386,10 +386,10 @@ if ( $model->session->get('user is owner') )
 	}
 }
 
-$view->prefs   = $model->user->prefs;
+$view->prefs   = $app->user->prefs;
 $view->id      = $id;
 $view->action  = $action;
 
 $view->load('account.html.php');
 
-$model->end();
+$app->end();

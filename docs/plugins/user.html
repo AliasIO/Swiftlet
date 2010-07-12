@@ -4,19 +4,19 @@
 
 <p>
 	The user plugin handles user authentication and preferences. This plugin requires a database and depends on the
-	<a href="./mysql">MySQL</a> (or any other database) and <a href="./session">Session</a> plug-ins.
+	<a href="./mysql">MySQL</a> (or any other database) and <a href="./session">Session</a> plugins.
 </p>
 
 <h5>Example</h5>
 
 <pre>
 <?php
-if ( $model->session->get('user id') != user::guestId )
+if ( $app->session->get('user id') != user::guestId )
 {
 	// User is logged in
 }
 
-if ( $model->session->get('user is owner') )
+if ( $app->session->get('user is owner') )
 {
 	// User is the website owner
 }
@@ -26,11 +26,11 @@ if ( $model->session->get('user is owner') )
 <h3>Preferences</h3>
 
 <p>
-	Plug-ins can add new preferences to user accounts. Users can change their preferences on the account page (<code>/account/</code>).
+	Plugins can add new preferences to user accounts. Users can change their preferences on the account page (<code>/account/</code>).
 </p>
 
 <p>
-	The <code>$model-&gt;user-&gt;save_pref()</code> function requires three or four parameters.
+	The <code>$app-&gt;user-&gt;save_pref()</code> function requires three or four parameters.
 </p>
 
 <ul>
@@ -56,7 +56,7 @@ if ( $model->session->get('user is owner') )
 
 <pre>
 <?php
-$model->user->save_pref(array(
+$app->user->save_pref(array(
 	'pref'    => 'Example',
 	'type'    => 'select',
 	'match'   => '/.*/',
@@ -68,42 +68,42 @@ $model->user->save_pref(array(
 <h2>Class</h2>
 
 <p>
-	<code>$model-&gt;user</code>
+	<code>$app-&gt;user</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;user-&gt;login ( <em>string</em> $username, <em>string</em> $password )</code><br/>
+		<code>$app-&gt;user-&gt;login ( <em>string</em> $username, <em>string</em> $password )</code><br/>
 		Logs the user in with a username and password and updates the session.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;logout ( )</code><br/>
+		<code>$app-&gt;user-&gt;logout ( )</code><br/>
 		Logs the user out and resets the session.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;validate_password ( <em>string</em> $username, <em>string</em> $password )</code><br/>
+		<code>$app-&gt;user-&gt;validate_password ( <em>string</em> $username, <em>string</em> $password )</code><br/>
 		Checks if a username/password combination is correct.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;make_pass_hash ( <em>string</em> $username, <em>string</em> $password )</code><br/>
+		<code>$app-&gt;user-&gt;make_pass_hash ( <em>string</em> $username, <em>string</em> $password )</code><br/>
 		Generates a password hash.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;save_pref ( <em>array</em> $params )</code><br/>
+		<code>$app-&gt;user-&gt;save_pref ( <em>array</em> $params )</code><br/>
 		Saves a preference.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;delete_pref ( <em>string</em> $pref )</code><br/>
+		<code>$app-&gt;user-&gt;delete_pref ( <em>string</em> $pref )</code><br/>
 		Deletes a preference.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;save_pref_value ( <em>string</em> $params )</code><br/>
+		<code>$app-&gt;user-&gt;save_pref_value ( <em>string</em> $params )</code><br/>
 		Saves a preference value.
 	</li>
 	<li>
-		<code>$model-&gt;user-&gt;get_pref_values ( <em>int</em> $userId )</code><br/>
+		<code>$app-&gt;user-&gt;get_pref_values ( <em>int</em> $userId )</code><br/>
 		Gets a user's preferences.
 	</li>
 </ul>
@@ -114,6 +114,6 @@ $model->user->save_pref(array(
 	<li>
 		<code>user::guestId</code><br/>
 		Reserved user ID for all guest users (users who are not logged in). This can be used to test if a user is logged in or not
-		(e.g. <code>if ( $model->session->get('user id') != user::guestId )</code>).
+		(e.g. <code>if ( $app->session->get('user id') != user::guestId )</code>).
 	</li>
 </ul>

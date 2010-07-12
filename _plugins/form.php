@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -21,11 +21,11 @@ switch ( $hook )
 	case 'init':
 		require($contr->classPath . 'form.php');
 
-		$model->form = new form($model);
+		$app->form = new form($app);
 
 		break;
 	case 'footer':
-		if ( !empty($model->form->errors) )
+		if ( !empty($app->form->errors) )
 		{
 			$view->load('form_errors.html.php');
 		}

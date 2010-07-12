@@ -11,31 +11,31 @@ $contrSetup = array(
 	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-if ( !isset($model->routeParts[1]) )
+if ( !isset($app->routeParts[1]) )
 {
-	$model->end();
+	$app->end();
 }
 
-$thumb = isset($model->routeParts[1]) && isset($model->routeParts[2]) && $model->routeParts[1] == 'thumb';
-$id    = $thumb && isset($model->routeParts[2]) ? $model->routeParts[2] : $model->routeParts[1];
+$thumb = isset($app->routeParts[1]) && isset($app->routeParts[2]) && $app->routeParts[1] == 'thumb';
+$id    = $thumb && isset($app->routeParts[2]) ? $app->routeParts[2] : $app->routeParts[1];
 
 $id = basename($id, strstr($id, '.'));
 
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		`title`,
 		`extension`,
 		`filename`,
 		`mime_type`
-	FROM `' . $model->db->prefix . 'files`
+	FROM `' . $app->db->prefix . 'files`
 	WHERE
 		id = ' . ( int ) $id . '
 	LIMIT 1
 	;');
 
-if ( $model->db->result && $r = $model->db->result[0] )
+if ( $app->db->result && $r = $app->db->result[0] )
 {
 	if ( is_file($file = $contr->rootPath . 'uploads/' . ( $thumb ? 'thumbs/' : 'files/' ) . $r['filename']) )
 	{
@@ -54,4 +54,4 @@ if ( $model->db->result && $r = $model->db->result[0] )
 	}
 }
 
-$model->end();
+$app->end();

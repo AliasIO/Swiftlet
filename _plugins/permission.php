@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,10 +20,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'perms', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'perms', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'perms` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'perms` (
 					`id`    INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`name`  VARCHAR(255)     NOT NULL,
 					`desc`  VARCHAR(255)     NOT NULL,
@@ -33,8 +33,8 @@ switch ( $hook )
 					) TYPE = INNODB
 				;');
 
-			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'perms` (
+			$app->db->sql('
+				INSERT INTO `' . $app->db->prefix . 'perms` (
 					`name`,
 					`desc`,
 					`group`
@@ -60,10 +60,10 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !in_array($model->db->prefix . 'perms_roles', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'perms_roles', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'perms_roles` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'perms_roles` (
 					`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`name` VARCHAR(255)     NOT NULL,
 					UNIQUE `name` (`name`),
@@ -71,8 +71,8 @@ switch ( $hook )
 					) TYPE = INNODB
 				;');
 
-			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'perms_roles` (
+			$app->db->sql('
+				INSERT INTO `' . $app->db->prefix . 'perms_roles` (
 					`name`
 					)
 				VALUES (
@@ -81,10 +81,10 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !in_array($model->db->prefix . 'perms_roles_xref', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'perms_roles_xref', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'perms_roles_xref` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'perms_roles_xref` (
 					`perm_id` INT(10) UNSIGNED NOT NULL,
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`value`   INT(1)               NULL,
@@ -93,10 +93,10 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !in_array($model->db->prefix . 'perms_roles_users_xref', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'perms_roles_users_xref', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'perms_roles_users_xref` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'perms_roles_users_xref` (
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`user_id` INT(10) UNSIGNED NOT NULL,
 					UNIQUE `role_user` (`role_id`, `user_id`)
@@ -106,33 +106,33 @@ switch ( $hook )
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'perms', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'perms', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'perms`;');
 		}
 
-		if ( in_array($model->db->prefix . 'perms_roles', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'perms_roles', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms_roles`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'perms_roles`;');
 		}
 
-		if ( in_array($model->db->prefix . 'perms_roles_xref', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'perms_roles_xref', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms_roles_xref`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'perms_roles_xref`;');
 		}
 
-		if ( in_array($model->db->prefix . 'perms_roles_users_xref', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'perms_roles_users_xref', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'perms_roles_users_xref`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'perms_roles_users_xref`;');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->session->ready) )
+		if ( !empty($app->session->ready) )
 		{
 			require($contr->classPath . 'permission.php');
 
-			$model->perm = new perm($model);
+			$app->perm = new perm($app);
 		}
 
 		break;

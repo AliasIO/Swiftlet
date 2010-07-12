@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * E-mail
@@ -18,20 +18,20 @@ class email
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
 		$this->ready = TRUE;
 	}
@@ -43,7 +43,7 @@ class email
 	{
 		$headers = array(
 			'To'           => '<' . $params['to'] . '>',
-			'From'         => $this->model->siteName . ' <' . $this->model->adminEmail . '>',
+			'From'         => $this->app->siteName . ' <' . $this->app->adminEmail . '>',
 			'MIME-Version' => '1.0',
 			'Content-type' => 'text/html; charset=UTF-8',
 			'X-Mailer'     => 'Swiftlet - http://swiftlet.org'

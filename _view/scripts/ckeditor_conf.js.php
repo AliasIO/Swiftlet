@@ -11,7 +11,7 @@ $contrSetup = array(
 	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
 ?>
 CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $contr->absPath ?>';
@@ -38,5 +38,5 @@ function fileBrowserCallback(url) {
 }
 <?php
 
-$model->end();
+$app->end();
 ?>

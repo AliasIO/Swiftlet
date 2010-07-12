@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -19,10 +19,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'cache_queries', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'cache_queries', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'cache_queries` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'cache_queries` (
 					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`hash`        VARCHAR(40)      NOT NULL,
 					`results`     TEXT             NOT NULL,
@@ -35,10 +35,10 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !in_array($model->db->prefix . 'cache_tables', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'cache_tables', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'cache_tables` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'cache_tables` (
 					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`query_id`    INT(10) UNSIGNED NOT NULL,
 					`table`       VARCHAR(255)     NOT NULL,
@@ -51,44 +51,44 @@ switch ( $hook )
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'cache_queries', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'cache_queries', $app->db->tables) )
 		{
-			unset($model->db->tables[$model->db->prefix . 'cache_queries']);
+			unset($app->db->tables[$app->db->prefix . 'cache_queries']);
 
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'cache_queries`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'cache_queries`;');
 		}
 
-		if ( in_array($model->db->prefix . 'cache_tables', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'cache_tables', $app->db->tables) )
 		{
-			unset($model->db->tables[$model->db->prefix . 'cache_tables']);
+			unset($app->db->tables[$app->db->prefix . 'cache_tables']);
 
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'cache_tables`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'cache_tables`;');
 		}
 
 		break;
 	case 'init':
 		require($contr->classPath . 'mysql.php');
 
-		$model->db = new mysql($model, $model->dbHost, $model->dbUser, $model->dbPass, $model->dbName, $model->dbPrefix);
+		$app->db = new mysql($app, $app->dbHost, $app->dbUser, $app->dbPass, $app->dbName, $app->dbPrefix);
 
 		break;
 	case 'input_sanitize':
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
-			$model->POST_db_safe = $model->db->sanitize($model->POST_raw);
-			$model->GET_db_safe  = $model->db->sanitize($model->GET_raw);
+			$app->POST_db_safe = $app->db->sanitize($app->POST_raw);
+			$app->GET_db_safe  = $app->db->sanitize($app->GET_raw);
 		}
 
 		break;
 	case 'clear_cache':
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
-			$model->db->clear_cache();
+			$app->db->clear_cache();
 		}
 
 		break;
 	case 'end':
-		$model->db->close();				
+		$app->db->close();				
 
 		break;
 }

@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,10 +20,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'nodes', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'nodes', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'nodes` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'nodes` (
 					`id`        INT(10)      UNSIGNED NOT NULL AUTO_INCREMENT,
 					`left_id`   INT(10)      UNSIGNED NOT NULL,
 					`right_id`  INT(10)      UNSIGNED NOT NULL,
@@ -42,8 +42,8 @@ switch ( $hook )
 					) TYPE = INNODB
 				;');
 
-			$model->db->sql('
-				INSERT INTO `' . $model->db->prefix . 'nodes` (
+			$app->db->sql('
+				INSERT INTO `' . $app->db->prefix . 'nodes` (
 					`left_id`,
 					`right_id`,
 					`type`,
@@ -64,24 +64,24 @@ switch ( $hook )
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'nodes', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'nodes', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'nodes`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'nodes`;');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
 			require($contr->classPath . 'node.php');
 
-			$model->node = new node($model);
+			$app->node = new node($app);
 		}
 
 		break;
 	case 'route':
-		if ( !empty($model->node->ready) )
+		if ( !empty($app->node->ready) )
 		{
-			$params = $model->node->route($params);
+			$params = $app->node->route($params);
 		}
 }

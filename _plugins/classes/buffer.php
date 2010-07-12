@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * Buffer
@@ -18,20 +18,20 @@ class buffer
 		;
 
 	private
-		$model,
+		$app,
 		$view,
 		$contr
 		;
 
 	/**
 	 * Initialize buffer
-	 * @param object $model
+	 * @param object $app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 	}
 
 	/**
@@ -58,7 +58,7 @@ class buffer
 
 			$params['contents'] = &$contents;
 
-			$this->model->hook('cache', $params);
+			$this->app->hook('cache', $params);
 
  			if ( ob_get_length() > 0 )
 			{
@@ -70,11 +70,11 @@ class buffer
 			// Output debug messages
 			ob_start();
 
-			if ( $this->model->debugMode && !$this->contr->standAlone )
+			if ( $this->app->debugMode && !$this->contr->standAlone )
 			{
 				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
 
-				print_r($this->model->debugOutput);
+				print_r($this->app->debugOutput);
 
 				echo "\n-->";
 			}

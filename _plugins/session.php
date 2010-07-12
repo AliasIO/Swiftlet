@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -20,10 +20,10 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		if ( !in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		if ( !in_array($app->db->prefix . 'sessions', $app->db->tables) )
 		{
-			$model->db->sql('
-				CREATE TABLE `' . $model->db->prefix . 'sessions` (
+			$app->db->sql('
+				CREATE TABLE `' . $app->db->prefix . 'sessions` (
 					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`hash`        VARCHAR(40)      NOT NULL,
 					`contents`    TEXT             NULL,
@@ -37,25 +37,25 @@ switch ( $hook )
 
 		break;
 	case 'remove':
-		if ( in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'sessions', $app->db->tables) )
 		{
-			$model->db->sql('DROP TABLE `' . $model->db->prefix . 'sessions`;');
+			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'sessions`;');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($model->db->ready) )
+		if ( !empty($app->db->ready) )
 		{
 			require($contr->classPath . 'session.php');
 
-			$model->session = new session($model);
+			$app->session = new session($app);
 		}
 
 		break;
 	case 'end':
-		if ( !empty($model->session->ready) )
+		if ( !empty($app->session->ready) )
 		{
-			$model->session->end();
+			$app->session->end();
 		}
 
 		break;

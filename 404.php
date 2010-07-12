@@ -10,8 +10,8 @@ $contrSetup = array(
 	'pageTitle' => 'Page not found'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
 $view->load('404.html.php');
 
-$model->end();
+$app->end();

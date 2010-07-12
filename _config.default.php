@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 $config = array(
 	/**
@@ -23,7 +23,7 @@ $config = array(
 	'adminEmail' => '',
 
 	/**
-	 * System password. Required for operations like installing plug-ins
+	 * System password. Required for operations like installing plugins
 	 */
 	'sysPassword' => '',
 
@@ -41,7 +41,7 @@ $config = array(
 /*
  * testing should be set to FALSE when running in a production environment
  */
-switch ( $model->userIp )
+switch ( $app->userIp )
 {
 	case '127.0.0.1':
 	case '0.0.0.0':

@@ -11,11 +11,11 @@ $contrSetup = array(
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'form', 'perm'));
+$app->check_dependencies(array('db', 'form', 'perm'));
 
-$model->form->validate(array(
+$app->form->validate(array(
 	'form-submit'   => 'bool',
 	'name'          => 'string',
 	'form-submit-2' => 'bool',
@@ -24,40 +24,40 @@ $model->form->validate(array(
 	'value'         => 'int'
 	));
 
-$id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
-$action = isset($model->GET_raw['action']) ? $model->GET_raw['action'] : FALSE;
+$id     = isset($app->GET_raw['id']) && ( int ) $app->GET_raw['id'] ? ( int ) $app->GET_raw['id'] : FALSE;
+$action = isset($app->GET_raw['action']) ? $app->GET_raw['action'] : FALSE;
 
-if ( !$model->perm->check('admin perm access') )
+if ( !$app->perm->check('admin perm access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
 /*
  * Get users
  */
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		`id`,
 		`username`
-	FROM `' . $model->db->prefix . 'users`
+	FROM `' . $app->db->prefix . 'users`
 	ORDER BY `username` ASC
 	;');
 
-$users = $model->db->result;
+$users = $app->db->result;
 
 /*
  * Get permissions
  */
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		*
-	FROM `' . $model->db->prefix . 'perms`
+	FROM `' . $app->db->prefix . 'perms`
 	ORDER BY `name` ASC
 	;');
 
-$perms = $model->db->result;
+$perms = $app->db->result;
 
 $permsGroups = array();
 
@@ -79,15 +79,15 @@ if ( $perms )
  */
 $roles = array();
 
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		`id`,
 		`name`
-	FROM `' . $model->db->prefix . 'perms_roles`
+	FROM `' . $app->db->prefix . 'perms_roles`
 	ORDER BY `name` ASC
 	;');
 
-if ( $r = $model->db->result )
+if ( $r = $app->db->result )
 {
 	foreach ( $r as $d )
 	{
@@ -102,17 +102,17 @@ if ( $r = $model->db->result )
 /*
  * Get users
  */
-$model->db->sql('
+$app->db->sql('
 	SELECT
 		prux.`role_id`,
 		u.`id`,
 		u.`username`
-	FROM      `' . $model->db->prefix . 'perms_roles_users_xref` AS prux
-	LEFT JOIN `' . $model->db->prefix . 'users`                  AS u    ON prux.`user_id` = u.`id`
+	FROM      `' . $app->db->prefix . 'perms_roles_users_xref` AS prux
+	LEFT JOIN `' . $app->db->prefix . 'users`                  AS u    ON prux.`user_id` = u.`id`
 	ORDER BY `username` ASC
 	;');
 
-if ( $r = $model->db->result )
+if ( $r = $app->db->result )
 {
 	foreach ( $r as $d )
 	{
@@ -123,95 +123,95 @@ if ( $r = $model->db->result )
 	}
 }
 
-if ( !$model->perm->check('admin perm access') )
+if ( !$app->perm->check('admin perm access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-if ( $model->POST_valid['form-submit'] )
+if ( $app->POST_valid['form-submit'] )
 {
-	if ( !$model->POST_valid['name'] )
+	if ( !$app->POST_valid['name'] )
 	{
-		$model->form->errors['name'] = $model->t('Please provide a name');
+		$app->form->errors['name'] = $app->t('Please provide a name');
 	}
 
-	if ( $model->form->errors )
+	if ( $app->form->errors )
 	{
-		$view->error = $model->t('Please correct the errors below.');
+		$view->error = $app->t('Please correct the errors below.');
 	}
 	else
 	{
-		if ( $action == 'create' && $model->perm->check('admin perm create') )
+		if ( $action == 'create' && $app->perm->check('admin perm create') )
 		{
-			$model->db->sql('
-				INSERT IGNORE INTO `' . $model->db->prefix . 'perms_roles` (
+			$app->db->sql('
+				INSERT IGNORE INTO `' . $app->db->prefix . 'perms_roles` (
 					`name`
 				)
 				VALUES (
-					"' . $model->POST_db_safe['name'] . '"
+					"' . $app->POST_db_safe['name'] . '"
 				)
 				;');
 			
-			if ( $model->db->result )
+			if ( $app->db->result )
 			{
 				header('Location: ?notice=created');
 
-				$model->end();
+				$app->end();
 			}
 		}
-		else if ( $action == 'edit' && $model->perm->check('admin perm edit') )
+		else if ( $action == 'edit' && $app->perm->check('admin perm edit') )
 		{
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'perms_roles` SET
-					`name` = "' . $model->POST_db_safe['name'] . '"
+			$app->db->sql('
+				UPDATE `' . $app->db->prefix . 'perms_roles` SET
+					`name` = "' . $app->POST_db_safe['name'] . '"
 				WHERE
 					`id` = ' . ( int ) $id . '
 				LIMIT 1
 				;');
 
-			if ( $model->db->result )
+			if ( $app->db->result )
 			{
 				header('Location: ?notice=updated');
 
-				$model->end();
+				$app->end();
 			}
 		}
 	}
 }
 
-if ( $model->POST_valid['form-submit-2'] && $id && $model->perm->check('admin perm edit') )
+if ( $app->POST_valid['form-submit-2'] && $id && $app->perm->check('admin perm edit') )
 {
-	if ( !$model->form->errors )
+	if ( !$app->form->errors )
 	{
-		$model->db->sql('
-			INSERT IGNORE INTO `' . $model->db->prefix . 'perms_roles_users_xref` (
+		$app->db->sql('
+			INSERT IGNORE INTO `' . $app->db->prefix . 'perms_roles_users_xref` (
 				`role_id`,
 				`user_id`
 				)
 			VALUES (
 				' . ( int ) $id . ',
-				' . ( int ) $model->POST_db_safe['user'] . '
+				' . ( int ) $app->POST_db_safe['user'] . '
 				)
 			;');
 
 		header('Location: ?notice=added');
 
-		$model->end();
+		$app->end();
 	}
 }
 
-if ( $model->POST_valid['form-submit-3'] )
+if ( $app->POST_valid['form-submit-3'] )
 {
-	if ( !$model->form->errors )
+	if ( !$app->form->errors )
 	{
 		foreach ( $perms as $perm )
 		{
 			foreach ( $roles as $role )
 			{
-				$model->db->sql('
-					INSERT INTO `' . $model->db->prefix . 'perms_roles_xref` (
+				$app->db->sql('
+					INSERT INTO `' . $app->db->prefix . 'perms_roles_xref` (
 						`perm_id`,
 						`role_id`,
 						`value`
@@ -219,47 +219,47 @@ if ( $model->POST_valid['form-submit-3'] )
 					VALUES (
 						' . ( int ) $perm['id'] . ',
 						' . ( int ) $role['id'] . ',
-						' . ( int ) $model->POST_db_safe['value'][$perm['id']][$role['id']] . '
+						' . ( int ) $app->POST_db_safe['value'][$perm['id']][$role['id']] . '
 						)
 					ON DUPLICATE KEY UPDATE
-						`value` = ' . ( int ) $model->POST_db_safe['value'][$perm['id']][$role['id']] . '
+						`value` = ' . ( int ) $app->POST_db_safe['value'][$perm['id']][$role['id']] . '
 					;');
 			}
 		}
 		
 		header('Location: ?notice=perms_updated');
 
-		$model->end();
+		$app->end();
 	}
 }
 else
 {
-	if ( isset($model->GET_raw['notice']) )
+	if ( isset($app->GET_raw['notice']) )
 	{
-		switch ( $model->GET_raw['notice'] )
+		switch ( $app->GET_raw['notice'] )
 		{
 			case 'added':
-				$view->notice = $model->t('The user has been added to the role.');
+				$view->notice = $app->t('The user has been added to the role.');
 
 				break;
 			case 'removed':
-				$view->notice = $model->t('The user has been removed to the role.');
+				$view->notice = $app->t('The user has been removed to the role.');
 
 				break;
 			case 'created':
-				$view->notice = $model->t('The role has been created.');
+				$view->notice = $app->t('The role has been created.');
 
 				break;
 			case 'updated':
-				$view->notice = $model->t('The role has been updated.');
+				$view->notice = $app->t('The role has been updated.');
 
 				break;
 			case 'deleted':
-				$view->notice = $model->t('The role has been deleted.');
+				$view->notice = $app->t('The role has been deleted.');
 
 				break;
 			case 'perms_updated':
-				$view->notice = $model->t('The permissions have been updated.');
+				$view->notice = $app->t('The permissions have been updated.');
 
 				break;
 		}
@@ -270,13 +270,13 @@ else
 	 */
 	$values = array();
 
-	$model->db->sql('
+	$app->db->sql('
 		SELECT
 			*
-		FROM `' . $model->db->prefix . 'perms_roles_xref`
+		FROM `' . $app->db->prefix . 'perms_roles_xref`
 		;');
 
-	if ( $r = $model->db->result )
+	if ( $r = $app->db->result )
 	{
 		foreach ( $r as $d )
 		{
@@ -309,60 +309,60 @@ if ( $action && $id )
 	switch ( $action )
 	{
 		case 'edit':
-			$model->POST_html_safe['name'] = $roles[$id]['name'];
+			$app->POST_html_safe['name'] = $roles[$id]['name'];
 
 			break;
 		case 'remove':
-			if ( isset($model->GET_raw['user_id']) && $userId = ( int ) $model->GET_raw['user_id'] && $model->perm->check('admin perm edit') )
+			if ( isset($app->GET_raw['user_id']) && $userId = ( int ) $app->GET_raw['user_id'] && $app->perm->check('admin perm edit') )
 			{
-				if ( !$model->POST_valid['confirm'] )
+				if ( !$app->POST_valid['confirm'] )
 				{
-					$model->confirm($model->t('Are you sure you wish to remove this user from this role?'));
+					$app->confirm($app->t('Are you sure you wish to remove this user from this role?'));
 				}
 				else
 				{
-					$model->db->sql('
+					$app->db->sql('
 						DELETE
-						FROM `' . $model->db->prefix . 'perms_roles_users_xref`
+						FROM `' . $app->db->prefix . 'perms_roles_users_xref`
 						WHERE
 							`user_id` = ' . ( int ) $userId . ' AND
 							`role_id` = ' . ( int ) $id . '
 						;');
 
-					if ( $model->db->result )
+					if ( $app->db->result )
 					{
 						header('Location: ?notice=removed');
 
-						$model->end();
+						$app->end();
 					}
 				}
 			}
 
 			break;
 		case 'delete':
-			if ( $model->perm->check('admin perm delete') )
+			if ( $app->perm->check('admin perm delete') )
 			{
-				if ( !$model->POST_valid['confirm'] )
+				if ( !$app->POST_valid['confirm'] )
 				{
-					$model->confirm($model->t('Are you sure you wish to delete this role?'));
+					$app->confirm($app->t('Are you sure you wish to delete this role?'));
 				}
 				else
 				{
-					$model->db->sql('
+					$app->db->sql('
 						DELETE
 							pr, prx, prux
-						FROM      `' . $model->db->prefix . 'perms_roles`            AS pr
-						LEFT JOIN `' . $model->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`       = prx.`role_id`
-						LEFT JOIN `' . $model->db->prefix . 'perms_roles_users_xref` AS prux ON prx.`role_id` = prux.`role_id`
+						FROM      `' . $app->db->prefix . 'perms_roles`            AS pr
+						LEFT JOIN `' . $app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`       = prx.`role_id`
+						LEFT JOIN `' . $app->db->prefix . 'perms_roles_users_xref` AS prux ON prx.`role_id` = prux.`role_id`
 						WHERE
 							pr.`id` = ' . ( int ) $id . '
 						;');
 
-					if ( $model->db->result )
+					if ( $app->db->result )
 					{
 						header('Location: ?notice=deleted');
 
-						$model->end();
+						$app->end();
 					}
 				}
 			}
@@ -371,7 +371,7 @@ if ( $action && $id )
 	}
 }
 
-$model->POST_html_safe['value'] = $values;
+$app->POST_html_safe['value'] = $values;
 
 $view->id          = $id;
 $view->action      = $action;
@@ -381,4 +381,4 @@ $view->roles       = $roles;
 
 $view->load('admin/perms.html.php');
 
-$model->end();
+$app->end();

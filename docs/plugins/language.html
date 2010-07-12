@@ -4,7 +4,7 @@
 
 <p>
 	Plugin to handle translations. This plugin hooks into to the <em>translate</em> <a href="../concepts/hook.html">hook</a> and can be called
-	with <code>$model-&gt;t()</code>.
+	with <code>$app-&gt;t()</code>.
 </p>
 
 <p>
@@ -32,30 +32,30 @@ $translation = array(
 
 <pre>
 <?php
-<p><?php echo $model->t('Text to translate') ?></p>
+<p><?php echo $app->t('Text to translate') ?></p>
 ?>
 </pre>
 
 <h3>Class</h3>
 
 <p>
-	<code>$model-&gt;lang</code>
+	<code>$app-&gt;lang</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;lang-&gt;check_languages ( )</code><br/>
+		<code>$app-&gt;lang-&gt;check_languages ( )</code><br/>
 		Scans the <code>/lang/</code> directory for installed languages.
 	</li>
 	<li>
-		<code>$model-&gt;lang-&gt;load ( )</code><br/>
+		<code>$app-&gt;lang-&gt;load ( )</code><br/>
 		Loads a language file.
 	</li>
 	<li>
-		<code>$model-&gt;lang-&gt;translate ( <em>string</em> $v )</code><br/>
-		Translates a string (this function should not be called directly, use <code>$model-&gt;t()</code> instead.
+		<code>$app-&gt;lang-&gt;translate ( <em>string</em> $v )</code><br/>
+		Translates a string (this function should not be called directly, use <code>$app-&gt;t()</code> instead.
 	</li>
 </ul>
 
@@ -63,11 +63,11 @@ $translation = array(
 
 <ul>
 	<li>
-		<code>$model-&gt;lang-&gt;language</code><br/>
+		<code>$app-&gt;lang-&gt;language</code><br/>
 		The current user's language.
 	</li>
 	<li>
-		<code>$model-&gt;lang-&gt;languages</code><br/>
+		<code>$app-&gt;lang-&gt;languages</code><br/>
 		List of installed languages.
 	</li>
 </ul>

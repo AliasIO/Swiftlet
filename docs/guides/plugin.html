@@ -13,7 +13,7 @@
 
 <pre>
 <?php
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -58,7 +58,7 @@ switch ( $hook )
 
 <pre>
 <?php
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -75,8 +75,8 @@ switch ( $hook )
 
 		break;
 	case 'install':
-		$model->db->sql('
-			CREATE TABLE `' . $model->db->prefix . 'example` (
+		$app->db->sql('
+			CREATE TABLE `' . $app->db->prefix . 'example` (
 				`id`  INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 				`foo` VARCHAR(256)     NOT NULL,
 				PRIMARY KEY (`id`)
@@ -85,8 +85,8 @@ switch ( $hook )
 
 		break;
 	case 'upgrade':
-		$model->db->sql('
-			UPDATE `' . $model->db->prefix . 'example` SET
+		$app->db->sql('
+			UPDATE `' . $app->db->prefix . 'example` SET
 				`foo` = "bar"
 			;');
 
@@ -94,7 +94,7 @@ switch ( $hook )
 	case 'init':
 		require($contr->classPath . 'example.php');
 
-		$model->example = new example($model);
+		$app->example = new example($app);
 
 		break;
 }
@@ -127,7 +127,7 @@ switch ( $hook )
 
 <pre>
 <?php
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 class example
 {
@@ -135,7 +135,7 @@ class example
 		$ready
 		;
 
-	function __construct($model)
+	function __construct($app)
 	{
 		$this->ready = TRUE;
 	}
@@ -144,13 +144,13 @@ class example
 </pre>
 
 <p>
-	An instance of <code>$model</code> should be passed to each class in order to access the <a href="./model">Model</a> inside
+	An instance of <code>$app</code> should be passed to each class in order to access the <a href="./model">Model</a> inside
 	the class.
 </p>
 
 <p>
 	If the plugin is required by other plugins or pages the <code>$ready</code> variable is checked using
-	<code>$model-&gt;check_dependencies()</code>. The variable should always be set.
+	<code>$app-&gt;check_dependencies()</code>. The variable should always be set.
 </p>
 
 <h3>See also</h3>

@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($this->model) ) die('Direct access to this file is not allowed');
+if ( !isset($this->app) ) die('Direct access to this file is not allowed');
 
 /**
  * Session
@@ -21,7 +21,7 @@ class session
 		;
 
 	private
-		$model,
+		$app,
 		$contr,
 
 		$hash
@@ -29,18 +29,18 @@ class session
 
 	/**
 	 * Initialize session
-	 * @param object $this->model
+	 * @param object $this->app
 	 */
-	function __construct($model)
+	function __construct($app)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
 		/**
 		 * Check if the sessions table exists
 		 */
-		if ( in_array($model->db->prefix . 'sessions', $model->db->tables) )
+		if ( in_array($app->db->prefix . 'sessions', $app->db->tables) )
 		{
 			$this->ready = TRUE;
 
@@ -48,14 +48,14 @@ class session
 
 			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-			$this->hash = sha1($this->model->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->contr->absPath);
+			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->contr->absPath);
 
 			/**
 			 * Delete expired sessions
 			 */
-			$model->db->sql('
+			$app->db->sql('
 				DELETE
-				FROM `' . $this->model->db->prefix . 'sessions`
+				FROM `' . $this->app->db->prefix . 'sessions`
 				WHERE
 					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
 				;');
@@ -65,17 +65,17 @@ class session
 			 */
 			if ( $this->id )
 			{
-				$model->db->sql('
+				$app->db->sql('
 					SELECT
 						`contents`
-					FROM `' . $this->model->db->prefix . 'sessions`
+					FROM `' . $this->app->db->prefix . 'sessions`
 					WHERE
 						`id`   = '  . $this->id   . ' AND
 						`hash` = "' . $this->hash . '"
 					LIMIT 1
 					;', FALSE);
 
-				if ( $r = $model->db->result )
+				if ( $r = $app->db->result )
 				{
 					$this->contents = unserialize($r[0]['contents']);
 
@@ -91,9 +91,9 @@ class session
 				/**
 				 * Create a new sessions if no session exists
 				 */
-				$model->db->sql('
+				$app->db->sql('
 					INSERT
-					INTO `' . $model->db->prefix . 'sessions` (
+					INTO `' . $app->db->prefix . 'sessions` (
 						`hash`,
 						`contents`,
 						`date`,
@@ -101,17 +101,17 @@ class session
 						)
 					VALUES (
 						"' . $this->hash . '",
-						"' . $model->db->escape(serialize($this->contents)) . '",
+						"' . $app->db->escape(serialize($this->contents)) . '",
 						"' . gmdate('Y-m-d H:i:s') . '",
 						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 						)
 					ON DUPLICATE KEY UPDATE
-						`contents`    = "' . $model->db->escape(serialize($this->contents)) . '",
+						`contents`    = "' . $app->db->escape(serialize($this->contents)) . '",
 						`date`        = "' . gmdate('Y-m-d H:i:s') . '",
 						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 					;');
 
-				$this->id = $model->db->result;
+				$this->id = $app->db->result;
 			}
 		}
 	}
@@ -160,12 +160,12 @@ class session
 	 */
 	function end()
 	{
-		if ( in_array($this->model->db->prefix . 'sessions', $this->model->db->tables) )
+		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
-			$this->model->db->sql('
-				UPDATE `' . $this->model->db->prefix . 'sessions`
+			$this->app->db->sql('
+				UPDATE `' . $this->app->db->prefix . 'sessions`
 				SET
-					`contents` = "' . $this->model->db->escape(serialize($this->contents)) . '",
+					`contents` = "' . $this->app->db->escape(serialize($this->contents)) . '",
 					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 				WHERE
 					`id` = ' . $this->id . '

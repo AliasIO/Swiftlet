@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($model) ) die('Direct access to this file is not allowed');
+if ( !isset($app) ) die('Direct access to this file is not allowed');
 
 /**
  * MySQL database
@@ -14,7 +14,7 @@ if ( !isset($model) ) die('Direct access to this file is not allowed');
 class mysql
 {
 	private
-		$model,
+		$app,
 		$view,
 		$contr
 		;
@@ -28,32 +28,32 @@ class mysql
 
 	/**
 	 * Initialize database connection
-	 * @param object $model
+	 * @param object $app
 	 * @param string $host
 	 * @param string $user
 	 * @param string $pass
 	 * @param string $name
 	 * @param string $prefix
 	 */
-	function __construct($model, $host, $user, $pass = FALSE, $name = FALSE, $prefix = FALSE)
+	function __construct($app, $host, $user, $pass = FALSE, $name = FALSE, $prefix = FALSE)
 	{
-		$this->model = $model;
-		$this->view  = $model->view;
-		$this->contr = $model->contr;
+		$this->app  = $app;
+		$this->view  = $app->view;
+		$this->contr = $app->contr;
 
 		$this->prefix = $prefix;
 
-		$model->debugOutput['mysql queries'] = array('reads' => 0, 'writes' => 0);
+		$app->debugOutput['mysql queries'] = array('reads' => 0, 'writes' => 0);
 
 		if ( $name )
 		{
 			$this->link = mysql_connect($host, $user, $pass)
-				or $model->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
+				or $app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
 			if ( is_resource($this->link) )
 			{
 				mysql_select_db($name, $this->link)
-					or $model->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
+					or $app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
 				$this->ready = TRUE;
 				
@@ -86,7 +86,7 @@ class mysql
 				}
 				else
 				{
-					$model->caching = FALSE;
+					$app->caching = FALSE;
 				}
 			}
 		}
@@ -100,7 +100,7 @@ class mysql
 	{
 		if ( !$this->ready )
 		{
-			$this->model->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
+			$this->app->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
 		}
 
 		$this->result = array();
@@ -148,7 +148,7 @@ class mysql
 	 */
 	private function read($cache)
 	{
-		$this->model->debugOutput['mysql queries']['reads'] ++;
+		$this->app->debugOutput['mysql queries']['reads'] ++;
 
 		$tables = $this->get_tables();
 
@@ -157,7 +157,7 @@ class mysql
 		 */
 		$hash = sha1($this->sql);
 
-		if ( $this->model->caching && $cache && $tables )
+		if ( $this->app->caching && $cache && $tables )
 		{
 			$sql = $this->sql;
 
@@ -201,12 +201,12 @@ class mysql
 		/**
 		 * Not cached, execute query
 		 */
-		$timerStart = $this->model->timer_start();
+		$timerStart = $this->app->timer_start();
 	
 		$r = mysql_query($this->sql)
-			or $this->model->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
+			or $this->app->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
 
-		$timerEnd = $this->model->timer_end($timerStart);
+		$timerEnd = $this->app->timer_end($timerStart);
 
 		if ( $r )
 		{
@@ -216,18 +216,18 @@ class mysql
 			}
 		}
 
-		if ( $this->model->debugMode && preg_match('/^SELECT/i', $this->sql) )
+		if ( $this->app->debugMode && preg_match('/^SELECT/i', $this->sql) )
 		{
 			/**
 			 * Get detailed debug information about a SELECT query
 			 */
 			$r = mysql_query('EXPLAIN ' . $this->sql);
 
-			$this->model->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'execution time' => $timerEnd, 'explain' => mysql_fetch_assoc($r));
+			$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'execution time' => $timerEnd, 'explain' => mysql_fetch_assoc($r));
 		}
 		else
 		{		
-			$this->model->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'execution time' => $timerEnd);
+			$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'execution time' => $timerEnd);
 		}
 
 		mysql_free_result($r);
@@ -235,7 +235,7 @@ class mysql
 		/**
 		 * Cache results
 		 */
-		if ( $this->result && $this->model->caching && $cache && $tables )
+		if ( $this->result && $this->app->caching && $cache && $tables )
 		{
 			$result = $this->result;
 
@@ -283,14 +283,14 @@ class mysql
 	 */
 	private function write()
 	{
-		$this->model->debugOutput['mysql queries']['writes'] ++;
+		$this->app->debugOutput['mysql queries']['writes'] ++;
 
 		/**
 		 * Clear cache
 		 */
 		$tables = $this->get_tables();
 
-		if ( $this->model->caching && $tables )
+		if ( $this->app->caching && $tables )
 		{
 			$sql = $this->sql;
 			
@@ -307,12 +307,12 @@ class mysql
 			$this->result = array();
 		}
 
-		$timerStart = $this->model->timer_start();
+		$timerStart = $this->app->timer_start();
 
 		$r = mysql_query($this->sql)
-			or $this->model->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
+			or $this->app->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
 
-		$this->model->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'affected rows' => mysql_affected_rows(), 'execution time' => $this->model->timer_end($timerStart));
+		$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'affected rows' => mysql_affected_rows(), 'execution time' => $this->app->timer_end($timerStart));
 	}
 
 	/**
@@ -386,7 +386,7 @@ class mysql
 		}
 		else
 		{
-			return $this->escape($this->model->h($v));
+			return $this->escape($this->app->h($v));
 		}
 	}
 

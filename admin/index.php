@@ -11,31 +11,31 @@ $contrSetup = array(
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('dashboard', 'perm'));
+$app->check_dependencies(array('dashboard', 'perm'));
 
-if ( !$model->perm->check('dashboard access') )
+if ( !$app->perm->check('dashboard access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-if ( !empty($model->GET_raw['action']) && $model->GET_raw['action'] == 'clear_cache' )
+if ( !empty($app->GET_raw['action']) && $app->GET_raw['action'] == 'clear_cache' )
 {
-	$model->clear_cache();
+	$app->clear_cache();
 
 	header('Location: ?notice=cache_cleared');
 
-	$model->end();
+	$app->end();
 }
 
 $newPlugins = 0;
 
-if ( isset($model->db) )
+if ( isset($app->db) )
 {
-	foreach ( $model->pluginsLoaded as $pluginName => $plugin )
+	foreach ( $app->pluginsLoaded as $pluginName => $plugin )
 	{
 		$version = $plugin->get_version();
 		
@@ -49,20 +49,20 @@ if ( isset($model->db) )
 	}
 }
 
-if ( !empty($model->GET_raw['notice']) )
+if ( !empty($app->GET_raw['notice']) )
 {
-	switch($model->GET_raw['notice'])
+	switch($app->GET_raw['notice'])
 	{
 		case 'cache_cleared':
-			$view->notice = $model->t('The cache has been cleared.');
+			$view->notice = $app->t('The cache has been cleared.');
 
 			break;
 	}
 }
 
 $view->newPlugins = $newPlugins;
-$view->pages      = $model->dashboard->pages;
+$view->pages      = $app->dashboard->pages;
 
 $view->load('admin/dashboard.html.php');
 
-$model->end();
+$app->end();

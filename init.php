@@ -20,12 +20,12 @@ if ( empty($contrSetup) )
 
 if ( !class_exists('model') )
 {
-	require($contrSetup['rootPath'] . '_model/model.class.php');
+	require($contrSetup['rootPath'] . '_app/model.class.php');
 }
 
-if ( !class_exists('contr') )
+if ( !class_exists('controller') )
 {
-	require($contrSetup['rootPath'] . '_model/controller.class.php');
+	require($contrSetup['rootPath'] . '_app/controller.class.php');
 }
 
 if ( isset($contr) )
@@ -33,34 +33,34 @@ if ( isset($contr) )
 	$absPath = $contr->absPath;
 }
 
-$contr = new contr($contrSetup);
+$contr = new controller($contrSetup);
 
 if ( isset($absPath) )
 {
 	$contr->absPath = $absPath;
 }
 
-if ( !isset($model) )
+if ( !isset($app) )
 {
-	$model = new model($contr);
+	$app = new model($contr);
 }
 else
 {
-	$model->contr = $contr;
+	$app->contr = $contr;
 
-	$model->view = new view($model);
+	$app->view = new view($app);
 }
 
 if ( !class_exists('view') )
 {
-	$model->view = new view($model);
+	$app->view = new view($app);
 }
 
-$view = $model->view;
+$view = $app->view;
 
 unset($contrSetup);
 
 if ( empty($contr->standAlone) )
 {
-	$model->hook('header');
+	$app->hook('header');
 }

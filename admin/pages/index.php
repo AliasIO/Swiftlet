@@ -11,11 +11,11 @@ $contrSetup = array(
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
-$model->check_dependencies(array('db', 'form', 'node', 'perm'));
+$app->check_dependencies(array('db', 'form', 'node', 'perm'));
 
-$model->form->validate(array(
+$app->form->validate(array(
 	'form-submit' => 'bool',
 	'delete'      => 'bool',
 	'title'       => 'string',
@@ -26,45 +26,45 @@ $model->form->validate(array(
 	'home'        => 'bool'
 	));
 
-$id     = isset($model->GET_raw['id']) && ( int ) $model->GET_raw['id'] ? ( int ) $model->GET_raw['id'] : FALSE;
-$action = isset($model->GET_raw['action']) && $id ? $model->GET_raw['action'] : FALSE;
+$id     = isset($app->GET_raw['id']) && ( int ) $app->GET_raw['id'] ? ( int ) $app->GET_raw['id'] : FALSE;
+$action = isset($app->GET_raw['action']) && $id ? $app->GET_raw['action'] : FALSE;
 
-if ( !$model->perm->check('admin page access') )
+if ( !$app->perm->check('admin page access') )
 {
 	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
-	$model->end();
+	$app->end();
 }
 
-$languages = !empty($model->lang->ready) ? $model->lang->languages : array('English US');
+$languages = !empty($app->lang->ready) ? $app->lang->languages : array('English US');
 
 sort($languages);
 
-if ( $model->POST_valid['form-submit'] )
+if ( $app->POST_valid['form-submit'] )
 {
-	foreach ( $model->POST_valid['title'] as $language => $title )
+	foreach ( $app->POST_valid['title'] as $language => $title )
 	{
-		if ( !$model->POST_valid['title'][$language] )
+		if ( !$app->POST_valid['title'][$language] )
 		{
-			$model->form->errors['title_' . array_search($language, $languages)] = $model->t('Please provide a title');
+			$app->form->errors['title_' . array_search($language, $languages)] = $app->t('Please provide a title');
 		}
 	}
 
-	if ( isset($model->form->errors['path']) )
+	if ( isset($app->form->errors['path']) )
 	{
-		$model->form->errors['path'] = $model->t('Invalid path. Please use alphanumeric characters, underscores, dashes and slashes only (e.g. "some/path").');
+		$app->form->errors['path'] = $app->t('Invalid path. Please use alphanumeric characters, underscores, dashes and slashes only (e.g. "some/path").');
 	}
 
-	if ( $model->form->errors )
+	if ( $app->form->errors )
 	{
-		$view->error = $model->t('Please correct the errors below.');
+		$view->error = $app->t('Please correct the errors below.');
 	}
 	else
 	{
-		if ( $model->POST_valid['home'] )
+		if ( $app->POST_valid['home'] )
 		{
-			$model->db->sql('
-				UPDATE `' . $model->db->prefix . 'nodes` SET
+			$app->db->sql('
+				UPDATE `' . $app->db->prefix . 'nodes` SET
 					`home` = 0
 				;');
 		}
@@ -72,13 +72,13 @@ if ( $model->POST_valid['form-submit'] )
 		switch ( $action )
 		{
 			case 'edit':
-				if ( $model->perm->check('admin page edit') )
+				if ( $app->perm->check('admin page edit') )
 				{
-					$model->db->sql('
-						UPDATE `' . $model->db->prefix . 'nodes` SET
-							`title` = "' . $model->POST_db_safe['title']['English US'] . '",
-							`home`  =  ' . ( $model->POST_raw['home'] ? 1 : 0 )        . ',
-							`path`  = "' . $model->POST_db_safe['path']                . '"
+					$app->db->sql('
+						UPDATE `' . $app->db->prefix . 'nodes` SET
+							`title` = "' . $app->POST_db_safe['title']['English US'] . '",
+							`home`  =  ' . ( $app->POST_raw['home'] ? 1 : 0 )        . ',
+							`path`  = "' . $app->POST_db_safe['path']                . '"
 						WHERE
 							`id` = ' . $id . '
 						LIMIT 1
@@ -87,15 +87,15 @@ if ( $model->POST_valid['form-submit'] )
 					// Check in which languages the page is stored
 					$langExist = array();
 
-					$model->db->sql('
+					$app->db->sql('
 						SELECT
 							`lang`
-						FROM `' . $model->db->prefix . 'pages`
+						FROM `' . $app->db->prefix . 'pages`
 						WHERE
 							`node_id` = ' . $id . '
 						;');
 
-					if ( $r = $model->db->result )
+					if ( $r = $app->db->result )
 					{
 						foreach ( $r as $d )
 						{
@@ -107,22 +107,22 @@ if ( $model->POST_valid['form-submit'] )
 					{
 						if ( in_array($language, $langExist) )
 						{
-							$model->db->sql('
-								UPDATE `' . $model->db->prefix . 'pages` SET
-									`title`     = "' . $model->POST_db_safe['title'][$language]  . '",
-									`body`      = "' . $model->POST_db_safe['body'][$language]   . '",
-									`published` =  ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
+							$app->db->sql('
+								UPDATE `' . $app->db->prefix . 'pages` SET
+									`title`     = "' . $app->POST_db_safe['title'][$language]  . '",
+									`body`      = "' . $app->POST_db_safe['body'][$language]   . '",
+									`published` =  ' . ( $app->POST_raw['published'] ? 1 : 0 ) . ',
 									`date_edit` = "' . gmdate('Y-m-d H:i:s')                     . '"
 								WHERE
 									`node_id` =  ' . $id . ' AND
-									`lang`    = "' . $model->db->escape($language) . '"
+									`lang`    = "' . $app->db->escape($language) . '"
 								LIMIT 1
 								;');
 						}
 						else
 						{
-							$model->db->sql('
-								INSERT INTO `' . $model->db->prefix . 'pages` (
+							$app->db->sql('
+								INSERT INTO `' . $app->db->prefix . 'pages` (
 									`node_id`,
 									`title`,
 									`body`,
@@ -133,10 +133,10 @@ if ( $model->POST_valid['form-submit'] )
 									)
 								VALUES (
 									 ' . $id                                       . ',
-									"' . $model->POST_db_safe['title'][$language]  . '",
-									"' . $model->POST_db_safe['body'][$language]   . '",
-									 ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
-									"' . $model->db->escape($language)             . '",
+									"' . $app->POST_db_safe['title'][$language]  . '",
+									"' . $app->POST_db_safe['body'][$language]   . '",
+									 ' . ( $app->POST_raw['published'] ? 1 : 0 ) . ',
+									"' . $app->db->escape($language)             . '",
 									"' . gmdate('Y-m-d H:i:s')                     . '",
 									"' . gmdate('Y-m-d H:i:s')                     . '"
 									)
@@ -144,38 +144,38 @@ if ( $model->POST_valid['form-submit'] )
 						}
 					}
 
-					$model->node->move($id, $model->POST_raw['parent']);
+					$app->node->move($id, $app->POST_raw['parent']);
 
-					$path = !empty($model->POST_raw['path']) ? $model->POST_raw['path'] : 'node/' . ( int ) $id;
+					$path = !empty($app->POST_raw['path']) ? $app->POST_raw['path'] : 'node/' . ( int ) $id;
 
 					header('Location: ?action=edit&id=' . ( int ) $id . '&path=' . rawurlencode($path) . '&notice=updated');
 
-					$model->end();
+					$app->end();
 				}
 
 				break;
 			default:
-				if ( $model->perm->check('admin page create') )
+				if ( $app->perm->check('admin page create') )
 				{
-					$nodeId = $model->node->create($model->POST_raw['title']['English US'], 'page', $model->POST_raw['parent']);
+					$nodeId = $app->node->create($app->POST_raw['title']['English US'], 'page', $app->POST_raw['parent']);
 
 					if ( $nodeId )
 					{
-						$model->db->sql('
-							UPDATE `' . $model->db->prefix . 'nodes` SET
-								`home` =  ' . ( $model->POST_raw['home'] ? 1 : 0 ) . ',
-								`path` = "' . $model->POST_db_safe['path']         . '"
+						$app->db->sql('
+							UPDATE `' . $app->db->prefix . 'nodes` SET
+								`home` =  ' . ( $app->POST_raw['home'] ? 1 : 0 ) . ',
+								`path` = "' . $app->POST_db_safe['path']         . '"
 							WHERE
 								`id` = ' . ( $nodeId ) . '
 							LIMIT 1
 							;');
 
-						$model->db->result = FALSE;
+						$app->db->result = FALSE;
 						
 						foreach ( $languages as $language )
 						{
-							$model->db->sql('
-								INSERT INTO `' . $model->db->prefix . 'pages` (
+							$app->db->sql('
+								INSERT INTO `' . $app->db->prefix . 'pages` (
 									`node_id`,
 									`title`,
 									`body`,
@@ -186,19 +186,19 @@ if ( $model->POST_valid['form-submit'] )
 									)
 								VALUES (
 									 ' . ( int ) $nodeId                           . ',
-									"' . $model->POST_db_safe['title'][$language]  . '",
-									"' . $model->POST_db_safe['body'][$language]   . '",
-									 ' . ( $model->POST_raw['published'] ? 1 : 0 ) . ',
-									"' . $model->db->escape($language)             . '",
+									"' . $app->POST_db_safe['title'][$language]  . '",
+									"' . $app->POST_db_safe['body'][$language]   . '",
+									 ' . ( $app->POST_raw['published'] ? 1 : 0 ) . ',
+									"' . $app->db->escape($language)             . '",
 									"' . gmdate('Y-m-d H:i:s')                     . '",
 									"' . gmdate('Y-m-d H:i:s')                     . '"
 									)
 								;');
 						}
 
-						if ( $model->db->result )
+						if ( $app->db->result )
 						{
-							$path = !empty($model->POST_raw['path']) ? $model->POST_raw['path'] : 'node/' . $nodeId;
+							$path = !empty($app->POST_raw['path']) ? $app->POST_raw['path'] : 'node/' . $nodeId;
 
 							header('Location: ?action=edit&id=' . $nodeId . '&path=' . rawurlencode($path) . '&notice=created');
 
@@ -206,27 +206,27 @@ if ( $model->POST_valid['form-submit'] )
 						}
 						else
 						{
-							$model->node->delete($nodeId);
+							$app->node->delete($nodeId);
 						}
 					}
 			}
 		}
 	}
 }
-else if ( isset($model->GET_raw['notice']) )
+else if ( isset($app->GET_raw['notice']) )
 {
-	switch ( $model->GET_raw['notice'] )
+	switch ( $app->GET_raw['notice'] )
 	{
 		case 'created':
-			$view->notice = $model->t('The page has been created (%1$sview%2$s).', array('<a href="' . $model->route($model->h($model->GET_raw['path'])) . '">', '</a>'));
+			$view->notice = $app->t('The page has been created (%1$sview%2$s).', array('<a href="' . $app->route($app->h($app->GET_raw['path'])) . '">', '</a>'));
 			
 			break;
 		case 'updated':
-			$view->notice = $model->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $model->route($model->h($model->GET_raw['path'])) . '">', '</a>'));
+			$view->notice = $app->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $app->route($app->h($app->GET_raw['path'])) . '">', '</a>'));
 			
 			break;
 		case 'deleted':
-			$view->notice = $model->t('The page has been deleted.');
+			$view->notice = $app->t('The page has been deleted.');
 			
 			break;
 	}
@@ -238,13 +238,13 @@ switch ( $action )
 		$editLeftId  = 0;
 		$editRightId = 0;
 
-		if ( $model->perm->check('admin page edit') )
+		if ( $app->perm->check('admin page edit') )
 		{
-			$node = $model->node->get_parents($id);
+			$node = $app->node->get_parents($id);
 
 			if ( $node )
 			{
-				$model->db->sql('
+				$app->db->sql('
 					SELECT
 						p.`title`,
 						p.`body`,
@@ -254,57 +254,57 @@ switch ( $action )
 						n.`right_id`,
 						n.`home`,
 						n.`path`
-					FROM      `' . $model->db->prefix . 'nodes` AS n
-					LEFT JOIN `' . $model->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+					FROM      `' . $app->db->prefix . 'nodes` AS n
+					LEFT JOIN `' . $app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 					WHERE
 						n.`id`= ' . ( int ) $id . '
 					;');
 
-				if ( $r = $model->db->result )
+				if ( $r = $app->db->result )
 				{
 					$editLeftId  = ( int ) $r[0]['left_id'];
 					$editRightId = ( int ) $r[0]['right_id'];
 
 					foreach ( $r as $d )
 					{
-						$model->POST_html_safe['title'][$d['lang']] = $d['title'];
-						$model->POST_html_safe['body'][$d['lang']]  = $d['body'];
+						$app->POST_html_safe['title'][$d['lang']] = $d['title'];
+						$app->POST_html_safe['body'][$d['lang']]  = $d['body'];
 					}
 
-					$model->POST_html_safe['parent']    = ( int ) $node['parents'][count($node['parents']) - 1]['id'];
-					$model->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
-					$model->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
-					$model->POST_html_safe['path']      = $r[0]['path'];
+					$app->POST_html_safe['parent']    = ( int ) $node['parents'][count($node['parents']) - 1]['id'];
+					$app->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
+					$app->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
+					$app->POST_html_safe['path']      = $r[0]['path'];
 				}
 			}
 		}
 
 		break;
 	case 'delete':
-		if ( $model->perm->check('admin page delete') )
+		if ( $app->perm->check('admin page delete') )
 		{
-			if ( !$model->POST_valid['confirm'] )
+			if ( !$app->POST_valid['confirm'] )
 			{
-				$model->confirm($model->t('Are you sure you wish to delete this page?'));
+				$app->confirm($app->t('Are you sure you wish to delete this page?'));
 			}
 			else
 			{
 				// Delete page
-				if ( $model->node->delete($id) )
+				if ( $app->node->delete($id) )
 				{
 					// Not using LIMIT 1 because a node can have several pages (translations)
-					$model->db->sql('
+					$app->db->sql('
 						DELETE
-						FROM `' . $model->db->prefix . 'pages`
+						FROM `' . $app->db->prefix . 'pages`
 						WHERE
 							`node_id` = ' . ( int ) $id . '
 						;');
 
-					if ( $model->db->result )
+					if ( $app->db->result )
 					{
 						header('Location: ?notice=deleted');
 
-						$model->end();
+						$app->end();
 					}
 				}
 			}
@@ -312,28 +312,28 @@ switch ( $action )
 
 		break;
 	default:
-		$model->POST_html_safe['published'] = 1;
+		$app->POST_html_safe['published'] = 1;
 }
 
 foreach ( $languages as $language )
 {
-	if ( !isset($model->POST_html_safe['title'][$language]) )
+	if ( !isset($app->POST_html_safe['title'][$language]) )
 	{
-		$model->POST_html_safe['title'][$language] = '';
+		$app->POST_html_safe['title'][$language] = '';
 	}
 
-	if ( !isset($model->POST_html_safe['body'][$language]) )
+	if ( !isset($app->POST_html_safe['body'][$language]) )
 	{
-		$model->POST_html_safe['body'][$language] = '';
+		$app->POST_html_safe['body'][$language] = '';
 	}
 }
 
 $list        = array();
 $listParents = array();
 
-$nodes = $model->node->get_children(node::rootId, 'page');
+$nodes = $app->node->get_children(node::rootId, 'page');
 
-$model->node->nodes_to_array($nodes, $list);
+$app->node->nodes_to_array($nodes, $list);
 
 array_shift($list);
 
@@ -356,7 +356,7 @@ if ( $action == 'edit' )
 	}
 }
 
-$pagination = $model->paginate('pages', count($list), 10);
+$pagination = $view->paginate('pages', count($list), 10);
 
 $view->nodesParents    = $listParents;
 $view->nodes           = array_splice($list, $pagination['from'], 10);
@@ -369,4 +369,4 @@ $view->languages = $languages;
 
 $view->load('admin/pages.html.php');
 
-$model->end();
+$app->end();

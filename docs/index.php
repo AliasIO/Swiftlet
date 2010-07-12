@@ -10,13 +10,13 @@ $contrSetup = array(
 	'pageTitle' => 'Documenation'
 	);
 
-require($contrSetup['rootPath'] . '_model/init.php');
+require($contrSetup['rootPath'] . 'init.php');
 
 $file = 'intro.html';
 
-if ( isset($model->routeParts[1]) )
+if ( isset($app->routeParts[1]) )
 {
-	$file = './' . implode('/', array_slice($model->routeParts, 1)) . '.html';
+	$file = './' . implode('/', array_slice($app->routeParts, 1)) . '.html';
 }
 
 $contents = '';
@@ -29,7 +29,7 @@ if ( is_file ( $file ) )
 
 	if ( $m )
 	{
-		$view->pageTitle = $model->h($m[1]);
+		$view->pageTitle = $app->h($m[1]);
 	}
 
 	/*
@@ -42,16 +42,16 @@ if ( is_file ( $file ) )
 		foreach ( $m[0] as $v )
 		{
 			$code = highlight_string(preg_replace('/<\/?pre>\r*\n*/', '', $v), TRUE);
-			
+
 			$gutter = '';
-			
+
 			for ( $i = 1; $i <= ( $lines = substr_count($code, '<br />') ); $i ++ )
 			{
 				$gutter .= sprintf('%0' . strlen($lines) . 'd', $i) . '<br/>';
 			}
 
 			$code = '<div class="syntax"><div class="gutter">' . $gutter . '</div><div class="code">' . $code . '</div></div>';
-			
+
 			$contents = str_replace($v, $code, $contents);
 		}
 	}
@@ -59,6 +59,6 @@ if ( is_file ( $file ) )
 
 $view->contents = $contents;
 
-$model->view->load('docs.html.php');
+$view->load('docs.html.php');
 
-$model->end();
+$app->end();

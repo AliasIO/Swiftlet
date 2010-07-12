@@ -1,5 +1,5 @@
 <div class="no-grid">
-	<h1><?php echo $model->t($contr->pageTitle) ?></h1>
+	<h1><?php echo $app->t($contr->pageTitle) ?></h1>
 
 	<p>
 		<?php if ( $view->failures ): ?>
@@ -11,9 +11,9 @@
 
 	<?php foreach ( $view->tests as $test ): ?>
 	<?php if ( $test['pass'] ): ?>
-	<p class="message notice"><strong><?php echo $model->t('PASSED') ?></strong>: <?php echo $test['test'] ?></p>
+	<p class="message notice"><strong><?php echo $app->t('PASSED') ?></strong>: <?php echo $test['test'] ?></p>
 	<?php else: ?>
-	<p class="message error"><strong><?php echo $model->t('FAILED') ?></strong>: <?php echo $test['test'] ?></p>
+	<p class="message error"><strong><?php echo $app->t('FAILED') ?></strong>: <?php echo $test['test'] ?></p>
 	<?php endif ?>
 	<?php endforeach ?>
 </div>

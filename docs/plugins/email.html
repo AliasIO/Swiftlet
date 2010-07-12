@@ -3,14 +3,14 @@
 <p><code>/_plugins/email.php</code></p>
 
 <p>
-	A plug-in to send e-mail.
+	A plugin to send e-mail.
 </p>
 
 <h4>Example</h4>
 
 <pre>
 <?php
-$model->email(
+$app->email(
 	'recipient@example.com',
 	'Subject',
 	'<p>Body</p>',
@@ -25,15 +25,15 @@ $model->email(
 <h3>Class</h3>
 
 <p>
-	<code>$model-&gt;email</code>
+	<code>$app-&gt;email</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$model-&gt;log-&gt;send ( <em>array</em> $params )</code><br/>
-		Sends an e-mail. This function should not be called directly. Use <code>$model-&gt;email()</code> instead (see <code><a href="../concepts/model">Model</a></code>).
+		<code>$app-&gt;log-&gt;send ( <em>array</em> $params )</code><br/>
+		Sends an e-mail. This function should not be called directly. Use <code>$app-&gt;email()</code> instead (see <code><a href="../concepts/model">Model</a></code>).
 	</li>
 </ul>
 
