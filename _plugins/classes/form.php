@@ -11,16 +11,16 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Form
  * @abstract
  */
-class form
+class Form
 {
 	public
 		$ready
 		;
-	
+
 	private
 		$app,
 		$view,
-		$contr,
+		$controller,
 
 		$typesRegex = array(
 			'bool'   => '/^.*$/',
@@ -37,10 +37,10 @@ class form
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
-		
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
+
 		$this->ready = TRUE;
 	}
 
@@ -51,7 +51,7 @@ class form
 	function validate($vars)
 	{
 		$this->errors = array();
-		
+
 		$vars['confirm'] = 'bool';
 
 		foreach ( $vars as $var => $types )
@@ -86,7 +86,7 @@ class form
 
 		$this->app->hook('input_sanitize');
 	}
-	
+
 	private function check($var, $regexes)
 	{
 		if ( is_array($var) )
@@ -95,7 +95,7 @@ class form
 			{
 				$var[$k] = $this->check($v, $regexes);
 			}
-			
+
 			return $var;
 		}
 		else

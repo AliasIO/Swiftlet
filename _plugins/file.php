@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'         => 'file',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'perm'),
+			'dependencies' => array('db', 'permission'),
 			'hooks'        => array('dashboard' => 2, 'init' => 5, 'install' => 1, 'remove' => 1, 'route' => 1, 'unit_tests' => 1)
 			);
 
@@ -43,11 +43,11 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->create('Files', 'admin file access', 'Manage files');
-			$app->perm->create('Files', 'admin file upload', 'Upload files');
-			$app->perm->create('Files', 'admin file delete', 'Delete files');
+			$app->permission->create('Files', 'admin file access', 'Manage files');
+			$app->permission->create('Files', 'admin file upload', 'Upload files');
+			$app->permission->create('Files', 'admin file delete', 'Delete files');
 		}
 
 		break;
@@ -59,16 +59,16 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->delete('admin file access');
+			$app->permission->delete('admin file access');
 		}
 
 		break;
 	case 'init':
 		if ( !empty($app->db->ready) && !empty($app->node->ready) )
 		{
-			require($contr->classPath . 'file.php');
+			require($controller->classPath . 'file.php');
 
 			$app->file = new file($app);
 		}
@@ -80,7 +80,7 @@ switch ( $hook )
 			'description' => 'Upload and manage files',
 			'group'       => 'Content',
 			'path'        => 'admin/files/',
-			'perm'        => 'admin file access',
+			'permission'        => 'admin file access',
 			);
 
 		break;
@@ -100,12 +100,12 @@ switch ( $hook )
 		 */
 		$post = array(
 			'title[0]'    => 'Unit Test File',
-			'file[0]'     => '@' . $contr->rootPath . 'favicon.ico',
+			'file[0]'     => '@' . $controller->rootPath . 'favicon.ico',
 			'form-submit' => 'Submit',
 			'auth-token'  => $app->authToken
 			);
 
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/', $post);
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/files/', $post);
 
 		$app->db->sql('
 			SELECT
@@ -137,7 +137,7 @@ switch ( $hook )
 				'auth-token' => $app->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/files/?id=' . ( int ) $file['id'] . '&action=delete', $post);
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/files/?id=' . ( int ) $file['id'] . '&action=delete', $post);
 		}
 
 		$app->db->sql('

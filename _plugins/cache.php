@@ -20,7 +20,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'cache.php');
+		require($controller->classPath . 'cache.php');
 
 		$app->cache = new cache($app);
 

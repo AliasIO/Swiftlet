@@ -19,7 +19,7 @@ switch ( $hook )
 
 		break;	
 	case 'init':
-		require($contr->classPath . 'form.php');
+		require($controller->classPath . 'form.php');
 
 		$app->form = new form($app);
 

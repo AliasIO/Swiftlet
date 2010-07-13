@@ -5,12 +5,12 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../',
 	'pageTitle' => 'Unit tests'
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $app->check_dependencies(array('db', 'session', 'user'));
 
@@ -19,7 +19,7 @@ $app->form->validate(array(
 
 if ( !$app->session->get('user is owner') )
 {
-	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+	header('Location: ' . $controller->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$app->end();
 }
@@ -39,7 +39,7 @@ else
 		'foo' => 'bar'
 		);
 
-	$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'index.php', $params);
+	$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'index.php', $params);
 
 	$tests[] = array(
 		'test' => 'Submitting a form without authenticity token should result in an error (503).',

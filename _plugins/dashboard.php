@@ -14,38 +14,38 @@ switch ( $hook )
 			'name'         => 'dashboard',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'perm', 'session'),
+			'dependencies' => array('db', 'permission', 'session'),
 			'hooks'        => array('init' => 5, 'install' => 1, 'menu' => 2, 'remove' => 1, 'unit_tests' => 1)
 			);
 
 		break;
 	case 'install':
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->create('Administration', 'dashboard access', 'Access to the dashboard');
+			$app->permission->create('Administration', 'dashboard access', 'Access to the dashboard');
 		}
 
 		break;
 	case 'remove':
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->delete('dashboard access');
+			$app->permission->delete('dashboard access');
 		}
 
 		break;
 	case 'init':
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			require($contr->classPath . 'dashboard.php');
+			require($controller->classPath . 'dashboard.php');
 
 			$app->dashboard = new dashboard($app);
 		}
 
 		break;
 	case 'menu':
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			if ( $app->perm->check('dashboard access') )
+			if ( $app->permission->check('dashboard access') )
 			{
 				$params['Dashboard'] = $view->rootPath . 'admin/';
 			}
@@ -53,7 +53,7 @@ switch ( $hook )
 
 		break;
 	case 'unit_tests':
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/index.php', array(), TRUE);
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/index.php', array(), TRUE);
 
 		$params[] = array(
 			'test' => '<code>/admin/</code> should be inaccessible for guests.',

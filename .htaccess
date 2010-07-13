@@ -1,7 +1,9 @@
 Options All -Indexes
 
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{query_string} (.*)
-RewriteRule (.*) ?q=$1&%1 [L]
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{query_string} (.*)
+	RewriteRule (.*) ?q=$1&%1 [L]
+</IfModule>

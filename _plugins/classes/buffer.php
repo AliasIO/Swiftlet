@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Buffer
  * @abstract
  */
-class buffer
+class Buffer
 {
 	public
 		$ready = FALSE
@@ -20,7 +20,7 @@ class buffer
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -29,9 +29,9 @@ class buffer
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 	}
 
 	/**
@@ -70,7 +70,7 @@ class buffer
 			// Output debug messages
 			ob_start();
 
-			if ( $this->app->debugMode && !$this->contr->standAlone )
+			if ( $this->app->debugMode && !$this->controller->standAlone )
 			{
 				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
 
@@ -91,6 +91,8 @@ class buffer
 				header('Content-Encoding: gzip');
 			}
 
+			header('X-Powered-By: Swiftlet - http://swiftlet.org');
+
 			echo $contents;
 		}
 	}
@@ -106,7 +108,7 @@ class buffer
 			{
 				ob_end_clean();
 			}
-		
+
 			$this->active = FALSE;
 		}
 	}

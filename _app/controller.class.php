@@ -5,13 +5,13 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($contrSetup) ) die('Direct access to this file is not allowed');
+if ( !isset($controllerSetup) ) die('Direct access to this file is not allowed');
 
 /**
  * Controller
  * @abstract
  */
-class controller
+class Controller
 {
 	public
 		$pageDescription,
@@ -23,11 +23,11 @@ class controller
 
 	/**
 	 * Initialize
-	 * @param array $contrSetup
+	 * @param array $controllerSetup
 	 */
-	function __construct($contrSetup)
+	function __construct($controllerSetup)
 	{
-		foreach ( $contrSetup as $k => $v )
+		foreach ( $controllerSetup as $k => $v )
 		{
 			$this->{$k} = $v;
 		}
@@ -42,7 +42,7 @@ class controller
 			$this->rootPathView = $this->rootPath;
 		}
 
-		$this->viewPath   = $this->rootPath . '_view/';
+		$this->viewPath   = $this->rootPath . '_views/';
 		$this->pluginPath = $this->rootPath . '_plugins/';
 		$this->classPath  = $this->rootPath . '_plugins/classes/';
 

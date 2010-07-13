@@ -5,12 +5,12 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'   => './',
 	'pageTitle'  => 'Installation successful'
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $newPlugins = 0;
 

@@ -5,24 +5,24 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../../',
 	'pageTitle' => 'Menu',
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
-$app->check_dependencies(array('db', 'form', 'menu', 'node', 'perm'));
+$app->check_dependencies(array('db', 'form', 'menu', 'node', 'permission'));
 
 $app->form->validate(array(
 	'form-submit' => 'bool',
 	'items'       => '/.*/',
 	));
 
-if ( !$app->perm->check('admin menu access') )
+if ( !$app->permission->check('admin menu access') )
 {
-	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+	header('Location: ' . $controller->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$app->end();
 }
@@ -92,18 +92,17 @@ if ( $app->POST_valid['form-submit'] )
 		{
 			header('Location: ?notice=success');
 
-			$app->db->end();
+			$app->end();
 		}
 	}
 }
-
 else if ( isset($app->GET_raw['notice']) )
 {
 	switch ( $app->GET_raw['notice'] )
 	{
 		case 'success':
 			$view->notice = $app->t('The changes have been saved.');
-			
+
 			break;
 	}
 }
@@ -121,7 +120,7 @@ if ( $r = $app->db->result )
 	{
 		$nodeIds = array();
 		$paths   = array();
-		
+
 		foreach ( $items as $item )
 		{
 			if ( ( int ) $item['node_id'] )

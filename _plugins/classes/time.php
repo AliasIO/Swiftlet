@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Time
  * @abstract
  */
-class time
+class Time
 {
 	public
 		$ready,

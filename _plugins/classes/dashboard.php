@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Dashboard
  * @abstract
  */
-class dashboard
+class Dashboard
 {
 	public
 		$pages = array(),
@@ -30,7 +30,7 @@ class dashboard
 
 		foreach ( $pages as $page )
 		{
-			if ( !isset($page['perm']) || $app->perm->check($page['perm']) )
+			if ( !isset($page['permission']) || $app->permission->check($page['permission']) )
 			{
 				if ( !isset($this->pages[$page['group']]) )
 				{

@@ -11,14 +11,14 @@ if ( !isset($this->app) ) die('Direct access to this file is not allowed');
  * Nodes
  * @abstract
  */
-class node
+class Node
 {
 	public
 		$ready
 		;
 
 	const
-		rootId = 1
+		ROOT_ID = 1
 		;
 
 	private
@@ -26,7 +26,7 @@ class node
 
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -35,9 +35,9 @@ class node
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		if ( !empty($app->db->ready) )
 		{
@@ -138,11 +138,11 @@ class node
 				`id` = ' . ( int ) $parentId . '
 			LIMIT 1
 			;');
-		
+
 		if ( $this->app->db->result )
 		{
 			$parentNode = $this->app->db->result[0];
-			
+
 			$this->app->db->sql('
 				UPDATE `' . $this->app->db->prefix . 'nodes` SET
 					`left_id`   = `left_id` + 2,
@@ -169,12 +169,12 @@ class node
 					`date_edit`
 					)
 				VALUES (
-					 ' . ( ( int ) $parentNode['left_id'] + 1 )            . ',
-					 ' . ( ( int ) $parentNode['left_id'] + 2 )            . ',
-					"' . $this->app->db->escape($type)                   . '",
+					 ' . ( ( int ) $parentNode['left_id'] + 1 )        . ',
+					 ' . ( ( int ) $parentNode['left_id'] + 2 )        . ',
+					"' . $this->app->db->escape($type)                 . '",
 					"' . $this->app->db->escape($this->app->h($title)) . '",
-					"' . gmdate('Y-m-d H:i:s')                             . '",
-					"' . gmdate('Y-m-d H:i:s')                             . '"
+					"' . gmdate('Y-m-d H:i:s')                         . '",
+					"' . gmdate('Y-m-d H:i:s')                         . '"
 					)
 				;');
 
@@ -193,7 +193,7 @@ class node
 	function move($id, $parentId)
 	{
 		// Root node can not be moved
-		if ( $id == node::rootId )
+		if ( $id == Node::ROOT_ID )
 		{
 			return;
 		}
@@ -250,7 +250,7 @@ class node
 
 		// Sync moved branch
 		$parentNode['right_id'] += $diff;
-		
+
 		if ( $parentNode['right_id'] > $node[0]['right_id'] )
 		{
 			$diff = '+ ' . ( ( int ) $parentNode['right_id'] - ( int ) $node[0]['right_id'] - 1 );
@@ -340,7 +340,7 @@ class node
 	 */
 	function get($id)
 	{
-		$node = array();	
+		$node = array();
 
 		$this->app->db->sql('
 			SELECT
@@ -366,12 +366,12 @@ class node
 	 */
 	function get_parents($id)
 	{
-		$node = array();	
+		$node = array();
 
 		if ( $node = $this->get($id) )
 		{
 			$node['parents'] = array();
-			
+
 			$this->app->db->sql('
 				SELECT
 					*
@@ -393,7 +393,7 @@ class node
 
 		return $node;
 	}
-	
+
 	/**
 	 * Get a node and its children
 	 * @param int $id
@@ -431,7 +431,7 @@ class node
 				{
 					$nodes[] = $d;
 				}
-				
+
 				$nodes = $this->tree($nodes);
 
 				$nodes['all'] = $children;
@@ -453,14 +453,14 @@ class node
 		for ( $i = 0; $i < count($nodes); $i ++ )
 		{
 			$node = &$nodes[$i];
-			
+
 			while ( count($stack) > 0 && $stack[count($stack) - 1]['right_id'] < $node['right_id'] )
 			{
 				array_pop($stack);
 			}
 
 			$node['level'] = count($stack);
-				
+
 			if ( count($stack) > 0 )
 			{
 				$stack[count($stack) - 1]['children'][] = &$node;
@@ -480,7 +480,7 @@ class node
 	function nodes_to_array($nodes, &$list)
 	{
 		unset($nodes['all']);
-		
+
 		if ( $nodes )
 		{
 			foreach ( $nodes as $node )

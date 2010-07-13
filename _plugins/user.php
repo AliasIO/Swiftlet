@@ -116,7 +116,7 @@ switch ( $hook )
 	case 'init':
 		if ( !empty($app->session->ready) )
 		{
-			require($contr->classPath . 'user.php');
+			require($controller->classPath . 'user.php');
 
 			$app->user = new user($app);
 		}
@@ -125,7 +125,7 @@ switch ( $hook )
 	case 'menu':
 		if ( !empty($app->session->ready) )
 		{
-			if ( $app->session->get('user id') == user::guestId )
+			if ( $app->session->get('user id') == User::GUEST_ID )
 			{
 				$params['Login'] = $view->rootPath . 'login/';
 			}
@@ -159,7 +159,7 @@ switch ( $hook )
 			'auth-token'           => $app->authToken
 			);
 
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?action=create', $post);
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'account/?action=create', $post);
 
 		$app->db->sql('
 			SELECT
@@ -191,7 +191,7 @@ switch ( $hook )
 				'auth-token'  => $app->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?id=' . ( int ) $user['id'], $post);
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'account/?id=' . ( int ) $user['id'], $post);
 		}
 
 		$app->db->sql('
@@ -224,7 +224,7 @@ switch ( $hook )
 				'auth-token' => $app->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'account/?id=' . ( int ) $user['id'] . '&action=delete', $post);
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'account/?id=' . ( int ) $user['id'] . '&action=delete', $post);
 		}
 
 		$app->db->sql('

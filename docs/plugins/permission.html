@@ -33,14 +33,14 @@ switch ( $hook )
     case 'install':
 		if ( !empty($app->node->ready) )
 		{
-			$app->perm->create('Secrets', 'secret access', 'Access to secret');
+			$app->permission->create('Secrets', 'secret access', 'Access to secret');
 		}
 
         break;
     case 'remove':
 		if ( !empty($app->node->ready) )
 		{
-			$app->perm->delete('secret access');
+			$app->permission->delete('secret access');
 		}
 
         break;
@@ -54,7 +54,7 @@ switch ( $hook )
 
 <pre>
 <?php
-if ( $app->perm->check('secret access') )
+if ( $app->permission->check('secret access') )
 {
 	// User has access to secret
 }
@@ -64,22 +64,22 @@ if ( $app->perm->check('secret access') )
 <h3>Class</h3>
 
 <p>
-	<code>$app-&gt;perm</code>
+	<code>$app-&gt;permission</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;perm-&gt;check ( <em>string</em> $name )</code><br/>
+		<code>$app-&gt;permission-&gt;check ( <em>string</em> $name )</code><br/>
 		Checks if the current user has permission.
 	</li>
 	<li>
-		<code>$app-&gt;perm-&gt;create ( <em>string</em> $group, <em>string</em> $name, <em>string</em> $description )</code><br/>
+		<code>$app-&gt;permission-&gt;create ( <em>string</em> $group, <em>string</em> $name, <em>string</em> $description )</code><br/>
 		Creates a new permission.
 	</li>
 	<li>
-		<code>$app-&gt;perm-&gt;delete ( <em>string</em> $name )</code><br/>
+		<code>$app-&gt;permission-&gt;delete ( <em>string</em> $name )</code><br/>
 		Deletes a permission
 	</li>
 </ul>
@@ -88,19 +88,19 @@ if ( $app->perm->check('secret access') )
 
 <ul>
 	<li>
-		<code>perm::roleOwnerId</code><br/>
+		<code>Permission::ROLE_OWNER_ID</code><br/>
 		User id of the default owner (the first user).
 	</li>
 	<li>
-		<code>perm::yes</code><br/>
+		<code>Permission::YES</code><br/>
 		The user has permission.
 	</li>
 	<li>
-		<code>perm::no</code><br/>
+		<code>Permission::NO</code><br/>
 		The user has no permission (default).
 	</li>
 	<li>
-		<code>perm::never</code><br/>
+		<code>Permission::NEVER</code><br/>
 		The user has no permission, can not be overridden.
 	</li>
 </ul>

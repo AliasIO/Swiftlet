@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * File
  * @abstract
  */
-class file
+class File
 {
 	public
 		$ready
@@ -20,7 +20,7 @@ class file
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -29,9 +29,9 @@ class file
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		if ( !empty($app->db->ready) )
 		{
@@ -55,7 +55,7 @@ class file
 	 */
 	function thumb($filename, $mimeType, $width, $height)
 	{
-		if ( is_file($file = $this->contr->rootPath . 'uploads/files/' . $filename) )
+		if ( is_file($file = $this->controller->rootPath . 'uploads/files/' . $filename) )
 		{
 			$size = 120;
 
@@ -76,7 +76,7 @@ class file
 				case 'image/gif':
 					$image = imagecreatefromgif($file);
 
-					break;					
+					break;
 			}
 
 			if ( $image )
@@ -91,7 +91,7 @@ class file
 
 				$widthRatio  = 1;
 				$heightRatio = 1;
-				
+
 				if ( $width <= $size && $height <= $size )
 				{
 					$posX = ( $size - $width  ) / 2;
@@ -124,7 +124,7 @@ class file
 					$width  * $widthRatio,
 					$height * $heightRatio
 					);
-				
+
 				if ( $widthRatio > 1 || $heightRatio > 1 )
 				{
 					imagefilledrectangle(
@@ -137,7 +137,7 @@ class file
 						);
 				}
 
-				imagepng($thumb, $this->contr->rootPath . 'uploads/thumbs/' . $filename);
+				imagepng($thumb, $this->controller->rootPath . 'uploads/thumbs/' . $filename);
 			}
 		}
 	}

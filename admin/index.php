@@ -5,19 +5,19 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../',
 	'pageTitle' => 'Dashboard',
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
-$app->check_dependencies(array('dashboard', 'perm'));
+$app->check_dependencies(array('dashboard', 'permission'));
 
-if ( !$app->perm->check('dashboard access') )
+if ( !$app->permission->check('dashboard access') )
 {
-	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+	header('Location: ' . $controller->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$app->end();
 }

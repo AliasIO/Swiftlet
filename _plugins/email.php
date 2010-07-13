@@ -19,7 +19,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'email.php');
+		require($controller->classPath . 'email.php');
 
 		$app->email = new email($app);
 

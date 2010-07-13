@@ -14,7 +14,7 @@ switch ( $hook )
 			'name'         => 'page',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
-			'dependencies' => array('db', 'node', 'perm'),
+			'dependencies' => array('db', 'node', 'permission'),
 			'hooks'        => array('dashboard' => 1, 'display_node' => 1, 'home' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 			);
 
@@ -39,12 +39,12 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->create('Pages', 'admin page access', 'Manage pages');
-			$app->perm->create('Pages', 'admin page create', 'Create pages');
-			$app->perm->create('Pages', 'admin page edit',   'Edit pages');
-			$app->perm->create('Pages', 'admin page delete', 'Delete pages');
+			$app->permission->create('Pages', 'admin page access', 'Manage pages');
+			$app->permission->create('Pages', 'admin page create', 'Create pages');
+			$app->permission->create('Pages', 'admin page edit',   'Edit pages');
+			$app->permission->create('Pages', 'admin page delete', 'Delete pages');
 		}
 
 		break;
@@ -70,16 +70,16 @@ switch ( $hook )
 			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'pages`;');
 		}
 
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->delete('admin page access');
+			$app->permission->delete('admin page access');
 		}
 
 		break;
 	case 'init':
 		if ( !empty($app->db->ready) && !empty($app->node->ready) )
 		{
-			require($contr->classPath . 'page.php');
+			require($controller->classPath . 'page.php');
 
 			$app->page = new page($app);
 		}
@@ -91,7 +91,7 @@ switch ( $hook )
 			'description' => 'Add and edit pages',
 			'group'       => 'Content',
 			'path'        => 'admin/pages/',
-			'perm'        => 'admin page access'
+			'permission'        => 'admin page access'
 			);
 
 		break;
@@ -117,7 +117,7 @@ switch ( $hook )
 		 * Creating a page
 		 */
 		$post = array(
-			'parent'      => node::rootId,
+			'parent'      => Node::ROOT_ID,
 			'path'        => '',
 			'form-submit' => 'Submit',
 			'auth-token'  => $app->authToken
@@ -131,7 +131,7 @@ switch ( $hook )
 			$post['body['  . $app->h($language) . ']'] = 'Unit Test Page - Create';
 		}
 
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/', $post);
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/pages/', $post);
 
 		$app->db->sql('
 			SELECT
@@ -158,7 +158,7 @@ switch ( $hook )
 		if ( $page['node_id'] )
 		{
 			$post = array(
-				'parent'      => node::rootId,
+				'parent'      => Node::ROOT_ID,
 				'path'        => '',
 				'form-submit' => 'Submit',
 				'auth-token'  => $app->authToken
@@ -170,7 +170,7 @@ switch ( $hook )
 				$post['body['  . $app->h($language) . ']'] = 'Unit Test Page - Edit';
 			}
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=edit', $post);
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=edit', $post);
 		}
 
 		$app->db->sql('
@@ -203,7 +203,7 @@ switch ( $hook )
 				'auth-token' => $app->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $contr->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=delete', $post);
+			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=delete', $post);
 		}
 
 		$app->db->sql('

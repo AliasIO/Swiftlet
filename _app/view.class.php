@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * View
  * @abstract
  */
-class view
+class View
 {
 	public
 		$rootPath,
@@ -29,7 +29,7 @@ class view
 
 	private
 		$app,
-		$contr,
+		$controller,
 
 		$filesLoaded = array()
 		;
@@ -41,10 +41,10 @@ class view
 	function __construct($app)
 	{
 		$this->app   = $app;
-		$this->contr = $app->contr;
+		$this->controller = $app->controller;
 
-		$this->rootPath = $this->contr->absPath;
-		$this->viewPath = $this->contr->absPath . '_view/';
+		$this->rootPath = $this->controller->absPath;
+		$this->viewPath = $this->controller->absPath . '_views/';
 
 		foreach ( array(
 			'siteName',
@@ -57,9 +57,9 @@ class view
 			$this->{$v} = !empty($app->{$v}) ? $app->h($app->{$v}) : '';
 		}
 
-		$this->pageTitle       = !empty($this->contr->pageTitle)       ? $app->h($this->contr->pageTitle)       : '';
-		$this->pageDescription = !empty($this->contr->pageDescription) ? $app->h($this->contr->pageDescription) : $this->siteDescription;
-		$this->pageKeywords    = !empty($this->contr->pageKeywords)    ? $app->h($this->contr->pageKeywords)    : $this->siteKeywords;
+		$this->pageTitle       = !empty($this->controller->pageTitle)       ? $app->h($this->controller->pageTitle)       : '';
+		$this->pageDescription = !empty($this->controller->pageDescription) ? $app->h($this->controller->pageDescription) : $this->siteDescription;
+		$this->pageKeywords    = !empty($this->controller->pageKeywords)    ? $app->h($this->controller->pageKeywords)    : $this->siteKeywords;
 	}
 
 	/*
@@ -77,18 +77,18 @@ class view
 	function output()
 	{
 		$app   = $this->app;
-		$contr = $this->contr;
+		$controller = $this->controller;
 		$view  = $this;
 
 		foreach ( $this->filesLoaded as $file )
 		{
-			if ( is_file($contr->viewPath . $file) )
+			if ( is_file($controller->viewPath . $file) )
 			{
-				require($contr->viewPath . $file);
+				require($controller->viewPath . $file);
 			}
 			else
 			{
-				$app->error(FALSE, 'Missing view file `' . $contr->viewPath . $file . '`.', __FILE__, __LINE__);
+				$app->error(FALSE, 'Missing view file `' . $controller->viewPath . $file . '`.', __FILE__, __LINE__);
 			}
 		}
 	}
@@ -97,7 +97,7 @@ class view
 	 * Allow HTML
 	 * @param string $v
 	 */
-	function allow_html($v)
+	static function allow_html($v)
 	{
 		return html_entity_decode($v, ENT_QUOTES, 'UTF-8');
 	}

@@ -24,7 +24,7 @@ GETTING STARTED
 
  - Read the documentation on http://swiftlet.org/docs.
  - Copy the default configuration file from /_config.default.php to /_config.php.
- - To change the landing page, replace or modify /home.php and /_view/home.html.php.
+ - To change the landing page, replace or modify /home.php and /_views/home.html.php.
  - To change global settings, modify /_config.php.
 
 

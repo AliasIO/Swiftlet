@@ -11,16 +11,16 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Plugin
  * @abstract
  */
-class plugin
+class Plugin
 {
+	public
+		$info = array()
+		;
+
 	private
 		$app,
 		$view,
-		$contr
-		;
-
-	public
-		$info = array()
+		$controller
 		;
 
 	/**
@@ -32,15 +32,15 @@ class plugin
 	{
 		$this->app   = $app;
 		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->controller = $app->controller;
 
 		$hook = 'info';
 
-		require($this->contr->pluginPath . $file);
+		require($this->controller->pluginPath . $file);
 
 		if ( empty($info) )
 		{
-			$app->error(FALSE, 'No plugin info provided in ' . $this->contr->pluginPath . $file . '.', __FILE__, __LINE__);
+			$app->error(FALSE, 'No plugin info provided in ' . $this->controller->pluginPath . $file . '.', __FILE__, __LINE__);
 		}
 
 		$info = array_merge(array(
@@ -55,17 +55,17 @@ class plugin
 
 		if ( !$info['name'] )
 		{
-			$app->error(FALSE, 'No plugin name provided in ' . $this->contr->pluginPath . $file . '.', __FILE__, __LINE__);
+			$app->error(FALSE, 'No plugin name provided in ' . $this->controller->pluginPath . $file . '.', __FILE__, __LINE__);
 		}
 
 		if ( isset($app->pluginsLoaded[$info['name']]) )
 		{
-			$app->error(FALSE, 'Plugin name `' . $info['name'] . '` (' . $this->contr->pluginPath . $file . ') already taken by ' . $this->contr->pluginPath . $app->pluginsLoaded[$info['name']]->info['file'] . '.', __FILE__, __LINE__);
+			$app->error(FALSE, 'Plugin name `' . $info['name'] . '` (' . $this->controller->pluginPath . $file . ') already taken by ' . $this->controller->pluginPath . $app->pluginsLoaded[$info['name']]->info['file'] . '.', __FILE__, __LINE__);
 		}
 
 		if ( !$info['version'] )
 		{
-			$app->error(FALSE, 'No version number provided for plugin `' . $info['name'] . '` (' . $this->contr->pluginPath . $file . ').', __FILE__, __LINE__);
+			$app->error(FALSE, 'No version number provided for plugin `' . $info['name'] . '` (' . $this->controller->pluginPath . $file . ').', __FILE__, __LINE__);
 		}
 
 		/**
@@ -73,12 +73,12 @@ class plugin
 		 */
 		if ( !$info['compatible']['from'] || !$info['compatible']['to'] )
 		{
-			$app->error(FALSE, 'No compatibility information provided for plugin `' . $info['name'] . '` in ' . $this->contr->pluginPath . $file . '', __FILE__, __LINE__);
+			$app->error(FALSE, 'No compatibility information provided for plugin `' . $info['name'] . '` in ' . $this->controller->pluginPath . $file . '', __FILE__, __LINE__);
 		}
 
-		if ( version_compare(model::version, str_replace('*', '99999', $info['compatible']['from']), '<') || version_compare(model::version, str_replace('*', '99999', $info['compatible']['to']), '>') )
+		if ( version_compare(Model::VERSION, str_replace('*', '99999', $info['compatible']['from']), '<') || version_compare(Model::VERSION, str_replace('*', '99999', $info['compatible']['to']), '>') )
 		{
-			$app->error(FALSE, 'Plugin `' . $info['name'] . '` (/' . $this->contr->pluginPath . $file . ') is designed for ' . ( $info['compatible']['from'] == $info['compatible']['to'] ? 'version ' . $info['compatible']['from'] : 'versions ' . $info['compatible']['from'] . ' to ' . $info['compatible']['to'] ) . ' of Swiftlet (running version ' . model::version . ')', __FILE__, __LINE__);
+			$app->error(FALSE, 'Plugin `' . $info['name'] . '` (/' . $this->controller->pluginPath . $file . ') is designed for ' . ( $info['compatible']['from'] == $info['compatible']['to'] ? 'version ' . $info['compatible']['from'] : 'versions ' . $info['compatible']['from'] . ' to ' . $info['compatible']['to'] ) . ' of Swiftlet (running version ' . Model::VERSION . ')', __FILE__, __LINE__);
 		}
 
 		if ( $info['hooks'] )
@@ -97,17 +97,17 @@ class plugin
 	{
 		$app   = $this->app;
 		$view  = $this->app->view;
-		$contr = $this->app->contr;
+		$controller = $this->app->controller;
 
 		$timerStart = $app->timer_start();
 
-		require($contr->pluginPath . $this->info['file']);
+		require($controller->pluginPath . $this->info['file']);
 
 		$app->pluginsHooked[$this->info['name']][$hook] = TRUE;
 
 		$app->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
 			'order'          => $order,
-			'plugin'         => $this->info['name'] . ' (' . $contr->pluginPath . $this->info['file'] . ')',
+			'plugin'         => $this->info['name'] . ' (' . $controller->pluginPath . $this->info['file'] . ')',
 			'execution time' => $app->timer_end($timerStart)
 			);
 	}
@@ -119,11 +119,11 @@ class plugin
 	{
 		$app   = $this->app;
 		$view  = $this->view;
-		$contr = $this->contr;
+		$controller = $this->controller;
 
 		$hook = 'install';
 
-		require($contr->pluginPath . $this->info['file']);
+		require($controller->pluginPath . $this->info['file']);
 	}
 
 	/**
@@ -133,11 +133,11 @@ class plugin
 	{
 		$app   = $this->app;
 		$view  = $this->view;
-		$contr = $this->contr;
+		$controller = $this->controller;
 
 		$hook = 'upgrade';
 
-		require($contr->pluginPath . $this->info['file']);
+		require($controller->pluginPath . $this->info['file']);
 	}
 
 	/**
@@ -147,11 +147,11 @@ class plugin
 	{
 		$app   = $this->app;
 		$view  = $this->view;
-		$contr = $this->contr;
+		$controller = $this->controller;
 
 		$hook = 'remove';
 
-		require($contr->pluginPath . $this->info['file']);
+		require($controller->pluginPath . $this->info['file']);
 	}
 
 	/**

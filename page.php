@@ -5,12 +5,12 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => './',
 	'pageTitle' => 'Page'
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $app->check_dependencies(array('db', 'node', 'page'));
 
@@ -60,7 +60,7 @@ if ( isset($app->routeParts[1]) )
 
 			foreach ( $nodes['parents'] as $d )
 			{
-				if ( $d['id'] != node::rootId )
+				if ( $d['id'] != Node::ROOT_ID )
 				{
 					$view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
 				}

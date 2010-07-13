@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Log
  * @abstract
  */
-class log
+class Log
 {
 	public
 		$ready = FALSE
@@ -20,7 +20,7 @@ class log
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -29,9 +29,9 @@ class log
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		$this->ready = TRUE;
 	}
@@ -41,19 +41,19 @@ class log
 	 */
 	function write($filename, $contents)
 	{
-		if ( !is_dir($this->contr->rootPath . 'log') )
+		if ( !is_dir($this->controller->rootPath . 'log') )
 		{
 			$this->app->error(FALSE, 'Directory "/log" does not exist.', __FILE__, __LINE__);
 		}
 
-		if ( !is_writable($this->contr->rootPath . 'log') )
+		if ( !is_writable($this->controller->rootPath . 'log') )
 		{
 			$this->app->error(FALSE, 'Directory "/log" is not writable.', __FILE__, __LINE__);
 		}
 
 		$contents = date('M d H:i:s') . "\t" . $contents . "\n";
 
-		if ( !$handle = fopen($this->contr->rootPath . 'log/' . $filename, 'a+') )
+		if ( !$handle = fopen($this->controller->rootPath . 'log/' . $filename, 'a+') )
 		{
 			$this->app->error(FALSE, 'Could not open file "/log/' . $filename . '".', __FILE__, __LINE__);
 		}

@@ -13,40 +13,40 @@ if ( version_compare(PHP_VERSION, '5.1', '<') )
 	die('<p>PHP 5.1 or higher is required.</p>');
 }
 
-if ( empty($contrSetup) )
+if ( empty($controllerSetup) )
 {
 	die('<p>Missing controller setup.</p>');
 }
 
 if ( !class_exists('model') )
 {
-	require($contrSetup['rootPath'] . '_app/model.class.php');
+	require($controllerSetup['rootPath'] . '_app/model.class.php');
 }
 
 if ( !class_exists('controller') )
 {
-	require($contrSetup['rootPath'] . '_app/controller.class.php');
+	require($controllerSetup['rootPath'] . '_app/controller.class.php');
 }
 
-if ( isset($contr) )
+if ( isset($controller) )
 {
-	$absPath = $contr->absPath;
+	$absPath = $controller->absPath;
 }
 
-$contr = new controller($contrSetup);
+$controller = new controller($controllerSetup);
 
 if ( isset($absPath) )
 {
-	$contr->absPath = $absPath;
+	$controller->absPath = $absPath;
 }
 
 if ( !isset($app) )
 {
-	$app = new model($contr);
+	$app = new model($controller);
 }
 else
 {
-	$app->contr = $contr;
+	$app->controller = $controller;
 
 	$app->view = new view($app);
 }
@@ -58,9 +58,9 @@ if ( !class_exists('view') )
 
 $view = $app->view;
 
-unset($contrSetup);
+unset($controllerSetup);
 
-if ( empty($contr->standAlone) )
+if ( empty($controller->standAlone) )
 {
 	$app->hook('header');
 }

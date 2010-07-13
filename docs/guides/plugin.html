@@ -92,7 +92,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'example.php');
+		require($controller->classPath . 'example.php');
 
 		$app->example = new example($app);
 

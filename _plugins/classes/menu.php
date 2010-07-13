@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Menu
  * @abstract
  */
-class menu
+class Menu
 {
 	public
 		$ready
@@ -20,7 +20,7 @@ class menu
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -29,9 +29,9 @@ class menu
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		if ( !empty($app->db->ready) )
 		{

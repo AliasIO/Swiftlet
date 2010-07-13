@@ -5,15 +5,15 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../../',
 	'pageTitle' => 'Files',
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
-$app->check_dependencies(array('db', 'form', 'perm'));
+$app->check_dependencies(array('db', 'form', 'permission'));
 
 $app->form->validate(array(
 	'form-submit' => 'bool',
@@ -24,9 +24,9 @@ $id       = isset($app->GET_raw['id']) && ( int ) $app->GET_raw['id'] ? ( int ) 
 $action   = isset($app->GET_raw['action'])   ? $app->GET_raw['action']   : FALSE;
 $callback = isset($app->GET_raw['callback']) ? $app->GET_raw['callback'] : FALSE;
 
-if ( !$app->perm->check('admin file access') )
+if ( !$app->permission->check('admin file access') )
 {
-	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+	header('Location: ' . $controller->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$app->end();
 }
@@ -37,7 +37,7 @@ if ( $app->POST_valid['form-submit'] )
 	{
 		$uploads = array();
 
-		if ( !is_writable($contr->rootPath . 'uploads/files/') )
+		if ( !is_writable($controller->rootPath . 'uploads/files/') )
 		{
 			$app->error(FALSE, 'Directory "/uploads/files/" is not writable.', __FILE__, __LINE__);
 		}
@@ -49,7 +49,7 @@ if ( $app->POST_valid['form-submit'] )
 				case UPLOAD_ERR_OK:
 					$filename = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]) . time());
 
-					$r = @move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $contr->rootPath . 'uploads/files/' . $filename);
+					$r = @move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $controller->rootPath . 'uploads/files/' . $filename);
 
 					if ( $r )
 					{
@@ -171,12 +171,12 @@ if ( ( int ) $id )
 				{
 					$filename = $r[0]['filename'];
 
-					if ( is_file($file = $contr->rootPath . 'uploads/files/' . $filename) )
+					if ( is_file($file = $controller->rootPath . 'uploads/files/' . $filename) )
 					{
 						unlink($file);
 					}
 
-					if ( is_file($file = $contr->rootPath . 'uploads/thumbs/' . $filename) )
+					if ( is_file($file = $controller->rootPath . 'uploads/thumbs/' . $filename) )
 					{
 						unlink($file);
 					}

@@ -5,13 +5,13 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'   => './',
 	'pageTitle'  => 'Route',
 	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $route = '';
 
@@ -33,7 +33,7 @@ if ( !$route )
 
 if ( !$route )
 {
-	chdir($contr->rootPath);
+	chdir($controller->rootPath);
 
 	require('home.php');
 }
@@ -49,7 +49,7 @@ $app->routeParts = $params['parts'];
 
 if ( $path = $params['path'] )
 {
-	chdir($contr->rootPath . dirname($path));
+	chdir($controller->rootPath . dirname($path));
 
 	require($path);
 }
@@ -57,7 +57,7 @@ if ( $path = $params['path'] )
 /*
  * Page not found
  */
-chdir($contr->rootPath);
+chdir($controller->rootPath);
 
 require('404.php');
 

@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Cache
  * @abstract
  */
-class cache
+class Cache
 {
 	public
 		$ready = FALSE
@@ -20,7 +20,7 @@ class cache
 	private
 		$app,
 		$view,
-		$contr,
+		$controller,
 
 		$cacheLifeTime = 3600
 		;
@@ -31,9 +31,9 @@ class cache
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		$this->ready = TRUE;
 
@@ -46,24 +46,24 @@ class cache
 	 */
 	private function read()
 	{
-		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != user::guestId )
+		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User::GUEST_ID )
 		{
 			return;
 		}
 
 		if ( $this->app->caching && empty($this->app->POST_raw) && empty($_POST) )
 		{
-			if ( $handle = opendir($contr->rootPath . 'cache') )
+			if ( $handle = opendir($controller->rootPath . 'cache') )
 			{
 				while ( $filename = readdir($handle) )
 				{
-					if ( is_file($this->contr->rootPath . 'cache/' . $filename) )
-					{					
+					if ( is_file($this->controller->rootPath . 'cache/' . $filename) )
+					{
 						list($time, $hash) = explode('_', $filename);
 
 						if ( $time <= time() )
 						{
-							@unlink($this->contr->rootPath . 'cache/' . $filename);
+							@unlink($this->controller->rootPath . 'cache/' . $filename);
 						}
 						else
 						{
@@ -73,8 +73,8 @@ class cache
 								{
 									header('X-Swiftlet-Cache: HIT');
 								}
-								
-								echo file_get_contents($this->contr->rootPath . 'cache/' . $filename);
+
+								echo file_get_contents($this->controller->rootPath . 'cache/' . $filename);
 
 								$this->app->buffer->flush();
 
@@ -95,7 +95,7 @@ class cache
 	 */
 	function write(&$contents)
 	{
-		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != user::guestId )
+		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User::GUEST_ID )
 		{
 			return;
 		}
@@ -113,19 +113,19 @@ class cache
 
 		if ( $this->app->caching && empty($this->app->POST_raw) )
 		{
-			if ( !is_dir($contr->rootPath . 'cache') )
+			if ( !is_dir($controller->rootPath . 'cache') )
 			{
 				$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
 			}
 
-			if ( !is_writable($contr->rootPath . 'cache') )
+			if ( !is_writable($controller->rootPath . 'cache') )
 			{
 				$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
 			}
 
 			$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
 
-			if ( !$handle = fopen($contr->rootPath . 'cache/' . $filename, 'a+') )
+			if ( !$handle = fopen($controller->rootPath . 'cache/' . $filename, 'a+') )
 			{
 				$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
 			}
@@ -140,19 +140,19 @@ class cache
 
 		unset($contents);
 	}
-	
+
 	/**
 	 * Clear cache
 	 */
 	function clear()
 	{
-		if ( $handle = opendir($this->contr->rootPath . 'cache') )
+		if ( $handle = opendir($this->controller->rootPath . 'cache') )
 		{
 			while ( $filename = readdir($handle) )
 			{
-				if ( is_file($this->contr->rootPath . 'cache/' . $filename) )
+				if ( is_file($this->controller->rootPath . 'cache/' . $filename) )
 				{
-					$r = @unlink($this->contr->rootPath . 'cache/' . $filename);
+					$r = @unlink($this->controller->rootPath . 'cache/' . $filename);
 
 					if ( !$r )
 					{

@@ -67,7 +67,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'mysql.php');
+		require($controller->classPath . 'mysql.php');
 
 		$app->db = new mysql($app, $app->dbHost, $app->dbUser, $app->dbPass, $app->dbName, $app->dbPrefix);
 

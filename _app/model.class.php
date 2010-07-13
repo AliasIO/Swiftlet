@@ -5,16 +5,16 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($contrSetup) ) die('Direct access to this file is not allowed');
+if ( !isset($controllerSetup) ) die('Direct access to this file is not allowed');
 
 /**
  * Model
  * @abstract
  */
-class model
+class Model
 {
 	const
-		version = '1.2.0'
+		VERSION = '1.2.0'
 		;
 
 	public
@@ -24,19 +24,19 @@ class model
 
 	/**
 	 * Initialize
-	 * @param object $contr
+	 * @param object $controller
 	 */
-	function __construct($contr)
+	function __construct($controller)
 	{
 		$app = $this;
 
-		$this->contr = $contr;
+		$this->controller = $controller;
 
 		set_error_handler(array($this, 'error'), E_ALL);
 
 		$this->timerStart = $this->timer_start();
 
-		$this->debugOutput['version'] = model::version;
+		$this->debugOutput['version'] = Model::VERSION;
 
 		/**
 		 * Get the user's real IP address
@@ -46,15 +46,15 @@ class model
 		/*
 		 * Load configuration
 		 */
-		if ( is_file($this->contr->rootPath . '_config.php') )
+		if ( is_file($this->controller->rootPath . '_config.php') )
 		{
-			require($this->contr->rootPath . '_config.php');
+			require($this->controller->rootPath . '_config.php');
 		}
 		else
 		{
-			if ( is_file($this->contr->rootPath . '_config.default.php') )
+			if ( is_file($this->controller->rootPath . '_config.default.php') )
 			{
-				require($this->contr->rootPath . '_config.default.php');
+				require($this->controller->rootPath . '_config.default.php');
 
 				$this->configMissing = TRUE;
 			}
@@ -100,7 +100,7 @@ class model
 		 */
 		if ( !class_exists('view') )
 		{
-			require($this->contr->rootPath . '_app/view.class.php');
+			require($this->controller->rootPath . '_app/view.class.php');
 		}
 
 		$this->view = new view($this);
@@ -110,10 +110,10 @@ class model
 		 */
 		if ( !class_exists('plugin') )
 		{
-			require($this->contr->rootPath . '_app/plugin.class.php');
+			require($this->controller->rootPath . '_app/plugin.class.php');
 		}
 
-		if ( $handle = opendir($dir = $this->contr->pluginPath) )
+		if ( $handle = opendir($dir = $this->controller->pluginPath) )
 		{
 			while ( ( $file = readdir($handle) ) !== FALSE )
 			{
@@ -415,7 +415,7 @@ class model
 	 */
 	function end()
 	{
-		if ( empty($this->contr->standAlone) )
+		if ( empty($this->controller->standAlone) )
 		{
 			$this->hook('footer');
 		}

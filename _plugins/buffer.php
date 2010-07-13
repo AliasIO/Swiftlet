@@ -19,7 +19,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'buffer.php');
+		require($controller->classPath . 'buffer.php');
 
 		$app->buffer = new buffer($app);
 

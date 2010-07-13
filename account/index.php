@@ -5,12 +5,12 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../',
 	'pageTitle' => 'Account settings'
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $app->check_dependencies(array('db', 'session', 'user', 'form'));
 
@@ -35,9 +35,9 @@ $app->form->validate(array(
 	'owner'                => 'bool'
 	) + $prefsValidate);
 
-if ( $app->session->get('user id') == user::guestId )
+if ( $app->session->get('user id') == User::GUEST_ID )
 {
-	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+	header('Location: ' . $controller->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$app->end();
 }

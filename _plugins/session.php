@@ -46,7 +46,7 @@ switch ( $hook )
 	case 'init':
 		if ( !empty($app->db->ready) )
 		{
-			require($contr->classPath . 'session.php');
+			require($controller->classPath . 'session.php');
 
 			$app->session = new session($app);
 		}

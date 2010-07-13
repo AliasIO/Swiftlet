@@ -11,7 +11,7 @@ if ( !isset($this->app) ) die('Direct access to this file is not allowed');
  * Page
  * @abstract
  */
-class page
+class Page
 {
 	public
 		$ready
@@ -20,7 +20,7 @@ class page
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -29,9 +29,9 @@ class page
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		if ( !empty($app->db->ready) )
 		{

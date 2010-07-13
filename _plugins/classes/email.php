@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * E-mail
  * @abstract
  */
-class email
+class Email
 {
 	public
 		$ready = FALSE
@@ -20,7 +20,7 @@ class email
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
@@ -29,9 +29,9 @@ class email
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		$this->ready = TRUE;
 	}
@@ -48,7 +48,7 @@ class email
 			'Content-type' => 'text/html; charset=UTF-8',
 			'X-Mailer'     => 'Swiftlet - http://swiftlet.org'
 			);
-		
+
 		$headers = array_merge($headers, $params['headers']);
 
 		$head = '';

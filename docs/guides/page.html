@@ -16,12 +16,12 @@
 
 <pre>
 <?php
-$contrSetup = array(
+$controllerSetup = array(
     'rootPath'  => './',
     'pageTitle' => 'Hello'
     );
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 // Your code goes here
 
@@ -32,7 +32,7 @@ $app->end();
 </pre>
 
 <p>
-	The <code>$contrSetup</code> variable is a requirement that lets you configure the Controller. The value of <code>rootPath</code>
+	The <code>$controllerSetup</code> variable is a requirement that lets you configure the Controller. The value of <code>rootPath</code>
 	is the relative path to the root directory, in this case <code>./</code>. If you place the controller in a subdirectory it should
 	be <code>../</code> or perhaps <code>../../</code>.
 </p>

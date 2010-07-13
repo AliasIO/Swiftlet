@@ -11,7 +11,7 @@ if ( !isset($this->app) ) die('Direct access to this file is not allowed');
  * Session
  * @abstract
  */
-class session
+class Session
 {
 	public
 		$ready,
@@ -22,7 +22,7 @@ class session
 
 	private
 		$app,
-		$contr,
+		$controller,
 
 		$hash
 		;
@@ -33,9 +33,9 @@ class session
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		/**
 		 * Check if the sessions table exists
@@ -48,7 +48,7 @@ class session
 
 			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->contr->absPath);
+			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->controller->absPath);
 
 			/**
 			 * Delete expired sessions
@@ -70,7 +70,7 @@ class session
 						`contents`
 					FROM `' . $this->app->db->prefix . 'sessions`
 					WHERE
-						`id`   = '  . $this->id   . ' AND
+						`id`   =  ' . $this->id   . ' AND
 						`hash` = "' . $this->hash . '"
 					LIMIT 1
 					;', FALSE);
@@ -100,14 +100,14 @@ class session
 						`date_expire`
 						)
 					VALUES (
-						"' . $this->hash . '",
+						"' . $this->hash                                  . '",
 						"' . $app->db->escape(serialize($this->contents)) . '",
-						"' . gmdate('Y-m-d H:i:s') . '",
+						"' . gmdate('Y-m-d H:i:s')                        . '",
 						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 						)
 					ON DUPLICATE KEY UPDATE
 						`contents`    = "' . $app->db->escape(serialize($this->contents)) . '",
-						`date`        = "' . gmdate('Y-m-d H:i:s') . '",
+						`date`        = "' . gmdate('Y-m-d H:i:s')                        . '",
 						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 					;');
 
@@ -165,14 +165,14 @@ class session
 			$this->app->db->sql('
 				UPDATE `' . $this->app->db->prefix . 'sessions`
 				SET
-					`contents` = "' . $this->app->db->escape(serialize($this->contents)) . '",
+					`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
 					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
 				WHERE
 					`id` = ' . $this->id . '
-				LIMIT 1						
+				LIMIT 1
 				;');
 		}
 
-		setcookie('sw_session', $this->id, time() + $this->lifeTime, $this->contr->absPath);
+		setcookie('sw_session', $this->id, time() + $this->lifeTime, $this->controller->absPath);
 	}
 }

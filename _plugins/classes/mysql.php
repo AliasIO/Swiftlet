@@ -11,12 +11,12 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * MySQL database
  * @abstract
  */
-class mysql
+class Mysql
 {
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	public
@@ -37,9 +37,9 @@ class mysql
 	 */
 	function __construct($app, $host, $user, $pass = FALSE, $name = FALSE, $prefix = FALSE)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		$this->prefix = $prefix;
 
@@ -56,9 +56,9 @@ class mysql
 					or $app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
 				$this->ready = TRUE;
-				
+
 				$this->sql('SHOW TABLES;');
-				
+
 				if ( $r = $this->result )
 				{
 					foreach ( $r as $d )
@@ -66,7 +66,7 @@ class mysql
 						$this->tables[$d[0]] = $d[0];
 					}
 				}
-				
+
 				/**
 				 * Check if the cache tables exists
 				 */
@@ -171,7 +171,7 @@ class mysql
 					ct.`table` IN ( "' . implode('", "', $tables) . '" )
 				LIMIT 1
 				;', FALSE);
-			
+
 			if ( $this->result && $r = $this->result[0] )
 			{
 				$this->result = @unserialize($r['results']);
@@ -202,7 +202,7 @@ class mysql
 		 * Not cached, execute query
 		 */
 		$timerStart = $this->app->timer_start();
-	
+
 		$r = mysql_query($this->sql)
 			or $this->app->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
 
@@ -226,7 +226,7 @@ class mysql
 			$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'execution time' => $timerEnd, 'explain' => mysql_fetch_assoc($r));
 		}
 		else
-		{		
+		{
 			$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'execution time' => $timerEnd);
 		}
 
@@ -249,9 +249,9 @@ class mysql
 						`date_expire`
 						)
 					VALUES (
-						"' . $this->escape($hash) . '",
+						"' . $this->escape($hash)              . '",
 						"' . $this->escape(serialize($result)) . '",
-						"' . gmdate('Y-m-d H:i:s') . '",
+						"' . gmdate('Y-m-d H:i:s')             . '",
 						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL 1 HOUR)
 						)
 					;');
@@ -266,7 +266,7 @@ class mysql
 								`table`
 								)
 							VALUES (
-								' . ( int ) $id . ',
+								 ' . ( int ) $id           . ',
 								"' . $this->escape($table) . '"
 								)
 							;');
@@ -293,7 +293,7 @@ class mysql
 		if ( $this->app->caching && $tables )
 		{
 			$sql = $this->sql;
-			
+
 			$this->sql('
 				DELETE
 					cq, ct
@@ -302,7 +302,7 @@ class mysql
 				WHERE
 					ct.`table` IN ( "' . implode('", "', $tables) . '" )
 				;');
-			
+
 			$this->sql    = $sql;
 			$this->result = array();
 		}
@@ -318,14 +318,14 @@ class mysql
 	/**
 	* Get table names from query
 	* @param string $sql
-	* @return array 
+	* @return array
 	*/
 	private function get_tables()
 	{
 		$tables = array();
 
 		preg_match_all('/(FROM|JOIN|UPDATE|INTO|TRUNCATE|DROP TABLE) (`?(' . preg_quote($this->prefix, '/') . '[a-z0-9_]+)`?\s?,?)+/i', $this->sql, $m);
-		
+
 		if ( isset($m[3]) )
 		{
 			foreach ( $m[3] as $match )
@@ -350,7 +350,7 @@ class mysql
 			mysql_close($this->link);
 
 			$this->ready = FALSE;
-		}			
+		}
 	}
 
 	/**
@@ -400,7 +400,7 @@ class mysql
 			$this->sql('
 				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
 				');
-			
+
 			$this->sql('
 				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
 				');

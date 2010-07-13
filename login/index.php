@@ -5,12 +5,12 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../',
 	'pageTitle' => ( isset($_GET['logout']) ? 'Log out' : 'Log in' )
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $app->check_dependencies(array('db', 'session', 'user', 'form'));
 
@@ -103,7 +103,7 @@ if ( isset($app->GET_raw['ref']) && empty($view->error) )
 	$view->notice = $app->t('Please log in with an authenticated account.');
 }
 
-if ( $app->session->get('user id') == user::guestId )
+if ( $app->session->get('user id') == User::GUEST_ID )
 {
 	$app->db->sql('
 		SELECT
@@ -126,14 +126,14 @@ if ( isset($app->GET_raw['notice']) )
 	switch ( $app->GET_raw['notice'] )
 	{
 		case 'login':
-			if ( $app->session->get('user id') != user::guestId )
+			if ( $app->session->get('user id') != User::GUEST_ID )
 			{
 				$view->notice = $app->t('Hello %1$s, you are now logged in.', $app->session->get('user username'));
 			}
 
 			break;
 		case 'logout':
-			if ( $app->session->get('user id') == user::guestId )
+			if ( $app->session->get('user id') == User::GUEST_ID )
 			{
 				$view->notice = $app->t('You are now logged out.');
 			}

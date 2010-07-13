@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Language
  * @abstract
  */
-class lang
+class Lang
 {
 	public
 		$language  = 'English US',
@@ -20,10 +20,11 @@ class lang
 		;
 
 	private
+		$translation = array(),
+
 		$app,
 		$view,
-		$contr,
-		$translation = array()
+		$controller
 		;
 
 	/**
@@ -32,9 +33,9 @@ class lang
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		$this->check_languages();
 
@@ -63,7 +64,7 @@ class lang
 		{
 			$this->languages = array('English US' => 'English US');
 
-			if ( is_dir($dir = $this->contr->rootPath . 'lang/') )
+			if ( is_dir($dir = $this->controller->rootPath . 'lang/') )
 			{
 				if ( $handle = opendir($dir) )
 				{
@@ -104,7 +105,7 @@ class lang
 
 		if ( $this->language )
 		{
-			if ( is_dir($dir = $this->contr->rootPath . 'lang/' . $this->language . '/') )
+			if ( is_dir($dir = $this->controller->rootPath . 'lang/' . $this->language . '/') )
 			{
 				if ( $handle = opendir($dir) )
 				{

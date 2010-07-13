@@ -8,10 +8,10 @@
 if ( !isset($this->app) ) die('Direct access to this file is not allowed');
 
 /**
- * Authorisation
+ * User
  * @abstract
  */
-class user
+class User
 {
 	public
 		$ready,
@@ -19,24 +19,24 @@ class user
 		;
 
 	const
-		guestId = 0
+		GUEST_ID = 0
 		;
 
 	private
 		$app,
 		$view,
-		$contr
+		$controller
 		;
 
 	/**
-	 * Initialize authorisation
+	 * Initialize
 	 * @param object $this->app
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		if ( !empty($app->db->ready) )
 		{
@@ -74,8 +74,8 @@ class user
 				if ( $app->session->get('user id') === FALSE )
 				{
 					$app->session->put(array(
-						'user id'       => user::guestId,
-						'user username' => user::guestId
+						'user id'       => User::GUEST_ID,
+						'user username' => User::GUEST_ID
 						));
 				}
 			}
@@ -229,9 +229,9 @@ class user
 				`options`
 				)
 			VALUES (
-				"' . $this->app->db->escape($params['pref'])    . '",
-				"' . $this->app->db->escape($params['type'])    . '",
-				"' . $this->app->db->escape($params['match'])   . '",
+				"' . $this->app->db->escape($params['pref'])               . '",
+				"' . $this->app->db->escape($params['type'])               . '",
+				"' . $this->app->db->escape($params['match'])              . '",
 				"' . $this->app->db->escape(serialize($params['options'])) . '"
 				)
 			ON DUPLICATE KEY UPDATE
@@ -272,9 +272,9 @@ class user
 				`value`
 				)
 			VALUES (
-				' . ( int ) $params['user_id'] . ',
-				' . ( int ) $this->prefs[$params['pref']]['id'] . ',
-				"' . $this->app->db->escape($params['value']) . '"
+				 ' . ( int ) $params['user_id']                  . ',
+				 ' . ( int ) $this->prefs[$params['pref']]['id'] . ',
+				"' . $this->app->db->escape($params['value'])    . '"
 				)
 			ON DUPLICATE KEY UPDATE
 				`value` = "' . $this->app->db->escape($params['value']) . '"

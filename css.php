@@ -5,13 +5,13 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'   => './',
 	'pageTitle'  => 'CSS Parser',
 	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 /*
  * Parse CSS files
@@ -23,7 +23,7 @@ if ( !empty($app->GET_raw['files']) )
 	// Combine files
 	foreach ( explode(',', $app->GET_raw['files']) as $filename )
 	{
-		if ( is_file($file = $contr->viewPath . $filename) )
+		if ( is_file($file = $controller->viewPath . $filename) )
 		{
 			$css .= '/* ' . $filename . ' */' . "\n\n" . trim(file_get_contents($file)) . "\n\n";
 		}

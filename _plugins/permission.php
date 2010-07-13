@@ -11,7 +11,7 @@ switch ( $hook )
 {
 	case 'info':
 		$info = array(
-			'name'         => 'perm',
+			'name'         => 'permission',
 			'version'      => '1.0.0',
 			'compatible'   => array('from' => '1.2.0', 'to' => '1.2.*'),
 			'dependencies' => array('session', 'user'),
@@ -40,20 +40,20 @@ switch ( $hook )
 					`group`
 					)
 				VALUES (
-					"admin perm access",
+					"admin permission access",
 					"Manage roles",
 					"Permissions"
 				),
 				(
-					"admin perm create",
+					"admin permission create",
 					"Create roles",
 					"Permissions"
 				),(
-					"admin perm edit",
+					"admin permission edit",
 					"Edit roles",
 					"Permissions"
 				),(
-					"admin perm delete",
+					"admin permission delete",
 					"Delete roles",
 					"Permissions"
 				)
@@ -130,9 +130,9 @@ switch ( $hook )
 	case 'init':
 		if ( !empty($app->session->ready) )
 		{
-			require($contr->classPath . 'permission.php');
+			require($controller->classPath . 'permission.php');
 
-			$app->perm = new perm($app);
+			$app->permission = new permission($app);
 		}
 
 		break;
@@ -141,8 +141,8 @@ switch ( $hook )
 			'name'        => 'Permsissions',
 			'description' => 'Add and edit roles and permissions',
 			'group'       => 'Users',
-			'path'        => 'admin/perms/',
-			'perm'        => 'admin perm access'
+			'path'        => 'admin/permissions/',
+			'permission'        => 'admin permission access'
 			);
 
 		break;

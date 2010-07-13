@@ -5,13 +5,13 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'   => '../',
 	'pageTitle'  => 'File',
 	'standAlone' => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 if ( !isset($app->routeParts[1]) )
 {
@@ -37,7 +37,7 @@ $app->db->sql('
 
 if ( $app->db->result && $r = $app->db->result[0] )
 {
-	if ( is_file($file = $contr->rootPath . 'uploads/' . ( $thumb ? 'thumbs/' : 'files/' ) . $r['filename']) )
+	if ( is_file($file = $controller->rootPath . 'uploads/' . ( $thumb ? 'thumbs/' : 'files/' ) . $r['filename']) )
 	{
 		if ( substr($r['mime_type'], 0, 5) == 'image' )
 		{

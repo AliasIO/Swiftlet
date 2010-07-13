@@ -19,7 +19,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'language.php');
+		require($controller->classPath . 'language.php');
 			
 		$app->lang = new lang($app);
 

@@ -90,7 +90,7 @@
 # Added .htaccess file to /file/uploads/ to disallow access
 # Added timezone plugin
 # Now storing all dates in GMT
-# Updated CKEditor to 3.1, created a config file in /_view/scripts/
+# Updated CKEditor to 3.1, created a config file in /_views/scripts/
 # Fixed issue with relative paths and rich text editors
 # Updated jQuery to v1.4
 # Added ability to remove (uninstall) plugins
@@ -135,7 +135,7 @@
 # 1.1.0.B2 - 1.1.0.B3
 #
 # CSS changes
-# Removed /_view/logout.html.php, using $app->confirm() instead
+# Removed /_views/logout.html.php, using $app->confirm() instead
 # Added $app->db->tables to check if a table exists to avoid many SHOW TABLE queries
 # Added database caching
 #
@@ -155,7 +155,7 @@
 # Bug #16 (reported by svenn.dhert) Applied $app->rewrite_url() to crumbs
 # Added jQuery library (linked from Google APIs)
 # Changes to /admin/pages/, can not select self or descendant as parent
-# Added $app->confirm() to ask user for confirmation on permanent changes (like deleting a page)
+# Added $app->confirm() to ask user for confirmation on permissionanent changes (like deleting a page)
 # User accounts can now be deleted
 #
 #
@@ -166,14 +166,14 @@
 # Added .htaccess file
 # Added /lib (library) directory for third party code
 # Added CKEditor for rich text editing
-# Added $contr->inAdmin for admin pages (and admin specific theming)
+# Added $controller->inAdmin for admin pages (and admin specific theming)
 # Template and CSS changes
 # Improvements to the /admin/pages controller
 # Added $app->t() (and shorthand t() for views) function and 'translate' hook for translation plugins
 # Applied t() function on all strings in views
 # Added $app->h() (and shorthand h() for views) function to make string HTML safe
 # Added ?ref parameter to login for redirects
-# Removed /_view/auth.html.php (now redirecting to login instead)
+# Removed /_views/auth.html.php (now redirecting to login instead)
 # Many more minor changes
 #
 #
@@ -228,13 +228,13 @@
 # 1.0.3 - 1.0.4
 #
 # No longer calling buffer plugin from $app->error(), using error hook instead
-# Replaced $contr->rootPath with $view->rootPath in /_view/header.html.php
-# Made site and page properties HTML safe in /_view/header.html.php with required changes in /_app/view.class.php
+# Replaced $controller->rootPath with $view->rootPath in /_views/header.html.php
+# Made site and page properties HTML safe in /_views/header.html.php with required changes in /_app/view.class.php
 #
 #
 # 1.0.2 - 1.0.3
 #
-# Bug #8 (reported by svenn.dhert) Fixed $contr->absPath bug for installs in root directory
+# Bug #8 (reported by svenn.dhert) Fixed $controller->absPath bug for installs in root directory
 #
 #
 # 1.0.1 - 1.0.2
@@ -297,21 +297,21 @@
 # - Added user authentication plugin
 # - Added login controller
 # - Improved session plugin
-# - Fixed $contr->absPath bug
+# - Fixed $controller->absPath bug
 # - Changes to the default layout
 # - Input sanitizing now works with arrays
 #
 #
 # 0.12 - 1.0.0.A13
 #
-# - Added model::version constant
+# - Added Model::VERSION constant
 # - Added compatibility check for plugins
 # - Changed versioning from x.x (major, revision) to x.x.x (major, minor, revision)
 #
 #
 # 0.11 - 0.12
 #
-# - Added $contr->absPath variable containing the absolute path
+# - Added $controller->absPath variable containing the absolute path
 # - Added $app->session->lifeTime variable containing the session lifetime in seconds
 # - Added session cookies
 # - Made sessions faster by using id instead of hash when selecting from database

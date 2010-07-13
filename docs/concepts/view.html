@@ -8,7 +8,7 @@
 </p>
 
 <p>
-	Views are stored in the <code>_view</code> directory.
+	Views are stored in the <code>_views</code> directory.
 </p>
 
 <h5>Example View</h5>
@@ -45,12 +45,12 @@
 <ul>
 	<li>
 		<code>$view-&gt;rootPath</code><br/>
-		Absolute path to the root. Note that this can be different from <code>$contr-&gt;rootPath</code> (e.g. when URL rewrites or AJAX
+		Absolute path to the root. Note that this can be different from <code>$controller-&gt;rootPath</code> (e.g. when URL rewrites or AJAX
 		is used).
 	</li>
 	<li>
 		<code>$view-&gt;viewPath</code><br/>
-		Absolute path to the View directory (<code>/_view</code>).
+		Absolute path to the View directory (<code>/_views</code>).
 	</li>
 	<li>
 		<code>$view-&gt;siteName</code><br/>
@@ -67,16 +67,16 @@
 	</li>
 	<li>
 		<code>$view-&gt;pageTitle</code><br/>
-		Title of the page (value of <code>$contr-&gt;pageTitle</code>, safe for HTML).
+		Title of the page (value of <code>$controller-&gt;pageTitle</code>, safe for HTML).
 	</li>
 	<li>
 		<code>$view-&gt;pageDescription</code><br/>
-		Description of the page (value of <code>$contr-&gt;pageDescription</code> or <code>$app-&gt;siteDescription</code> if missing,
+		Description of the page (value of <code>$controller-&gt;pageDescription</code> or <code>$app-&gt;siteDescription</code> if missing,
 		safe for HTML).
 	</li>
 	<li>
 		<code>$view-&gt;pageKeywords</code><br/>
-		Keywords relevant to the contents of the page (value of <code>$contr-&gt;pageKeywords</code> or <code>$app-&gt;siteKeywords</code>
+		Keywords relevant to the contents of the page (value of <code>$controller-&gt;pageKeywords</code> or <code>$app-&gt;siteKeywords</code>
 		if missing,	safe for HTML).
 	</li>
 	<li>

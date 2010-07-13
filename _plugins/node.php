@@ -73,7 +73,7 @@ switch ( $hook )
 	case 'init':
 		if ( !empty($app->db->ready) )
 		{
-			require($contr->classPath . 'node.php');
+			require($controller->classPath . 'node.php');
 
 			$app->node = new node($app);
 		}

@@ -167,7 +167,7 @@ switch ( $hook )
 	case 'init':
 		if ( !empty($app->db->ready) && !empty($app->node->ready) )
 		{
-			require($contr->classPath . 'time.php');
+			require($controller->classPath . 'time.php');
 
 			$app->time = new time($app);
 		}

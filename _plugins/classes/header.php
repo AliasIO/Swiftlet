@@ -11,7 +11,7 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
  * Header
  * @abstract
  */
-class header
+class Header
 {
 	public
 		$menu = array(),

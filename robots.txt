@@ -1,7 +1,7 @@
 User-agent: *
 Disallow: /_app/
 Disallow: /_plugins/
-Disallow: /_view/
+Disallow: /_views/
 Disallow: /admin/
 Disallow: /cache/
 Disallow: /installer/

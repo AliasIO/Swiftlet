@@ -11,7 +11,7 @@ if ( !isset($this->app) ) die('Direct access to this file is not allowed');
  * Permissions
  * @abstract
  */
-class perm
+class Permission
 {
 	public
 		$ready
@@ -26,7 +26,7 @@ class perm
 
 	private
 		$app,
-		$contr
+		$controller
 		;
 
 	/**
@@ -35,9 +35,9 @@ class perm
 	 */
 	function __construct($app)
 	{
-		$this->app  = $app;
-		$this->view  = $app->view;
-		$this->contr = $app->contr;
+		$this->app        = $app;
+		$this->view       = $app->view;
+		$this->controller = $app->controller;
 
 		/**
 		 * Check if the permissions table exists
@@ -51,30 +51,30 @@ class perm
 					prx.`value`
 				FROM      `' . $app->db->prefix . 'perms_roles_users_xref` AS prux
 				LEFT JOIN `' . $app->db->prefix . 'perms_roles`            AS pr   ON prux.`role_id` = pr.`id`
-				LEFT JOIN `' . $app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id` 
+				LEFT JOIN `' . $app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id`
 				LEFT JOIN `' . $app->db->prefix . 'perms`                  AS p    ON prx.`perm_id`  = p.`id`
 				WHERE
-					p.`name`  IS NOT NULL AND
+					 p.`name` IS NOT NULL AND
 					pr.`name` IS NOT NULL AND
 					prux.`user_id` = ' . ( int ) $app->session->get('user id') . '
 				', FALSE);
 
 			if ( $r = $app->db->result )
 			{
-				$perms = array();
+				$permissions = array();
 
 				foreach ( $r as $d )
 				{
-					if ( empty($perms[$d['permission']]) || $perms[$d['permission']] != -1 )
+					if ( empty($permissions[$d['permission']]) || $permissions[$d['permission']] != -1 )
 					{
-						$perms[$d['permission']] = $d['value'];
+						$permissions[$d['permission']] = $d['value'];
 					}
 				}
 
-				foreach ( $perms as $name => $value )
-				{			
-					$app->session->put('perm ' . $name, ( $app->session->get('user id owner') or $value == 1 ) ? 1 : 0);
-				}			
+				foreach ( $permissions as $name => $value )
+				{
+					$app->session->put('permission ' . $name, ( $app->session->get('user id owner') or $value == 1 ) ? 1 : 0);
+				}
 			}
 
 			$this->ready = TRUE;
@@ -82,13 +82,13 @@ class perm
 	}
 
 	/**
-	 * Check if the current user has permssion
+	 * Check if the current user has permissionssion
 	 * @param string $name
 	 * @return bool
 	 */
 	function check($name)
 	{
-		return $this->app->session->get('user is owner') or $this->app->session->get('perm ' . $name);
+		return $this->app->session->get('user is owner') or $this->app->session->get('permission ' . $name);
 	}
 
 	/**
@@ -107,9 +107,9 @@ class perm
 				`group`
 				)
 			VALUES (
-				"' . $this->app->db->escape($name) . '",
+				"' . $this->app->db->escape($name)        . '",
 				"' . $this->app->db->escape($description) . '",
-				"' . $this->app->db->escape($group) . '"
+				"' . $this->app->db->escape($group)       . '"
 				)
 			;');
 	}
@@ -135,7 +135,7 @@ class perm
 			$this->app->db->sql('
 				DELETE
 					p, prx
-				FROM      `' . $this->app->db->prefix . 'perms`            AS p
+				FROM      `' . $this->app->db->prefix . 'perms`            AS   p
 				LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
 				WHERE
 					p.`id` = ' . ( int ) $id . '

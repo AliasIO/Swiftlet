@@ -19,7 +19,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'header.php');
+		require($controller->classPath . 'header.php');
 
 		$app->header = new header($app);
 

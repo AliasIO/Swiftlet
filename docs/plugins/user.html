@@ -11,7 +11,7 @@
 
 <pre>
 <?php
-if ( $app->session->get('user id') != user::guestId )
+if ( $app->session->get('user id') != User::GUEST_ID )
 {
 	// User is logged in
 }
@@ -112,8 +112,8 @@ $app->user->save_pref(array(
 
 <ul>
 	<li>
-		<code>user::guestId</code><br/>
+		<code>User::GUEST_ID</code><br/>
 		Reserved user ID for all guest users (users who are not logged in). This can be used to test if a user is logged in or not
-		(e.g. <code>if ( $app->session->get('user id') != user::guestId )</code>).
+		(e.g. <code>if ( $app->session->get('user id') != User::GUEST_ID )</code>).
 	</li>
 </ul>

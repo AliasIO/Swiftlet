@@ -19,7 +19,7 @@ switch ( $hook )
 
 		break;
 	case 'init':
-		require($contr->classPath . 'log.php');
+		require($controller->classPath . 'log.php');
 
 		$app->log = new log($app);
 
@@ -29,12 +29,12 @@ switch ( $hook )
 
 		$params[] = array(
 			'test' => 'Writing a log file to <code>/log/</code>.',
-			'pass' => is_file($contr->rootPath . 'log/unit_test')
+			'pass' => is_file($controller->rootPath . 'log/unit_test')
 			);
 
-		if ( is_file($contr->rootPath . 'log/unit_test') )
+		if ( is_file($controller->rootPath . 'log/unit_test') )
 		{
-			unlink($contr->rootPath . 'log/unit_test');
+			unlink($controller->rootPath . 'log/unit_test');
 		}
 
 		break;

@@ -5,15 +5,15 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => '../../',
 	'pageTitle' => 'Pages',
 	'inAdmin'   => TRUE
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
-$app->check_dependencies(array('db', 'form', 'node', 'perm'));
+$app->check_dependencies(array('db', 'form', 'node', 'permission'));
 
 $app->form->validate(array(
 	'form-submit' => 'bool',
@@ -29,9 +29,9 @@ $app->form->validate(array(
 $id     = isset($app->GET_raw['id']) && ( int ) $app->GET_raw['id'] ? ( int ) $app->GET_raw['id'] : FALSE;
 $action = isset($app->GET_raw['action']) && $id ? $app->GET_raw['action'] : FALSE;
 
-if ( !$app->perm->check('admin page access') )
+if ( !$app->permission->check('admin page access') )
 {
-	header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+	header('Location: ' . $controller->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
 
 	$app->end();
 }
@@ -72,7 +72,7 @@ if ( $app->POST_valid['form-submit'] )
 		switch ( $action )
 		{
 			case 'edit':
-				if ( $app->perm->check('admin page edit') )
+				if ( $app->permission->check('admin page edit') )
 				{
 					$app->db->sql('
 						UPDATE `' . $app->db->prefix . 'nodes` SET
@@ -155,7 +155,7 @@ if ( $app->POST_valid['form-submit'] )
 
 				break;
 			default:
-				if ( $app->perm->check('admin page create') )
+				if ( $app->permission->check('admin page create') )
 				{
 					$nodeId = $app->node->create($app->POST_raw['title']['English US'], 'page', $app->POST_raw['parent']);
 
@@ -238,7 +238,7 @@ switch ( $action )
 		$editLeftId  = 0;
 		$editRightId = 0;
 
-		if ( $app->perm->check('admin page edit') )
+		if ( $app->permission->check('admin page edit') )
 		{
 			$node = $app->node->get_parents($id);
 
@@ -281,7 +281,7 @@ switch ( $action )
 
 		break;
 	case 'delete':
-		if ( $app->perm->check('admin page delete') )
+		if ( $app->permission->check('admin page delete') )
 		{
 			if ( !$app->POST_valid['confirm'] )
 			{
@@ -331,7 +331,7 @@ foreach ( $languages as $language )
 $list        = array();
 $listParents = array();
 
-$nodes = $app->node->get_children(node::rootId, 'page');
+$nodes = $app->node->get_children(Node::ROOT_ID, 'page');
 
 $app->node->nodes_to_array($nodes, $list);
 

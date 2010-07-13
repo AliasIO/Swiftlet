@@ -38,9 +38,9 @@ switch ( $hook )
 				;');
 		}
 
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->create('Menu', 'admin menu access', 'Manage menu items');
+			$app->permission->create('Menu', 'admin menu access', 'Manage menu items');
 		}
 
 		break;
@@ -50,14 +50,14 @@ switch ( $hook )
 			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'menu`;');
 		}
 
-		if ( !empty($app->perm->ready) )
+		if ( !empty($app->permission->ready) )
 		{
-			$app->perm->delete('admin menu access');
+			$app->permission->delete('admin menu access');
 		}
 
 		break;
 	case 'init':
-		require($contr->classPath . 'menu.php');
+		require($controller->classPath . 'menu.php');
 
 		$app->menu = new menu($app);
 
@@ -68,7 +68,7 @@ switch ( $hook )
 			'description' => 'Add and remove menu items',
 			'group'       => 'Content',
 			'path'        => 'admin/menu/',
-			'perm'        => 'admin menu access'
+			'permission'        => 'admin menu access'
 			);
 
 		break;

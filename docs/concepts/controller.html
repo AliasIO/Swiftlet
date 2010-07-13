@@ -6,12 +6,12 @@
 
 <pre>
 <?php
-$contrSetup = array(
+$controllerSetup = array(
 	'rootPath'  => './',
 	'pageTitle' => 'Hello world'
 	);
 
-require($contrSetup['rootPath'] . 'init.php');
+require($controllerSetup['rootPath'] . 'init.php');
 
 $app->check_dependencies(array('db')); // Use if database access is needed
 
@@ -23,7 +23,7 @@ $app->end();
 ?>
 </pre>
 
-<h4>Example View (<code>/_view/index.html.php</code>)</h4>
+<h4>Example View (<code>/_views/index.html.php</code>)</h4>
 
 <pre>
 <p><?php echo $view->hello ?></p>
@@ -31,7 +31,7 @@ $app->end();
 
 <h3>Setup</h3>
 
-<p>The <code>$contrSetup</code> array needs to be defined at the top of the Controller file.</p>
+<p>The <code>$controllerSetup</code> array needs to be defined at the top of the Controller file.</p>
 
 <h4>List of possible keys</h4>
 
@@ -65,11 +65,11 @@ $app->end();
 </ul>
 
 <p>
-	All the defined keys are available as a variable of the <code>$contr</code> object (i.e.
-	<code>$contr-&gt;rootPath</code>).
+	All the defined keys are available as a variable of the <code>$controller</code> object (i.e.
+	<code>$controller-&gt;rootPath</code>).
 </p>
 
-<p>After <code>$contrSetup</code> the <code>/init.php</code> file needs to be included.</p>
+<p>After <code>$controllerSetup</code> the <code>/init.php</code> file needs to be included.</p>
 
 <p>
 	<code>$app-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
@@ -81,38 +81,38 @@ $app->end();
 <h3>Class</h3>
 
 <p>
-	<code>$contr</code>
+	<code>$controller</code>
 </p>
 
 <h4>Public variables</h4>
 
 <ul>
 	<li>
-		<code>$contr-&gt;rootPath</code><br/>
+		<code>$controller-&gt;rootPath</code><br/>
 		Relative path to the root (e.g. <code>./</code>).
 	</li>
 	<li>
-		<code>$contr-&gt;absPath</code><br/>
+		<code>$controller-&gt;absPath</code><br/>
 		Absolute path to the root (e.g. <code>/</code>).
 	</li>
 	<li>
-		<code>$contr-&gt;pageTitle</code><br/>
+		<code>$controller-&gt;pageTitle</code><br/>
 		Title of the page.
 	</li>
 	<li>
-		<code>$contr-&gt;pageDescription</code><br/>
+		<code>$controller-&gt;pageDescription</code><br/>
 		Description of the page.
 	</li>
 	<li>
-		<code>$contr-&gt;pageKeywords</code><br/>
+		<code>$controller-&gt;pageKeywords</code><br/>
 		Keywords relevant to the contents of the page.
 	</li>
 	<li>
-		<code>$contr-&gt;standAlone</code><br/>
+		<code>$controller-&gt;standAlone</code><br/>
 		If this variable is set to <code>TRUE</code> the header and footer hooks will not be executed.
 	</li>
 	<li>
-		<code>$contr-&gt;inAdmin</code><br/>
+		<code>$controller-&gt;inAdmin</code><br/>
 		Used for administrative pages.
 	</li>
 </ul>
