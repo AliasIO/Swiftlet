@@ -1,6 +1,8 @@
 # 1.2.0.RC1 - 1.2.0.RC2
 #
 # Renamed model to app
+# Fixed .htaccess bug (check for existence of mod_rewrite module)
+# Renamed /_view/ folder to /_views/
 #
 #
 # 1.2.0.B3 - 1.2.0.RC1
@@ -62,7 +64,7 @@
 # Using CSS selectors instead of classes for theming forms
 # Updated jQuery to v1.4.2
 # Using a default config file to prevent losing settings when overwriting files.
-# Added improved URL routing, replaced $app->rewriteUrl() to $app->route()
+# Added improved URL routing, replaced $app->rewriteUrl() to $view->route()
 #
 #
 # 1.2.0.A1 - 1.2.0.A2
@@ -135,7 +137,7 @@
 # 1.1.0.B2 - 1.1.0.B3
 #
 # CSS changes
-# Removed /_views/logout.html.php, using $app->confirm() instead
+# Removed /_views/logout.html.php, using $app->input->confirm() instead
 # Added $app->db->tables to check if a table exists to avoid many SHOW TABLE queries
 # Added database caching
 #
@@ -155,7 +157,7 @@
 # Bug #16 (reported by svenn.dhert) Applied $app->rewrite_url() to crumbs
 # Added jQuery library (linked from Google APIs)
 # Changes to /admin/pages/, can not select self or descendant as parent
-# Added $app->confirm() to ask user for confirmation on permissionanent changes (like deleting a page)
+# Added $app->input->confirm() to ask user for confirmation on permissionanent changes (like deleting a page)
 # User accounts can now be deleted
 #
 #
@@ -169,9 +171,9 @@
 # Added $controller->inAdmin for admin pages (and admin specific theming)
 # Template and CSS changes
 # Improvements to the /admin/pages controller
-# Added $app->t() (and shorthand t() for views) function and 'translate' hook for translation plugins
+# Added $view->t() (and shorthand t() for views) function and 'translate' hook for translation plugins
 # Applied t() function on all strings in views
-# Added $app->h() (and shorthand h() for views) function to make string HTML safe
+# Added $view->h() (and shorthand h() for views) function to make string HTML safe
 # Added ?ref parameter to login for redirects
 # Removed /_views/auth.html.php (now redirecting to login instead)
 # Many more minor changes
@@ -181,7 +183,7 @@
 #
 # Improved authenticity tokens, they no longer experire after one request (better AJAX compatibility)
 # Improved error reporting (less alarming appearance)
-# Added $app->h() function, shorthand for htmlentities($v, ENT_QUOTES, 'UTF-8')
+# Added $view->h() function, shorthand for htmlentities($v, ENT_QUOTES, 'UTF-8')
 # Fixed a small bug in /css.php
 # Changed inclusion order for /_plugins/mysql
 # Changed variable mysqlHost etc. to dbHost
@@ -269,7 +271,7 @@
 #
 # - Account settings page now unavailable for guest users
 # - Added $app->check_dependencies() function to check if required plugins are ready
-# - Added $app->authToken variable for forms to prevent cross-site request forgery (CSRF) attacks
+# - Added $app->input->authToken variable for forms to prevent cross-site request forgery (CSRF) attacks
 # - Changed session hash from md5 to sha1
 #
 #

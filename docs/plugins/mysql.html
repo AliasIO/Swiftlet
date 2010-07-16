@@ -62,7 +62,7 @@ if ( $r = $app->db->result )
 	</li>
 	<li>
 		<code>$app-&gt;db-&gt;escape ( <em>string|array</em> $v )</code><br/>
-		Escapes strings for safe database insertion and HTML. Note that <code>$app-&gt;POST_db_safe</code> values are already escaped.
+		Escapes strings for safe database insertion and HTML. Note that <code>$app-&gt;input-&gt;POST_db_safe</code> values are already escaped.
 	</li>
 	<li>
 		<code>$app-&gt;db-&gt;sanitize ( <em>string|array</em> $v )</code><br/>

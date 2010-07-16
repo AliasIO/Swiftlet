@@ -12,16 +12,16 @@
 <h4>Why are <code>$_GET</code> and <code>$_POST</code> always empty?</h4>
 
 <p>
-	Swiftlet has a safer way to handle GET and POST. In short, you should use <code>$app-&gt;POST_db_safe</code>,
-	<code>$app-&gt;POST_html_safe</code> or <code>$app-&gt;POST_raw</code> where appropriate (the same for GET).
-	See <a href="./form">Forms</a> for more information.
+	Swiftlet has a safer way to handle GET and POST. In short, you should use <code>$app-&gt;input-&gt;POST_db_safe</code>,
+	<code>$app-&gt;input-&gt;POST_html_safe</code> or <code>$app-&gt;input-&gt;POST_raw</code> where appropriate (the same for GET).
+	See <a href="./input">Inputs</a> for more information.
 </p>
 
 <h4>I made a form but it doesn't work. There is no POST data when I submit it.</h4>
 
 <p>
 	If you're sending data using POST the field <code>auth-token</code> needs to be present otherwise the request
-	is ignored. This is also the case with AJAX requests. See <a href="./form">Forms</a> for more information.
+	is ignored. This is also the case with AJAX requests. See <a href="./input">Inputs</a> for more information.
 </p>
 
 

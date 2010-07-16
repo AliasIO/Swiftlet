@@ -13,13 +13,13 @@ $controllerSetup = array(
 
 require($controllerSetup['rootPath'] . 'init.php');
 
-if ( !isset($app->routeParts[1]) )
+if ( !isset($view->routeParts[1]) )
 {
 	$app->end();
 }
 
-$thumb = isset($app->routeParts[1]) && isset($app->routeParts[2]) && $app->routeParts[1] == 'thumb';
-$id    = $thumb && isset($app->routeParts[2]) ? $app->routeParts[2] : $app->routeParts[1];
+$thumb = isset($view->routeParts[1]) && isset($view->routeParts[2]) && $view->routeParts[1] == 'thumb';
+$id    = $thumb && isset($view->routeParts[2]) ? $view->routeParts[2] : $view->routeParts[1];
 
 $id = basename($id, strstr($id, '.'));
 

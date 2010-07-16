@@ -14,9 +14,9 @@ require($controllerSetup['rootPath'] . 'init.php');
 
 $file = 'intro.html';
 
-if ( isset($app->routeParts[1]) )
+if ( isset($view->routeParts[1]) )
 {
-	$file = './' . implode('/', array_slice($app->routeParts, 1)) . '.html';
+	$file = './' . implode('/', array_slice($view->routeParts, 1)) . '.html';
 }
 
 $contents = '';
@@ -29,7 +29,7 @@ if ( is_file ( $file ) )
 
 	if ( $m )
 	{
-		$view->pageTitle = $app->h($m[1]);
+		$view->pageTitle = $view->h($m[1]);
 	}
 
 	/*

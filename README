@@ -22,10 +22,10 @@ INSTALLATION
 
 GETTING STARTED
 
- - Read the documentation on http://swiftlet.org/docs.
- - Copy the default configuration file from /_config.default.php to /_config.php.
- - To change the landing page, replace or modify /home.php and /_views/home.html.php.
- - To change global settings, modify /_config.php.
+ - Read the documentation at http://swiftlet.org/docs/.
+ - Create and review the configuration file (copy /_config.default.php to /_config.php).
+ - Use the plugin installer to install plugins (database connection required).
+ - To change the welcome page, replace or modify /home.php and /_views/home.html.php.
 
 
 SUPPORT

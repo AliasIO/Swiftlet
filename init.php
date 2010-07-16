@@ -18,14 +18,14 @@ if ( empty($controllerSetup) )
 	die('<p>Missing controller setup.</p>');
 }
 
-if ( !class_exists('model') )
+if ( !class_exists('Application') )
 {
-	require($controllerSetup['rootPath'] . '_app/model.class.php');
+	require($controllerSetup['rootPath'] . '_app/Application.php');
 }
 
-if ( !class_exists('controller') )
+if ( !class_exists('Controller') )
 {
-	require($controllerSetup['rootPath'] . '_app/controller.class.php');
+	require($controllerSetup['rootPath'] . '_app/Controller.php');
 }
 
 if ( isset($controller) )
@@ -33,7 +33,7 @@ if ( isset($controller) )
 	$absPath = $controller->absPath;
 }
 
-$controller = new controller($controllerSetup);
+$controller = new Controller($controllerSetup);
 
 if ( isset($absPath) )
 {
@@ -42,18 +42,18 @@ if ( isset($absPath) )
 
 if ( !isset($app) )
 {
-	$app = new model($controller);
+	$app = new Application($controller);
 }
 else
 {
 	$app->controller = $controller;
 
-	$app->view = new view($app);
+	$app->view = new View($app, $view->route);
 }
 
-if ( !class_exists('view') )
+if ( !class_exists('View') )
 {
-	$app->view = new view($app);
+	$app->view = new View($app);
 }
 
 $view = $app->view;

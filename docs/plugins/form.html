@@ -8,17 +8,17 @@
 
 <pre>
 <?php
-$app->form->validate(array(
+$app->input->validate(array(
 	'submit' => 'bool',
 	'name'   => 'string, empty'
 	'email'  => 'email'
 	));
 
-if ( $app->POST_valid['submit'] )
+if ( $app->input->POST_valid['submit'] )
 {
-	if ( $app->form->errors )
+	if ( $app->input->errors )
 	{
-		if ( $app->form->errors['email'] )
+		if ( $app->input->errors['email'] )
 		{
 			$view->error = 'Please provide a valid e-mail address.';
 		}
@@ -65,14 +65,14 @@ if ( $app->POST_valid['submit'] )
 <h3>Class</h3>
 
 <p>
-	<code>$app->form</code>
+	<code>$app->input</code>
 </p>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;form-&gt;validate ( <em>array</em> $vars )</code><br/>
+		<code>$app-&gt;input-&gt;validate ( <em>array</em> $vars )</code><br/>
 	</li>
 </ul>
 
@@ -80,8 +80,8 @@ if ( $app->POST_valid['submit'] )
 
 <ul>
 	<li>
-		<code>$app-&gt;form-&gt;errors</code><br/>
-		Array containing all fields that failed validation (<code>$app->form->errors[$k] = TRUE</code>).
+		<code>$app-&gt;input-&gt;errors</code><br/>
+		Array containing all fields that failed validation (<code>$app->input->errors[$k] = TRUE</code>).
 	</li>
 </ul>
 
@@ -89,6 +89,6 @@ if ( $app->POST_valid['submit'] )
 
 <ul>
 	<li>
-		<a href="../manual/form">Forms</a>
+		<a href="../manual/input">Inputs</a>
 	</li>
 </ul>

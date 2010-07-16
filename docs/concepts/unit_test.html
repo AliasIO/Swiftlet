@@ -32,7 +32,7 @@ switch ( $hook )
 		$post = array(
 			'foo'         => 'bar',
 			'form-submit' => 'Submit',
-			'auth_token'  => $app->authToken
+			'auth_token'  => $app->input->authToken
 			);
 
 		// Simulate submitting a form with a POST request		
