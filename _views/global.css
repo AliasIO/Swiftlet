@@ -92,41 +92,41 @@ a:hover {
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, .4);
 }
 
-#menu ul {
-	float: left;
-}
-
-#menu li {
-	border-left: 1px solid rgba(255, 255, 255, .2);
-	border-right: 1px solid rgba(0, 0, 0, .2);
-	display: inline-block;
-	float: left;
-}
-
-	#menu li:first-child {
-		border-left: none;
+	#menu ul {
+		float: left;
 	}
 
-	#menu li:last-child {
-		border-right: none;
+	#menu li {
+		border-left: 1px solid rgba(255, 255, 255, .2);
+		border-right: 1px solid rgba(0, 0, 0, .2);
+		display: inline-block;
+		float: left;
 	}
 
-#menu p {
-	float: right;
-	font-weight: bold;
-	padding: 0 1em;
-}
+		#menu li:first-child {
+			border-left: none;
+		}
 
-#menu a:link, #menu a:hover, #menu a:active, #menu a:visited {
-	color: var(content-background-color);
-	float: left;
-	padding: 0 1em;
-	text-decoration: none;
-}
+		#menu li:last-child {
+			border-right: none;
+		}
 
-#menu a:hover {
-	text-decoration: underline;
-}
+	#menu p {
+		float: right;
+		font-weight: bold;
+		padding: 0 1em;
+	}
+
+	#menu a:link, #menu a:hover, #menu a:active, #menu a:visited {
+		color: var(content-background-color);
+		float: left;
+		padding: 0 1em;
+		text-decoration: none;
+	}
+
+	#menu a:hover {
+		text-decoration: underline;
+	}
 
 #logo {
 	margin: 0 auto;
