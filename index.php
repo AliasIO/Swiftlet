@@ -5,6 +5,19 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
+$swiftlet = TRUE;
+
+require('_app/Application.php');
+require('_app/Plugin.php');
+require('_app/Controller.php');
+require('_app/View.php');
+
+$swiftlet = new Application;
+
+exit; ##
+
+
+
 $controllerSetup = array(
 	'rootPath'   => './',
 	'pageTitle'  => 'Route',

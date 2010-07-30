@@ -4,7 +4,7 @@
 	<head>
 		<title><?php echo $view->siteName ?> - <?php echo $view->t($view->pageTitle) ?></title>
 
-		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->route('css?files=global.css,grid.css') ?>"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->route('css/global.css/grid.css') ?>"/>
 
 		<link type="image/png" rel="shortcut icon" href="<?php echo $view->rootPath ?>favicon.ico"/>
 

@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($app) ) die('Direct access to this file is not allowed');
+if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 
 /**
  * View
@@ -16,7 +16,6 @@ class View
 	public
 		$rootPath,
 		$viewPath,
-		$route,
 		$siteName,
 		$siteCopyright,
 		$siteDesigner,
@@ -27,7 +26,14 @@ class View
 		$pageKeywords,
 		$inAdmin,
 		$action,
-		$id
+		$id,
+		$route = array(
+			'path'       => '',
+			'args'       => array(),
+			'controller' => 'Home',
+			'action'     => '',
+			'id'         => ''
+			)
 		;
 
 	private
@@ -41,39 +47,39 @@ class View
 	 * Initialize
 	 * @param object $app
 	 */
-	function __construct($app, $route = array())
+	function __construct($app)
 	{
-		$this->app        = $app;
-		$this->controller = $app->controller;
+		$this->app = $app;
 
-		$this->rootPath = $this->controller->absPath;
-		$this->viewPath = $this->controller->absPath . '_views/';
-
-		$this->route = array_merge(array(
-			'path'       => '',
-			'controller' => '',
-			'parts'      => array(),
-			'action'     => '',
-			'id'         => ''
-			), $route);
-
-		$this->action = $this->route['action'];
-		$this->id     = $this->route['id'];
-
-		foreach ( array(
-			'siteName',
-			'siteCopyright',
-			'siteDesigner',
-			'siteDescription',
-			'siteKeywords'
-			) as $v )
+		if ( !empty($_GET['q']) )
 		{
-			$this->{$v} = !empty($app->{$v}) ? $this->h($app->{$v}) : '';
+			$this->route['path']       = $_GET['q'];
+			$this->route['args']       = explode('/', $_GET['q']);
+			$this->route['controller'] = '';
+
+			for ( $i = count($this->route['args']); $i > 0; $i -- )
+			{
+				$file = ucfirst(basename(implode('/', array_slice($this->route['args'], 0, $i))));
+
+				if ( is_file('../_controllers/' . $file . '.php') )
+				{
+					$this->route['controller'] = $file;
+
+					$this->route['action'] = isset($this->route['args'][$i])     ? $this->route['args'][$i]     : '';
+					$this->route['id']     = isset($this->route['args'][$i + 1]) ? $this->route['args'][$i + 1] : '';
+				}
+			}
 		}
 
-		$this->pageTitle       = !empty($this->controller->pageTitle)       ? $this->t($this->controller->pageTitle)       : '';
-		$this->pageDescription = !empty($this->controller->pageDescription) ? $this->t($this->controller->pageDescription) : $this->siteDescription;
-		$this->pageKeywords    = !empty($this->controller->pageKeywords)    ? $this->t($this->controller->pageKeywords)    : $this->siteKeywords;
+		if ( empty($this->route['controller']) )
+		{
+			$this->route['controller'] = 'Err404';
+		}
+
+		array_shift($this->route['args']);
+
+		$this->rootPath = str_repeat('../', count($this->route['args']));
+		$this->viewPath = $this->rootPath . '_views/';
 	}
 
 	/*
@@ -90,19 +96,34 @@ class View
 	 */
 	function output()
 	{
-		$app        = $this->app;
 		$view       = $this;
-		$controller = $this->controller;
+		$app        = $this->app;
+		$controller = $this->app->controller;
+
+		foreach ( array(
+			'siteName',
+			'siteCopyright',
+			'siteDesigner',
+			'siteDescription',
+			'siteKeywords'
+			) as $v )
+		{
+			$this->{$v} = !empty($this->app->config[$v]) ? $this->h($this->app->config[$v]) : '';
+		}
+
+		$this->pageTitle       = !empty($this->app->controller->pageTitle)       ? $this->t($this->app->controller->pageTitle)       : '';
+		$this->pageDescription = !empty($this->app->controller->pageDescription) ? $this->t($this->app->controller->pageDescription) : $this->siteDescription;
+		$this->pageKeywords    = !empty($this->app->controller->pageKeywords)    ? $this->t($this->app->controller->pageKeywords)    : $this->siteKeywords;
 
 		foreach ( $this->filesLoaded as $file )
 		{
-			if ( is_file($controller->viewPath . $file) )
+			if ( is_file('_views/' . $file) )
 			{
-				require($controller->viewPath . $file);
+				require('_views/' . $file);
 			}
 			else
 			{
-				$app->error(FALSE, 'Missing view file `' . $controller->viewPath . $file . '`.', __FILE__, __LINE__);
+				$app->error(FALSE, 'Missing view file `' .$file . '`.', __FILE__, __LINE__);
 			}
 		}
 	}
@@ -156,7 +177,7 @@ class View
 	 */
 	function route($route)
 	{
-		$route = $this->rootPath . ( $this->app->urlRewrite ? $route : '?q=' . str_replace('?', '&amp;', $route) );
+		$route = $this->rootPath . ( $this->app->config['urlRewrite'] ? $route : '?q=' . str_replace('?', '&amp;', $route) );
 
 		return $route;
 	}

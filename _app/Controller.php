@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($controllerSetup) ) die('Direct access to this file is not allowed');
+if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 
 /**
  * Controller
@@ -21,35 +21,45 @@ class Controller
 		$inAdmin
 		;
 
+	protected
+		$dependencies = array(),
+		$args         = array(),
+		$app,
+		$view
+		;
+
 	/**
 	 * Initialize
-	 * @param array $controllerSetup
+	 * @param object $app
 	 */
-	function __construct($controllerSetup)
+	function __construct($app)
 	{
-		foreach ( $controllerSetup as $k => $v )
+		$this->app  = $app;
+		$this->view = $app->view;
+
+		$this->args = $this->view->route['args'];
+
+		if ( $this->dependencies )
 		{
-			$this->{$k} = $v;
+			$missing = array();
+
+			foreach ( $this->dependencies as $dependency )
+			{
+				if ( empty($app->{$dependency}->ready) )
+				{
+					$missing[] = $dependency;
+				}
+			}
+
+			if ( $missing )
+			{
+				$app->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
+			}
 		}
 
-		if ( !$this->rootPath )
+		if ( !$this->standAlone )
 		{
-			$this->rootPath = './';
+			$app->hook('header');
 		}
-
-		if ( empty($this->rootPathView) )
-		{
-			$this->rootPathView = $this->rootPath;
-		}
-
-		$this->viewPath       = $this->rootPath . '_views/';
-		$this->controllerPath = $this->rootPath . '_controllers/';
-		$this->pluginPath     = $this->rootPath . '_app/plugins/';
-		$this->classPath      = $this->rootPath . '_app/plugins/classes/';
-
-		/**
-		 * Find absolute path to the root
-		 */
-		$this->absPath = str_replace('//', '/', preg_replace('/([^\/]+\/){' . ( substr_count(( $this->rootPath == './' ? '' : $this->rootPath ), '/') ) . '}$/', '', dirname(str_replace('\\', '/', $_SERVER['PHP_SELF'])) . '/'));
 	}
 }

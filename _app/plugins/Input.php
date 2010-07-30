@@ -5,23 +5,17 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($app) ) die('Direct access to this file is not allowed');
+if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-/*
- * Input
- * @abstract
- */
-class Input
+class Input extends Plugin
 {
 	public
-		$ready
+		$version    = '1.0.0',
+		$compatible = array('from' => '1.2.0', 'to' => '1.2.*'),
+		$hooks      = array('footer' => 1, 'init' => 2)
 		;
 
 	private
-		$app,
-		$view,
-		$controller,
-
 		$typesRegex = array(
 			'bool'   => '/^.*$/',
 			'empty'  => '/^$/',
@@ -31,15 +25,9 @@ class Input
 			)
 		;
 
-	/**
-	 * Initialize
-	 * @param object $app
-	 */
-	function __construct($app)
+	function hook_init()
 	{
-		$this->app        = $app;
-		$this->view       = $app->view;
-		$this->controller = $app->controller;
+		$this->ready = TRUE;
 
 		/**
 		 * Authenticity token to secure forms
@@ -50,11 +38,11 @@ class Input
 			session_start();
 		}
 
-		$this->authToken = sha1(session_id() . phpversion() . $app->sysPassword . $app->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
+		$this->authToken = sha1(session_id() . phpversion() . $this->app->config['sysPassword'] . $this->app->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
 
 		if ( ( !empty($_POST) && !isset($_POST['auth-token']) ) || ( isset($_POST['auth-token']) && $_POST['auth-token'] != $this->authToken ) )
 		{
-			$app->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
+			$this->app->error(FALSE, 'The form has expired, please go back and try again (wrong or missing authenticity token).', __FILE__, __LINE__);
 		}
 
 		if ( isset($_POST['auth-token']) )
@@ -65,6 +53,15 @@ class Input
 		$this->input_sanitize();
 
 		$this->ready = TRUE;
+
+	}
+
+	function hook_footer()
+	{
+		if ( !empty($this->errors) )
+		{
+			$this->app->view->load('input_errors.html.php');
+		}
 	}
 
 	/**
@@ -73,10 +70,10 @@ class Input
 	 */
 	function confirm($notice)
 	{
-		$this->view->notice  = $notice;
-		$this->view->getData = $this->view->h(serialize($this->GET_raw));
+		$this->app->view->notice  = $notice;
+		$this->app->view->getData = $this->app->view->h(serialize($this->GET_raw));
 
-		$this->view->load('confirm.html.php');
+		$this->app->view->load('confirm.html.php');
 
 		$this->app->end();
 	}
@@ -129,12 +126,12 @@ class Input
 
 		foreach ( $this->POST_raw as $k => $v )
 		{
-			$this->POST_html_safe[$k] = $this->view->h($v);
+			$this->POST_html_safe[$k] = $this->app->view->h($v);
 		}
 
 		foreach ( $this->GET_raw as $k => $v )
 		{
-			$this->GET_html_safe[$k] = $this->view->h($v);
+			$this->GET_html_safe[$k] = $this->app->view->h($v);
 		}
 
 		$this->app->hook('input_sanitize');
@@ -175,7 +172,7 @@ class Input
 
 				if ( $this->POST_valid[$var] === FALSE )
 				{
-					$this->errors[$var] = $this->view->t('Invalid value');
+					$this->errors[$var] = $this->app->view->t('Invalid value');
 				}
 			}
 		}

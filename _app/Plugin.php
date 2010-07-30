@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($app) ) die('Direct access to this file is not allowed');
+if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 
 /**
  * Plugin
@@ -14,79 +14,51 @@ if ( !isset($app) ) die('Direct access to this file is not allowed');
 class Plugin
 {
 	public
-		$info = array()
+		$name,
+		$description,
+		$version,
+		$compatible   = array('from' => '', 'to' => ''),
+		$dependencies = array(),
+		$hooks        = array(),
+		$ready        = FALSE
 		;
 
-	private
-		$app,
-		$view,
-		$controller
+	protected
+		$app
 		;
 
 	/**
 	 * Initialize
 	 * @param object $app
-	 * @param string $plugin
+	 * @param string $name
 	 */
-	function __construct($app, $file)
+	function __construct($app, $name)
 	{
-		$this->app        = $app;
-		$this->view       = $app->view;
-		$this->controller = $app->controller;
+		$this->app  = $app;
+		$this->name = $name;
 
-		$hook = 'info';
-
-		require($this->controller->pluginPath . $file);
-
-		if ( empty($info) )
+		if ( !$this->version )
 		{
-			$app->error(FALSE, 'No plugin info provided in ' . $this->controller->pluginPath . $file . '.', __FILE__, __LINE__);
-		}
-
-		$info = array_merge(array(
-			'name'         => '',
-			'file'         => $file,
-			'description'  => '',
-			'version'      => '',
-			'compatible'   => array('from' => '', 'to' => ''),
-			'dependencies' => array(),
-			'hooks'        => array()
-			), $info);
-
-		if ( !$info['name'] )
-		{
-			$app->error(FALSE, 'No plugin name provided in ' . $this->controller->pluginPath . $file . '.', __FILE__, __LINE__);
-		}
-
-		if ( isset($app->pluginsLoaded[$info['name']]) )
-		{
-			$app->error(FALSE, 'Plugin name `' . $info['name'] . '` (' . $this->controller->pluginPath . $file . ') already taken by ' . $this->controller->pluginPath . $app->pluginsLoaded[$info['name']]->info['file'] . '.', __FILE__, __LINE__);
-		}
-
-		if ( !$info['version'] )
-		{
-			$app->error(FALSE, 'No version number provided for plugin `' . $info['name'] . '` (' . $this->controller->pluginPath . $file . ').', __FILE__, __LINE__);
+			$app->error(FALSE, 'No version number provided for plugin `' . $name . '`.', __FILE__, __LINE__);
 		}
 
 		/**
 		 * Check if the plugin is compatible with this version of Swiftlet
 		 */
-		if ( !$info['compatible']['from'] || !$info['compatible']['to'] )
+		if ( !$this->compatible['from'] || !$this->compatible['to'] )
 		{
-			$app->error(FALSE, 'No compatibility information provided for plugin `' . $info['name'] . '` in ' . $this->controller->pluginPath . $file . '', __FILE__, __LINE__);
+			$app->error(FALSE, 'No compatibility information provided for plugin `' . $name . '`.', __FILE__, __LINE__);
 		}
 
-		if ( version_compare(Application::VERSION, str_replace('*', '99999', $info['compatible']['from']), '<') || version_compare(Application::VERSION, str_replace('*', '99999', $info['compatible']['to']), '>') )
+		if ( version_compare(Application::VERSION, str_replace('*', '99999', $this->compatible['from']), '<') || version_compare(Application::VERSION, str_replace('*', '99999', $this->compatible['to']), '>') )
 		{
-			$app->error(FALSE, 'Plugin `' . $info['name'] . '` (/' . $this->controller->pluginPath . $file . ') is designed for ' . ( $info['compatible']['from'] == $info['compatible']['to'] ? 'version ' . $info['compatible']['from'] : 'versions ' . $info['compatible']['from'] . ' to ' . $info['compatible']['to'] ) . ' of Swiftlet (running version ' . Model::VERSION . ')', __FILE__, __LINE__);
+			$app->error(FALSE, 'Plugin `' . $name . '` is designed for ' . ( $this->compatible['from'] == $this->compatible['to'] ? 'version ' . $this->info['compatible']['from'] : 'versions ' . $compatible['from'] . ' to ' . $compatible['to'] ) . ' of Swiftlet (running version ' . Model::VERSION . ')', __FILE__, __LINE__);
 		}
 
-		if ( $info['hooks'] )
+		if ( $this->hooks )
 		{
-			$app->hook_register($info['name'], $info['hooks']);
+			$app->hook_register($name, $this->hooks);
 		}
-
-		$this->info = $info;
 	}
 
 	/**
@@ -95,63 +67,19 @@ class Plugin
 	 */
 	function hook($hook, $order, &$params = array())
 	{
-		$app        = $this->app;
-		$view       = $this->app->view;
-		$controller = $this->app->controller;
+		$app = $this->app;
 
 		$timerStart = $app->timer_start();
 
-		require($controller->pluginPath . $this->info['file']);
+		require($this->info['file']);
 
 		$app->pluginsHooked[$this->info['name']][$hook] = TRUE;
 
 		$app->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
 			'order'          => $order,
-			'plugin'         => $this->info['name'] . ' (' . $controller->pluginPath . $this->info['file'] . ')',
+			'plugin'         => $this->info['name'] . ' (' . $this->info['file'] . ')',
 			'execution time' => $app->timer_end($timerStart)
 			);
-	}
-
-	/**
-	 * Install a plugin
-	 */
-	function install()
-	{
-		$app        = $this->app;
-		$view       = $this->view;
-		$controller = $this->controller;
-
-		$hook = 'install';
-
-		require($controller->pluginPath . $this->info['file']);
-	}
-
-	/**
-	 * Upgrade a plugin
-	 */
-	function upgrade()
-	{
-		$app        = $this->app;
-		$view       = $this->view;
-		$controller = $this->controller;
-
-		$hook = 'upgrade';
-
-		require($controller->pluginPath . $this->info['file']);
-	}
-
-	/**
-	 * Remove (uninstall) a plugin
-	 */
-	function remove()
-	{
-		$app        = $this->app;
-		$view       = $this->view;
-		$controller = $this->controller;
-
-		$hook = 'remove';
-
-		require($controller->pluginPath . $this->info['file']);
 	}
 
 	/**
@@ -166,7 +94,7 @@ class Plugin
 					`version`
 				FROM `' . $this->app->db->prefix . 'versions`
 				WHERE
-					`plugin` = "' . $this->info['name'] . '"
+					`plugin` = "' . $this->name . '"
 				LIMIT 1
 				;');
 

@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-if ( !isset($controllerSetup) ) die('Direct access to this file is not allowed');
+if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 
 /**
  * Application
@@ -19,19 +19,15 @@ class Application
 
 	public
 		$configMissing = FALSE,
-		$debugMode     = TRUE
+		$debugMode     = TRUE,
+		$plugins       = array()
 		;
 
 	/**
 	 * Initialize
-	 * @param object $controller
 	 */
-	function __construct($controller)
+	function __construct()
 	{
-		$app = $this;
-
-		$this->controller = $controller;
-
 		set_error_handler(array($this, 'error'), E_ALL);
 
 		$this->timerStart = $this->timer_start();
@@ -46,15 +42,15 @@ class Application
 		/*
 		 * Load configuration
 		 */
-		if ( is_file($this->controller->rootPath . '_config.php') )
+		if ( is_file('_config.php') )
 		{
-			require($this->controller->rootPath . '_config.php');
+			require('_config.php');
 		}
 		else
 		{
-			if ( is_file($this->controller->rootPath . '_config.default.php') )
+			if ( is_file('_config.default.php') )
 			{
-				require($this->controller->rootPath . '_config.default.php');
+				require('_config.default.php');
 
 				$this->configMissing = TRUE;
 			}
@@ -64,41 +60,28 @@ class Application
 			}
 		}
 
-		if ( isset($config) )
-		{
-			foreach ( $config as $k => $v )
-			{
-				$this->{$k} = $v;
-			}
-
-			unset($config);
-		}
-
-		/*
-		 * View
-		 */
-		if ( !class_exists('View') )
-		{
-			require($this->controller->rootPath . '_app/View.php');
-		}
+		chdir(dirname(__FILE__));
 
 		$this->view = new View($this);
 
 		/*
 		 * Plugins
 		 */
-		if ( !class_exists('Plugin') )
-		{
-			require($this->controller->rootPath . '_app/Plugin.php');
-		}
+		chdir('plugins');
 
-		if ( $handle = opendir($dir = $this->controller->pluginPath) )
+		if ( $handle = opendir('.') )
 		{
 			while ( ( $file = readdir($handle) ) !== FALSE )
 			{
-				if ( is_file($dir . $file) && preg_match('/\.php$/', $file) )
+				if ( is_file($file) && preg_match('/\.php$/', $file) )
 				{
-					$this->plugin_load($file);
+					require($file);
+
+					$plugin = basename($file, '.php');
+
+					$this->{strtolower($plugin)} = new $plugin($this, strtolower($plugin));
+
+					$this->plugins[] = strtolower($plugin);
 				}
 			}
 
@@ -106,17 +89,16 @@ class Application
 		}
 
 		$this->hook('init');
-	}
 
-	/**
-	 * Initialize plugin
-	 * @param string plugin
-	 */
-	private function plugin_load($file)
-	{
-		$plugin = new Plugin($this, $file);
+		chdir('../../');
 
-		$this->pluginsLoaded[$plugin->info['name']] = $plugin;
+		require('_controllers/' . $this->view->route['controller'] . '.php');
+
+		$this->controller = new $this->view->route['controller']($this);
+
+		$this->controller->init();
+
+		$this->end();
 	}
 
 	/**
@@ -134,7 +116,36 @@ class Application
 
 			foreach ( $this->hooksRegistered[$hook] as $plugin )
 			{
-				$this->pluginsLoaded[$plugin['name']]->hook($hook, $plugin['order'], $params);
+				// Check dependencies
+				if ( $this->{$plugin['name']}->dependencies )
+				{
+					$missing = array();
+
+					foreach ( $this->{$plugin['name']}->dependencies as $dependency )
+					{
+						if ( empty($this->{$dependency}->ready) )
+						{
+							$missing[] = $dependency;
+						}
+					}
+
+					if ( $missing )
+					{
+						$this->error(FALSE, 'Plugin `' . $plugin['name'] . '` requires the following plugins to be ready: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
+					}
+				}
+
+				$timerStart = $this->timer_start();
+
+				$this->{$plugin['name']}->{'hook_' . $hook}($params);
+
+				$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
+
+				$this->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
+					'order'          => $plugin['order'],
+					'plugin'         => $plugin['name'],
+					'execution time' => $this->timer_end($timerStart)
+					);
 			}
 		}
 	}
@@ -366,12 +377,12 @@ class Application
 			}
 		}
 
-		if ( $this->adminEmail )
+		if ( $this->config['adminEmail'] )
 		{
 			echo '
 						<p>
 							<br/>
-							Please contact us at <a href="mailto:' . $view->h($this->adminEmail) . '">' . $view->h($this->adminEmail) . '</a>.
+							Please contact us at <a href="mailto:' . $view->h($this->config['adminEmail']) . '">' . $view->h($this->config['adminEmail']) . '</a>.
 						</p>
 				';
 		}
