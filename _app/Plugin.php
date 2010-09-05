@@ -15,6 +15,8 @@ class Plugin
 {
 	public
 		$name,
+		$file,
+		$class,
 		$description,
 		$version,
 		$compatible   = array('from' => '', 'to' => ''),
@@ -32,10 +34,12 @@ class Plugin
 	 * @param object $app
 	 * @param string $name
 	 */
-	function __construct($app, $name)
+	function __construct($app, $name, $file, $class)
 	{
-		$this->app  = $app;
-		$this->name = $name;
+		$this->app   = $app;
+		$this->name  = $name;
+		$this->file  = $file;
+		$this->class = $class;
 
 		if ( !$this->version )
 		{

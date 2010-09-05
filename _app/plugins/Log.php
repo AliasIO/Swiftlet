@@ -7,15 +7,15 @@
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-class Log extends Plugin
+class Log_Plugin extends Plugin
 {
 	public
 		$version    = '1.0.0',
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*'),
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$hooks      = array('unit_tests' => 1)
 		;
 
-	function hook_unit_tests()
+	function unit_tests()
 	{
 		$this->write('unit_test', 'Test');
 

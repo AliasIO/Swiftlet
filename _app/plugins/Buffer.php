@@ -11,24 +11,20 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
  * Buffer
  * @abstract
  */
-class Buffer extends Plugin
+class Buffer_Plugin extends Plugin
 {
 	public
 		$version    = '1.0.0',
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*'),
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$hooks      = array('init' => 4, 'end' => 999, 'error' => 999)
 		;
 
-	public
-		$ready
-		;
-
-	function hook_init()
+	function init()
 	{
 		$this->start();
 	}
 
-	function hook_end()
+	function end()
 	{
 		if ( !empty($this->ready) && !$this->app->controller->standAlone )
 		{
@@ -38,7 +34,7 @@ class Buffer extends Plugin
 		}
 	}
 
-	function hook_error()
+	function error()
 	{
 		if ( !empty($this->ready) )
 		{

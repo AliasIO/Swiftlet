@@ -5,28 +5,38 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Header
  * @abstract
  */
-class Header extends Plugin
+class Header_Plugin extends Plugin
 {
 	public
 		$version    = '1.0.0',
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*'),
-		$hooks      = array('init' => 999, 'header' => 999)
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
+		$hooks      = array('init' => 999, 'header' => 999),
+
+		$menu = array()
 		;
 
-	public
-		$ready
-		;
-
-	function hook_init()
+	function init()
 	{
 		$this->ready = TRUE;
+
+		$this->app->hook('menu', $this->menu);
+
+		foreach ( $this->menu as $title => $path )
+		{
+			if ( !preg_match('/^[a-z]+:\/\//', $path) )
+			{
+				$this->menu[$title] = $this->app->view->route($path);;
+			}
+		}
 	}
 
-	function hook_header()
+	function header()
 	{
 		$this->app->view->load('header.html.php');
 	}

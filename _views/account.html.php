@@ -6,7 +6,7 @@
 	<h2><?php echo $view->t('Edit account') ?></h2>
 
 	<p>
-		<a class="button" href="./?action=create"><?php echo $view->t('Create a new account') ?></a> 
+		<a class="button" href="?action=create"><?php echo $view->t('Create a new account') ?></a>
 		<?php if ( $app->session->get('user id') != $view->userId ): ?>
 		<a class="button caution" href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $view->t('Delete this account') ?></a>
 		<?php endif ?>
@@ -43,7 +43,7 @@
 					<?php else: ?>
 					<?php echo $view->userUsername ?>
 					<?php endif ?>
-					
+
 					<?php if ( isset($app->input->errors['username']) ): ?>
 					<span class="error"><?php echo $app->input->errors['username'] ?></span>
 					<?php endif ?>
@@ -53,7 +53,7 @@
 				<dt><label for="new_password"><?php echo $view->action == 'edit' ? $view->t('New password') : $view->t('Password') ?> (2x)</label></dt>
 				<dd>
 					<input type="password" name="new_password" id="new_password"/>
-					
+
 					<?php if ( isset($app->input->errors['new_password']) ): ?>
 					<span class="error"><?php echo $app->input->errors['new_password'] ?></span>
 					<?php endif ?>
@@ -63,7 +63,7 @@
 				<dt><br/></dt>
 				<dd>
 					<input type="password" name="new_password_confirm" id="new_password_confirm"/>
-					
+
 					<?php if ( isset($app->input->errors['new_password_repeat']) ): ?>
 					<span class="error"><?php echo $app->input->errors['new_password_repeat'] ?></span>
 					<?php endif ?>
@@ -73,7 +73,7 @@
 				<dt><label for="email"><?php echo $view->t('E-mail address') ?></label></dt>
 				<dd>
 					<input type="text" name="email" id="email" value="<?php echo $app->input->POST_html_safe['email'] ?>"/>
-					
+
 					<?php if ( isset($app->input->errors['email']) ): ?>
 					<span class="error"><?php echo $view->t('Invalid e-mail address') ?></span>
 					<?php endif ?>
@@ -110,7 +110,7 @@
 							<?php endforeach ?>
 							</select>
 							<?php
-							
+
 							break;
 						case 'text':
 							?>
@@ -135,13 +135,13 @@
 			<?php endforeach ?>
 		</fieldset>
 		<?php endif ?>
-		<?php if ( $view->action == 'edit' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $view->userId ) ): ?> 
+		<?php if ( $view->action == 'edit' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $view->userId ) ): ?>
 		<fieldset>
 			<dl>
 				<dt><label for="password"><?php echo $view->t('Password') ?></label></dt>
 				<dd>
 					<input type="password" name="password" id="password"/>
-					
+
 					<?php if ( isset($app->input->errors['password']) ): ?>
 					<span class="error"><?php echo $app->input->errors['password'] ?></span>
 					<?php endif ?>

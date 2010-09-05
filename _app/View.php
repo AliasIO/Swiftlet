@@ -30,9 +30,10 @@ class View
 		$route = array(
 			'path'       => '',
 			'args'       => array(),
-			'controller' => 'Home',
-			'action'     => '',
-			'id'         => ''
+			'controller' => array(
+				'file'  => 'Home.php',
+				'class' => 'Home_Controller'
+				)
 			)
 		;
 
@@ -51,34 +52,42 @@ class View
 	{
 		$this->app = $app;
 
+		$args = array();
+
 		if ( !empty($_GET['q']) )
 		{
-			$this->route['path']       = $_GET['q'];
-			$this->route['args']       = explode('/', $_GET['q']);
 			$this->route['controller'] = '';
 
-			for ( $i = count($this->route['args']); $i > 0; $i -- )
+			$args = explode('/', $_GET['q']);
+
+			for ( $i = count($args); $i > 0; $i -- )
 			{
-				$file = ucfirst(basename(implode('/', array_slice($this->route['args'], 0, $i))));
+				$file = ltrim(implode('/', array_slice($args, 0, $i - 1)) . '/' . ucfirst($args[$i - 1]), '/');
 
 				if ( is_file('../_controllers/' . $file . '.php') )
 				{
-					$this->route['controller'] = $file;
+					$this->route['controller'] = array(
+						'file'  => $file . '.php',
+						'class' => basename($file) . '_Controller'
+						);
 
-					$this->route['action'] = isset($this->route['args'][$i])     ? $this->route['args'][$i]     : '';
-					$this->route['id']     = isset($this->route['args'][$i + 1]) ? $this->route['args'][$i + 1] : '';
+					$this->route['path'] = ltrim(implode('/', array_slice($args, 0, $i)) . '/', '/');
+					$this->route['args'] = $i < count($args) ? array_slice($args, $i, count($args)) : array();
+
+					break;
 				}
 			}
 		}
 
 		if ( empty($this->route['controller']) )
 		{
-			$this->route['controller'] = 'Err404';
+			$this->route['controller'] = array(
+				'file'  => 'Err404.php',
+				'class' => 'Err404_Controller'
+				);
 		}
 
-		array_shift($this->route['args']);
-
-		$this->rootPath = str_repeat('../', count($this->route['args']));
+		$this->rootPath = $args ? str_repeat('../', count($args) - 1) : './';
 		$this->viewPath = $this->rootPath . '_views/';
 	}
 

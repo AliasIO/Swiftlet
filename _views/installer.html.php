@@ -17,25 +17,25 @@
 	<h2><?php echo $view->t('Install') ?></h2>
 
 	<?php if ( $view->newPlugins ): ?>
-	<form id="formInstaller" method="post" action="./">
+	<form id="formInstaller" method="post" action="">
 		<fieldset>
 			<?php foreach ( $view->newPlugins as $plugin => $v ): ?>
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
-						<?php echo $plugin ?> (<?php echo $v['file'] ?>)
-						<em>v<?php echo $v['version'] ?></em>
-						<em><?php echo $v['description'] ?></em>
+						<?php echo $plugin ?> (<?php echo $v->file ?>)
+						<em>v<?php echo $v->version ?></em>
+						<em><?php echo $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
-					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v['dependency_status']) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v->dependency_status) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
-					<?php if ( $v['dependency_status'] ): ?>
+					<?php if ( $v->dependency_status ): ?>
 					<em>
 						<?php echo $view->t('Depends on') ?>:
-						
-						<?php foreach ( $v['dependency_status'] as $dependency => $ready ): ?>
+
+						<?php foreach ( $v->dependency_status as $dependency => $ready ): ?>
 						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $view->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $view->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
 						<?php endforeach ?>
 					</em>
@@ -83,7 +83,7 @@
 	<h2><?php echo $view->t('Upgrade') ?></h2>
 
 	<?php if ( $view->outdatedPlugins ): ?>
-	<form id="formLogin" method="post" action="./">
+	<form id="formLogin" method="post" action="">
 		<fieldset>
 			<?php foreach ( $view->outdatedPlugins as $plugin => $v ): ?>
 			<dl>
@@ -144,7 +144,7 @@
 		<?php echo $view->t('Removing a plugin will <em>permissionanently remove all data</em> associated with it. Backup your database first!') ?>
 	</p>
 
-	<form id="formInstaller" method="post" action="./">
+	<form id="formInstaller" method="post" action="">
 		<fieldset>
 			<?php foreach ( $view->installedPlugins as $plugin => $v ): ?>
 			<dl>
@@ -205,7 +205,7 @@
 		<?php echo $view->t('Please authenticate with the system password (stored in %1$s).', '<code>/_config.php</code>') ?>
 	</p>
 
-	<form id="formLogin" method="post" action="./">
+	<form id="formLogin" method="post" action="">
 		<fieldset>
 			<dl>
 				<dt>

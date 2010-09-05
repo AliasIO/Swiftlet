@@ -14,7 +14,7 @@ if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 class Application
 {
 	const
-		VERSION = '1.2.0'
+		VERSION = '1.3.0'
 		;
 
 	public
@@ -77,11 +77,14 @@ class Application
 				{
 					require($file);
 
-					$plugin = basename($file, '.php');
+					$plugin      = basename($file, '.php');
+					$pluginClass = $plugin . '_Plugin';
 
-					$this->{strtolower($plugin)} = new $plugin($this, strtolower($plugin));
+					$plugin = strtolower($plugin);
 
-					$this->plugins[] = strtolower($plugin);
+					$this->{$plugin} = new $pluginClass($this, $plugin, $file, $pluginClass);
+
+					$this->plugins[$plugin] = $plugin;
 				}
 			}
 
@@ -92,9 +95,9 @@ class Application
 
 		chdir('../../');
 
-		require('_controllers/' . $this->view->route['controller'] . '.php');
+		require('_controllers/' . $this->view->route['controller']['file']);
 
-		$this->controller = new $this->view->route['controller']($this);
+		$this->controller = new $this->view->route['controller']['class']($this);
 
 		$this->controller->init();
 
@@ -137,7 +140,7 @@ class Application
 
 				$timerStart = $this->timer_start();
 
-				$this->{$plugin['name']}->{'hook_' . $hook}($params);
+				$this->{$plugin['name']}->{$hook}($params);
 
 				$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
 

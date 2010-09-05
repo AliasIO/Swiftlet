@@ -5,7 +5,11 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-class Home extends Controller
+/**
+ * Home
+ * @abstract
+ */
+class Home_Controller extends Controller
 {
 	public
 		$pageTitle = 'Installation successful'
@@ -17,7 +21,7 @@ class Home extends Controller
 
 		if ( isset($this->app->db) )
 		{
-			foreach ( $this->app->plugins as $pluginName => $plugin )
+			foreach ( $this->app->plugins as $plugin )
 			{
 				$version = $this->app->{$plugin}->get_version();
 

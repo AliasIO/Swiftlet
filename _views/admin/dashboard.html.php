@@ -47,16 +47,16 @@
 
 		<dl>
 			<dt><?php echo $view->t('Environment') ?></dt>
-			<dd><?php echo $app->testing ? $view->t('Testing (%1$sunit tests%2$s)', array('<a href="' . $view->route('unit_tests') . '">', '</a>')) : $view->t('Production') ?></dd>
+			<dd><?php echo $app->config['testing'] ? $view->t('Testing (%1$sunit tests%2$s)', array('<a href="' . $view->route('unit_tests') . '">', '</a>')) : $view->t('Production') ?></dd>
 
 			<dt><?php echo $view->t('Debug mode') ?></dt>
-			<dd><?php echo $app->debugMode ? $view->t('On') : $view->t('Off') ?></dd>
+			<dd><?php echo $app->config['debugMode'] ? $view->t('On') : $view->t('Off') ?></dd>
 
 			<dt><?php echo $view->t('URL rewriting') ?></dt>
-			<dd><?php echo $app->urlRewrite ? $view->t('On') : $view->t('Off') ?></dd>
+			<dd><?php echo $app->config['urlRewrite'] ? $view->t('On') : $view->t('Off') ?></dd>
 
 			<dt><?php echo $view->t('Caching') ?></dt>
-			<dd><?php echo $app->caching ? $view->t('On (%1$sclear%2$s)', array('<a href="?action=clear_cache">', '</a>')) : $view->t('Off') ?></dd>
+			<dd><?php echo $app->config['caching'] ? $view->t('On (%1$sclear%2$s)', array('<a href="?action=clear_cache">', '</a>')) : $view->t('Off') ?></dd>
 		</dl>
 	</div>
 </div>

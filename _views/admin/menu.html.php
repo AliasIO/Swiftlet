@@ -9,7 +9,7 @@
 	<p class="message notice"><?php echo $view->notice ?></p>
 	<?php endif ?>
 
-	<form id="formMenu" method="post" action="./">
+	<form id="formMenu" method="post" action="">
 		<fieldset>
 			<dl>
 				<dt>

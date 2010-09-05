@@ -1,11 +1,15 @@
-V<?php
+<?php
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-class Login extends Controller
+/**
+ * Login
+ * @abstract
+ */
+class Login_Controller extends Controller
 {
 	public
 		$pageTitle    = 'Log in',
@@ -21,7 +25,7 @@ class Login extends Controller
 			'action'      => 'string'
 			));
 
-		if ( isset($this->app->input->GET_raw['logout']) )
+		if ( !empty($this->args[0]) && $this->args[0] == 'logout' )
 		{
 			if ( !$this->app->input->POST_valid['confirm'] )
 			{
@@ -75,7 +79,7 @@ class Login extends Controller
 								 * Header injection is not an issue here, header()
 								 * prevents more than one header to be sent at once
 								 */
-								header('Location: ' . $this->app->input->GET_raw['ref']);
+								header('Location: ' . $this->app->view->route($this->app->input->GET_raw['ref']));
 
 								$this->app->end();
 							}
@@ -103,7 +107,7 @@ class Login extends Controller
 			$this->view->notice = $this->view->t('Please log in with an authenticated account.');
 		}
 
-		if ( $this->app->session->get('user id') == User::GUEST_ID )
+		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
 		{
 			$this->app->db->sql('
 				SELECT
@@ -126,14 +130,14 @@ class Login extends Controller
 			switch ( $this->app->input->GET_raw['notice'] )
 			{
 				case 'login':
-					if ( $this->app->session->get('user id') != User::GUEST_ID )
+					if ( $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 					{
 						$this->view->notice = $this->view->t('Hello %1$s, you are now logged in.', $this->app->session->get('user username'));
 					}
 
 					break;
 				case 'logout':
-					if ( $this->app->session->get('user id') == User::GUEST_ID )
+					if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
 					{
 						$this->view->notice = $this->view->t('You are now logged out.');
 					}

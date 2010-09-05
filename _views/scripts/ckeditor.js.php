@@ -1,4 +1,4 @@
-CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $controller->absPath ?>';
+CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $view->absPath ?>';
 CKEDITOR.config.height      = '400';
 CKEDITOR.config.bodyId      = 'content';
 CKEDITOR.config.contentsCss = '<?php echo $view->route('css?files=global.css,grid.css,ckeditor.css') ?>';

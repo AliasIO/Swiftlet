@@ -6,17 +6,21 @@
  */
 
 /**
- * Error 404
+ * CKEditor
  * @abstract
  */
-class Err404_Controller extends Controller
+
+class Ckeditor_Controller extends Controller
 {
 	public
-		$pageTitle = 'Page not found'
+		$pageTitle  = 'CKEditor configuration',
+		$standAlone = TRUE
 		;
 
 	function init()
 	{
-		$this->view->load('404.html.php');
+		header('Content-type: text/javascript');
+
+		$this->view->load('scripts/ckeditor.js.php');
 	}
 }

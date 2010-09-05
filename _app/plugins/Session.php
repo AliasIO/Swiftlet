@@ -7,34 +7,34 @@
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-class Session extends Plugin
+class Session_Plugin extends Plugin
 {
 	public
 		$version      = '1.0.0',
-		$compatible   = array('from' => '1.2.0', 'to' => '1.2.*'),
+		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db'),
 		$hooks        = array('init' => 2, 'install' => 1, 'end' => 1, 'remove' => 1),
 
 		$id,
-		$lifeTime     = 3600,
-		$contents     = array()
+		$lifeTime = 3600,
+		$contents = array()
 		;
 
 	private
 		$hash
 		;
 
-	function hook_install()
+	function install()
 	{
-		if ( !in_array($app->db->prefix . 'sessions', $app->db->tables) )
+		if ( !in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
-			$app->db->sql('
-				CREATE TABLE `' . $app->db->prefix . 'sessions` (
-					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`hash`        VARCHAR(40)      NOT NULL,
-					`contents`    TEXT             NULL,
-					`date`        DATETIME         NOT NULL,
-					`date_expire` DATETIME         NOT NULL,
+			$this->app->db->sql('
+				CREATE TABLE `' . $this->app->db->prefix . 'sessions` (
+					`id`          INT(10)     UNSIGNED NOT NULL AUTO_INCREMENT,
+					`hash`        VARCHAR(40)          NOT NULL,
+					`contents`    TEXT                     NULL,
+					`date`        DATETIME             NOT NULL,
+					`date_expire` DATETIME             NOT NULL,
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`)
 					) TYPE = INNODB
@@ -42,24 +42,92 @@ class Session extends Plugin
 		}
 	}
 
-	function hook_remove()
+	function remove()
 	{
-		if ( in_array($app->db->prefix . 'sessions', $app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
-			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'sessions`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'sessions`;');
 		}
 	}
 
-	function hook_init()
+	function init()
 	{
-		$this->ready = TRUE;
-	}
-
-	function hook_end()
-	{
-		if ( !empty($app->session->ready) )
+		/**
+		 * Check if the sessions table exists
+		 */
+		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
-			$app->session->end();
+			$this->ready = TRUE;
+
+			$this->id = !empty($_COOKIE['sw_session']) ? ( int ) $_COOKIE['sw_session'] : FALSE;
+
+			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME']);// . $this->controller->absPath);
+
+			/**
+			 * Delete expired sessions
+			 */
+			$this->app->db->sql('
+				DELETE
+				FROM `' . $this->app->db->prefix . 'sessions`
+				WHERE
+					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
+				;');
+
+			/**
+			 * Get session contents
+			 */
+			if ( $this->id )
+			{
+				$this->app->db->sql('
+					SELECT
+						`contents`
+					FROM `' . $this->app->db->prefix . 'sessions`
+					WHERE
+						`id`   =  ' . $this->id   . ' AND
+						`hash` = "' . $this->hash . '"
+					LIMIT 1
+					;', FALSE);
+
+				if ( $r = $this->app->db->result )
+				{
+					$this->contents = unserialize($r[0]['contents']);
+
+					if ( !is_array($this->contents) )
+					{
+						$this->contents = array($this->contents);
+					}
+				}
+			}
+
+			if ( !$this->id || !$r )
+			{
+				/**
+				 * Create a new sessions if no session exists
+				 */
+				$this->app->db->sql('
+					INSERT
+					INTO `' . $this->app->db->prefix . 'sessions` (
+						`hash`,
+						`contents`,
+						`date`,
+						`date_expire`
+						)
+					VALUES (
+						"' . $this->hash                                        . '",
+						"' . $this->app->db->escape(serialize($this->contents)) . '",
+						"' . gmdate('Y-m-d H:i:s')                              . '",
+						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+						)
+					ON DUPLICATE KEY UPDATE
+						`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
+						`date`        = "' . gmdate('Y-m-d H:i:s')                              . '",
+						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+					;');
+
+				$this->id = $this->app->db->result;
+			}
 		}
 	}
 
@@ -120,6 +188,6 @@ class Session extends Plugin
 				;');
 		}
 
-		setcookie('sw_session', $this->id, time() + $this->lifeTime, $this->controller->absPath);
+		setcookie('sw_session', $this->id, time() + $this->lifeTime);//, $this->controller->absPath);
 	}
 }

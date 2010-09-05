@@ -5,7 +5,11 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-class Installer extends Controller
+/**
+ * Plugin installer
+ * @abstract
+ */
+class Installer_Controller extends Controller
 {
 	public
 		$pageTitle    = 'Plugin installer',
@@ -54,13 +58,13 @@ class Installer extends Controller
 					{
 						$dependencyStatus = array();
 
-						foreach ( $plugin->info['dependencies'] as $dependency )
+						foreach ( $this->app->{$plugin}->dependencies as $dependency )
 						{
 							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->ready) ? 1 : 0;
 						}
 
-						$this->view->newPlugins[$pluginName]                      = $plugin;
-						$this->view->newPlugins[$pluginName]['dependency_status'] = $dependencyStatus;
+						$this->view->newPlugins[$plugin]                    = $this->app->{$plugin};
+						$this->view->newPlugins[$plugin]->dependency_status = $dependencyStatus;
 					}
 				}
 				else
@@ -127,9 +131,9 @@ class Installer extends Controller
 								{
 									$this->app->db->sql('
 										CREATE TABLE `' . $this->app->db->prefix . 'versions` (
-											`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-											`plugin`      VARCHAR(256)     NOT NULL,
-											`version`     VARCHAR(10)      NOT NULL,
+											`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+											`plugin`  VARCHAR(256)     NOT NULL,
+											`version` VARCHAR(10)      NOT NULL,
 											PRIMARY KEY (`id`)
 											) TYPE = INNODB
 										;');
@@ -137,11 +141,11 @@ class Installer extends Controller
 
 								$pluginsInstalled = array();
 
-								foreach ( $this->app->input->POST_valid['plugin'] as $pluginName => $v )
+								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->newPlugins[$pluginName]) && !in_array(0, $this->view->newPlugins[$pluginName]['dependency_status']) )
+									if ( isset($this->view->newPlugins[$plugin]) && !in_array(0, $this->view->newPlugins[$plugin]->dependency_status) )
 									{
-										$this->app->plugins[$pluginName]->install();
+										$this->app->{$plugin}->install();
 
 										$this->app->db->sql('
 											INSERT INTO `' . $this->app->db->prefix . 'versions` (
@@ -149,14 +153,14 @@ class Installer extends Controller
 												`version`
 												)
 											VALUES (
-												"' . $this->app->db->escape($pluginName)           . '",
-												"' . $this->view->newPlugins[$pluginName]['version'] . '"
+												"' . $this->app->db->escape($plugin)           . '",
+												"' . $this->view->newPlugins[$plugin]->version . '"
 												)
 											;');
 
-										$pluginsInstalled[] = $pluginName;
+										$pluginsInstalled[] = $plugin;
 
-										unset($this->view->newPlugins[$pluginName]);
+										unset($this->view->newPlugins[$plugin]);
 									}
 								}
 
@@ -171,23 +175,23 @@ class Installer extends Controller
 							case 'upgrade':
 								$pluginsUpgraded = array();
 
-								foreach ( $this->app->input->POST_valid['plugin'] as $pluginName => $v )
+								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->outdatedPlugins[$pluginName]) )
+									if ( isset($this->view->outdatedPlugins[$plugin]) )
 									{
-										$this->app->plugins[$pluginName]->upgrade();
+										$this->app->plugins[$plugin]->upgrade();
 
 										$this->app->db->sql('
 											UPDATE `' . $this->app->db->prefix . 'versions` SET
-												`version` = "' . $this->view->outdatedPlugins[$pluginName]['version'] . '"
+												`version` = "' . $this->view->outdatedPlugins[$plugin]['version'] . '"
 											WHERE
-												`plugin` = "' . $pluginName . '"
+												`plugin` = "' . $plugin . '"
 											LIMIT 1
 											;');
 
-										$pluginsUpgraded[] = $pluginName;
+										$pluginsUpgraded[] = $plugin;
 
-										unset($this->view->outdatedPlugins[$pluginName]);
+										unset($this->view->outdatedPlugins[$plugin]);
 									}
 								}
 
@@ -202,23 +206,23 @@ class Installer extends Controller
 							case 'remove':
 								$pluginsRemoved = array();
 
-								foreach ( $this->app->input->POST_valid['plugin'] as $pluginName => $v )
+								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->installedPlugins[$pluginName]) && !in_array(1, $this->view->installedPlugins[$pluginName]['required_by_status']) )
+									if ( isset($this->view->installedPlugins[$plugin]) && !in_array(1, $this->view->installedPlugins[$plugin]['required_by_status']) )
 									{
 										$this->app->db->sql('
 											DELETE
 											FROM `' . $this->app->db->prefix . 'versions`
 											WHERE
-												`plugin` = "' . $this->app->db->escape($pluginName) . '"
+												`plugin` = "' . $this->app->db->escape($plugin) . '"
 											LIMIT 1
 											;');
 
-										$this->app->plugins[$pluginName]->remove();
+										$this->app->plugins[$plugin]->remove();
 
-										$pluginsRemoved[] = $pluginName;
+										$pluginsRemoved[] = $plugin;
 
-										unset($this->view->installedPlugins[$pluginName]);
+										unset($this->view->installedPlugins[$plugin]);
 									}
 								}
 

@@ -5,7 +5,11 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-class Css extends Controller
+/**
+ * CSS
+ * @abstract
+ */
+class Css_Controller extends Controller
 {
 	public
 		$pageTitle  = 'CSS',

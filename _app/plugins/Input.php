@@ -7,11 +7,11 @@
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-class Input extends Plugin
+class Input_Plugin extends Plugin
 {
 	public
 		$version    = '1.0.0',
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*'),
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$hooks      = array('footer' => 1, 'init' => 2)
 		;
 
@@ -25,7 +25,7 @@ class Input extends Plugin
 			)
 		;
 
-	function hook_init()
+	function init()
 	{
 		$this->ready = TRUE;
 
@@ -56,7 +56,7 @@ class Input extends Plugin
 
 	}
 
-	function hook_footer()
+	function footer()
 	{
 		if ( !empty($this->errors) )
 		{
@@ -70,8 +70,7 @@ class Input extends Plugin
 	 */
 	function confirm($notice)
 	{
-		$this->app->view->notice  = $notice;
-		$this->app->view->getData = $this->app->view->h(serialize($this->GET_raw));
+		$this->app->view->notice = $notice;
 
 		$this->app->view->load('confirm.html.php');
 
@@ -102,17 +101,6 @@ class Input extends Plugin
 			$_GET    = array_map(array($this, 'undo_magic_quotes'), $_GET);
 			$_POST   = array_map(array($this, 'undo_magic_quotes'), $_POST);
 			$_COOKIE = array_map(array($this, 'undo_magic_quotes'), $_COOKIE);
-		}
-
-		/*
-		 * Check integrety of confirmed information (see $this->confirm())
-		 */
-		if ( isset($_POST['confirm']) && !empty($_POST['get-data']) && !empty($_GET) )
-		{
-			if ( unserialize($_POST['get-data']) != $_GET )
-			{
-				unset($_POST['confirm']);
-			}
 		}
 
 		/*

@@ -11,22 +11,21 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
  * MySQL database
  * @abstract
  */
-class Db extends Plugin
+class Db_Plugin extends Plugin
 {
 	public
 		$version    = '1.0.0',
-		$compatible = array('from' => '1.2.0', 'to' => '1.2.*'),
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$hooks      = array('clear_cache' => 1, 'init' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
 		;
 
 	public
 		$link,
-		$ready,
 		$prefix,
 		$tables = array()
 		;
 
-	function hook_install()
+	function install()
 	{
 		if ( !in_array($app->db->prefix . 'cache_queries', $app->db->tables) )
 		{
@@ -59,7 +58,7 @@ class Db extends Plugin
 		}
 	}
 
-	function hook_remove()
+	function remove()
 	{
 		if ( in_array($app->db->prefix . 'cache_queries', $app->db->tables) )
 		{
@@ -76,12 +75,12 @@ class Db extends Plugin
 		}
 	}
 
-	function hook_init()
+	function init()
 	{
 		$this->connect($this->app->config['dbHost'], $this->app->config['dbUser'], $this->app->config['dbPass'], $this->app->config['dbName'], $this->app->config['dbPrefix']);
 	}
 
-	function hook_input_sanitize()
+	function input_sanitize()
 	{
 		if ( !empty($this->ready) )
 		{
@@ -90,15 +89,7 @@ class Db extends Plugin
 		}
 	}
 
-	function hook_clear_cache()
-	{
-		if ( !empty($this->ready) )
-		{
-			$this->app->db->clear_cache();
-		}
-	}
-
-	function hook_end()
+	function end()
 	{
 		$this->app->db->close();
 	}
