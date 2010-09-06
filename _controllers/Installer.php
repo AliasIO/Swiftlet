@@ -79,10 +79,8 @@ class Installer_Controller extends Controller
 
 					if ( isset($this->app->{$plugin}->hooks['remove']) )
 					{
-						/*
-						$this->view->installedPlugins[$plugin]                       = $plugin;
-						$this->view->installedPlugins[$plugin]['required_by_status'] = isset($requiredBy[$plugin]) ? $requiredBy[$plugin] : array();
-						*/
+						$this->view->installedPlugins[$plugin]                     = $this->app->{$plugin};
+						$this->view->installedPlugins[$plugin]->required_by_status = isset($requiredBy[$plugin]) ? $requiredBy[$plugin] : array();
 					}
 				}
 			}
@@ -208,7 +206,7 @@ class Installer_Controller extends Controller
 
 								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->installedPlugins[$plugin]) && !in_array(1, $this->view->installedPlugins[$plugin]['required_by_status']) )
+									if ( isset($this->view->installedPlugins[$plugin]) && !in_array(1, $this->view->installedPlugins[$plugin]->required_by_status) )
 									{
 										$this->app->db->sql('
 											DELETE
@@ -218,7 +216,7 @@ class Installer_Controller extends Controller
 											LIMIT 1
 											;');
 
-										$this->app->plugins[$plugin]->remove();
+										$this->app->{$plugin}->remove();
 
 										$pluginsRemoved[] = $plugin;
 

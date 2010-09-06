@@ -18,6 +18,13 @@ class Account_Controller extends Controller
 
 	function init()
 	{
+		if ( $this->method == 'create' && !$this->app->session->get('user is owner') )
+		{
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+
+			$this->app->end();
+		}
+
 		// Get preferences
 		$prefsValidate = array();
 
@@ -46,22 +53,14 @@ class Account_Controller extends Controller
 			$this->app->end();
 		}
 
-		$id     = isset($this->app->input->GET_raw['id']) && ( int ) $this->app->input->GET_raw['id'] ? ( int ) $this->app->input->GET_raw['id'] : FALSE;
-		$action = isset($this->app->input->GET_raw['action']) ? $this->app->input->GET_raw['action'] : 'edit';
-
-		if ( $action != 'edit' && !$this->app->session->get('user is owner') )
-		{
-			$action = 'edit';
-		}
-
-		if ( $id && ( $action == 'edit' || $action == 'delete' ) && $this->app->session->get('user is owner') )
+		if ( $this->id && $this->app->session->get('user is owner') )
 		{
 			$this->app->db->sql('
 				SELECT
 					*
 				FROM `' . $this->app->db->prefix . 'users`
 				WHERE
-					`id` = ' . $id . '
+					`id` = ' . ( int ) $this->id . '
 				LIMIT 1
 				;');
 
@@ -78,24 +77,23 @@ class Account_Controller extends Controller
 
 		if ( !isset($user) )
 		{
-			switch ( $action )
+			if ( $this->method == 'create' )
 			{
-				case 'create':
-					$user = array(
-						'id'       => '',
-						'username' => '',
-						'email'    => '',
-						'owner'    => ''
-						);
-
-					break;
-				case 'edit':
-					$user = array(
-						'id'       => $this->app->session->get('user id'),
-						'username' => $this->app->session->get('user username'),
-						'email'    => $this->app->session->get('user email'),
-						'owner'    => $this->app->session->get('user is owner')
-						);
+				$user = array(
+					'id'       => '',
+					'username' => '',
+					'email'    => '',
+					'owner'    => ''
+					);
+			}
+			else
+			{
+				$user = array(
+					'id'       => $this->app->session->get('user id'),
+					'username' => $this->app->session->get('user username'),
+					'email'    => $this->app->session->get('user email'),
+					'owner'    => $this->app->session->get('user is owner')
+					);
 			}
 		}
 
@@ -120,20 +118,19 @@ class Account_Controller extends Controller
 
 		if ( $this->app->input->POST_valid['form-submit'] )
 		{
-			if ( $action == 'edit' )
+			if ( $this->method == 'create' )
 			{
-				if ( !$this->app->session->get('user is owner') || !$id || $this->app->session->get('user id') == $id )
+				if ( !$this->app->input->POST_valid['new_password'] )
 				{
-					if ( !$this->app->user->validate_password($this->app->session->get('user username'), $this->app->input->POST_raw['password']) )
-					{
-						$this->app->input->errors['password'] = $this->view->t('Incorrect password, try again');
-					}
+					$this->app->input->errors['new_password'] = $this->view->t('Please provide a password');
 				}
 			}
-
-			if ( $action == 'create' && !$this->app->input->POST_valid['new_password'] )
+			else
 			{
-				$this->app->input->errors['new_password'] = $this->view->t('Please provide a password');
+				if ( !$this->app->user->validate_password($this->app->session->get('user username'), $this->app->input->POST_raw['password']) )
+				{
+					$this->app->input->errors['password'] = $this->view->t('Incorrect password, try again');
+				}
 			}
 
 			if ( $this->app->input->POST_valid['new_password'] || $this->app->input->POST_valid['new_password_confirm'] )
@@ -194,7 +191,7 @@ class Account_Controller extends Controller
 
 				$email = $this->app->input->POST_valid['email'] ? $this->app->input->POST_db_safe['email'] : FALSE;
 
-				switch ( $action )
+				switch ( $this->method )
 				{
 					case 'create':
 						$this->app->db->sql('
@@ -208,11 +205,11 @@ class Account_Controller extends Controller
 								)
 							VALUES (
 								"' . $this->app->db->escape($username) . '",
-								"' . $email . '",
-								' . ( int ) $owner . ',
-								"' . gmdate('Y-m-d H:i:s') . '",
-								"' . gmdate('Y-m-d H:i:s') . '",
-								"' . $passHash . '"
+								"' . $email                            . '",
+								 ' . ( int ) $owner                    . ',
+								"' . gmdate('Y-m-d H:i:s')             . '",
+								"' . gmdate('Y-m-d H:i:s')             . '",
+								"' . $passHash                         . '"
 								)
 								;');
 
@@ -227,7 +224,7 @@ class Account_Controller extends Controller
 									));
 							}
 
-							header('Location: ?id=' . $this->app->db->result . '&notice=created');
+							header('Location: ' . $this->app->view->route($this->path . '/edit/' . $this->app->db->result . '&notice=created'));
 
 							$this->app->end();
 						}
@@ -237,10 +234,10 @@ class Account_Controller extends Controller
 						$this->app->db->sql('
 							UPDATE `' . $this->app->db->prefix . 'users` SET
 								`username`  = "' . $this->app->db->escape($username) . '",
-								`email`     = "' . $email                        . '",
-								`owner`     =  ' . ( int ) $owner                . ',
-								`date_edit` = "' . gmdate('Y-m-d H:i:s')         . '",
-								`pass_hash` = "' . $passHash                     . '"
+								`email`     = "' . $email                            . '",
+								`owner`     =  ' . ( int ) $owner                    . ',
+								`date_edit` = "' . gmdate('Y-m-d H:i:s')             . '",
+								`pass_hash` = "' . $passHash                         . '"
 							WHERE
 								`id` = ' . ( int ) $user['id'] . '
 							LIMIT 1
@@ -266,7 +263,7 @@ class Account_Controller extends Controller
 									));
 							}
 
-							header('Location: ?id=' . ( int ) $user['id'] . '&notice=saved');
+							header('Location: ' . $view->route($this->path . '/edit/' . $this->app->db->result . '&notice=saved'));
 
 							$this->app->end();
 						}
@@ -292,43 +289,46 @@ class Account_Controller extends Controller
 			}
 		}
 
-		switch ( $action )
+		if ( $this->id )
 		{
-			case 'delete':
-				if ( $user && $this->app->session->get('user is owner') )
-				{
-					if ( !$this->app->input->POST_valid['confirm'] )
+			switch ( $this->method )
+			{
+				case 'delete':
+					if ( $user && $this->app->session->get('user is owner') )
 					{
-						$this->app->input->confirm($this->view->t('Are you sure you wish to delete this account?'));
-					}
-					else
-					{
-						// Delete account
-						$this->app->db->sql('
-							DELETE
-							FROM `' . $this->app->db->prefix . 'users`
-							WHERE
-								`id` = ' . ( int ) $id . '
-							LIMIT 1
-							;');
-
-						if ( $this->app->db->result )
+						if ( !$this->app->input->POST_valid['confirm'] )
 						{
+							$this->app->input->confirm($this->view->t('Are you sure you wish to delete this account?'));
+						}
+						else
+						{
+							// Delete account
 							$this->app->db->sql('
 								DELETE
-								FROM `' . $this->app->db->prefix . 'user_prefs_xref`
+								FROM `' . $this->app->db->prefix . 'users`
 								WHERE
-									`user_id` = ' . ( int ) $id . '
+									`id` = ' . ( int ) $this->id . '
+								LIMIT 1
 								;');
 
-							header('Location: ?notice=deleted');
+							if ( $this->app->db->result )
+							{
+								$this->app->db->sql('
+									DELETE
+									FROM `' . $this->app->db->prefix . 'user_prefs_xref`
+									WHERE
+										`user_id` = ' . ( int ) $this->id . '
+									;');
 
-							$this->app->end();
+								header('Location: ' . $this->app->view->route($this->path . '?notice=deleted'));
+
+								$this->app->end();
+							}
 						}
 					}
-				}
 
-				break;
+					break;
+			}
 		}
 
 		if ( isset($this->app->input->GET_raw['notice']) )
@@ -390,9 +390,7 @@ class Account_Controller extends Controller
 			}
 		}
 
-		$this->view->prefs   = $this->app->user->prefs;
-		$this->view->id      = $id;
-		$this->view->action  = $action;
+		$this->view->prefs = $this->app->user->prefs;
 
 		$this->view->load('account.html.php');
 	}

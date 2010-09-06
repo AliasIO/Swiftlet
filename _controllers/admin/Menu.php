@@ -26,7 +26,7 @@ class Menu_Controller extends Controller
 
 		if ( !$this->app->permission->check('admin menu access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->view->route['path']));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
 
 			$this->app->end();
 		}

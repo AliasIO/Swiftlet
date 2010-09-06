@@ -90,7 +90,7 @@
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
 						<?php echo $plugin ?>
-						<em>v<?php echo $v['version'] ?></em>
+						<em>v<?php echo $v->version ?></em>
 					</label>
 				</dt>
 				<dd>
@@ -141,7 +141,7 @@
 
 	<?php if ( $view->installedPlugins ): ?>
 	<p>
-		<?php echo $view->t('Removing a plugin will <em>permissionanently remove all data</em> associated with it. Backup your database first!') ?>
+		<?php echo $view->t('Removing a plugin will also <em>permanently remove all data</em> associated with it. Backup your database first!') ?>
 	</p>
 
 	<form id="formInstaller" method="post" action="">
@@ -150,19 +150,19 @@
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
-						<?php echo $plugin ?> (<?php echo $v['file'] ?>)
-						<em>v<?php echo $v['version'] ?></em>
-						<em><?php echo $v['description'] ?></em>
+						<?php echo $plugin ?> (<?php echo $v->file ?>)
+						<em>v<?php echo $v->version ?></em>
+						<em><?php echo $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
-					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(1, $v['required_by_status']) ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(1, $v->required_by_status) ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
-					<?php if ( $v['required_by_status'] ): ?>
+					<?php if ( $v->required_by_status ): ?>
 					<em>
 						<?php echo $view->t('Required by') ?>:
 
-						<?php foreach ( $v['required_by_status'] as $requiredBy => $ready ): ?>
+						<?php foreach ( $v->required_by_status as $requiredBy => $ready ): ?>
 						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $view->t('Active') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $view->t('Not active') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
 						<?php endforeach ?>
 					</em>

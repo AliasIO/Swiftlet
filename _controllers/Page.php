@@ -18,9 +18,9 @@ class Page_Controller extends Controller
 
 	function init()
 	{
-		if ( isset($this->view->route['parts'][1]) )
+		if ( isset($this->app->view->args[1]) )
 		{
-			$language = !empty($this->app->lang->ready) ? $this->app->lang->language : array('English US');
+			$language = !empty($this->app->lang->ready) ? $this->app->lang->language : 'English US';
 
 			$this->app->db->sql('
 				SELECT
@@ -32,31 +32,31 @@ class Page_Controller extends Controller
 				FROM      `' . $this->app->db->prefix . 'pages` AS p
 				LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 				WHERE
-					n.`id`        = "' . ( int ) $this->view->route['parts'][1] . '" AND
-					n.`type`      = "page"                                     AND
-					p.`published` = 1                                          AND
-					p.`lang`      = "' . $this->app->db->escape($language)      . '"
+					n.`id`        = "' . ( int ) $this->app->view->args[1] . '" AND
+					n.`type`      = "page"                                      AND
+					p.`published` = 1                                           AND
+					p.`lang`      = "' . $this->app->db->escape($language) . '"
 				LIMIT 1
 				;');
 
 			if ( isset($this->app->db->result[0]) && $d = $this->app->db->result[0] )
 			{
-				$this->view->pageTitle = $d['title'];
-				$this->view->nodeId    = $d['node_id'];
-				$this->view->body      = $this->view->allow_html($d['body']);
-				$this->view->home      = $d['home'];
+				$this->app->view->pageTitle = $d['title'];
+				$this->app->view->nodeId    = $d['node_id'];
+				$this->app->view->body      = $this->app->view->allow_html($d['body']);
+				$this->app->view->home      = $d['home'];
 
 				/*
 				 * Prefix relative links with the path to the root
 				 * This way internal links won't break when the site
 				 * is moved to another directory
 				 */
-				$this->app->page->parse_urls($this->view->body);
+				$this->app->page->parse_urls($this->app->view->body);
 
 				/*
 				 * Create a breadcrumb trail
 				 */
-				$this->view->parents = array();
+				$this->app->view->parents = array();
 
 				if ( !$d['home'] )
 				{
@@ -64,23 +64,23 @@ class Page_Controller extends Controller
 
 					foreach ( $nodes['parents'] as $d )
 					{
-						if ( $d['id'] != Node::ROOT_ID )
+						if ( $d['id'] != Node_Plugin::ROOT_ID )
 						{
-							$this->view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
+							$this->app->view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
 						}
 					}
 				}
 			}
 		}
 
-		if ( !isset($this->view->nodeId) )
+		if ( !isset($this->app->view->nodeId) )
 		{
 			header('HTTP/1.0 404 Not Found');
 
-			$this->view->pageTitle = $this->view->t('Page not found');
-			$this->view->error     = $this->view->t('The page you are looking for does not exist.');
+			$this->app->view->pageTitle = $this->app->view->t('Page not found');
+			$this->app->view->error     = $this->app->view->t('The page you are looking for does not exist.');
 		}
 
-		$this->view->load('page.html.php');
+		$this->app->view->load('page.html.php');
 	}
 }

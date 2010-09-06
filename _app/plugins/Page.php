@@ -85,6 +85,11 @@ class Page_Plugin extends Plugin
 			if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
 			{
 				$this->ready = TRUE;
+
+				if ( count($this->app->view->args) >= 2 && $this->app->view->args[0] == 'node' )
+				{
+					$this->app->view->controller = 'Page';
+				}
 			}
 		}
 	}

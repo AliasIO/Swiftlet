@@ -9,7 +9,7 @@
 	<p class="message notice"><?php echo $view->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( $view->action == 'edit' && $app->permission->check('admin page edit') ): ?>
+	<?php if ( count($view->args) >= 2 && $view->args[0] == 'edit' && $app->permission->check('admin page edit') ): ?>
 	<h2><?php echo $view->t('Edit page') ?></h2>
 
 	<p>
@@ -18,7 +18,7 @@
 		<?php endif ?>
 		<a class="button" href="<?php echo $view->route($view->path) ?>"><?php echo $view->t('View this page') ?></a>
 		<?php if ( $app->permission->check('admin page delete') ): ?>
-		<a class="button caution" href="<?php echo $view->route('admin/page/delete/' . $view->id) ?>"><?php echo $view->t('Delete this page') ?></a>
+		<a class="button caution" href="<?php echo $view->route('admin/page/delete/' . $view->args[1]) ?>"><?php echo $view->t('Delete this page') ?></a>
 		<?php endif ?>
 	</p>
 	<?php elseif ( $app->permission->check('admin page create') ): ?>
@@ -27,7 +27,7 @@
 
 	<?php if ( $app->permission->check('admin page create') || $view->action == 'edit' && $app->permission->check('admin page edit') ): ?>
 
-	<form id="formPage" method="post" action="<?php echo $view->id ? $view->route('admin/page/edit/' . $view->id) : '' ?>">
+	<form id="formPage" method="post" action="<?php echo isset($view->args[1]) ? $view->route('admin/page/edit/' . $view->args[1]) : '' ?>">
 		<?php foreach ( $view->languages as $i => $language ): ?>
 		<fieldset>
 			<dl>

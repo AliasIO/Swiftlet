@@ -14,8 +14,11 @@ if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 class View
 {
 	public
-		$rootPath,
-		$viewPath,
+		$args            = array(),
+		$controller      = 'Home',
+		$id,
+		$inAdmin,
+		$method,
 		$siteName,
 		$siteCopyright,
 		$siteDesigner,
@@ -24,23 +27,14 @@ class View
 		$pageTitle,
 		$pageDescription,
 		$pageKeywords,
-		$inAdmin,
-		$action,
-		$id,
-		$route = array(
-			'path'       => '',
-			'args'       => array(),
-			'controller' => array(
-				'file'  => 'Home.php',
-				'class' => 'Home_Controller'
-				)
-			)
+		$path,
+		$request,
+		$rootPath,
+		$viewPath
 		;
 
 	private
 		$app,
-		$controller,
-
 		$filesLoaded = array()
 		;
 
@@ -56,9 +50,9 @@ class View
 
 		if ( !empty($_GET['q']) )
 		{
-			$this->route['controller'] = '';
-
 			$args = explode('/', $_GET['q']);
+
+			$this->controller = '';
 
 			for ( $i = count($args); $i > 0; $i -- )
 			{
@@ -66,28 +60,30 @@ class View
 
 				if ( is_file('../_controllers/' . $file . '.php') )
 				{
-					$this->route['controller'] = array(
-						'file'  => $file . '.php',
-						'class' => basename($file) . '_Controller'
-						);
+					$this->controller = $file;
+					$this->path       = implode('/', array_slice($args, 0, $i));
 
-					$this->route['path'] = ltrim(implode('/', array_slice($args, 0, $i)) . '/', '/');
-					$this->route['args'] = $i < count($args) ? array_slice($args, $i, count($args)) : array();
+					if ( $i < count($args) )
+					{
+						$this->args = array_slice($args, $i, count($args));
+					}
 
 					break;
 				}
 			}
 		}
 
-		if ( empty($this->route['controller']) )
+		if ( empty($this->controller) )
 		{
-			$this->route['controller'] = array(
-				'file'  => 'Err404.php',
-				'class' => 'Err404_Controller'
-				);
+			$this->controller = 'Err404.php';
 		}
 
-		$this->rootPath = $args ? str_repeat('../', count($args) - 1) : './';
+		$this->request = $this->path . ( $this->args ? '/' . implode('/', $this->args) : '' );
+
+		$this->method = $this->args           ?         $this->args[0] : '';
+		$this->id     = isset($this->args[1]) ? ( int ) $this->args[1] : '';
+
+		$this->rootPath = count($args) > 1 ? str_repeat('../', count($args) - 1) : './';
 		$this->viewPath = $this->rootPath . '_views/';
 	}
 

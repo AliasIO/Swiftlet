@@ -21,7 +21,7 @@
 	{
 		if ( !$this->app->permission->check('dashboard access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->view->route['path']));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
 
 			$this->app->end();
 		}
@@ -30,7 +30,7 @@
 		{
 			$this->app->clear_cache();
 
-			header('Location: ?notice=cache_cleared');
+			header('Location: ' . $this->view->route($this->path . '?notice=cache_cleared'));
 
 			$this->app->end();
 		}

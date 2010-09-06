@@ -42,7 +42,7 @@ class User_Plugin extends Plugin
 				;');
 
 			$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . 'admin');
-			$passHash = $salt . $this->app->sysPassword;
+			$passHash = $salt . $this->app->config['sysPassword'];
 
 			for ( $i = 0; $i < 100000; $i ++ )
 			{

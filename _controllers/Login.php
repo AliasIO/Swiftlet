@@ -25,7 +25,7 @@ class Login_Controller extends Controller
 			'action'      => 'string'
 			));
 
-		if ( !empty($this->args[0]) && $this->args[0] == 'logout' )
+		if ( $this->method == 'logout' )
 		{
 			if ( !$this->app->input->POST_valid['confirm'] )
 			{
@@ -35,7 +35,7 @@ class Login_Controller extends Controller
 			{
 				$this->app->user->logout();
 
-				header('Location: ?notice=logout');
+				header('Location: ' . $this->app->view->route($this->path . '?notice=logout'));
 
 				$this->app->end();
 			}

@@ -18,7 +18,7 @@ class Dashboard_Plugin extends Plugin
 		$pages = array()
 		;
 
-	function installer()
+	function install()
 	{
 		if ( !empty($this->app->permission->ready) )
 		{

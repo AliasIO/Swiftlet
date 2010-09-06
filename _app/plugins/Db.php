@@ -27,10 +27,10 @@ class Db_Plugin extends Plugin
 
 	function install()
 	{
-		if ( !in_array($app->db->prefix . 'cache_queries', $app->db->tables) )
+		if ( !in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
 		{
-			$app->db->sql('
-				CREATE TABLE `' . $app->db->prefix . 'cache_queries` (
+			$this->app->db->sql('
+				CREATE TABLE `' . $this->app->db->prefix . 'cache_queries` (
 					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`hash`        VARCHAR(40)      NOT NULL,
 					`results`     TEXT             NOT NULL,
@@ -43,10 +43,10 @@ class Db_Plugin extends Plugin
 				;');
 		}
 
-		if ( !in_array($app->db->prefix . 'cache_tables', $app->db->tables) )
+		if ( !in_array($this->app->db->prefix . 'cache_tables', $this->app->db->tables) )
 		{
-			$app->db->sql('
-				CREATE TABLE `' . $app->db->prefix . 'cache_tables` (
+			$this->app->db->sql('
+				CREATE TABLE `' . $this->app->db->prefix . 'cache_tables` (
 					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 					`query_id`    INT(10) UNSIGNED NOT NULL,
 					`table`       VARCHAR(255)     NOT NULL,
@@ -60,18 +60,18 @@ class Db_Plugin extends Plugin
 
 	function remove()
 	{
-		if ( in_array($app->db->prefix . 'cache_queries', $app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
 		{
-			unset($app->db->tables[$app->db->prefix . 'cache_queries']);
+			unset($this->app->db->tables[$this->app->db->prefix . 'cache_queries']);
 
-			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'cache_queries`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_queries`;');
 		}
 
-		if ( in_array($app->db->prefix . 'cache_tables', $app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'cache_tables', $this->app->db->tables) )
 		{
-			unset($app->db->tables[$app->db->prefix . 'cache_tables']);
+			unset($this->app->db->tables[$this->app->db->prefix . 'cache_tables']);
 
-			$app->db->sql('DROP TABLE `' . $app->db->prefix . 'cache_tables`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_tables`;');
 		}
 	}
 
@@ -96,7 +96,7 @@ class Db_Plugin extends Plugin
 
 	/**
 	 * Initialize database connection
-	 * @param object $app
+	 * @param object $this->app
 	 * @param string $host
 	 * @param string $user
 	 * @param string $pass
@@ -112,12 +112,12 @@ class Db_Plugin extends Plugin
 		if ( $name )
 		{
 			$this->link = mysql_connect($host, $user, $pass)
-				or $app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
+				or $this->app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
 			if ( is_resource($this->link) )
 			{
 				mysql_select_db($name, $this->link)
-					or $app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
+					or $this->app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
 				$this->ready = TRUE;
 
@@ -150,7 +150,7 @@ class Db_Plugin extends Plugin
 				}
 				else
 				{
-					$app->config['caching'] = FALSE;
+					$this->app->config['caching'] = FALSE;
 				}
 			}
 		}

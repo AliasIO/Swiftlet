@@ -28,12 +28,9 @@ class Permission_Controller extends Controller
 			'value'         => 'int'
 			));
 
-		$id     = isset($this->app->input->GET_raw['id']) && ( int ) $this->app->input->GET_raw['id'] ? ( int ) $this->app->input->GET_raw['id'] : FALSE;
-		$action = isset($this->app->input->GET_raw['action']) ? $this->app->input->GET_raw['action'] : FALSE;
-
 		if ( !$this->app->permission->check('admin permission access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->view->route['path']));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
 
 			$this->app->end();
 		}

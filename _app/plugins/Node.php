@@ -12,7 +12,7 @@ class Node_Plugin extends Plugin
 	public
 		$version    = '1.0.0',
 		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('init' => 4, 'install' => 1, 'remove' => 1, 'route' => 1)
+		$hooks      = array('init' => 4, 'install' => 1, 'remove' => 1)
 		;
 
 	const
@@ -112,6 +112,7 @@ class Node_Plugin extends Plugin
 	 * @param array $params
 	 * @return string
 	 */
+	/*
 	function route(&$params)
 	{
 		$nodeId = array_search(implode('/', $params['parts']), $this->paths);
@@ -151,6 +152,7 @@ class Node_Plugin extends Plugin
 			}
 		}
 	}
+	*/
 
 	/**
 	 * Create a node
@@ -206,12 +208,12 @@ class Node_Plugin extends Plugin
 					`date_edit`
 					)
 				VALUES (
-					 ' . ( ( int ) $parentNode['left_id'] + 1 )         . ',
-					 ' . ( ( int ) $parentNode['left_id'] + 2 )         . ',
-					"' . $this->app->db->escape($type)                  . '",
-					"' . $this->app->db->escape($this->view->h($title)) . '",
-					"' . gmdate('Y-m-d H:i:s')                          . '",
-					"' . gmdate('Y-m-d H:i:s')                          . '"
+					 ' . ( ( int ) $parentNode['left_id'] + 1 )              . ',
+					 ' . ( ( int ) $parentNode['left_id'] + 2 )              . ',
+					"' . $this->app->db->escape($type)                       . '",
+					"' . $this->app->db->escape($this->app->view->h($title)) . '",
+					"' . gmdate('Y-m-d H:i:s')                               . '",
+					"' . gmdate('Y-m-d H:i:s')                               . '"
 					)
 				;');
 

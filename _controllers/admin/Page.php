@@ -32,7 +32,7 @@ class Page_Controller extends Controller
 
 		if ( !$this->app->permission->check('admin page access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->view->route['path']));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
 
 			$this->app->end();
 		}
@@ -149,7 +149,7 @@ class Page_Controller extends Controller
 
 							$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'node/' . ( int ) $this->view->id;
 
-							header('Location: ' . $this->view->route('admin/pages/edit/' . ( int ) $this->view->id . '?path=' . rawurlencode($path) . '&notice=updated'));
+							header('Location: ' . $this->view->route('admin/page/edit/' . ( int ) $this->view->id . '?path=' . rawurlencode($path) . '&notice=updated'));
 
 							$this->app->end();
 						}
@@ -201,7 +201,7 @@ class Page_Controller extends Controller
 								{
 									$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'node/' . $nodeId;
 
-									header('Location: ' . $this->view->route('admin/pages/edit/' . $nodeId . '?path=' . rawurlencode($path) . '&notice=created'));
+									header('Location: ' . $this->view->route('admin/page/edit/' . $nodeId . '?path=' . rawurlencode($path) . '&notice=created'));
 
 									exit;
 								}
@@ -232,8 +232,7 @@ class Page_Controller extends Controller
 					break;
 			}
 		}
-
-		if ( !empty($this->args[0]) && !empty($this->args[1]) )
+		else if ( !empty($this->args[0]) && !empty($this->args[1]) )
 		{
 			switch ( $this->args[0] )
 			{
@@ -349,7 +348,7 @@ class Page_Controller extends Controller
 		$listParents = $list;
 
 		// A page can not be a child of itself or a descendant, remove those pages from dropdown
-		if ( $this->view->action == 'edit' )
+		if ( $this->view->args && $this->view->args[0] == 'edit' )
 		{
 			foreach ( $listParents as $i => $d )
 			{

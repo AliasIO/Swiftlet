@@ -1,7 +1,7 @@
 <div class="no-grid">
 	<h1><?php echo $view->t($controller->pageTitle) ?></h1>
 
-	<form class="hide" id="formConfirm" method="post" action="<?php echo $view->route($view->route['path'] . implode('/', $view->route['args'])) ?>">
+	<form class="hide" id="formConfirm" method="post" action="<?php echo $view->route($view->request) ?>">
 		<fieldset>
 			<p class="message notice">
 				<?php echo $view->t($view->notice) ?>

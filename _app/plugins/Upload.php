@@ -37,7 +37,6 @@ class Upload_Plugin extends Plugin
 					`size`      INT(10)    UNSIGNED     NULL,
 					`date`      DATETIME            NOT NULL,
 					`date_edit` DATETIME            NOT NULL,
-					INDEX `node_id` (`node_id`),
 					INDEX `image`   (`image`),
 					PRIMARY KEY (`id`)
 					) TYPE = INNODB

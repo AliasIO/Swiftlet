@@ -95,9 +95,11 @@ class Application
 
 		chdir('../../');
 
-		require('_controllers/' . $this->view->route['controller']['file']);
+		require('_controllers/' . $this->view->controller . '.php');
 
-		$this->controller = new $this->view->route['controller']['class']($this);
+		$controllerClass = basename($this->view->controller) . '_Controller';
+
+		$this->controller = new $controllerClass($this);
 
 		$this->controller->init();
 
@@ -112,6 +114,8 @@ class Application
 	{
 		if ( !empty($this->hooksRegistered[$hook]) )
 		{
+			$pluginsSkipped = array();
+
 			/**
 			 * Hook plugins in order
 			 */
@@ -119,11 +123,11 @@ class Application
 
 			foreach ( $this->hooksRegistered[$hook] as $plugin )
 			{
+				$missing = array();
+
 				// Check dependencies
 				if ( $this->{$plugin['name']}->dependencies )
 				{
-					$missing = array();
-
 					foreach ( $this->{$plugin['name']}->dependencies as $dependency )
 					{
 						if ( empty($this->{$dependency}->ready) )
@@ -131,24 +135,37 @@ class Application
 							$missing[] = $dependency;
 						}
 					}
-
-					if ( $missing )
-					{
-						$this->error(FALSE, 'Plugin `' . $plugin['name'] . '` requires the following plugins to be ready: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
-					}
 				}
 
-				$timerStart = $this->timer_start();
+				if ( !$missing )
+				{
+					$timerStart = $this->timer_start();
 
-				$this->{$plugin['name']}->{$hook}($params);
+					$this->{$plugin['name']}->{$hook}($params);
 
-				$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
+					$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
 
-				$this->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
-					'order'          => $plugin['order'],
-					'plugin'         => $plugin['name'],
-					'execution time' => $this->timer_end($timerStart)
-					);
+					$this->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
+						'order'          => $plugin['order'],
+						'plugin'         => $plugin['name'],
+						'execution time' => $this->timer_end($timerStart)
+						);
+				}
+				else
+				{
+					$pluginsSkipped[$plugin['name']] = $missing;
+				}
+			}
+
+			if ( $pluginsSkipped )
+			{
+				foreach ( $pluginsSkipped as $plugin => $dependencies )
+				{
+					$this->debugOutput['plugins skipped'][] = array(
+						'plugin'               => $plugin,
+						'missing dependencies' => $dependencies
+						);
+				}
 			}
 		}
 	}

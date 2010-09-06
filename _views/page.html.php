@@ -9,7 +9,7 @@
 	<?php if ( $app->permission->check('admin page edit') || $app->permission->check('admin page delete') ): ?>
 	<ul class="admin-toolbox">
 		<?php if ( $app->permission->check('admin page edit') ): ?>
-		<li><a class="button" href="<?php echo $view->route('admin/pages?action=edit&id=' . $view->nodeId) ?>"><?php echo $view->t('Edit') ?></a></li>
+		<li><a class="button" href="<?php echo $view->route('admin/page/?action=edit&id=' . $view->nodeId) ?>"><?php echo $view->t('Edit') ?></a></li>
 		<?php endif ?>
 	</ul>
 	<?php endif ?>

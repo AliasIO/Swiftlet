@@ -27,7 +27,7 @@ class Home_Controller extends Controller
 
 				if ( !$version )
 				{
-					if ( isset($plugin->info['hooks']['install']) )
+					if ( isset($this->app->{$plugin}->hooks['install']) )
 					{
 						$newPlugins ++;
 					}
@@ -87,7 +87,7 @@ class Home_Controller extends Controller
 					'%1$s Plugin(s) require installation (go to %2$s).',
 					array(
 						$newPlugins,
-						'<a href="' . $this->view->rootPath . 'installer/"><code>/installer/</code></a>'
+						'<a href="' . $this->view->rootPath . 'installer"><code>/installer</code></a>'
 						)
 					);
 			}

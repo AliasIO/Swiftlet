@@ -2,13 +2,13 @@
 	<h1><?php echo $view->t($controller->pageTitle) ?></h1>
 
 	<?php if ( $app->session->get('user is owner') ): ?>
-	<?php if ( $view->action == 'edit' ): ?>
+	<?php if ( !$this->method || $this->method == 'edit' ): ?>
 	<h2><?php echo $view->t('Edit account') ?></h2>
 
 	<p>
-		<a class="button" href="?action=create"><?php echo $view->t('Create a new account') ?></a>
+		<a class="button" href="<?php echo $this->route($this->path . '/create') ?>"><?php echo $view->t('Create a new account') ?></a>
 		<?php if ( $app->session->get('user id') != $view->userId ): ?>
-		<a class="button caution" href="./?action=delete&id=<?php echo $view->userId ?>"><?php echo $view->t('Delete this account') ?></a>
+		<a class="button caution" href="<?php echo $view->route($this->path . '/delete/' . $view->userId) ?>"><?php echo $view->t('Delete this account') ?></a>
 		<?php endif ?>
 	</p>
 
@@ -25,16 +25,8 @@
 	<p class="message notice"><?php echo $view->notice ?></p>
 	<?php endif ?>
 
-	<form id="formAccount" method="post" action="./?action=<?php echo $view->action . ( $view->id ? '&id=' . $view->id : '' ) ?>" autocomplete="off">
+	<form id="formAccount" method="post" action="<?php echo $this->route($this->request) ?>" autocomplete="off">
 		<fieldset>
-			<?php if ( $view->action == 'edit' ): ?>
-			<dl>
-				<dt><?php echo $view->t('Id') ?></dt>
-				<dd>
-					<?php echo $view->userId ?>
-				</dd>
-			</dl>
-			<?php endif ?>
 			<dl>
 				<dt><label for="username"><?php echo $view->t('Username') ?></label></dt>
 				<dd>
@@ -50,7 +42,7 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="new_password"><?php echo $view->action == 'edit' ? $view->t('New password') : $view->t('Password') ?> (2x)</label></dt>
+				<dt><label for="new_password"><?php echo $this->method == 'edit' ? $view->t('New password') : $view->t('Password') ?> (2x)</label></dt>
 				<dd>
 					<input type="password" name="new_password" id="new_password"/>
 
@@ -135,7 +127,7 @@
 			<?php endforeach ?>
 		</fieldset>
 		<?php endif ?>
-		<?php if ( $view->action == 'edit' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $view->userId ) ): ?>
+		<?php if ( !$this->method != 'create' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $this->id ) ): ?>
 		<fieldset>
 			<dl>
 				<dt><label for="password"><?php echo $view->t('Password') ?></label></dt>
@@ -181,7 +173,7 @@
 			<?php foreach ( $view->users as $id => $username ): ?>
 			<tr>
 				<td>
-					<a href="?id=<?php echo $id ?>"><?php echo $username ?></a>
+					<a href="<?php echo $this->route($this->path . '/edit/' . $id) ?>"><?php echo $username ?></a>
 				</td>
 			</tr>
 			<?php endforeach ?>
@@ -197,7 +189,7 @@
 	</p>
 	<?php endif ?>
 
-	<?php if ( $view->action == 'create' ): ?>
+	<?php if ( $this->args && $this->args[0] == 'create' ): ?>
 	<script type="text/javascript">
 		<!-- /* <![CDATA[ */
 		// Focus the username field

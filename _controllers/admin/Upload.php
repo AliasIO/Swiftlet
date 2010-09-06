@@ -5,7 +5,6 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
  */
 
-
 /**
  * Upload
  * @abstract
@@ -20,19 +19,19 @@ class Upload_Controller extends Controller
 
 	function init()
 	{
+		if ( !$this->app->permission->check('admin upload access') )
+		{
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+
+			$this->app->end();
+		}
+
 		$this->app->input->validate(array(
 			'form-submit' => 'bool',
 			'title'       => 'string, empty'
 			));
 
 		$callback = isset($this->app->input->GET_raw['callback']) ? $this->app->input->GET_raw['callback'] : FALSE;
-
-		if ( !$this->app->permission->check('admin upload access') )
-		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->view->route['path']));
-
-			$this->app->end();
-		}
 
 		if ( $this->app->input->POST_valid['form-submit'] )
 		{
@@ -194,7 +193,7 @@ class Upload_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->app->view->route($this->app->view->route['path'] . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
+								header('Location: ' . $this->app->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
 
 								$this->app->end();
 							}

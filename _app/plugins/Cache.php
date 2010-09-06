@@ -38,7 +38,7 @@ class Cache_Plugin extends Plugin
 	 */
 	private function read()
 	{
-		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User::GUEST_ID )
+		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 		{
 			return;
 		}
@@ -138,13 +138,13 @@ class Cache_Plugin extends Plugin
 	 */
 	function clear_cache()
 	{
-		if ( $handle = opendir($this->controller->rootPath . 'cache') )
+		if ( $handle = opendir('cache') )
 		{
 			while ( $filename = readdir($handle) )
 			{
-				if ( is_file($this->controller->rootPath . 'cache/' . $filename) )
+				if ( is_file('cache/' . $filename) )
 				{
-					$r = @unlink($this->controller->rootPath . 'cache/' . $filename);
+					$r = @unlink('cache/' . $filename);
 
 					if ( !$r )
 					{
