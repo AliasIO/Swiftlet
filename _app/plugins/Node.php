@@ -85,24 +85,27 @@ class Node_Plugin extends Plugin
 			 */
 			if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
 			{
-				$this->app->db->sql('
-					SELECT
-						`id`,
-						`path`
-					FROM `' . $this->app->db->prefix . 'nodes`
-					WHERE
-						`path` != ""
-					;');
+				$this->ready = TRUE;
 
-				if ( $r = $this->app->db->result )
+				if ( $this->app->view->controller == 'Node' && isset($this->app->view->args[0]) )
 				{
-					foreach ( $r as $d )
+					$this->app->db->sql('
+						SELECT
+							`type`
+						FROM `' . $this->app->db->prefix . 'nodes`
+						WHERE
+							`id` != ' . ( int ) $this->app->view->args[0] . '
+						;');
+
+					if ( $r = $this->app->db->result )
 					{
-						$this->paths[$d['id']] = $d['path'];
+						$this->app->view->controller = ucfirst($r[0]['type']);
+					}
+					else
+					{
+						$this->app->view->controller = 'Err404';
 					}
 				}
-
-				$this->ready = TRUE;
 			}
 		}
 	}
@@ -232,7 +235,7 @@ class Node_Plugin extends Plugin
 	function move($id, $parentId)
 	{
 		// Root node can not be moved
-		if ( $id == Node::ROOT_ID )
+		if ( $id == Node_Plugin::ROOT_ID )
 		{
 			return;
 		}

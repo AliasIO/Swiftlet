@@ -70,7 +70,7 @@ class Page_Controller extends Controller
 						;');
 				}
 
-				switch ( $this->view->action )
+				switch ( $this->method )
 				{
 					case 'edit':
 						if ( $this->app->permission->check('admin page edit') )
@@ -113,9 +113,9 @@ class Page_Controller extends Controller
 											`title`     = "' . $this->app->input->POST_db_safe['title'][$language]  . '",
 											`body`      = "' . $this->app->input->POST_db_safe['body'][$language]   . '",
 											`published` =  ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
-											`date_edit` = "' . gmdate('Y-m-d H:i:s')                          . '"
+											`date_edit` = "' . gmdate('Y-m-d H:i:s')                                . '"
 										WHERE
-											`node_id` =  ' . $this->view->id . ' AND
+											`node_id` =  ' . $this->view->id                   . '  AND
 											`lang`    = "' . $this->app->db->escape($language) . '"
 										LIMIT 1
 										;');
@@ -138,8 +138,8 @@ class Page_Controller extends Controller
 											"' . $this->app->input->POST_db_safe['body'][$language]   . '",
 											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
 											"' . $this->app->db->escape($language)                    . '",
-											"' . gmdate('Y-m-d H:i:s')                          . '",
-											"' . gmdate('Y-m-d H:i:s')                          . '"
+											"' . gmdate('Y-m-d H:i:s')                                . '",
+											"' . gmdate('Y-m-d H:i:s')                                . '"
 											)
 										;');
 								}
@@ -186,13 +186,13 @@ class Page_Controller extends Controller
 											`date_edit`
 											)
 										VALUES (
-											 ' . ( int ) $nodeId                                . ',
+											 ' . ( int ) $nodeId                                      . ',
 											"' . $this->app->input->POST_db_safe['title'][$language]  . '",
 											"' . $this->app->input->POST_db_safe['body'][$language]   . '",
 											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
 											"' . $this->app->db->escape($language)                    . '",
-											"' . gmdate('Y-m-d H:i:s')                          . '",
-											"' . gmdate('Y-m-d H:i:s')                          . '"
+											"' . gmdate('Y-m-d H:i:s')                                . '",
+											"' . gmdate('Y-m-d H:i:s')                                . '"
 											)
 										;');
 								}
@@ -232,9 +232,10 @@ class Page_Controller extends Controller
 					break;
 			}
 		}
-		else if ( !empty($this->args[0]) && !empty($this->args[1]) )
+
+		if ( $this->method && $this->id )
 		{
-			switch ( $this->args[0] )
+			switch ( $this->method )
 			{
 				case 'edit':
 					$editLeftId  = 0;
@@ -242,7 +243,7 @@ class Page_Controller extends Controller
 
 					if ( $this->app->permission->check('admin page edit') )
 					{
-						$node = $this->app->node->get_parents($this->args[1]);
+						$node = $this->app->node->get_parents($this->id);
 
 						if ( $node )
 						{
@@ -259,7 +260,7 @@ class Page_Controller extends Controller
 								FROM      `' . $this->app->db->prefix . 'nodes` AS n
 								LEFT JOIN `' . $this->app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
 								WHERE
-									n.`id`= ' . ( int ) $this->args[1] . '
+									n.`id`= ' . ( int ) $this->id . '
 								;');
 
 							if ( $r = $this->app->db->result )
@@ -292,14 +293,14 @@ class Page_Controller extends Controller
 						else
 						{
 							// Delete page
-							if ( $this->app->node->delete($this->args[1]) )
+							if ( $this->app->node->delete($this->id) )
 							{
 								// Not using LIMIT 1 because a node can have several pages (translations)
 								$this->app->db->sql('
 									DELETE
 									FROM `' . $this->app->db->prefix . 'pages`
 									WHERE
-										`node_id` = ' . ( int ) $this->args[1] . '
+										`node_id` = ' . ( int ) $this->id . '
 									;');
 
 								if ( $this->app->db->result )
@@ -348,7 +349,7 @@ class Page_Controller extends Controller
 		$listParents = $list;
 
 		// A page can not be a child of itself or a descendant, remove those pages from dropdown
-		if ( $this->view->args && $this->view->args[0] == 'edit' )
+		if ( $this->method == 'edit' )
 		{
 			foreach ( $listParents as $i => $d )
 			{

@@ -75,7 +75,7 @@ class View
 
 		if ( empty($this->controller) )
 		{
-			$this->controller = 'Err404.php';
+			$this->controller = 'Err404';
 		}
 
 		$this->request = $this->path . ( $this->args ? '/' . implode('/', $this->args) : '' );

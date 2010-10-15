@@ -125,7 +125,7 @@ class Account_Controller extends Controller
 					$this->app->input->errors['new_password'] = $this->view->t('Please provide a password');
 				}
 			}
-			else
+			else if ( !$this->app->session->get('user is owner') )
 			{
 				if ( !$this->app->user->validate_password($this->app->session->get('user username'), $this->app->input->POST_raw['password']) )
 				{
@@ -263,7 +263,7 @@ class Account_Controller extends Controller
 									));
 							}
 
-							header('Location: ' . $view->route($this->path . '/edit/' . $this->app->db->result . '&notice=saved'));
+							header('Location: ' . $this->view->route($this->path . '/edit/' . $this->id . '&notice=saved'));
 
 							$this->app->end();
 						}

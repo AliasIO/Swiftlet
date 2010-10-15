@@ -49,7 +49,7 @@ class Upload_Controller extends Controller
 					switch ( $_FILES['file']['error'][$i] )
 					{
 						case UPLOAD_ERR_OK:
-							$filename = sha1(file_get_contents($_FILES['file']['tmp_name'][$i]) . time());
+							$filename = sha1(uniqid(mt_rand(), TRUE));
 
 							$r = @move_uploaded_file($_FILES['file']['tmp_name'][$i], $file = $this->rootPath . 'uploads/files/' . $filename);
 

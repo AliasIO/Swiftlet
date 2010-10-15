@@ -468,8 +468,7 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 	background: var(form-background-color);
 	background-image: -moz-linear-gradient(top, var(content-background-color), var(form-background-color));
 	background-image: -webkit-gradient(linear, left top, left bottom, from(var(content-background-color)), to(var(form-background-color)));
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=var(content-background-color),endColorstr=var(form-background-color));
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=var(content-background-color),endColorstr=var(form-background-color))";
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='var(content-background-color)',endColorstr='var(form-background-color)');
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;

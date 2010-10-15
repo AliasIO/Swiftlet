@@ -18,7 +18,7 @@ class Page_Controller extends Controller
 
 	function init()
 	{
-		if ( isset($this->app->view->args[1]) )
+		if ( isset($this->app->view->args[0]) )
 		{
 			$language = !empty($this->app->lang->ready) ? $this->app->lang->language : 'English US';
 
@@ -32,7 +32,7 @@ class Page_Controller extends Controller
 				FROM      `' . $this->app->db->prefix . 'pages` AS p
 				LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 				WHERE
-					n.`id`        = "' . ( int ) $this->app->view->args[1] . '" AND
+					n.`id`        =  ' . ( int ) $this->app->view->args[0] . '  AND
 					n.`type`      = "page"                                      AND
 					p.`published` = 1                                           AND
 					p.`lang`      = "' . $this->app->db->escape($language) . '"
