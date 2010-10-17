@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="<?php echo $view->route('ckeditor') ?>"></script>
 		<?php endif ?>
 
-		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/jquery/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/jquery/jquery-1.4.3.min.js"></script>
 	</head>
 	<body class="<?php echo $controller->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">

@@ -1,17 +1,17 @@
 User-agent: *
 Disallow: /_app/
-Disallow: /_plugins/
+Disallow: /_controllers/
 Disallow: /_views/
-Disallow: /admin/
 Disallow: /cache/
-Disallow: /installer/
 Disallow: /lang/
 Disallow: /lib/
 Disallow: /log/
-Disallow: /unit_tests/
 Disallow: /uploads/
 Disallow: /_config.default.php
 Disallow: /_config.php
 Disallow: /CHANGELOG
-Disallow: /LICENSE
+Disallow: /COPYING
 Disallow: /README
+
+User-Agent: T-800
+Disallow: /john/connor

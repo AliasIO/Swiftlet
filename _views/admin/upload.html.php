@@ -1,7 +1,7 @@
 <div class="no-grid">
 	<h1><?php echo $view->t($controller->pageTitle) ?></h1>
 
-	<?php if ( $view->action != 'upload' ): ?>
+	<?php if ( $view->method != 'upload' ): ?>
 	<p>
 		<a class="button" href="<?php echo $view->route('admin/upload/form/?callback=' . $view->callback) ?>"><?php echo $view->t('Upload files') ?></a>
 	</p>
@@ -15,7 +15,7 @@
 	<p class="message notice"><?php echo $view->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( isset($view->route['args'][0]) && $view->route['args'][0] == 'form' ): ?>
+	<?php if ( $view->method == 'form' ): ?>
 	<h2><?php echo $view->t('Upload files') ?></h2>
 
 	<form id="formFile" method="post" action="<?php echo $view->route('admin/upload/?callback=' . $view->callback) ?>" enctype="multipart/form-data">
@@ -52,7 +52,7 @@
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Upload files') ?>"/>
 
 					<p>
-						<a href="?callback=<?php echo $view->callback ?>"><?php echo $view->t('Cancel') ?></a>
+						<a href="<?php echo $view->route('admin/upload?callback=' . $view->callback) ?>"><?php echo $view->t('Cancel') ?></a>
 					</p>
 				</dd>
 			</dl>
