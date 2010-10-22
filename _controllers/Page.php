@@ -18,6 +18,7 @@ class Page_Controller extends Controller
 
 	function init()
 	{
+		die('x');
 		$language = !empty($this->app->lang->ready) ? $this->app->lang->language : 'English US';
 
 		$this->app->db->sql('

@@ -29,18 +29,18 @@ class Upload_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'uploads` (
-					`id`        INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
-					`title`     VARCHAR(255)        NOT NULL,
-					`extension` VARCHAR(255)            NULL,
-					`image`     TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-					`filename`  VARCHAR(40)         NOT NULL,
-					`mime_type` VARCHAR(255)        NOT NULL,
-					`width`     INT(10)    UNSIGNED     NULL,
-					`height`    INT(10)    UNSIGNED     NULL,
-					`size`      INT(10)    UNSIGNED     NULL,
-					`date`      DATETIME            NOT NULL,
-					`date_edit` DATETIME            NOT NULL,
-					INDEX `image`   (`image`),
+					`id`        INT(10)      UNSIGNED NOT NULL AUTO_INCREMENT,
+					`title`     VARCHAR(255)          NOT NULL,
+					`extension` VARCHAR(255)              NULL,
+					`image`     TINYINT(1)   UNSIGNED NOT NULL DEFAULT 0,
+					`filename`  VARCHAR(40)           NOT NULL,
+					`mime_type` VARCHAR(255)          NOT NULL,
+					`width`     INT(10)      UNSIGNED     NULL,
+					`height`    INT(10)      UNSIGNED     NULL,
+					`size`      INT(10)      UNSIGNED     NULL,
+					`date`      DATETIME              NOT NULL,
+					`date_edit` DATETIME              NOT NULL,
+					INDEX `image` (`image`),
 					PRIMARY KEY (`id`)
 					) TYPE = INNODB
 				;');
@@ -207,9 +207,10 @@ class Upload_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
+		/*
 		/**
 		 * Uploading a file
-		 */
+		 * /
 		$post = array(
 			'title[0]'    => 'Unit Test File',
 			'file[0]'     => '@' . $controller->rootPath . 'favicon.ico',
@@ -237,7 +238,7 @@ class Upload_Plugin extends Plugin
 
 		/**
 		 * Deleting a file
-		 */
+		 * /
 		if ( $file['id'] )
 		{
 			$post = array(
@@ -265,5 +266,6 @@ class Upload_Plugin extends Plugin
 			'test' => 'Deleting a file in <code>/admin/files/</code>.',
 			'pass' => !$this->app->db->result
 			);
+		*/
 	}
 }

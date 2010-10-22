@@ -137,20 +137,8 @@ class Page_Plugin extends Plugin
 	{
 		if ( !empty($this->app->page->ready) )
 		{
-			$params['route'] = $this->app->page->get_home();
+			$params['controller'] = 'Page';
 		}
-	}
-
-	/**
-	 * Rewrite URLs
-	 * @param string $url
-	 * @return string
-	 */
-	function rewrite($url)
-	{
-		$url = preg_replace('/page\/\?page=(.+)?/', 'p/$1', $url);
-
-		return $url;
 	}
 
 	/**
@@ -203,9 +191,10 @@ class Page_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
+		/*
 		/**
 		 * Creating a page
-		 */
+		 * /
 		$post = array(
 			'parent'      => Node::ROOT_ID,
 			'path'        => '',
@@ -244,7 +233,7 @@ class Page_Plugin extends Plugin
 
 		/**
 		 * Editing a page
-		 */
+		 * /
 		if ( $page['node_id'] )
 		{
 			$post = array(
@@ -281,7 +270,7 @@ class Page_Plugin extends Plugin
 
 		/**
 		 * Deleting a page
-		 */
+		 * /
 		if ( $page['node_id'] )
 		{
 			$post = array(
@@ -310,5 +299,6 @@ class Page_Plugin extends Plugin
 			'test' => 'Deleting a page in <code>/admin/pages/</code>.',
 			'pass' => !$this->app->db->result
 			);
+		*/
 	}
 }

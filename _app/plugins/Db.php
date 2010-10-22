@@ -282,12 +282,12 @@ class Db_Plugin extends Plugin
 		/**
 		 * Not cached, execute query
 		 */
-		$timerStart = $this->app->timer_start();
+		$timerStart = microtime(TRUE);
 
 		$r = mysql_query($this->sql)
 			or $this->app->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
 
-		$timerEnd = $this->app->timer_end($timerStart);
+		$timerEnd = round(microtime(TRUE) - $timerStart, 3) . ' sec';
 
 		if ( $r )
 		{
@@ -388,12 +388,12 @@ class Db_Plugin extends Plugin
 			$this->result = array();
 		}
 
-		$timerStart = $this->app->timer_start();
+		$timerStart = microtime(TRUE);
 
 		$r = mysql_query($this->sql)
 			or $this->app->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
 
-		$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'affected rows' => mysql_affected_rows(), 'execution time' => $this->app->timer_end($timerStart));
+		$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'affected rows' => mysql_affected_rows(), 'execution time' => round(microtime(TRUE) - $timerStart, 3) . ' sec');
 	}
 
 	/**

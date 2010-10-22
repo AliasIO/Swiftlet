@@ -96,27 +96,30 @@ class Node_Plugin extends Plugin
 			{
 				$this->ready = TRUE;
 
-				$this->app->db->sql('
-					SELECT
-						`type`
-					FROM `' . $this->app->db->prefix . 'nodes`
-					WHERE
-						' . ( $this->app->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
-						`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
-						`path` = "' . $this->app->db->escape($this->app->view->request) . '"
-					LIMIT 1
-					');
-
-				if ( $r = $this->app->db->result )
+				if ( $this->app->view->request )
 				{
-					$params = array(
-						'type'       => $r[0]['type'],
-						'controller' => 'Err404'
-						);
+					$this->app->db->sql('
+						SELECT
+							`type`
+						FROM `' . $this->app->db->prefix . 'nodes`
+						WHERE
+							' . ( $this->app->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
+							`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
+							`path` = "' . $this->app->db->escape($this->app->view->request) . '"
+						LIMIT 1
+						');
 
-					$this->app->hook('display_node', $params);
+					if ( $r = $this->app->db->result )
+					{
+						$params = array(
+							'type'       => $r[0]['type'],
+							'controller' => 'Err404'
+							);
 
-					$this->app->view->controller = $params['controller'];
+						$this->app->hook('display_node', $params);
+
+						$this->app->view->controller = $params['controller'];
+					}
 				}
 			}
 		}

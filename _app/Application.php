@@ -30,7 +30,7 @@ class Application
 	{
 		set_error_handler(array($this, 'error'), E_ALL);
 
-		$this->timerStart = $this->timer_start();
+		$this->timerStart = microtime(TRUE);
 
 		$this->debugOutput['version'] = Application::VERSION;
 
@@ -139,7 +139,7 @@ class Application
 
 				if ( !$missing )
 				{
-					$timerStart = $this->timer_start();
+					$timerStart = microtime(TRUE);
 
 					$this->{$plugin['name']}->{$hook}($params);
 
@@ -148,7 +148,7 @@ class Application
 					$this->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
 						'order'          => $plugin['order'],
 						'plugin'         => $plugin['name'],
-						'execution time' => $this->timer_end($timerStart)
+						'execution time' => round(microtime(TRUE) - $this->timerStart, 3) . ' sec'
 						);
 				}
 				else
@@ -248,25 +248,6 @@ class Application
 	}
 
 	/**
-	 * Start a timer
-	 * @return int
-	 */
-	function timer_start()
-	{
-		return array_sum(explode(' ', microtime()));
-	}
-
-	/**
-	 * End a timer
-	 * @param int $timerStart
-	 * @return int
-	 */
-	function timer_end($timerStart)
-	{
-		return round($this->timer_start() - $timerStart, 3) . ' sec';
-	}
-
-	/**
 	 * Wrap up and exit
 	 */
 	function end()
@@ -278,7 +259,7 @@ class Application
 
 		$this->view->output();
 
-		$this->debugOutput['execution time']['all'] = $this->timer_end($this->timerStart);
+		$this->debugOutput['execution time']['all'] = round(microtime(TRUE) - $this->timerStart,   3) . ' sec';
 		$this->debugOutput['peak memory usage']     = round(memory_get_peak_usage() / 1024 / 1024, 3) . ' MB';
 
 		$this->hook('end');

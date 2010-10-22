@@ -21,6 +21,7 @@ class Log_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
+		/*
 		$this->write('unit_test', 'Test');
 
 		$params[] = array(
@@ -32,6 +33,7 @@ class Log_Plugin extends Plugin
 		{
 			unlink($this->app->controller->rootPath . 'log/unit_test');
 		}
+		*/
 	}
 
 	/**

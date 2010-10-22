@@ -454,9 +454,10 @@ class User_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
+		/*
 		/**
 		 * Creating a user account
-		 */
+		 * /
 		$post = array(
 			'username'             => 'Unit_Test',
 			'new_password'         => '123',
@@ -486,7 +487,7 @@ class User_Plugin extends Plugin
 
 		/**
 		 * Editing a user account
-		 */
+		 * /
 		if ( $user['id'] )
 		{
 			$post = array(
@@ -512,6 +513,70 @@ class User_Plugin extends Plugin
 
 		$email = isset($this->app->db->result[0]) ? $this->app->db->result[0]['email'] : FALSE;
 
+		/**
+		 * Make a POST request
+		 * @param string $url
+		 * @param array $params
+		 * @return array
+		 * /
+		function post_request($url, $params, $guest = FALSE)
+		{
+			if ( function_exists('curl_init') )
+			{
+				$cookies = '';
+
+				if ( !$guest )
+				{
+					// Let's hijack your session for this request
+					if ( !empty($_COOKIE) )
+					{
+						foreach ( $_COOKIE as $k => $v )
+						{
+							$cookies .= $k . '=' . $v . ';';
+						}
+					}
+				}
+
+				$handle = curl_init();
+
+				$options = array(
+					CURLOPT_URL            => $url,
+					CURLOPT_COOKIE         => $cookies,
+					CURLOPT_USERAGENT      => $guest ? '' : $_SERVER['HTTP_USER_AGENT'],
+					CURLOPT_HEADER         => FALSE,
+					CURLOPT_RETURNTRANSFER => TRUE,
+					CURLOPT_FOLLOWLOCATION => FALSE,
+					CURLOPT_MAXREDIRS      => 3,
+					CURLOPT_POST           => TRUE,
+					CURLOPT_POSTFIELDS     => $params
+					);
+
+				curl_setopt_array($handle, $options);
+
+				// We can't use the same session twice, close it first
+				session_commit();
+
+				$output = curl_exec($handle);
+
+				session_start();
+
+				$result = array(
+					'output' => $output,
+					'info'   => curl_getinfo($handle)
+					);
+
+				curl_close($handle);
+
+				unset($output);
+
+				return $result;
+			}
+			else
+			{
+				$this->app->error(FALSE, 'Your PHP installation does not support cURL, a requirement for some unit tests.');
+			}
+		}
+
 		$params[] = array(
 			'test' => 'Editing a user account in <code>/account/</code>.',
 			'pass' => $email == 'unit@test.com'
@@ -519,7 +584,7 @@ class User_Plugin extends Plugin
 
 		/**
 		 * Deleting a user account
-		 */
+		 * /
 		if ( $user['id'] )
 		{
 			$post = array(
@@ -550,11 +615,11 @@ class User_Plugin extends Plugin
 
 		/**
 		 * Creating a user preference
-		 */
+		 * /
 		$this->app->user->save_pref(array(
 			'pref'    => 'Unit Test',
 			'type'    => 'text',
-			'match'   => '/.*/'
+			'match'   => '/.* /'
 			));
 
 		$this->app->db->sql('
@@ -573,7 +638,7 @@ class User_Plugin extends Plugin
 
 		/**
 		 * Deleting a user preference
-		 */
+		 * /
 		$this->app->user->delete_pref('Unit Test');
 
 		$this->app->db->sql('
@@ -589,5 +654,6 @@ class User_Plugin extends Plugin
 			'test' => 'Deleting a user preference.',
 			'pass' => !$this->app->db->result
 			);
+		*/
 	}
 }
