@@ -18,6 +18,9 @@ class Dashboard_Plugin extends Plugin
 		$pages = array()
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !empty($this->app->permission->ready) )
@@ -26,6 +29,9 @@ class Dashboard_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( !empty($this->app->permission->ready) )
@@ -34,6 +40,9 @@ class Dashboard_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$pages = array();
@@ -58,6 +67,10 @@ class Dashboard_Plugin extends Plugin
 		$this->ready = TRUE;
 	}
 
+	/*
+	 * Implement menu hook
+	 * @params array $params
+	 */
 	function menu(&$params)
 	{
 		if ( !empty($this->app->permission->ready) )
@@ -69,6 +82,10 @@ class Dashboard_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement unit tests hook
+	 * @params array $params
+	 */
 	function unit_tests(&$params)
 	{
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/index.php', array(), TRUE);

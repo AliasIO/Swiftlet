@@ -1,39 +1,39 @@
 <div class="no-grid">
-	<h1><?php echo $view->t($controller->pageTitle) ?></h1>
+	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
 	<?php if ( $app->session->get('user is owner') ): ?>
 	<?php if ( !$this->method || $this->method == 'edit' ): ?>
-	<h2><?php echo $view->t('Edit account') ?></h2>
+	<h2><?php echo $this->t('Edit account') ?></h2>
 
 	<p>
-		<a class="button" href="<?php echo $this->route($this->path . '/create') ?>"><?php echo $view->t('Create a new account') ?></a>
-		<?php if ( $app->session->get('user id') != $view->userId ): ?>
-		<a class="button caution" href="<?php echo $view->route($this->path . '/delete/' . $view->userId) ?>"><?php echo $view->t('Delete this account') ?></a>
+		<a class="button" href="<?php echo $this->route($this->path . '/create') ?>"><?php echo $this->t('Create a new account') ?></a>
+		<?php if ( $app->session->get('user id') != $this->userId ): ?>
+		<a class="button caution" href="<?php echo $this->route($this->path . '/delete/' . $this->userId) ?>"><?php echo $this->t('Delete this account') ?></a>
 		<?php endif ?>
 	</p>
 
 	<?php else: ?>
-	<h2><?php echo $view->t('New account') ?></h2>
+	<h2><?php echo $this->t('New account') ?></h2>
 	<?php endif ?>
 	<?php endif ?>
 
-	<?php if ( !empty($view->error) ): ?>
-	<p class="message error"><?php echo $view->error ?></p>
+	<?php if ( !empty($this->error) ): ?>
+	<p class="message error"><?php echo $this->error ?></p>
 	<?php endif ?>
 
-	<?php if ( !empty($view->notice) ): ?>
-	<p class="message notice"><?php echo $view->notice ?></p>
+	<?php if ( !empty($this->notice) ): ?>
+	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<form id="formAccount" method="post" action="<?php echo $this->route($this->request) ?>" autocomplete="off">
+	<form id="form-account" method="post" action="<?php echo $this->route($this->request) ?>" autocomplete="off">
 		<fieldset>
 			<dl>
-				<dt><label for="username"><?php echo $view->t('Username') ?></label></dt>
+				<dt><label for="username"><?php echo $this->t('Username') ?></label></dt>
 				<dd>
 					<?php if ( $app->session->get('user is owner') ): ?>
 					<input type="text" name="username" id="username" value="<?php echo $app->input->POST_html_safe['username'] ?>"/>
 					<?php else: ?>
-					<?php echo $view->userUsername ?>
+					<?php echo $this->userUsername ?>
 					<?php endif ?>
 
 					<?php if ( isset($app->input->errors['username']) ): ?>
@@ -42,7 +42,7 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="new_password"><?php echo $this->method == 'edit' ? $view->t('New password') : $view->t('Password') ?> (2x)</label></dt>
+				<dt><label for="new_password"><?php echo $this->method == 'edit' ? $this->t('New password') : $this->t('Password') ?> (2x)</label></dt>
 				<dd>
 					<input type="password" name="new_password" id="new_password"/>
 
@@ -62,33 +62,33 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="email"><?php echo $view->t('E-mail address') ?></label></dt>
+				<dt><label for="email"><?php echo $this->t('E-mail address') ?></label></dt>
 				<dd>
 					<input type="text" name="email" id="email" value="<?php echo $app->input->POST_html_safe['email'] ?>"/>
 
 					<?php if ( isset($app->input->errors['email']) ): ?>
-					<span class="error"><?php echo $view->t('Invalid e-mail address') ?></span>
+					<span class="error"><?php echo $this->t('Invalid e-mail address') ?></span>
 					<?php endif ?>
 				</dd>
 			</dl>
 			<?php if ( $app->session->get('user is owner') ): ?>
 			<dl>
-				<dt><label for="auth"><?php echo $view->t('Owner privileges') ?></label></dt>
+				<dt><label for="auth"><?php echo $this->t('Owner privileges') ?></label></dt>
 				<dd>
-					<?php if ( $app->session->get('user id') != $view->userId ): ?>
+					<?php if ( $app->session->get('user id') != $this->userId ): ?>
 					<input type="checkbox" name="owner" value="1" <?php echo $app->input->POST_html_safe['owner'] ? 'checked="checked"' : '' ?>/>
 					<?php else: ?>
-					<?php echo $view->t('Yes') ?>
+					<?php echo $this->t('Yes') ?>
 					<?php endif ?>
 				</dd>
 			</dl>
 			<?php endif ?>
 		</fieldset>
-		<?php if ( $view->prefs ): ?>
+		<?php if ( $this->prefs ): ?>
 		<fieldset>
-			<?php foreach ( $view->prefs as $pref ): ?>
+			<?php foreach ( $this->prefs as $pref ): ?>
 			<dl>
-				<dt><label for="pref-<?php echo $pref['id'] ?>"><?php echo $view->t($pref['pref']) ?></label></dt>
+				<dt><label for="pref-<?php echo $pref['id'] ?>"><?php echo $this->t($pref['pref']) ?></label></dt>
 				<dd>
 					<?php
 					switch ( $pref['type'] )
@@ -96,9 +96,9 @@
 						case 'select':
 							?>
 							<select name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>">
-							<option value="" ><?php echo $view->t('Select&hellip;') ?></option>
+							<option value="" ><?php echo $this->t('Select&hellip;') ?></option>
 							<?php foreach ( $pref['options'] as $k => $v ): ?>
-							<option value="<?php echo $view->h($k) ?>" <?php echo $view->h($k) == $app->input->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo $view->h($view->t($v)) ?></option>
+							<option value="<?php echo $this->h($k) ?>" <?php echo $this->h($k) == $app->input->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo $this->h($this->t($v)) ?></option>
 							<?php endforeach ?>
 							</select>
 							<?php
@@ -120,7 +120,7 @@
 					?>
 
 					<?php if ( isset($app->input->errors['pref-' . $pref['id']]) ): ?>
-					<span class="error"><?php echo $view->t('Invalid') ?></span>
+					<span class="error"><?php echo $this->t('Invalid') ?></span>
 					<?php endif ?>
 				</dd>
 			</dl>
@@ -130,7 +130,7 @@
 		<?php if ( !$this->method != 'create' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $this->id ) ): ?>
 		<fieldset>
 			<dl>
-				<dt><label for="password"><?php echo $view->t('Password') ?></label></dt>
+				<dt><label for="password"><?php echo $this->t('Password') ?></label></dt>
 				<dd>
 					<input type="password" name="password" id="password"/>
 
@@ -147,7 +147,7 @@
 				<dd>
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Save settings') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Save settings') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
@@ -156,21 +156,21 @@
 	<?php if ( $app->session->get('user is owner') ): ?>
 	<a name="users"></a>
 
-	<h2><?php echo $view->t('All accounts') ?></h2>
+	<h2><?php echo $this->t('All accounts') ?></h2>
 
-	<?php if ( $view->users ): ?>
+	<?php if ( $this->users ): ?>
 	<p>
-		<?php echo $view->usersPagination['html'] ?>
+		<?php echo $this->usersPagination['html'] ?>
 	</p>
 
 	<table>
 		<thead>
 			<tr>
-				<th><?php echo $view->t('Username') ?></th>
+				<th><?php echo $this->t('Username') ?></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ( $view->users as $id => $username ): ?>
+			<?php foreach ( $this->users as $id => $username ): ?>
 			<tr>
 				<td>
 					<a href="<?php echo $this->route($this->path . '/edit/' . $id) ?>"><?php echo $username ?></a>
@@ -181,15 +181,15 @@
 	</table>
 
 	<p>
-		<?php echo $view->usersPagination['html'] ?>
+		<?php echo $this->usersPagination['html'] ?>
 	</p>
 	<?php else: ?>
 	<p>
-		<em><?php echo $view->t('No accounts') ?></em>
+		<em><?php echo $this->t('No accounts') ?></em>
 	</p>
 	<?php endif ?>
 
-	<?php if ( $this->args && $this->args[0] == 'create' ): ?>
+	<?php if ( $this->method == 'create' ): ?>
 	<script type="text/javascript">
 		<!-- /* <![CDATA[ */
 		// Focus the username field

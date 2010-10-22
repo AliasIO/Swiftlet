@@ -1,7 +1,7 @@
-CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $view->absPath ?>';
+CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $this->absPath ?>';
 CKEDITOR.config.height      = '400';
 CKEDITOR.config.bodyId      = 'content';
-CKEDITOR.config.contentsCss = '<?php echo $view->route('css?files=global.css,grid.css,ckeditor.css') ?>';
+CKEDITOR.config.contentsCss = '<?php echo $this->route('css/global.css/grid.css/ckeditor.css') ?>';
 CKEDITOR.config.toolbar     = [
 	['Format'],
 	['Bold', 'Italic', 'Strike'],
@@ -13,7 +13,7 @@ CKEDITOR.config.toolbar     = [
 	['Source']
 	];
 
-CKEDITOR.config.filebrowserBrowseUrl    = '<?php echo $view->route('admin/files?callback=fileBrowserCallback') ?>';
+CKEDITOR.config.filebrowserBrowseUrl    = '<?php echo $this->route('admin/files?callback=fileBrowserCallback') ?>';
 CKEDITOR.config.filebrowserWindowWidth  = '1000';
 CKEDITOR.config.filebrowserWindowHeight = '75%';
 

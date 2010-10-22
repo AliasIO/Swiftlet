@@ -21,6 +21,9 @@ class Time_Plugin extends Plugin
 		$timeOffset = 0
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !empty($this->app->user->ready) )
@@ -163,11 +166,17 @@ class Time_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		$this->app->user->delete_pref('Time zone');
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		if ( !empty($this->app->session->ready) )
@@ -192,10 +201,9 @@ class Time_Plugin extends Plugin
 	}
 
 	/**
+	 * Implement format_date hook
 	 * Format a date
-	 * @param string $date
-	 * @param string $type
-	 * @return string
+	 * @param array $params
 	 */
 	function format_date(&$params)
 	{

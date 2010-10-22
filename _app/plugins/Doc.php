@@ -15,6 +15,10 @@ class Doc_Plugin extends Plugin
 		$hooks      = array('dashboard' => 999, 'route' => 1)
 		;
 
+	/*
+	 * Implement dashboard hook
+	 * @params array $params
+	 */
 	function dashboard(&$params)
 	{
 		$params[] = array(

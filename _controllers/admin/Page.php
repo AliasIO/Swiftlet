@@ -147,7 +147,7 @@ class Page_Controller extends Controller
 
 							$this->app->node->move($this->view->id, $this->app->input->POST_raw['parent']);
 
-							$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'node/' . ( int ) $this->view->id;
+							$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'page/' . ( int ) $this->view->id;
 
 							header('Location: ' . $this->view->route('admin/page/edit/' . ( int ) $this->view->id . '?path=' . rawurlencode($path) . '&notice=updated'));
 
@@ -199,7 +199,7 @@ class Page_Controller extends Controller
 
 								if ( $this->app->db->result )
 								{
-									$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'node/' . $nodeId;
+									$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'page/' . $nodeId;
 
 									header('Location: ' . $this->view->route('admin/page/edit/' . $nodeId . '?path=' . rawurlencode($path) . '&notice=created'));
 
@@ -233,90 +233,89 @@ class Page_Controller extends Controller
 			}
 		}
 
-		if ( $this->method && $this->id )
+		switch ( $this->method )
 		{
-			switch ( $this->method )
-			{
-				case 'edit':
-					$editLeftId  = 0;
-					$editRightId = 0;
+			case 'edit':
+				$editLeftId  = 0;
+				$editRightId = 0;
 
-					if ( $this->app->permission->check('admin page edit') )
+				if ( $this->app->permission->check('admin page edit') )
+				{
+					$node = $this->app->node->get_parents($this->id);
+
+					if ( $node )
 					{
-						$node = $this->app->node->get_parents($this->id);
+						$this->app->db->sql('
+							SELECT
+								p.`title`,
+								p.`body`,
+								p.`published`,
+								p.`lang`,
+								n.`left_id`,
+								n.`right_id`,
+								n.`home`,
+								n.`path`
+							FROM      `' . $this->app->db->prefix . 'nodes` AS n
+							LEFT JOIN `' . $this->app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+							WHERE
+								n.`id`= ' . ( int ) $this->id . '
+							;');
 
-						if ( $node )
+						if ( $r = $this->app->db->result )
 						{
+							$editLeftId  = ( int ) $r[0]['left_id'];
+							$editRightId = ( int ) $r[0]['right_id'];
+
+							foreach ( $r as $d )
+							{
+								$this->app->input->POST_html_safe['title'][$d['lang']] = $d['title'];
+								$this->app->input->POST_html_safe['body'][$d['lang']]  = $d['body'];
+							}
+
+							$this->app->input->POST_html_safe['parent']    = ( int ) $node['parents'][count($node['parents']) - 1]['id'];
+							$this->app->input->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
+							$this->app->input->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
+							$this->app->input->POST_html_safe['path']      = $r[0]['path'];
+
+							$path = $r[0]['path'];
+						}
+					}
+				}
+
+				break;
+			case 'delete':
+				if ( $this->app->permission->check('admin page delete') )
+				{
+					if ( !$this->app->input->POST_valid['confirm'] )
+					{
+						$this->app->input->confirm($this->view->t('Are you sure you wish to delete this page?'));
+					}
+					else
+					{
+						// Delete page
+						if ( $this->app->node->delete($this->id) )
+						{
+							// Not using LIMIT 1 because a node can have several pages (translations)
 							$this->app->db->sql('
-								SELECT
-									p.`title`,
-									p.`body`,
-									p.`published`,
-									p.`lang`,
-									n.`left_id`,
-									n.`right_id`,
-									n.`home`,
-									n.`path`
-								FROM      `' . $this->app->db->prefix . 'nodes` AS n
-								LEFT JOIN `' . $this->app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+								DELETE
+								FROM `' . $this->app->db->prefix . 'pages`
 								WHERE
-									n.`id`= ' . ( int ) $this->id . '
+									`node_id` = ' . ( int ) $this->id . '
 								;');
 
-							if ( $r = $this->app->db->result )
+							if ( $this->app->db->result )
 							{
-								$editLeftId  = ( int ) $r[0]['left_id'];
-								$editRightId = ( int ) $r[0]['right_id'];
+								header('Location: ' . $this->app->view->route($this->app->view->request . '?notice=deleted'));
 
-								foreach ( $r as $d )
-								{
-									$this->app->input->POST_html_safe['title'][$d['lang']] = $d['title'];
-									$this->app->input->POST_html_safe['body'][$d['lang']]  = $d['body'];
-								}
-
-								$this->app->input->POST_html_safe['parent']    = ( int ) $node['parents'][count($node['parents']) - 1]['id'];
-								$this->app->input->POST_html_safe['published'] = $r[0]['published'] ? 1 : 0;
-								$this->app->input->POST_html_safe['home']      = $r[0]['home']      ? 1 : 0;
-								$this->app->input->POST_html_safe['path']      = $r[0]['path'];
+								$this->app->end();
 							}
 						}
 					}
+				}
 
-					break;
-				case 'delete':
-					if ( $this->app->permission->check('admin page delete') )
-					{
-						if ( !$this->app->input->POST_valid['confirm'] )
-						{
-							$this->app->input->confirm($this->view->t('Are you sure you wish to delete this page?'));
-						}
-						else
-						{
-							// Delete page
-							if ( $this->app->node->delete($this->id) )
-							{
-								// Not using LIMIT 1 because a node can have several pages (translations)
-								$this->app->db->sql('
-									DELETE
-									FROM `' . $this->app->db->prefix . 'pages`
-									WHERE
-										`node_id` = ' . ( int ) $this->id . '
-									;');
-
-								if ( $this->app->db->result )
-								{
-									header('Location: ' . $this->app->view->route($this->app->view->route['path'] . '?notice=deleted'));
-
-									$this->app->end();
-								}
-							}
-						}
-					}
-
-					break;
-				default:
-					$this->app->input->POST_html_safe['published'] = 1;
-			}
+				break;
+			default:
+				$this->app->input->POST_html_safe['published'] = 1;
 		}
 
 		foreach ( $languages as $language )
@@ -365,7 +364,7 @@ class Page_Controller extends Controller
 		$this->view->nodesParents    = $listParents;
 		$this->view->nodes           = array_splice($list, $pagination['from'], 10);
 		$this->view->nodesPagination = $pagination;
-		$this->view->path            = !empty($this->view->path) ? $this->view->path : 'node/' . $this->view->id;
+		$this->view->pagePath        = !empty($path) ? $path : 'page/' . $this->view->id;
 
 		$this->view->languages = $languages;
 

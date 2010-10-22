@@ -20,6 +20,9 @@ class Upload_Plugin extends Plugin
 		$hooks        = array('dashboard' => 2, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
@@ -51,6 +54,9 @@ class Upload_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
@@ -66,6 +72,9 @@ class Upload_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		if ( !empty($this->app->db->ready) )
@@ -80,6 +89,10 @@ class Upload_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement dashboard hook
+	 * @params array $params
+	 */
 	function dashboard(&$params)
 	{
 		$params[] = array(
@@ -188,6 +201,10 @@ class Upload_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement unit_tests hook
+	 * @params array $params
+	 */
 	function unit_tests(&$params)
 	{
 		/**

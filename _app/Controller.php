@@ -41,8 +41,7 @@ class Controller
 		$this->app  = $app;
 		$this->view = $app->view;
 
-		$this->args    = $this->view->args;
-		$this->id      = $this->view->id;
+		$this->id      = ( int ) $this->view->id;
 		$this->method  = $this->view->method;
 		$this->path    = $this->view->path;
 		$this->request = $this->view->request;

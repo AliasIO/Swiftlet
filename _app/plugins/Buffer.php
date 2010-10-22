@@ -19,11 +19,17 @@ class Buffer_Plugin extends Plugin
 		$hooks      = array('init' => 4, 'end' => 999, 'error' => 999)
 		;
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->start();
 	}
 
+	/*
+	 * Implement end hook
+	 */
 	function end()
 	{
 		if ( !empty($this->ready) && !$this->app->controller->standAlone )
@@ -34,6 +40,9 @@ class Buffer_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement error hook
+	 */
 	function error()
 	{
 		if ( !empty($this->ready) )
@@ -62,11 +71,13 @@ class Buffer_Plugin extends Plugin
 	{
 		if ( $this->ready )
 		{
-			$contents = ob_get_contents();
-
-			$params['contents'] = &$contents;
+			$params = array(
+				'contents' => ob_get_contents()
+				);
 
 			$this->app->hook('cache', $params);
+
+			$contents = &$params['contents'];
 
  			if ( ob_get_length() > 0 )
 			{

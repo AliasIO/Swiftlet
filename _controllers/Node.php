@@ -12,10 +12,13 @@
 class Node_Controller extends Controller
 {
 	public
-		$pageTitle = 'Node'
+		$pageTitle = 'Page not found'
 		;
 
 	function init()
 	{
+		header('HTTP/1.0 404 Not Found');
+
+		$this->app->view->load('404.html.php');
 	}
 }

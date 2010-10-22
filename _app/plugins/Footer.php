@@ -19,6 +19,9 @@ class Footer_Plugin extends Plugin
 		$hooks      = array('footer' => 999)
 		;
 
+	/*
+	 * Implement footer hook
+	 */
 	function footer()
 	{
 		$this->app->view->load('footer.html.php');

@@ -16,6 +16,9 @@ class Menu_Plugin extends Plugin
 		$hooks        = array('dashboard' => 3, 'init' => 5, 'install' => 1, 'menu' => 1, 'remove' => 1)
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'menu', $this->app->db->tables) )
@@ -42,6 +45,9 @@ class Menu_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'menu', $this->app->db->tables) )
@@ -55,6 +61,9 @@ class Menu_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		if ( !empty($this->app->db->ready) )
@@ -69,6 +78,10 @@ class Menu_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement dashboard hook
+	 * @params array $params
+	 */
 	function dashboard(&$params)
 	{
 		$params[] = array(
@@ -80,6 +93,10 @@ class Menu_Plugin extends Plugin
 			);
 	}
 
+	/*
+	 * Implement menu hook
+	 * @params array $params
+	 */
 	function menu(&$params)
 	{
 		if ( !empty($this->ready) )

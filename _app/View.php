@@ -56,17 +56,17 @@ class View
 
 			for ( $i = count($args); $i > 0; $i -- )
 			{
+				if ( $i < count($args) )
+				{
+					$this->args = array_slice($args, $i, count($args));
+				}
+
 				$file = ltrim(implode('/', array_slice($args, 0, $i - 1)) . '/' . ucfirst($args[$i - 1]), '/');
 
 				if ( is_file('../_controllers/' . $file . '.php') )
 				{
 					$this->controller = $file;
 					$this->path       = implode('/', array_slice($args, 0, $i));
-
-					if ( $i < count($args) )
-					{
-						$this->args = array_slice($args, $i, count($args));
-					}
 
 					break;
 				}
@@ -76,15 +76,17 @@ class View
 		if ( empty($this->controller) )
 		{
 			$this->controller = 'Err404';
+			$this->args       = $args;
 		}
 
-		$this->request = $this->path . ( $this->args ? '/' . implode('/', $this->args) : '' );
+		$this->request = $this->path . ( $this->args ? ( $this->path ? '/' : '' ) . implode('/', $this->args) : '' );
 
 		$this->method = $this->args           ?         $this->args[0] : '';
 		$this->id     = isset($this->args[1]) ? ( int ) $this->args[1] : '';
 
 		$this->rootPath = count($args) > 1 ? str_repeat('../', count($args) - 1) : './';
 		$this->viewPath = $this->rootPath . '_views/';
+		$this->absPath  = preg_replace('/([^\/]+\/){' . substr_count($this->rootPath, '../') . '}$/', '', dirname($_SERVER['REQUEST_URI']) . '/');
 	}
 
 	/*

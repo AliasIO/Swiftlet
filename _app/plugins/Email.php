@@ -19,11 +19,18 @@ class Email_Plugin extends Plugin
 		$hooks      = array('init' => 1, 'email' => 1)
 		;
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->ready = TRUE;
 	}
 
+	/*
+	 * Implement email hook
+	 * @params $params
+	 */
 	function email(&$params)
 	{
 		$params['success'] = $app->email->send($params);
@@ -31,8 +38,10 @@ class Email_Plugin extends Plugin
 
 	/**
 	 * Send an e-mail
+	 * @params array $params
+	 * @return boolean
 	 */
-	function send($params)
+	function send(&$params)
 	{
 		$headers = array(
 			'To'           => '<' . $params['to'] . '>',

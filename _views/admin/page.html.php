@@ -1,42 +1,42 @@
 <div class="no-grid">
-	<h1><?php echo $view->t($controller->pageTitle) ?></h1>
+	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
-	<?php if ( !empty($view->error) ): ?>
-	<p class="message error"><?php echo $view->error ?></p>
+	<?php if ( !empty($this->error) ): ?>
+	<p class="message error"><?php echo $this->error ?></p>
 	<?php endif ?>
 
-	<?php if ( !empty($view->notice) ): ?>
-	<p class="message notice"><?php echo $view->notice ?></p>
+	<?php if ( !empty($this->notice) ): ?>
+	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( count($view->args) >= 2 && $view->args[0] == 'edit' && $app->permission->check('admin page edit') ): ?>
-	<h2><?php echo $view->t('Edit page') ?></h2>
+	<?php if ( $this->method == 'edit' && $app->permission->check('admin page edit') ): ?>
+	<h2><?php echo $this->t('Edit page') ?></h2>
 
 	<p>
 		<?php if ( $app->permission->check('admin page create') ): ?>
-		<a class="button" href="<?php echo $view->route('admin/page') ?>"><?php echo $view->t('Create a new page') ?></a>
+		<a class="button" href="<?php echo $this->route('admin/page') ?>"><?php echo $this->t('Create a new page') ?></a>
 		<?php endif ?>
-		<a class="button" href="<?php echo $view->route($view->path) ?>"><?php echo $view->t('View this page') ?></a>
+		<a class="button" href="<?php echo $this->route($this->pagePath) ?>"><?php echo $this->t('View this page') ?></a>
 		<?php if ( $app->permission->check('admin page delete') ): ?>
-		<a class="button caution" href="<?php echo $view->route('admin/page/delete/' . $view->args[1]) ?>"><?php echo $view->t('Delete this page') ?></a>
+		<a class="button caution" href="<?php echo $this->route('admin/page/delete/' . $this->id) ?>"><?php echo $this->t('Delete this page') ?></a>
 		<?php endif ?>
 	</p>
 	<?php elseif ( $app->permission->check('admin page create') ): ?>
-	<h2><?php echo $view->t('New page') ?></h2>
+	<h2><?php echo $this->t('New page') ?></h2>
 	<?php endif ?>
 
-	<?php if ( $app->permission->check('admin page create') || $view->action == 'edit' && $app->permission->check('admin page edit') ): ?>
+	<?php if ( $app->permission->check('admin page create') || $this->method == 'edit' && $app->permission->check('admin page edit') ): ?>
 
-	<form id="formPage" method="post" action="<?php echo isset($view->args[1]) ? $view->route('admin/page/edit/' . $view->args[1]) : '' ?>">
-		<?php foreach ( $view->languages as $i => $language ): ?>
+	<form id="form-page" method="post" action="<?php echo $this->id ? $this->route('admin/page/edit/' . $this->id) : '' ?>">
+		<?php foreach ( $this->languages as $i => $language ): ?>
 		<fieldset>
 			<dl>
-				<strong><?php echo $view->t($language) ?></strong>
+				<strong><?php echo $this->t($language) ?></strong>
 			</dl>
 			<dl>
-				<dt><label for="title_<?php echo $i ?>"><?php echo $view->t('Title') ?></label></dt>
+				<dt><label for="title_<?php echo $i ?>"><?php echo $this->t('Title') ?></label></dt>
 				<dd>
-					<input type="text" name="title[<?php echo $view->h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $app->input->POST_html_safe['title'][$language] ?>"/>
+					<input type="text" name="title[<?php echo $this->h($language) ?>]" id="title_<?php echo $i ?>" value="<?php echo $app->input->POST_html_safe['title'][$language] ?>"/>
 
 					<?php if ( isset($app->input->errors['title_' . $i]) ): ?>
 					<span class="error"><?php echo $app->input->errors['title_' . $i] ?></span>
@@ -44,26 +44,26 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="body<?php echo $i ?>"><?php echo $view->t('Body') ?></label></dt>
+				<dt><label for="body<?php echo $i ?>"><?php echo $this->t('Body') ?></label></dt>
 			</dl>
 			<dl>
-				<textarea class="large code ckeditor" name="body[<?php echo $view->h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $app->input->POST_html_safe['body'][$language] ?></textarea>
+				<textarea class="large code ckeditor" name="body[<?php echo $this->h($language) ?>]" id="body_<?php echo $i ?>" cols="25" rows="5"><?php echo $app->input->POST_html_safe['body'][$language] ?></textarea>
 			</dl>
 		</fieldset>
 		<?php endforeach ?>
 		<fieldset>
 			<dl>
-				<dt><label for="published"><?php echo $view->t('Published') ?></label></dt>
+				<dt><label for="published"><?php echo $this->t('Published') ?></label></dt>
 				<dd>
 					<input type="checkbox" name="published" id="published" value="1"<?php echo $app->input->POST_html_safe['published'] ? ' checked="checked"' : '' ?>/>
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="parent"><?php echo $view->t('Parent page') ?></label></dt>
+				<dt><label for="parent"><?php echo $this->t('Parent page') ?></label></dt>
 				<dd>
 					<select class="select" name="parent" id="parent">
-						<option value="<?php echo Node_Plugin::ROOT_ID ?>"<?php echo $app->input->POST_html_safe['parent'] == Node_Plugin::ROOT_ID ? ' selected="selected"' : '' ?>><?php echo $view->t('None') ?></option>
-						<?php foreach ( $view->nodesParents as $node ): ?>
+						<option value="<?php echo Node_Plugin::ROOT_ID ?>"<?php echo $app->input->POST_html_safe['parent'] == Node_Plugin::ROOT_ID ? ' selected="selected"' : '' ?>><?php echo $this->t('None') ?></option>
+						<?php foreach ( $this->nodesParents as $node ): ?>
 						<option value="<?php echo $node['id'] ?>"<?php echo $app->input->POST_html_safe['parent'] == $node['id'] ? ' selected="selected"' : '' ?>><?php echo str_repeat('&nbsp;', $node['level'] * 3) . $node['title'] ?></option>
 						<?php endforeach ?>
 					</select>
@@ -72,14 +72,14 @@
 		</fieldset>
 		<fieldset>
 			<dl>
-				<dt><label for="home"><?php echo $view->t('Set as home page') ?></label></dt>
+				<dt><label for="home"><?php echo $this->t('Set as home page') ?></label></dt>
 				<dd>
 					<input type="checkbox" name="home" id="home" value="1"<?php echo $app->input->POST_html_safe['home'] ? ' checked="checked"' : '' ?>/>
 				</dd>
 			</dl>
 			<dl>
 				<dt>
-					<label for="path"><?php echo $view->t('Custom path') ?></label>
+					<label for="path"><?php echo $this->t('Custom path') ?></label>
 					<em>E.g. "some/path"</em></dt>
 				</dt>
 				<dd>
@@ -97,7 +97,7 @@
 				<dd>
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Save page') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Save page') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
@@ -106,39 +106,39 @@
 
 	<a name="pages"></a>
 
-	<h2><?php echo $view->t('All pages') ?></h2>
+	<h2><?php echo $this->t('All pages') ?></h2>
 
-	<?php if ( $view->nodes ): ?>
+	<?php if ( $this->nodes ): ?>
 	<p class="pagination">
-		<?php echo $view->nodesPagination['html'] ?>
+		<?php echo $this->nodesPagination['html'] ?>
 	</p>
 
 	<table>
 		<thead>
 			<tr>
-				<th><?php echo $view->t('Title') ?></th>
-				<th><?php echo $view->t('Created on') ?></th>
-				<th><?php echo $view->t('Action') ?></th>
+				<th><?php echo $this->t('Title') ?></th>
+				<th><?php echo $this->t('Created on') ?></th>
+				<th><?php echo $this->t('Action') ?></th>
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ( $view->nodes as $node ): ?>
+			<?php foreach ( $this->nodes as $node ): ?>
 			<tr>
 				<td>
 					<?php echo str_repeat('&nbsp;', $node['level'] * 4) ?>
-					<a href="<?php echo $view->route($node['path'] ? $node['path'] : 'node/' . $node['id']) ?>">
+					<a href="<?php echo $this->route($node['path'] ? $node['path'] : 'node/' . $node['id']) ?>">
 						<?php echo $node['title'] ?>
 					</a>
 				</td>
 				<td>
-					<?php echo $view->format_date($node['date'], 'date') ?>
+					<?php echo $this->format_date($node['date'], 'date') ?>
 				</td>
 				<td>
 					<?php if ( $app->permission->check('admin page edit') ): ?>
-					<a class="button" href="<?php echo $view->route('admin/page/edit/' . $node['id']) ?>"><?php echo $view->t('Edit') ?></a>
+					<a class="button" href="<?php echo $this->route('admin/page/edit/' . $node['id']) ?>"><?php echo $this->t('Edit') ?></a>
 					<?php endif ?>
 					<?php if ( $app->permission->check('admin page delete') ): ?>
-					<a class="button caution" href="<?php echo $view->route('admin/page/delete/' . $node['id']) ?>"><?php echo $view->t('Delete') ?></a>
+					<a class="button caution" href="<?php echo $this->route('admin/page/delete/' . $node['id']) ?>"><?php echo $this->t('Delete') ?></a>
 					<?php endif ?>
 				</td>
 			</tr>
@@ -147,11 +147,11 @@
 	</table>
 
 	<p class="pagination">
-		<?php echo $view->nodesPagination['html'] ?>
+		<?php echo $this->nodesPagination['html'] ?>
 	</p>
 	<?php else: ?>
 	<p>
-		<em><?php echo $view->t('No pages') ?></em>
+		<em><?php echo $this->t('No pages') ?></em>
 	</p>
 	<?php endif ?>
 

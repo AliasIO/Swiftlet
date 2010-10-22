@@ -17,6 +17,8 @@ class Err404_Controller extends Controller
 
 	function init()
 	{
+		header('HTTP/1.0 404 Not Found');
+
 		$this->view->load('404.html.php');
 	}
 }

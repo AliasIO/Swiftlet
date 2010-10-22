@@ -18,58 +18,68 @@ class Page_Controller extends Controller
 
 	function init()
 	{
-		if ( isset($this->app->view->args[0]) )
+		$language = !empty($this->app->lang->ready) ? $this->app->lang->language : 'English US';
+
+		$this->app->db->sql('
+			SELECT
+				p.`id`,
+				p.`node_id`,
+				p.`title`,
+				p.`body`,
+				p.`published`,
+				n.`home`
+			FROM      `' . $this->app->db->prefix . 'pages` AS p
+			LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
+			WHERE
+				' . ( $this->app->input->args[0] ? '
+				(
+					n.`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
+					n.`path` = "' . $this->app->db->escape($this->request)            . '"
+				) AND
+				n.`type`      = "page"                                      AND
+				' . ( !$this->app->permission->check('admin page edit') ? '
+				p.`published` = 1                                           AND
+				' : '' ) . '
+				p.`lang`      = "' . $this->app->db->escape($language) . '"
+			LIMIT 1
+			;');
+
+		if ( $r = $this->app->db->result )
 		{
-			$language = !empty($this->app->lang->ready) ? $this->app->lang->language : 'English US';
+			$this->pageTitle = $r[0]['title'];
 
-			$this->app->db->sql('
-				SELECT
-					p.`id`,
-					p.`node_id`,
-					p.`title`,
-					p.`body`,
-					n.`home`
-				FROM      `' . $this->app->db->prefix . 'pages` AS p
-				LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
-				WHERE
-					n.`id`        =  ' . ( int ) $this->app->view->args[0] . '  AND
-					n.`type`      = "page"                                      AND
-					p.`published` = 1                                           AND
-					p.`lang`      = "' . $this->app->db->escape($language) . '"
-				LIMIT 1
-				;');
+			$this->app->view->nodeId    = $r[0]['node_id'];
+			$this->app->view->body      = $this->app->view->allow_html($r[0]['body']);
+			$this->app->view->home      = $r[0]['home'];
 
-			if ( isset($this->app->db->result[0]) && $d = $this->app->db->result[0] )
+			/*
+			 * Prefix relative links with the path to the root
+			 * This way internal links won't break when the site
+			 * is moved to another directory
+			 */
+			$this->app->page->parse_urls($this->app->view->body);
+
+			/*
+			 * Create a breadcrumb trail
+			 */
+			$this->app->view->parents = array();
+
+			if ( !$r[0]['home'] )
 			{
-				$this->app->view->pageTitle = $d['title'];
-				$this->app->view->nodeId    = $d['node_id'];
-				$this->app->view->body      = $this->app->view->allow_html($d['body']);
-				$this->app->view->home      = $d['home'];
+				$nodes = $this->app->node->get_parents($r[0]['node_id']);
 
-				/*
-				 * Prefix relative links with the path to the root
-				 * This way internal links won't break when the site
-				 * is moved to another directory
-				 */
-				$this->app->page->parse_urls($this->app->view->body);
-
-				/*
-				 * Create a breadcrumb trail
-				 */
-				$this->app->view->parents = array();
-
-				if ( !$d['home'] )
+				foreach ( $nodes['parents'] as $d )
 				{
-					$nodes = $this->app->node->get_parents($d['node_id']);
-
-					foreach ( $nodes['parents'] as $d )
+					if ( $d['id'] != Node_Plugin::ROOT_ID )
 					{
-						if ( $d['id'] != Node_Plugin::ROOT_ID )
-						{
-							$this->app->view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
-						}
+						$this->app->view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
 					}
 				}
+			}
+
+			if ( !$r[0]['published'] )
+			{
+				$this->app->view->notice = $this->app->view->t('This page has not been published.');
 			}
 		}
 
@@ -77,10 +87,13 @@ class Page_Controller extends Controller
 		{
 			header('HTTP/1.0 404 Not Found');
 
-			$this->app->view->pageTitle = $this->app->view->t('Page not found');
-			$this->app->view->error     = $this->app->view->t('The page you are looking for does not exist.');
-		}
+			$this->pageTitle = $this->app->view->t('Page not found');
 
-		$this->app->view->load('page.html.php');
+			$this->app->view->load('404.html.php');
+		}
+		else
+		{
+			$this->app->view->load('page.html.php');
+		}
 	}
 }

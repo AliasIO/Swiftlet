@@ -16,6 +16,9 @@ class Page_Plugin extends Plugin
 		$hooks        = array('dashboard' => 1, 'display_node' => 1, 'home' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
@@ -46,6 +49,9 @@ class Page_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
@@ -75,6 +81,9 @@ class Page_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		if ( !empty($this->app->db->ready) )
@@ -86,7 +95,7 @@ class Page_Plugin extends Plugin
 			{
 				$this->ready = TRUE;
 
-				if ( count($this->app->view->args) >= 2 && $this->app->view->args[0] == 'node' )
+				if ( count($this->app->input->args) >= 2 && $this->app->input->args[0] == 'node' )
 				{
 					$this->app->view->controller = 'Page';
 				}
@@ -94,6 +103,9 @@ class Page_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement dashboard hook
+	 */
 	function dashboard(&$params)
 	{
 		$params[] = array(
@@ -105,17 +117,22 @@ class Page_Plugin extends Plugin
 			);
 	}
 
+	/*
+	 * Implement display_node hook
+	 * @params $params
+	 */
 	function display_node(&$params)
 	{
-		if ( !empty($this->app->page->ready) )
+		if ( $params['type'] == 'page' )
 		{
-			if ( $params['type'] == 'page' )
-			{
-				$params['controller'] = 'page';
-			}
+			$params['controller'] = 'Page';
 		}
 	}
 
+	/*
+	 * Implement home hook
+	 * @param array $params
+	 */
 	function home(&$params)
 	{
 		if ( !empty($this->app->page->ready) )
@@ -123,7 +140,6 @@ class Page_Plugin extends Plugin
 			$params['route'] = $this->app->page->get_home();
 		}
 	}
-
 
 	/**
 	 * Rewrite URLs
@@ -181,7 +197,11 @@ class Page_Plugin extends Plugin
 		}
 	}
 
-	function unit_tests()
+	/*
+	 * Implement unit_tests hook
+	 * @param array $params
+	 */
+	function unit_tests(&$params)
 	{
 		/**
 		 * Creating a page

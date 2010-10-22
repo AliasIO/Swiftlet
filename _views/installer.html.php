@@ -1,25 +1,25 @@
 <div class="no-grid">
-	<h1><?php echo $view->t($controller->pageTitle) ?></h1>
+	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
-	<?php if ( !empty($view->error) ): ?>
-	<p class="message error"><?php echo $view->error ?></p>
+	<?php if ( !empty($this->error) ): ?>
+	<p class="message error"><?php echo $this->error ?></p>
 	<?php endif ?>
 
-	<?php if ( !empty($view->notice) ): ?>
-	<p class="message notice"><?php echo $view->notice ?></p>
+	<?php if ( !empty($this->notice) ): ?>
+	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( $view->authenticated ): ?>
+	<?php if ( $this->authenticated ): ?>
 	<p>
-		<?php echo $view->t('Select the plugins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
+		<?php echo $this->t('Select the plugins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
 	</p>
 
-	<h2><?php echo $view->t('Install') ?></h2>
+	<h2><?php echo $this->t('Install') ?></h2>
 
-	<?php if ( $view->newPlugins ): ?>
-	<form id="formInstaller" method="post" action="">
+	<?php if ( $this->newPlugins ): ?>
+	<form id="form-install" method="post" action="">
 		<fieldset>
-			<?php foreach ( $view->newPlugins as $plugin => $v ): ?>
+			<?php foreach ( $this->newPlugins as $plugin => $v ): ?>
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
@@ -33,10 +33,10 @@
 
 					<?php if ( $v->dependency_status ): ?>
 					<em>
-						<?php echo $view->t('Depends on') ?>:
+						<?php echo $this->t('Depends on') ?>:
 
 						<?php foreach ( $v->dependency_status as $dependency => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $view->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $view->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
+						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $this->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $this->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
 						<?php endforeach ?>
 					</em>
 					<?php endif ?>
@@ -47,7 +47,7 @@
 		<fieldset>
 			<dl>
 				<dt>
-					<label for="system_password"><?php echo $view->t('System password') ?></label>
+					<label for="system_password"><?php echo $this->t('System password') ?></label>
 				</dt>
 				<dd>
 					<input type="password" name="system-password" id="system-password-1"/>
@@ -62,7 +62,7 @@
 
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Install') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Install') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
@@ -76,16 +76,16 @@
 	</script>
 	<?php else: ?>
 	<p>
-		<em><?php echo $view->t('There are no plugins to be installed.') ?></em>
+		<em><?php echo $this->t('There are no plugins to be installed.') ?></em>
 	</p>
 	<?php endif ?>
 
-	<h2><?php echo $view->t('Upgrade') ?></h2>
+	<h2><?php echo $this->t('Upgrade') ?></h2>
 
-	<?php if ( $view->outdatedPlugins ): ?>
-	<form id="formLogin" method="post" action="">
+	<?php if ( $this->outdatedPlugins ): ?>
+	<form id="form-upgrade" method="post" action="">
 		<fieldset>
-			<?php foreach ( $view->outdatedPlugins as $plugin => $v ): ?>
+			<?php foreach ( $this->outdatedPlugins as $plugin => $v ): ?>
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
@@ -99,9 +99,9 @@
 					<em>(<a href="javascript: void(0);" onclick="
 						e = document.getElementById('sql_<?php echo $plugin ?>');
 						e.style.display = e.style.display == 'none' ? 'block' : 'none';
-						"><?php echo $view->t('View SQL') ?></a>)</em>
+						"><?php echo $this->t('View SQL') ?></a>)</em>
 					<?php else: ?>
-					<em><?php echo $view->t('No upgrade available from version') ?> <?php echo $v['installed_version'] ?></em>
+					<em><?php echo $this->t('No upgrade available from version') ?> <?php echo $v['installed_version'] ?></em>
 					<?php endif; ?>
 				</dd>
 			</dl>
@@ -111,7 +111,7 @@
 		<fieldset>
 			<dl>
 				<dt>
-					<label for="system_password"><?php echo $view->t('System password') ?></label>
+					<label for="system_password"><?php echo $this->t('System password') ?></label>
 				</dt>
 				<dd>
 					<input type="password" name="system-password" id="system-password-2"/>
@@ -126,27 +126,27 @@
 
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Upgrade') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Upgrade') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
 	</form>
 	<?php else: ?>
 	<p>
-		<em><?php echo $view->t('There are no plugins to be upgraded.') ?></em>
+		<em><?php echo $this->t('There are no plugins to be upgraded.') ?></em>
 	</p>
 	<?php endif ?>
 
-	<h2><?php echo $view->t('Remove') ?></h2>
+	<h2><?php echo $this->t('Remove') ?></h2>
 
-	<?php if ( $view->installedPlugins ): ?>
+	<?php if ( $this->installedPlugins ): ?>
 	<p>
-		<?php echo $view->t('Removing a plugin will also <em>permanently remove all data</em> associated with it. Backup your database first!') ?>
+		<?php echo $this->t('Removing a plugin will also <em>permanently remove all data</em> associated with it. Backup your database first!') ?>
 	</p>
 
-	<form id="formInstaller" method="post" action="">
+	<form id="form-remove" method="post" action="">
 		<fieldset>
-			<?php foreach ( $view->installedPlugins as $plugin => $v ): ?>
+			<?php foreach ( $this->installedPlugins as $plugin => $v ): ?>
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
@@ -160,10 +160,10 @@
 
 					<?php if ( $v->required_by_status ): ?>
 					<em>
-						<?php echo $view->t('Required by') ?>:
+						<?php echo $this->t('Required by') ?>:
 
 						<?php foreach ( $v->required_by_status as $requiredBy => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $view->t('Active') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $view->t('Not active') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
+						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $this->t('Active') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $this->t('Not active') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
 						<?php endforeach ?>
 					</em>
 					<?php endif ?>
@@ -174,7 +174,7 @@
 		<fieldset>
 			<dl>
 				<dt>
-					<label for="system_password"><?php echo $view->t('System password') ?></label>
+					<label for="system_password"><?php echo $this->t('System password') ?></label>
 				</dt>
 				<dd>
 					<input type="password" name="system-password" id="system-password-3"/>
@@ -189,27 +189,27 @@
 
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Remove') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Remove') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
 	</form>
 	<?php else: ?>
 	<p>
-		<em><?php echo $view->t('There are no plugins to be removed.') ?></em>
+		<em><?php echo $this->t('There are no plugins to be removed.') ?></em>
 	</p>
 	<?php endif ?>
 
 	<?php else: ?>
 	<p>
-		<?php echo $view->t('Please authenticate with the system password (stored in %1$s).', '<code>/_config.php</code>') ?>
+		<?php echo $this->t('Please authenticate with the system password (stored in %1$s).', '<code>/_config.php</code>') ?>
 	</p>
 
 	<form id="formLogin" method="post" action="">
 		<fieldset>
 			<dl>
 				<dt>
-					<label for="system_password"><?php echo $view->t('system password') ?></label>
+					<label for="system_password"><?php echo $this->t('system password') ?></label>
 				</dt>
 				<dd>
 					<input type="password" name="system-password" id="system-password-3"/>
@@ -224,7 +224,7 @@
 
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $view->t('Authenticate') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Authenticate') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>

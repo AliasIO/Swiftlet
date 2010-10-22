@@ -25,6 +25,9 @@ class Input_Plugin extends Plugin
 			)
 		;
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->ready = TRUE;
@@ -56,6 +59,9 @@ class Input_Plugin extends Plugin
 
 	}
 
+	/*
+	 * Implement footer hook
+	 */
 	function footer()
 	{
 		if ( !empty($this->errors) )
@@ -107,10 +113,11 @@ class Input_Plugin extends Plugin
 		 * $_POST and $_GET values can't be trusted
 		 * If neccesary, access them through $this->POST_raw and $this->GET_raw
 		 */
-		$this->POST_raw = isset($_POST) ? $_POST : array();
-		$this->GET_raw  = isset($_GET)  ? $_GET  : array();
+		$this->POST_raw = isset($_POST)                 ? $_POST : array();
+		$this->GET_raw  = isset($_GET)                  ? $_GET  : array();
+		$this->args     = isset($this->app->view->args) ? $this->app->view->args : array();
 
-		unset($_POST, $_GET);
+		unset($_POST, $_GET, $this->app->view->args);
 
 		foreach ( $this->POST_raw as $k => $v )
 		{
@@ -120,6 +127,11 @@ class Input_Plugin extends Plugin
 		foreach ( $this->GET_raw as $k => $v )
 		{
 			$this->GET_html_safe[$k] = $this->app->view->h($v);
+		}
+
+		foreach ( $this->args as $v )
+		{
+			$this->args_html_safe[$k] = $this->app->view->h($v);
 		}
 
 		$this->app->hook('input_sanitize');
@@ -168,6 +180,12 @@ class Input_Plugin extends Plugin
 		$this->app->hook('input_sanitize');
 	}
 
+	/*
+	 * Check variables against regulare expressions
+	 * @param mixed $var
+	 * @params array $regexes
+	 * @return bool
+	 */
 	private function check($var, $regexes)
 	{
 		if ( is_array($var) )

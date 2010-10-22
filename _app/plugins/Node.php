@@ -23,6 +23,9 @@ class Node_Plugin extends Plugin
 		$paths = array()
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
@@ -68,6 +71,9 @@ class Node_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
@@ -76,6 +82,9 @@ class Node_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		if ( !empty($this->app->db->ready) )
@@ -87,75 +96,31 @@ class Node_Plugin extends Plugin
 			{
 				$this->ready = TRUE;
 
-				if ( $this->app->view->controller == 'Node' && isset($this->app->view->args[0]) )
+				$this->app->db->sql('
+					SELECT
+						`type`
+					FROM `' . $this->app->db->prefix . 'nodes`
+					WHERE
+						' . ( $this->app->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
+						`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
+						`path` = "' . $this->app->db->escape($this->app->view->request) . '"
+					LIMIT 1
+					');
+
+				if ( $r = $this->app->db->result )
 				{
-					$this->app->db->sql('
-						SELECT
-							`type`
-						FROM `' . $this->app->db->prefix . 'nodes`
-						WHERE
-							`id` != ' . ( int ) $this->app->view->args[0] . '
-						;');
-
-					if ( $r = $this->app->db->result )
-					{
-						$this->app->view->controller = ucfirst($r[0]['type']);
-					}
-					else
-					{
-						$this->app->view->controller = 'Err404';
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Get the path for a route
-	 * @param array $params
-	 * @return string
-	 */
-	/*
-	function route(&$params)
-	{
-		$nodeId = array_search(implode('/', $params['parts']), $this->paths);
-
-		if ( !$nodeId && count($params['parts']) == 2 && $params['parts'][0] == 'node' && ( int ) $params['parts'][1] )
-		{
-			$nodeId = ( int ) $params['parts'][1];
-		}
-
-		if ( $nodeId )
-		{
-			$this->app->db->sql('
-				SELECT
-					`type`
-				FROM `' . $this->app->db->prefix . 'nodes`
-				WHERE
-					`id` = ' . ( int ) $nodeId . '
-				LIMIT 1
-				;');
-
-			if ( $r = $this->app->db->result )
-			{
-				$params = array(
-					'type'       => $r['0']['type'],
-					'controller' => ''
-					);
-
-				$this->app->hook('display_node', $params);
-
-				if ( $params['controller'] )
-				{
-					return array(
-						'parts'      => array('node', $nodeId),
-						'controller' => $params['controller']
+					$params = array(
+						'type'       => $r[0]['type'],
+						'controller' => 'Err404'
 						);
+
+					$this->app->hook('display_node', $params);
+
+					$this->app->view->controller = $params['controller'];
 				}
 			}
 		}
 	}
-	*/
 
 	/**
 	 * Create a node
@@ -242,6 +207,11 @@ class Node_Plugin extends Plugin
 
 		$node       = $this->get_children($id);
 		$parentNode = $this->get($parentId);
+
+		if ( !$node )
+		{
+			return;
+		}
 
 		// Node can not be moved to a decendant of its own
 		if ( $node[0]['left_id'] <= $parentNode['left_id'] && $node[0]['right_id'] >= $parentNode['right_id'] )

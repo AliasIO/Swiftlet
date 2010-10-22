@@ -22,6 +22,9 @@ class User_Plugin extends Plugin
 		GUEST_ID = 0
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
@@ -100,6 +103,9 @@ class User_Plugin extends Plugin
 
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
@@ -118,6 +124,10 @@ class User_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement menu hook
+	 * @params array $params
+	 */
 	function menu(&$params)
 	{
 		if ( !empty($this->app->session->ready) )
@@ -134,16 +144,9 @@ class User_Plugin extends Plugin
 		}
 	}
 
-	function dashboard(&$params)
-	{
-		$params[] = array(
-			'name'        => 'Accounts',
-			'description' => 'Add and edit accounts',
-			'group'       => 'Users',
-			'path'        => 'account'
-			);
-	}
-
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		if ( !empty($this->app->db->ready) )
@@ -188,6 +191,20 @@ class User_Plugin extends Plugin
 				}
 			}
 		}
+	}
+
+	/*
+	 * Implement dashboard hook
+	 * @param array $params
+	 */
+	function dashboard(&$params)
+	{
+		$params[] = array(
+			'name'        => 'Accounts',
+			'description' => 'Add and edit accounts',
+			'group'       => 'Users',
+			'path'        => 'account'
+			);
 	}
 
 	/**
@@ -369,7 +386,7 @@ class User_Plugin extends Plugin
 	 * Save a preference value
 	 * @param array $params
 	 */
-	function save_pref_value($params)
+	function save_pref_value(&$params)
 	{
 		$this->app = $this->app;
 
@@ -431,7 +448,11 @@ class User_Plugin extends Plugin
 		return $prefs;
 	}
 
-	function unit_tests()
+	/*
+	 * Implement unit_tests hook
+	 * @params array $params
+	 */
+	function unit_tests(&$params)
 	{
 		/**
 		 * Creating a user account

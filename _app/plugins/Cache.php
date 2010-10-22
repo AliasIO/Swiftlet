@@ -19,12 +19,19 @@ class Cache_Plugin extends Plugin
 		$cacheLifeTime = 3600
 		;
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->ready = TRUE;
 	}
 
-	function cache()
+	/*
+	 * Implement cache hook
+	 * @param array $params
+	 */
+	function cache(&$params)
 	{
 		if ( !empty($app->cache->ready) )
 		{
@@ -83,7 +90,7 @@ class Cache_Plugin extends Plugin
 
 	/**
 	 * Write a file to cache
-	 * @param string $v
+	 * @param string $contents
 	 */
 	function write(&$contents)
 	{

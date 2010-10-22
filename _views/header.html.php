@@ -2,45 +2,45 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
 	<head>
-		<title><?php echo $view->siteName ?> - <?php echo $view->t($view->pageTitle) ?></title>
+		<title><?php echo $this->siteName ?> - <?php echo $this->t($this->pageTitle) ?></title>
 
-		<link type="text/css"  rel="stylesheet"    href="<?php echo $view->route('css/global.css/grid.css') ?>"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $this->route('css/global.css/grid.css') ?>"/>
 
-		<link type="image/png" rel="shortcut icon" href="<?php echo $view->rootPath ?>favicon.ico"/>
+		<link type="image/png" rel="shortcut icon" href="<?php echo $this->rootPath ?>favicon.ico"/>
 
 		<meta http-equiv="content-type"     content="text/html; charset=UTF-8"/>
 		<meta http-equiv="content-language" content="en-US"/>
 
-		<meta name="title"        content="<?php echo $view->siteName ?> - <?php echo $view->t($view->pageTitle) ?>"/>
+		<meta name="title"        content="<?php echo $this->siteName ?> - <?php echo $this->t($this->pageTitle) ?>"/>
 		<meta name="distribution" content="global"/>
 		<meta name="generator"    content="Swiftlet - http://swiftlet.org"/>
-		<meta name="copyright"    content="<?php echo $view->siteCopyright   ?>"/>
-		<meta name="designer"     content="<?php echo $view->siteDesigner    ?>"/>
-		<meta name="description"  content="<?php echo $view->pageDescription ?>"/>
-		<meta name="keywords"     content="<?php echo $view->pageKeywords    ?>"/>
+		<meta name="copyright"    content="<?php echo $this->siteCopyright   ?>"/>
+		<meta name="designer"     content="<?php echo $this->siteDesigner    ?>"/>
+		<meta name="description"  content="<?php echo $this->pageDescription ?>"/>
+		<meta name="keywords"     content="<?php echo $this->pageKeywords    ?>"/>
 
 		<?php if ( $controller->inAdmin ): ?>
-		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/ckeditor/ckeditor.js"></script>
-		<script type="text/javascript" src="<?php echo $view->route('ckeditor') ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->rootPath ?>lib/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="<?php echo $this->route('ckeditor') ?>"></script>
 		<?php endif ?>
 
-		<script type="text/javascript" src="<?php echo $view->rootPath ?>lib/jquery/jquery-1.4.3.min.js"></script>
+		<script type="text/javascript" src="<?php echo $this->rootPath ?>lib/jquery/jquery-1.4.3.min.js"></script>
 	</head>
 	<body class="<?php echo $controller->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">
 			<h1 id="logo">
-				<a href="<?php echo $view->rootPath ?>" title="<?php echo $view->t('Home') ?>"><?php echo $view->siteName ?></a>
+				<a href="<?php echo $this->rootPath ?>" title="<?php echo $this->t('Home') ?>"><?php echo $this->siteName ?></a>
 			</h1>
 
 			<div id="menu">
 				<ul>
 					<li>
-						<a href="<?php echo $view->rootPath ?>"><?php echo $view->t('Home') ?></a>
+						<a href="<?php echo $this->rootPath ?>"><?php echo $this->t('Home') ?></a>
 					</li>
 					<?php if ( !empty($app->header->menu) ): ?>
 					<?php foreach ( $app->header->menu as $item => $path ): ?>
 					<li>
-						<a href="<?php echo $path ?>"><?php echo $view->t($item) ?></a>
+						<a href="<?php echo $path ?>"><?php echo $this->t($item) ?></a>
 					</li>
 					<?php endforeach ?>
 					<?php endif ?>
@@ -48,7 +48,7 @@
 
 				<?php if ( $controller->inAdmin ): ?>
 				<p>
-					<?php echo $view->t('Administration') ?>
+					<?php echo $this->t('Administration') ?>
 				</p>
 				<?php endif ?>
 			</div>

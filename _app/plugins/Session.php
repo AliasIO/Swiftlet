@@ -24,6 +24,9 @@ class Session_Plugin extends Plugin
 		$hash
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
@@ -42,6 +45,9 @@ class Session_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
@@ -50,6 +56,9 @@ class Session_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		/**
@@ -171,6 +180,7 @@ class Session_Plugin extends Plugin
 	}
 
 	/**
+	 * Implement end hook
 	 * Save session contents
 	 */
 	function end()

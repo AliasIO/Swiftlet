@@ -26,6 +26,9 @@ class Language_Plugin extends Plugin
 		$translation = array()
 		;
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->check_languages();

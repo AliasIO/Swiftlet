@@ -21,6 +21,9 @@ class Header_Plugin extends Plugin
 		$menu = array()
 		;
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->ready = TRUE;
@@ -36,6 +39,9 @@ class Header_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement header hook
+	 */
 	function header()
 	{
 		$this->app->view->load('header.html.php');

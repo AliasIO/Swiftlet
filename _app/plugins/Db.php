@@ -25,6 +25,9 @@ class Db_Plugin extends Plugin
 		$tables = array()
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
@@ -58,6 +61,9 @@ class Db_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
@@ -75,20 +81,30 @@ class Db_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		$this->connect($this->app->config['dbHost'], $this->app->config['dbUser'], $this->app->config['dbPass'], $this->app->config['dbName'], $this->app->config['dbPrefix']);
 	}
 
+	/*
+	 * Implement input sanitize hook
+	 */
 	function input_sanitize()
 	{
 		if ( !empty($this->ready) )
 		{
 			$this->app->input->POST_db_safe = $this->app->db->sanitize($this->app->input->POST_raw);
 			$this->app->input->GET_db_safe  = $this->app->db->sanitize($this->app->input->GET_raw);
+			$this->app->input->args_db_safe = $this->app->db->sanitize($this->app->input->args);
 		}
 	}
 
+	/*
+	 * Implement end hook
+	 */
 	function end()
 	{
 		$this->app->db->close();
@@ -209,6 +225,7 @@ class Db_Plugin extends Plugin
 
 	/**
 	 * Perform a MySQL read query
+	 * @params $cache
 	 */
 	private function read($cache)
 	{

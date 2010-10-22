@@ -23,6 +23,9 @@ class Permission_Plugin extends Plugin
 		NEVER         = -1
 		;
 
+	/*
+	 * Implement install hook
+	 */
 	function install()
 	{
 		if ( !in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
@@ -110,6 +113,9 @@ class Permission_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement remove hook
+	 */
 	function remove()
 	{
 		if ( in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
@@ -133,6 +139,9 @@ class Permission_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement init hook
+	 */
 	function init()
 	{
 		/**
@@ -177,6 +186,10 @@ class Permission_Plugin extends Plugin
 		}
 	}
 
+	/*
+	 * Implement dashboard hook
+	 * @param array $params
+	 */
 	function dashboard(&$params)
 	{
 		$params[] = array(

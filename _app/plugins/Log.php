@@ -15,7 +15,11 @@ class Log_Plugin extends Plugin
 		$hooks      = array('unit_tests' => 1)
 		;
 
-	function unit_tests()
+	/*
+	 * Implement unit_test hook
+	 * @param array $params
+	 */
+	function unit_tests(&$params)
 	{
 		$this->write('unit_test', 'Test');
 

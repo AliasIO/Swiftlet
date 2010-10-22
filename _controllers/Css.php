@@ -21,12 +21,12 @@ class Css_Controller extends Controller
 		/*
 		 * Parse CSS files
 		 */
-		if ( $this->args )
+		if ( $this->app->input->args )
 		{
 			$css = '';
 
 			// Combine files
-			foreach ( $this->args as $filename )
+			foreach ( $this->app->input->args as $filename )
 			{
 				if ( is_file($file = '_views/' . $filename) )
 				{

@@ -126,7 +126,7 @@ class Permission_Controller extends Controller
 
 		if ( !$this->app->permission->check('admin permission access') )
 		{
-			header('Location: ' . $contr->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
 
 			$this->app->end();
 		}
@@ -144,7 +144,7 @@ class Permission_Controller extends Controller
 			}
 			else
 			{
-				if ( $action == 'create' && $this->app->permission->check('admin permission create') )
+				if ( $this->method == 'create' && $this->app->permission->check('admin permission create') )
 				{
 					$this->app->db->sql('
 						INSERT IGNORE INTO `' . $this->app->db->prefix . 'perms_roles` (
@@ -157,24 +157,24 @@ class Permission_Controller extends Controller
 
 					if ( $this->app->db->result )
 					{
-						header('Location: ?notice=created');
+						header('Location: ' . $this->view->route($this->path . '?notice=created'));
 
 						$this->app->end();
 					}
 				}
-				else if ( $action == 'edit' && $this->app->permission->check('admin permission edit') )
+				else if ( $this->method == 'edit' && $this->app->permission->check('admin permission edit') )
 				{
 					$this->app->db->sql('
 						UPDATE `' . $this->app->db->prefix . 'perms_roles` SET
 							`name` = "' . $this->app->input->POST_db_safe['name'] . '"
 						WHERE
-							`id` = ' . ( int ) $id . '
+							`id` = ' . ( int ) $this->id . '
 						LIMIT 1
 						;');
 
 					if ( $this->app->db->result )
 					{
-						header('Location: ?notice=updated');
+						header('Location: ' . $this->view->route($this->path . '?notice=updated'));
 
 						$this->app->end();
 					}
@@ -182,7 +182,7 @@ class Permission_Controller extends Controller
 			}
 		}
 
-		if ( $this->app->input->POST_valid['form-submit-2'] && $id && $this->app->permission->check('admin permission edit') )
+		if ( $this->app->input->POST_valid['form-submit-2'] && $this->id && $this->app->permission->check('admin permission edit') )
 		{
 			if ( !$this->app->input->errors )
 			{
@@ -192,12 +192,12 @@ class Permission_Controller extends Controller
 						`user_id`
 						)
 					VALUES (
-						' . ( int ) $id . ',
+						' . ( int ) $this->id                               . ',
 						' . ( int ) $this->app->input->POST_db_safe['user'] . '
 						)
 					;');
 
-				header('Location: ?notice=added');
+				header('Location: ' . $this->view->route($this->path . '?notice=added'));
 
 				$this->app->end();
 			}
@@ -219,7 +219,7 @@ class Permission_Controller extends Controller
 								)
 							VALUES (
 								' . ( int ) $permission['id'] . ',
-								' . ( int ) $role['id'] . ',
+								' . ( int ) $role['id']       . ',
 								' . ( int ) $this->app->input->POST_db_safe['value'][$permission['id']][$role['id']] . '
 								)
 							ON DUPLICATE KEY UPDATE
@@ -228,7 +228,7 @@ class Permission_Controller extends Controller
 					}
 				}
 
-				header('Location: ?notice=permissions_updated');
+				header('Location: ' . $this->view->route($this->path . '?notice=permissions_updated'));
 
 				$this->app->end();
 			}
@@ -305,16 +305,16 @@ class Permission_Controller extends Controller
 			}
 		}
 
-		if ( $action && $id )
+		if ( $this->method && $this->id )
 		{
-			switch ( $action )
+			switch ( $this->method )
 			{
 				case 'edit':
-					$this->app->input->POST_html_safe['name'] = $roles[$id]['name'];
+					$this->app->input->POST_html_safe['name'] = $roles[$this->id]['name'];
 
 					break;
-				case 'remove':
-					if ( isset($this->app->input->GET_raw['user_id']) && $userId = ( int ) $this->app->input->GET_raw['user_id'] && $this->app->permission->check('admin permission edit') )
+				case 'remove_user':
+					if ( isset($this->app->input->args['2']) && $userId = ( int ) $this->app->input->args['2'] && $this->app->permission->check('admin permission edit') )
 					{
 						if ( !$this->app->input->POST_valid['confirm'] )
 						{
@@ -326,13 +326,13 @@ class Permission_Controller extends Controller
 								DELETE
 								FROM `' . $this->app->db->prefix . 'perms_roles_users_xref`
 								WHERE
-									`user_id` = ' . ( int ) $userId . ' AND
-									`role_id` = ' . ( int ) $id . '
+									`user_id` = ' . ( int ) $userId   . ' AND
+									`role_id` = ' . ( int ) $this->id . '
 								;');
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ?notice=removed');
+								header('Location: ' . $this->view->route($this->path . '?notice=removed'));
 
 								$this->app->end();
 							}
@@ -352,16 +352,16 @@ class Permission_Controller extends Controller
 							$this->app->db->sql('
 								DELETE
 									pr, prx, prux
-								FROM      `' . $this->app->db->prefix . 'perms_roles`            AS pr
-								LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`       = prx.`role_id`
-								LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux ON prx.`role_id` = prux.`role_id`
+								FROM      `' . $this->app->db->prefix . 'perms_roles`            AS   pr
+								LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref`       AS  prx ON pr.`id` =  prx.`role_id`
+								LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux ON pr.`id` = prux.`role_id`
 								WHERE
-									pr.`id` = ' . ( int ) $id . '
+									pr.`id` = ' . ( int ) $this->id . '
 								;');
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ?notice=deleted');
+								header('Location: ' . $this->view->route($this->path . '?notice=deleted'));
 
 								$this->app->end();
 							}
@@ -374,8 +374,6 @@ class Permission_Controller extends Controller
 
 		$this->app->input->POST_html_safe['value'] = $values;
 
-		$this->view->id                = $id;
-		$this->view->action            = $action;
 		$this->view->users             = $users;
 		$this->view->permissionsGroups = $permissionsGroups;
 		$this->view->roles             = $roles;
