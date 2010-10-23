@@ -148,60 +148,56 @@ class Upload_Controller extends Controller
 			}
 		}
 
-		if ( !empty($this->args[0]) && !empty($this->args[1]) )
+		switch ( $this->method )
 		{
-			switch ( $this->args[0] )
-			{
-				case 'delete':
-					if ( !$this->app->input->POST_valid['confirm'] )
+			case 'delete':
+				if ( !$this->app->input->POST_valid['confirm'] )
+				{
+					$this->app->input->confirm($this->view->t('Are you sure you wish to delete this file?'));
+				}
+				else
+				{
+					$this->app->db->sql('
+						SELECT
+							`filename`
+						FROM `' . $this->app->db->prefix . 'uploads`
+						WHERE
+							`id` = ' . ( int ) $this->id . '
+						LIMIT 1
+						;');
+
+					if ( $r = $this->app->db->result )
 					{
-						$this->app->input->confirm($this->view->t('Are you sure you wish to delete this file?'));
-					}
-					else
-					{
-						// Delete file
+						$filename = $r[0]['filename'];
+
+						if ( is_file($file = 'uploads/files/' . $filename) )
+						{
+							unlink($file);
+						}
+
+						if ( is_file($file = 'uploads/thumbs/' . $filename) )
+						{
+							unlink($file);
+						}
+
 						$this->app->db->sql('
-							SELECT
-								`filename`
+							DELETE
 							FROM `' . $this->app->db->prefix . 'uploads`
 							WHERE
-								`id` = ' . ( int ) $this->args[1] . '
+								`id` = ' . ( int ) $this->id . '
 							LIMIT 1
 							;');
 
-						if ( $r = $this->app->db->result )
+						if ( $this->app->db->result )
 						{
-							$filename = $r[0]['filename'];
+							header('Location: ' . $this->app->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
 
-							if ( is_file($file = 'uploads/files/' . $filename) )
-							{
-								unlink($file);
-							}
-
-							if ( is_file($file = 'uploads/thumbs/' . $filename) )
-							{
-								unlink($file);
-							}
-
-							$this->app->db->sql('
-								DELETE
-								FROM `' . $this->app->db->prefix . 'uploads`
-								WHERE
-									`id` = ' . ( int ) $this->args[1] . '
-								LIMIT 1
-								;');
-
-							if ( $this->app->db->result )
-							{
-								header('Location: ' . $this->app->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
-
-								$this->app->end();
-							}
+							$this->app->end();
 						}
 					}
+				}
 
-					break;
-			}
+				break;
 		}
 
 		// Create a list of all files

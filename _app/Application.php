@@ -268,7 +268,7 @@ class Application
 		$this->console(array('DEBUG OUTPUT' => $this->debugOutput), 'info');
 
 		// Write debug messages to console
-		if ( $this->debugMode && $this->consoleMessages )
+		if ( $this->debugMode && !$this->controller->standAlone && $this->consoleMessages )
 		{
 			$messages = array();
 
@@ -281,7 +281,7 @@ class Application
 				<script type="text/javascript">
 					/* <![CDATA[ */
 					window.onload = function() {
-						if ( console ) {
+						if ( typeof(console) != \'undefined\' ) {
 							' . implode("\n", $messages) . '
 						}
 					};

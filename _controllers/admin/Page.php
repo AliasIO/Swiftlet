@@ -305,7 +305,7 @@ class Page_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->app->view->route($this->app->view->request . '?notice=deleted'));
+								header('Location: ' . $this->app->view->route($this->path . '?notice=deleted'));
 
 								$this->app->end();
 							}
