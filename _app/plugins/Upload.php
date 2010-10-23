@@ -207,23 +207,22 @@ class Upload_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		/*
 		/**
 		 * Uploading a file
-		 * /
+		 */
 		$post = array(
 			'title[0]'    => 'Unit Test File',
-			'file[0]'     => '@' . $controller->rootPath . 'favicon.ico',
+			'file[0]'     => '@favicon.ico',
 			'form-submit' => 'Submit',
 			'auth-token'  => $this->app->input->authToken
 			);
 
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/files/', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/upload', $post);
 
 		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->app->db->prefix . 'files`
+			FROM `' . $this->app->db->prefix . 'uploads`
 			WHERE
 				`title` = "Unit Test File"
 			LIMIT 1
@@ -232,40 +231,35 @@ class Upload_Plugin extends Plugin
 		$file = isset($this->app->db->result[0]) ? $this->app->db->result[0] : FALSE;
 
 		$params[] = array(
-			'test' => 'Uploading a file in <code>/admin/files/</code>.',
+			'test' => 'Uploading a file in <code>/admin/upload</code>.',
 			'pass' => ( bool ) $file['id']
 			);
 
 		/**
 		 * Deleting a file
-		 * /
+		 */
 		if ( $file['id'] )
 		{
 			$post = array(
-				'get_data'   => serialize(array(
-					'id'     => ( int ) $file['id'],
-					'action' => 'delete'
-					)),
 				'confirm'    => '1',
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/files/?id=' . ( int ) $file['id'] . '&action=delete', $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/upload/delete/' . ( int ) $file['id'], $post);
 		}
 
 		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->app->db->prefix . 'files`
+			FROM `' . $this->app->db->prefix . 'uploads`
 			WHERE
 				`id` = ' . ( int ) $file['id'] . '
 			LIMIT 1
 			;', FALSE);
 
 		$params[] = array(
-			'test' => 'Deleting a file in <code>/admin/files/</code>.',
+			'test' => 'Deleting a file in <code>/admin/upload</code>.',
 			'pass' => !$this->app->db->result
 			);
-		*/
 	}
 }

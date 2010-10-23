@@ -18,9 +18,10 @@ class Application
 		;
 
 	public
-		$configMissing = FALSE,
-		$debugMode     = TRUE,
-		$plugins       = array()
+		$configMissing   = FALSE,
+		$consoleMessages = array(),
+		$debugMode       = TRUE,
+		$plugins         = array()
 		;
 
 	/**
@@ -92,6 +93,8 @@ class Application
 		}
 
 		$this->hook('init');
+
+		$this->hook('init_after');
 
 		chdir('../../');
 
@@ -262,9 +265,60 @@ class Application
 		$this->debugOutput['execution time']['all'] = round(microtime(TRUE) - $this->timerStart,   3) . ' sec';
 		$this->debugOutput['peak memory usage']     = round(memory_get_peak_usage() / 1024 / 1024, 3) . ' MB';
 
+		$this->console(array('DEBUG OUTPUT' => $this->debugOutput), 'info');
+
+		// Write debug messages to console
+		if ( $this->debugMode && $this->consoleMessages )
+		{
+			$messages = array();
+
+			foreach ( $this->consoleMessages as $message )
+			{
+				$messages[] = 'console.' . $message['type'] . '(unescape(\'' . rawurlencode('SWIFTLET ' . addslashes($message['file']) . ' on line ' . ( int ) $message['line'] . '\n\n' . $message['message']) . '\'));';
+			}
+
+			echo '
+				<script type="text/javascript">
+					/* <![CDATA[ */
+					window.onload = function() {
+						if ( console ) {
+							' . implode("\n", $messages) . '
+						}
+					};
+					/* ]]> */
+				</script>
+				';
+		}
+
 		$this->hook('end');
 
 		exit;
+	}
+
+	/**
+	 * Write debug messages to browser's JavaScript console
+	 */
+	function console($message, $type = 'debug')
+	{
+		if ( $this->debugMode )
+		{
+			$backtrace = debug_backtrace();
+
+			ob_start();
+
+			print_r($message);
+
+			$message = ob_get_contents();
+
+			ob_end_clean();
+
+			$this->consoleMessages[] = array(
+				'message' => $message,
+				'type'    => $type,
+				'file'    => $backtrace[0]['file'],
+				'line'    => $backtrace[0]['line'],
+				);
+		}
 	}
 
 	/**

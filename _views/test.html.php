@@ -3,7 +3,7 @@
 
 	<p>
 		<?php if ( $this->failures ): ?>
-		<?php echo $this->t('%d Out of %d tests failed.', array($this->failures, $this->passes + $this->failures) ?>
+		<?php echo $this->t('%d Out of %d tests failed.', array($this->failures, $this->passes + $this->failures)) ?>
 		<?php else: ?>
 		<?php echo $this->t('All %d tests passed.', $this->passes + $this->failures) ?>
 		<?php endif ?>

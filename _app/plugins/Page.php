@@ -191,12 +191,11 @@ class Page_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		/*
 		/**
 		 * Creating a page
-		 * /
+		 */
 		$post = array(
-			'parent'      => Node::ROOT_ID,
+			'parent'      => Node_Plugin::ROOT_ID,
 			'path'        => '',
 			'form-submit' => 'Submit',
 			'auth-token'  => $this->app->input->authToken
@@ -206,11 +205,11 @@ class Page_Plugin extends Plugin
 
 		foreach ( $languages as $language )
 		{
-			$post['title[' . $view->h($language) . ']'] = 'Unit Test Page';
-			$post['body['  . $view->h($language) . ']'] = 'Unit Test Page - Create';
+			$post['title[' . $this->app->view->h($language) . ']'] = 'Unit Test Page';
+			$post['body['  . $this->app->view->h($language) . ']'] = 'Unit Test Page - Create';
 		}
 
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/pages/', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/page', $post);
 
 		$this->app->db->sql('
 			SELECT
@@ -227,17 +226,17 @@ class Page_Plugin extends Plugin
 		$page = isset($this->app->db->result[0]) ? $this->app->db->result[0] : FALSE;
 
 		$params[] = array(
-			'test' => 'Creating a page in <code>/admin/pages/</code>.',
+			'test' => 'Creating a page in <code>/admin/page</code>.',
 			'pass' => ( bool ) $page['node_id']
 			);
 
 		/**
 		 * Editing a page
-		 * /
+		 */
 		if ( $page['node_id'] )
 		{
 			$post = array(
-				'parent'      => Node::ROOT_ID,
+				'parent'      => Node_Plugin::ROOT_ID,
 				'path'        => '',
 				'form-submit' => 'Submit',
 				'auth-token'  => $this->app->input->authToken
@@ -245,11 +244,11 @@ class Page_Plugin extends Plugin
 
 			foreach ( $languages as $language )
 			{
-				$post['title[' . $view->h($language) . ']'] = 'Unit Test Page';
-				$post['body['  . $view->h($language) . ']'] = 'Unit Test Page - Edit';
+				$post['title[' . $this->app->view->h($language) . ']'] = 'Unit Test Page';
+				$post['body['  . $this->app->view->h($language) . ']'] = 'Unit Test Page - Edit';
 			}
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=edit', $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/page/edit/' . ( int ) $page['node_id'], $post);
 		}
 
 		$this->app->db->sql('
@@ -264,25 +263,21 @@ class Page_Plugin extends Plugin
 		$body = isset($this->app->db->result[0]) ? $this->app->db->result[0]['body'] : FALSE;
 
 		$params[] = array(
-			'test' => 'Editing a page in <code>/admin/pages/</code>.',
+			'test' => 'Editing a page in <code>/admin/page</code>.',
 			'pass' => $body == 'Unit Test Page - Edit'
 			);
 
 		/**
 		 * Deleting a page
-		 * /
+		 */
 		if ( $page['node_id'] )
 		{
 			$post = array(
-				'get_data'   => serialize(array(
-					'id'     => ( int ) $page['node_id'],
-					'action' => 'delete'
-					)),
 				'confirm'    => '1',
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/pages/?id=' . ( int ) $page['node_id'] . '&action=delete', $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/page/delete/' . ( int ) $page['node_id'], $post);
 		}
 
 		$this->app->db->sql('
@@ -296,9 +291,8 @@ class Page_Plugin extends Plugin
 			;', FALSE);
 
 		$params[] = array(
-			'test' => 'Deleting a page in <code>/admin/pages/</code>.',
+			'test' => 'Deleting a page in <code>/admin/page</code>.',
 			'pass' => !$this->app->db->result
 			);
-		*/
 	}
 }

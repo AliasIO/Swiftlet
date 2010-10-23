@@ -47,7 +47,7 @@
 
 		<dl>
 			<dt><?php echo $this->t('Environment') ?></dt>
-			<dd><?php echo $app->config['testing'] ? $this->t('Testing (%1$sunit tests%2$s)', array('<a href="' . $this->route('unit_tests') . '">', '</a>')) : $this->t('Production') ?></dd>
+			<dd><?php echo $app->config['testing'] ? $this->t('Testing (%1$sunit tests%2$s)', array('<a href="' . $this->route('test') . '">', '</a>')) : $this->t('Production') ?></dd>
 
 			<dt><?php echo $this->t('Debug mode') ?></dt>
 			<dd><?php echo $app->config['debugMode'] ? $this->t('On') : $this->t('Off') ?></dd>

@@ -21,19 +21,17 @@ class Log_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		/*
 		$this->write('unit_test', 'Test');
 
 		$params[] = array(
 			'test' => 'Writing a log file to <code>/log/</code>.',
-			'pass' => is_file($this->app->controller->rootPath . 'log/unit_test')
+			'pass' => is_file('log/unit_test')
 			);
 
-		if ( is_file($this->app->controller->rootPath . 'log/unit_test') )
+		if ( is_file('log/unit_test') )
 		{
-			unlink($this->app->controller->rootPath . 'log/unit_test');
+			unlink('log/unit_test');
 		}
-		*/
 	}
 
 	/**
@@ -41,19 +39,19 @@ class Log_Plugin extends Plugin
 	 */
 	function write($filename, $contents)
 	{
-		if ( !is_dir($this->controller->rootPath . 'log') )
+		if ( !is_dir('log') )
 		{
 			$this->app->error(FALSE, 'Directory "/log" does not exist.', __FILE__, __LINE__);
 		}
 
-		if ( !is_writable($this->controller->rootPath . 'log') )
+		if ( !is_writable('log') )
 		{
 			$this->app->error(FALSE, 'Directory "/log" is not writable.', __FILE__, __LINE__);
 		}
 
 		$contents = date('M d H:i:s') . "\t" . $contents . "\n";
 
-		if ( !$handle = fopen($this->controller->rootPath . 'log/' . $filename, 'a+') )
+		if ( !$handle = fopen('log/' . $filename, 'a+') )
 		{
 			$this->app->error(FALSE, 'Could not open file "/log/' . $filename . '".', __FILE__, __LINE__);
 		}

@@ -88,11 +88,11 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'admin/index.php', array(), TRUE);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/dashboard', array(), TRUE);
 
 		$params[] = array(
-			'test' => '<code>/admin/</code> should be inaccessible for guests.',
-			'pass' => $r['info']['http_code'] == '302'
+			'test' => '<code>/admin/dashboard</code> should be inaccessible for guests.',
+			'pass' => $r['info']['redirect_count']
 			);
 	}
 }

@@ -12,7 +12,7 @@ class Node_Plugin extends Plugin
 	public
 		$version    = '1.0.0',
 		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('init' => 4, 'install' => 1, 'remove' => 1)
+		$hooks      = array('init' => 4, 'init_after' => 1, 'install' => 1, 'remove' => 1)
 		;
 
 	const
@@ -95,36 +95,41 @@ class Node_Plugin extends Plugin
 			if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
 			{
 				$this->ready = TRUE;
-
-				if ( $this->app->view->request )
-				{
-					$this->app->db->sql('
-						SELECT
-							`type`
-						FROM `' . $this->app->db->prefix . 'nodes`
-						WHERE
-							' . ( $this->app->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
-							`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
-							`path` = "' . $this->app->db->escape($this->app->view->request) . '"
-						LIMIT 1
-						');
-
-					if ( $r = $this->app->db->result )
-					{
-						$params = array(
-							'type'       => $r[0]['type'],
-							'controller' => 'Err404'
-							);
-
-						$this->app->hook('display_node', $params);
-
-						$this->app->view->controller = $params['controller'];
-					}
-				}
 			}
 		}
 	}
 
+	/*
+	 * Implement init_after hook
+	 */
+	function init_after()
+	{
+		if ( !empty($this->ready) && $this->app->view->request )
+		{
+			$this->app->db->sql('
+				SELECT
+					`type`
+				FROM `' . $this->app->db->prefix . 'nodes`
+				WHERE
+					' . ( $this->app->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
+					`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
+					`path` = "' . $this->app->db->escape($this->app->view->request) . '"
+				LIMIT 1
+				');
+
+			if ( $r = $this->app->db->result )
+			{
+				$params = array(
+					'type'       => $r[0]['type'],
+					'controller' => 'Err404'
+					);
+
+				$this->app->hook('display_node', $params);
+
+				$this->app->view->controller = $params['controller'];
+			}
+		}
+	}
 	/**
 	 * Create a node
 	 * @param string $title
