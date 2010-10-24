@@ -24,7 +24,12 @@ class Buffer_Plugin extends Plugin
 	 */
 	function init()
 	{
-		$this->start();
+		if ( !$this->ready )
+		{
+			ob_start();
+
+			$this->ready = TRUE;
+		}
 	}
 
 	/*
@@ -48,19 +53,6 @@ class Buffer_Plugin extends Plugin
 		if ( !empty($this->ready) )
 		{
 			$this->clean();
-		}
-	}
-
-	/**
-	 * Start buffering
-	 */
-	function start()
-	{
-		if ( !$this->ready )
-		{
-			ob_start();
-
-			$this->ready = TRUE;
 		}
 	}
 
@@ -89,7 +81,7 @@ class Buffer_Plugin extends Plugin
 			// Output debug messages
 			ob_start();
 
-			if ( $this->app->debugMode )
+			if ( $this->app->config['debugMode'] )
 			{
 				echo "\n<!--\n\n[ DEBUG OUTPUT ]\n\n";
 

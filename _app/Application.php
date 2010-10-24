@@ -20,7 +20,6 @@ class Application
 	public
 		$configMissing   = FALSE,
 		$consoleMessages = array(),
-		$debugMode       = TRUE,
 		$plugins         = array()
 		;
 
@@ -61,22 +60,18 @@ class Application
 			}
 		}
 
-		chdir(dirname(__FILE__));
-
 		$this->view = new View($this);
 
 		/*
 		 * Plugins
 		 */
-		chdir('plugins');
-
-		if ( $handle = opendir('.') )
+		if ( $handle = opendir('_app/plugins') )
 		{
 			while ( ( $file = readdir($handle) ) !== FALSE )
 			{
-				if ( is_file($file) && preg_match('/\.php$/', $file) )
+				if ( is_file('_app/plugins/' . $file) && preg_match('/\.php$/', $file) )
 				{
-					require($file);
+					require('_app/plugins/' . $file);
 
 					$plugin      = basename($file, '.php');
 					$pluginClass = $plugin . '_Plugin';
@@ -95,8 +90,6 @@ class Application
 		$this->hook('init');
 
 		$this->hook('init_after');
-
-		chdir('../../');
 
 		require('_controllers/' . $this->view->controller . '.php');
 
@@ -260,6 +253,8 @@ class Application
 			$this->hook('footer');
 		}
 
+		ob_start();
+
 		$this->view->output();
 
 		$this->debugOutput['execution time']['all'] = round(microtime(TRUE) - $this->timerStart,   3) . ' sec';
@@ -268,7 +263,7 @@ class Application
 		$this->console(array('DEBUG OUTPUT' => $this->debugOutput), 'info');
 
 		// Write debug messages to console
-		if ( $this->debugMode && !$this->controller->standAlone && $this->consoleMessages )
+		if ( $this->config['debugMode'] && !$this->controller->standAlone && $this->consoleMessages )
 		{
 			$messages = array();
 
@@ -292,6 +287,8 @@ class Application
 
 		$this->hook('end');
 
+		ob_end_flush();
+
 		exit;
 	}
 
@@ -300,7 +297,7 @@ class Application
 	 */
 	function console($message, $type = 'debug')
 	{
-		if ( $this->debugMode )
+		if ( $this->config['debugMode'] )
 		{
 			$backtrace = debug_backtrace();
 
@@ -377,7 +374,7 @@ class Application
 							Oops! An error occured.
 						</p>
 
-						' . ( $this->debugMode ? '
+						' . ( $this->config['debugMode'] ? '
 						<p>[
 							<a href="javascript: void(0);" onclick="
 								e = document.getElementById(\'error_debug_mode\');
@@ -395,7 +392,7 @@ class Application
 						</p>' : '' ) . '
 			';
 
-		if ( $this->debugMode )
+		if ( $this->config['debugMode'] )
 		{
 			if ( count(debug_backtrace(FALSE)) > 1 )
 			{

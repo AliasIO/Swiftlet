@@ -63,7 +63,7 @@ class View
 
 				$file = ltrim(implode('/', array_slice($args, 0, $i - 1)) . '/' . ucfirst($args[$i - 1]), '/');
 
-				if ( is_file('../_controllers/' . $file . '.php') )
+				if ( is_file('_controllers/' . $file . '.php') )
 				{
 					$this->controller = $file;
 					$this->path       = implode('/', array_slice($args, 0, $i));

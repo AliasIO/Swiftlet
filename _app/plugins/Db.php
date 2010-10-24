@@ -297,7 +297,7 @@ class Db_Plugin extends Plugin
 			}
 		}
 
-		if ( $this->app->debugMode && preg_match('/^SELECT/i', $this->sql) )
+		if ( $this->app->config['debugMode'] && preg_match('/^SELECT/i', $this->sql) )
 		{
 			/**
 			 * Get detailed debug information about a SELECT query

@@ -90,12 +90,12 @@
 	<li>
 		<code>$app-&gt;debugOutput</code><br/>
 		Debug notices generated throughout the code. The contents are shown when an error occurs (and in the generated source code) if
-		<code>debugMode</code> is set to <code>TRUE</code> in <code>/_config.php</code>. The notices can be used to track down bugs.
+		<code>config['debugMode']</code> is set to <code>TRUE</code> in <code>/_config.php</code>. The notices can be used to track down bugs.
 	</li>
 </ul>
 
 <p>
-	Every value of the <a href="../guides/config">configuration</a> file is also available as a variable, e.g. <code>$app->debugMode</code>.
+	Every value of the <a href="../guides/config">configuration</a> file is also available as a variable, e.g. <code>$app->config['debugMode']</code>.
 </p>
 
 <h4>Constants</h4>

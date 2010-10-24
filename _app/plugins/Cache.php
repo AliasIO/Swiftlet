@@ -10,9 +10,10 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 class Cache_Plugin extends Plugin
 {
 	public
-		$version    = '1.0.0',
-		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('cache' => 1, 'clear_cache' => 1, 'init' => 999)
+		$version      = '1.0.0',
+		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
+		$dependencies = array('buffer'),
+		$hooks        = array('cache' => 1, 'clear_cache' => 1, 'init' => 5)
 		;
 
 	private
@@ -25,55 +26,36 @@ class Cache_Plugin extends Plugin
 	function init()
 	{
 		$this->ready = TRUE;
-	}
 
-	/*
-	 * Implement cache hook
-	 * @param array $params
-	 */
-	function cache(&$params)
-	{
-		if ( !empty($app->cache->ready) )
-		{
-			$app->cache->write($params['contents']);
-		}
-	}
-
-	/**
-	 * Read a file from cache
-	 * @return bool
-	 */
-	private function read()
-	{
 		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 		{
 			return;
 		}
 
-		if ( $this->app->caching && empty($this->app->input->POST_raw) && empty($_POST) )
+		if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) && empty($_POST) )
 		{
-			if ( $handle = opendir($controller->rootPath . 'cache') )
+			if ( $handle = @opendir('cache') )
 			{
 				while ( $filename = readdir($handle) )
 				{
-					if ( is_file($this->controller->rootPath . 'cache/' . $filename) )
+					if ( is_file('cache/' . $filename) )
 					{
 						list($time, $hash) = explode('_', $filename);
 
 						if ( $time <= time() )
 						{
-							@unlink($this->controller->rootPath . 'cache/' . $filename);
+							@unlink('cache/' . $filename);
 						}
 						else
 						{
 							if ( $hash == sha1($_SERVER['REQUEST_URI']) )
 							{
-								if ( $this->app->debugMode )
+								if ( $this->app->config['debugMode'] )
 								{
 									header('X-Swiftlet-Cache: HIT');
 								}
 
-								echo file_get_contents($this->controller->rootPath . 'cache/' . $filename);
+								echo file_get_contents('cache/' . $filename);
 
 								$this->app->buffer->flush();
 
@@ -85,6 +67,22 @@ class Cache_Plugin extends Plugin
 
 				closedir($handle);
 			}
+			else
+			{
+				$this->app->error(FALSE, 'Could not open directory "/cache" for reading.', __FILE__, __LINE__);
+			}
+		}
+	}
+
+	/*
+	 * Implement cache hook
+	 * @param array $params
+	 */
+	function cache(&$params)
+	{
+		if ( !empty($this->ready) )
+		{
+			$this->write($params['contents']);
 		}
 	}
 
@@ -94,7 +92,7 @@ class Cache_Plugin extends Plugin
 	 */
 	function write(&$contents)
 	{
-		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User::GUEST_ID )
+		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 		{
 			return;
 		}
@@ -110,21 +108,21 @@ class Cache_Plugin extends Plugin
 			}
 		}
 
-		if ( $this->app->caching && empty($this->app->input->POST_raw) )
+		if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) )
 		{
-			if ( !is_dir($controller->rootPath . 'cache') )
+			if ( !is_dir('cache') )
 			{
 				$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
 			}
 
-			if ( !is_writable($controller->rootPath . 'cache') )
+			if ( !is_writable('cache') )
 			{
 				$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
 			}
 
 			$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
 
-			if ( !$handle = fopen($controller->rootPath . 'cache/' . $filename, 'a+') )
+			if ( !$handle = fopen('cache/' . $filename, 'a+') )
 			{
 				$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
 			}
