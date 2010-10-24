@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
@@ -217,7 +217,7 @@ class Upload_Plugin extends Plugin
 			'auth-token'  => $this->app->input->authToken
 			);
 
-		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/upload', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/upload', $post);
 
 		$this->app->db->sql('
 			SELECT
@@ -245,7 +245,7 @@ class Upload_Plugin extends Plugin
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'admin/upload/delete/' . ( int ) $file['id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/upload/delete/' . ( int ) $file['id'], $post);
 		}
 
 		$this->app->db->sql('

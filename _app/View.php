@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
@@ -14,8 +14,8 @@ if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 class View
 {
 	public
-		$args            = array(),
-		$controller      = 'Home',
+		$args       = array(),
+		$controller = 'Home',
 		$id,
 		$inAdmin,
 		$method,
@@ -86,7 +86,7 @@ class View
 
 		$this->rootPath = count($args) > 1 ? str_repeat('../', count($args) - 1) : './';
 		$this->viewPath = $this->rootPath . '_views/';
-		$this->absPath  = preg_replace('/([^\/]+\/){' . substr_count($this->rootPath, '../') . '}$/', '', dirname($_SERVER['REQUEST_URI']) . '/');
+		$this->absPath  = preg_replace('/([^\/]+\/){' . substr_count($this->rootPath, '../') . '}$/', '', dirname($_SERVER['REQUEST_URI'] . ' ') . '/');
 	}
 
 	/*

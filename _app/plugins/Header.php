@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
@@ -34,7 +34,7 @@ class Header_Plugin extends Plugin
 		{
 			if ( !preg_match('/^[a-z]+:\/\//', $path) )
 			{
-				$this->menu[$title] = $this->app->view->route($path);;
+				$this->menu[$title] = $this->view->route($path);;
 			}
 		}
 	}
@@ -44,6 +44,6 @@ class Header_Plugin extends Plugin
 	 */
 	function header()
 	{
-		$this->app->view->load('header.html.php');
+		$this->view->load('header.html.php');
 	}
 }

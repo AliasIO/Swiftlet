@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 /**
@@ -35,7 +35,7 @@ class Login_Controller extends Controller
 			{
 				$this->app->user->logout();
 
-				header('Location: ' . $this->app->view->route($this->path . '?notice=logout'));
+				header('Location: ' . $this->view->route($this->path . '?notice=logout'));
 
 				$this->app->end();
 			}
@@ -79,7 +79,7 @@ class Login_Controller extends Controller
 								 * Header injection is not an issue here, header()
 								 * prevents more than one header to be sent at once
 								 */
-								header('Location: ' . $this->app->view->route($this->app->input->GET_raw['ref']));
+								header('Location: ' . $this->view->route($this->app->input->GET_raw['ref']));
 
 								$this->app->end();
 							}

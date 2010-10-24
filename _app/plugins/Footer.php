@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
@@ -24,6 +24,6 @@ class Footer_Plugin extends Plugin
 	 */
 	function footer()
 	{
-		$this->app->view->load('footer.html.php');
+		$this->view->load('footer.html.php');
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
@@ -104,16 +104,16 @@ class Node_Plugin extends Plugin
 	 */
 	function init_after()
 	{
-		if ( !empty($this->ready) && $this->app->view->request )
+		if ( !empty($this->ready) && $this->view->request )
 		{
 			$this->app->db->sql('
 				SELECT
 					`type`
 				FROM `' . $this->app->db->prefix . 'nodes`
 				WHERE
-					' . ( $this->app->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
+					' . ( $this->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
 					`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
-					`path` = "' . $this->app->db->escape($this->app->view->request) . '"
+					`path` = "' . $this->app->db->escape($this->view->request) . '"
 				LIMIT 1
 				');
 
@@ -126,7 +126,7 @@ class Node_Plugin extends Plugin
 
 				$this->app->hook('display_node', $params);
 
-				$this->app->view->controller = $params['controller'];
+				$this->view->controller = $params['controller'];
 			}
 		}
 	}
@@ -187,7 +187,7 @@ class Node_Plugin extends Plugin
 					 ' . ( ( int ) $parentNode['left_id'] + 1 )              . ',
 					 ' . ( ( int ) $parentNode['left_id'] + 2 )              . ',
 					"' . $this->app->db->escape($type)                       . '",
-					"' . $this->app->db->escape($this->app->view->h($title)) . '",
+					"' . $this->app->db->escape($this->view->h($title)) . '",
 					"' . gmdate('Y-m-d H:i:s')                               . '",
 					"' . gmdate('Y-m-d H:i:s')                               . '"
 					)

@@ -1,5 +1,11 @@
-# 1.2.0.RC1 - 1.2.0.RC2
+# 1.2.0.RC1 - 1.3.0.A1
 #
+# Switched from GPLv2 to GPLv3
+# Added write to console feature
+# Upgraded CKEditor, jQuery
+# Moved plugins to _app folder
+# Complete rewrite of routes 
+# Major restructuring of the code
 # Renamed model to app
 # Fixed .htaccess bug (check for existence of mod_rewrite module)
 # Renamed /_view/ folder to /_views/

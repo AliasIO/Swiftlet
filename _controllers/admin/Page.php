@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 /**
@@ -305,7 +305,7 @@ class Page_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->app->view->route($this->path . '?notice=deleted'));
+								header('Location: ' . $this->view->route($this->path . '?notice=deleted'));
 
 								$this->app->end();
 							}

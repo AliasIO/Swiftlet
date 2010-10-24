@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 /**
@@ -51,7 +51,7 @@ class Css_Controller extends Controller
 			}
 
 			// Parse relative URLs
-			$css = preg_replace('/url\((\'|")(.+?)\1\)/', 'url(\1' . $this->app->view->viewPath . '\2\1)', $css);
+			$css = preg_replace('/url\((\'|")(.+?)\1\)/', 'url(\1' . $this->view->viewPath . '\2\1)', $css);
 
 			header('Content-type: text/css');
 

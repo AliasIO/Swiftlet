@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 /**
@@ -48,7 +48,7 @@ class Account_Controller extends Controller
 
 		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
 		{
-			header('Location: ' . $this->rootPath . 'login?ref=' . rawurlencode($_SERVER['PHP_SELF']));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request));
 
 			$this->app->end();
 		}
@@ -224,13 +224,13 @@ class Account_Controller extends Controller
 									));
 							}
 
-							header('Location: ' . $this->app->view->route($this->path . '/edit/' . $this->app->db->result . '&notice=created'));
+							header('Location: ' . $this->view->route($this->path . '/edit/' . $this->app->db->result . '&notice=created'));
 
 							$this->app->end();
 						}
 
 						break;
-					case 'edit':
+					default:
 						$this->app->db->sql('
 							UPDATE `' . $this->app->db->prefix . 'users` SET
 								`username`  = "' . $this->app->db->escape($username) . '",
@@ -320,7 +320,7 @@ class Account_Controller extends Controller
 										`user_id` = ' . ( int ) $this->id . '
 									;');
 
-								header('Location: ' . $this->app->view->route($this->path . '?notice=deleted'));
+								header('Location: ' . $this->view->route($this->path . '?notice=deleted'));
 
 								$this->app->end();
 							}

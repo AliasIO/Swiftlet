@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
@@ -66,7 +66,7 @@ class Input_Plugin extends Plugin
 	{
 		if ( !empty($this->errors) )
 		{
-			$this->app->view->load('input_errors.html.php');
+			$this->view->load('input_errors.html.php');
 		}
 	}
 
@@ -76,9 +76,9 @@ class Input_Plugin extends Plugin
 	 */
 	function confirm($notice)
 	{
-		$this->app->view->notice = $notice;
+		$this->view->notice = $notice;
 
-		$this->app->view->load('confirm.html.php');
+		$this->view->load('confirm.html.php');
 
 		$this->app->end();
 	}
@@ -115,23 +115,23 @@ class Input_Plugin extends Plugin
 		 */
 		$this->POST_raw = isset($_POST)                 ? $_POST : array();
 		$this->GET_raw  = isset($_GET)                  ? $_GET  : array();
-		$this->args     = isset($this->app->view->args) ? $this->app->view->args : array();
+		$this->args     = isset($this->view->args) ? $this->view->args : array();
 
-		unset($_POST, $_GET, $this->app->view->args);
+		unset($_POST, $_GET, $this->view->args);
 
 		foreach ( $this->POST_raw as $k => $v )
 		{
-			$this->POST_html_safe[$k] = $this->app->view->h($v);
+			$this->POST_html_safe[$k] = $this->view->h($v);
 		}
 
 		foreach ( $this->GET_raw as $k => $v )
 		{
-			$this->GET_html_safe[$k] = $this->app->view->h($v);
+			$this->GET_html_safe[$k] = $this->view->h($v);
 		}
 
 		foreach ( $this->args as $v )
 		{
-			$this->args_html_safe[$k] = $this->app->view->h($v);
+			$this->args_html_safe[$k] = $this->view->h($v);
 		}
 
 		$this->app->hook('input_sanitize');
@@ -172,7 +172,7 @@ class Input_Plugin extends Plugin
 
 				if ( $this->POST_valid[$var] === FALSE )
 				{
-					$this->errors[$var] = $this->app->view->t('Invalid value');
+					$this->errors[$var] = $this->view->t('Invalid value');
 				}
 			}
 		}

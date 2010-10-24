@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($this) ) die('Direct access to this file is not allowed');
@@ -386,7 +386,7 @@ class User_Plugin extends Plugin
 	 * Save a preference value
 	 * @param array $params
 	 */
-	function save_pref_value(&$params)
+	function save_pref_value($params)
 	{
 		$this->app = $this->app;
 
@@ -454,10 +454,9 @@ class User_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		/*
 		/**
 		 * Creating a user account
-		 * /
+		 */
 		$post = array(
 			'username'             => 'Unit_Test',
 			'new_password'         => '123',
@@ -467,7 +466,7 @@ class User_Plugin extends Plugin
 			'auth-token'           => $this->app->input->authToken
 			);
 
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'account/?action=create', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'account/create', $post);
 
 		$this->app->db->sql('
 			SELECT
@@ -481,13 +480,13 @@ class User_Plugin extends Plugin
 		$user = isset($this->app->db->result[0]) ? $this->app->db->result[0] : FALSE;
 
 		$params[] = array(
-			'test' => 'Creating a user account in <code>/account/</code>.',
+			'test' => 'Creating a user account in <code>/account</code>.',
 			'pass' => ( bool ) $user['id']
 			);
 
 		/**
 		 * Editing a user account
-		 * /
+		 */
 		if ( $user['id'] )
 		{
 			$post = array(
@@ -499,7 +498,7 @@ class User_Plugin extends Plugin
 				'auth-token'  => $this->app->input->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'account/?id=' . ( int ) $user['id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'account/edit/' . ( int ) $user['id'], $post);
 		}
 
 		$this->app->db->sql('
@@ -513,78 +512,14 @@ class User_Plugin extends Plugin
 
 		$email = isset($this->app->db->result[0]) ? $this->app->db->result[0]['email'] : FALSE;
 
-		/**
-		 * Make a POST request
-		 * @param string $url
-		 * @param array $params
-		 * @return array
-		 * /
-		function post_request($url, $params, $guest = FALSE)
-		{
-			if ( function_exists('curl_init') )
-			{
-				$cookies = '';
-
-				if ( !$guest )
-				{
-					// Let's hijack your session for this request
-					if ( !empty($_COOKIE) )
-					{
-						foreach ( $_COOKIE as $k => $v )
-						{
-							$cookies .= $k . '=' . $v . ';';
-						}
-					}
-				}
-
-				$handle = curl_init();
-
-				$options = array(
-					CURLOPT_URL            => $url,
-					CURLOPT_COOKIE         => $cookies,
-					CURLOPT_USERAGENT      => $guest ? '' : $_SERVER['HTTP_USER_AGENT'],
-					CURLOPT_HEADER         => FALSE,
-					CURLOPT_RETURNTRANSFER => TRUE,
-					CURLOPT_FOLLOWLOCATION => FALSE,
-					CURLOPT_MAXREDIRS      => 3,
-					CURLOPT_POST           => TRUE,
-					CURLOPT_POSTFIELDS     => $params
-					);
-
-				curl_setopt_array($handle, $options);
-
-				// We can't use the same session twice, close it first
-				session_commit();
-
-				$output = curl_exec($handle);
-
-				session_start();
-
-				$result = array(
-					'output' => $output,
-					'info'   => curl_getinfo($handle)
-					);
-
-				curl_close($handle);
-
-				unset($output);
-
-				return $result;
-			}
-			else
-			{
-				$this->app->error(FALSE, 'Your PHP installation does not support cURL, a requirement for some unit tests.');
-			}
-		}
-
 		$params[] = array(
-			'test' => 'Editing a user account in <code>/account/</code>.',
+			'test' => 'Editing a user account in <code>/account</code>.',
 			'pass' => $email == 'unit@test.com'
 			);
 
 		/**
 		 * Deleting a user account
-		 * /
+		 */
 		if ( $user['id'] )
 		{
 			$post = array(
@@ -596,7 +531,7 @@ class User_Plugin extends Plugin
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . 'account/?id=' . ( int ) $user['id'] . '&action=delete', $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'account/delete/' . ( int ) $user['id'], $post);
 		}
 
 		$this->app->db->sql('
@@ -609,13 +544,13 @@ class User_Plugin extends Plugin
 			;', FALSE);
 
 		$params[] = array(
-			'test' => 'Deleting a user account <code>/account/</code>.',
+			'test' => 'Deleting a user account <code>/account</code>.',
 			'pass' => !$this->app->db->result
 			);
 
 		/**
 		 * Creating a user preference
-		 * /
+		 */
 		$this->app->user->save_pref(array(
 			'pref'    => 'Unit Test',
 			'type'    => 'text',
@@ -638,7 +573,7 @@ class User_Plugin extends Plugin
 
 		/**
 		 * Deleting a user preference
-		 * /
+		 */
 		$this->app->user->delete_pref('Unit Test');
 
 		$this->app->db->sql('
@@ -654,6 +589,5 @@ class User_Plugin extends Plugin
 			'test' => 'Deleting a user preference.',
 			'pass' => !$this->app->db->result
 			);
-		*/
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
@@ -26,7 +26,8 @@ class Plugin
 		;
 
 	protected
-		$app
+		$app,
+		$view
 		;
 
 	/**
@@ -37,6 +38,7 @@ class Plugin
 	function __construct($app, $name, $file, $class)
 	{
 		$this->app   = $app;
+		$this->view  = $app->view;
 		$this->name  = $name;
 		$this->file  = $file;
 		$this->class = $class;
@@ -71,18 +73,16 @@ class Plugin
 	 */
 	function hook($hook, $order, &$params = array())
 	{
-		$app = $this->app;
-
-		$timerStart = $app->timer_start();
+		$timerStart = microtime(TRUE);
 
 		require($this->info['file']);
 
-		$app->pluginsHooked[$this->info['name']][$hook] = TRUE;
+		$this->app->pluginsHooked[$this->info['name']][$hook] = TRUE;
 
-		$app->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
+		$this->app->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
 			'order'          => $order,
 			'plugin'         => $this->info['name'] . ' (' . $this->info['file'] . ')',
-			'execution time' => $app->timer_end($timerStart)
+			'execution time' => round(microtime(TRUE) - $timerStart, 3) . ' sec'
 			);
 	}
 

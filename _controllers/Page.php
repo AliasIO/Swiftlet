@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 /**
@@ -48,21 +48,21 @@ class Page_Controller extends Controller
 		{
 			$this->pageTitle = $r[0]['title'];
 
-			$this->app->view->nodeId    = $r[0]['node_id'];
-			$this->app->view->body      = $this->app->view->allow_html($r[0]['body']);
-			$this->app->view->home      = $r[0]['home'];
+			$this->view->nodeId    = $r[0]['node_id'];
+			$this->view->body      = $this->view->allow_html($r[0]['body']);
+			$this->view->home      = $r[0]['home'];
 
 			/*
 			 * Prefix relative links with the path to the root
 			 * This way internal links won't break when the site
 			 * is moved to another directory
 			 */
-			$this->app->page->parse_urls($this->app->view->body);
+			$this->app->page->parse_urls($this->view->body);
 
 			/*
 			 * Create a breadcrumb trail
 			 */
-			$this->app->view->parents = array();
+			$this->view->parents = array();
 
 			if ( !$r[0]['home'] )
 			{
@@ -72,28 +72,28 @@ class Page_Controller extends Controller
 				{
 					if ( $d['id'] != Node_Plugin::ROOT_ID )
 					{
-						$this->app->view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
+						$this->view->parents[$d['path'] ? $d['path'] : 'node/' . $d['id']] = $d['title'];
 					}
 				}
 			}
 
 			if ( !$r[0]['published'] )
 			{
-				$this->app->view->notice = $this->app->view->t('This page has not been published.');
+				$this->view->notice = $this->view->t('This page has not been published.');
 			}
 		}
 
-		if ( !isset($this->app->view->nodeId) )
+		if ( !isset($this->view->nodeId) )
 		{
 			header('HTTP/1.0 404 Not Found');
 
-			$this->pageTitle = $this->app->view->t('Page not found');
+			$this->pageTitle = $this->view->t('Page not found');
 
-			$this->app->view->load('404.html.php');
+			$this->view->load('404.html.php');
 		}
 		else
 		{
-			$this->app->view->load('page.html.php');
+			$this->view->load('page.html.php');
 		}
 	}
 }

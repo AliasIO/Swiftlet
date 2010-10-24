@@ -2,7 +2,7 @@
 /**
  * @package Swiftlet
  * @copyright 2009 ElbertF http://elbertf.com
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU Public License
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
 /**
@@ -44,7 +44,7 @@ class Test_Controller extends Controller
 				'foo' => 'bar'
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->app->view->absPath . 'index.php', $params);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'index.php', $params);
 
 			$tests[] = array(
 				'test' => 'Submitting a form without authenticity token should result in an error (503).',
