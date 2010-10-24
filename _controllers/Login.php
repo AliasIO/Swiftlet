@@ -22,7 +22,7 @@ class Login_Controller extends Controller
 			'form-submit' => 'bool',
 			'username'    => 'string',
 			'password'    => 'string',
-			'action'      => 'string'
+			'remember'    => 'bool'
 			));
 
 		if ( $this->method == 'logout' )
@@ -69,7 +69,7 @@ class Login_Controller extends Controller
 					}
 					else
 					{
-						$r = $this->app->user->login($this->app->input->POST_html_safe['username'], $this->app->input->POST_raw['password']);
+						$r = $this->app->user->login($this->app->input->POST_html_safe['username'], $this->app->input->POST_raw['password'], $this->app->input->POST_raw['remember']);
 
 						if ( $r )
 						{

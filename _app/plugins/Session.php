@@ -37,7 +37,7 @@ class Session_Plugin extends Plugin
 					`hash`        VARCHAR(40)          NOT NULL,
 					`contents`    TEXT                     NULL,
 					`date`        DATETIME             NOT NULL,
-					`date_expire` DATETIME             NOT NULL,
+					`date_expire` DATETIME             NOT NULL
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`)
 					) TYPE = INNODB
@@ -72,7 +72,7 @@ class Session_Plugin extends Plugin
 
 			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME']);// . $this->controller->absPath);
+			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->view->absPath);
 
 			/**
 			 * Delete expired sessions
@@ -185,19 +185,21 @@ class Session_Plugin extends Plugin
 	 */
 	function end()
 	{
+		$lifeTime = ( int ) !empty($this->contents['lifetime']) ? $this->contents['lifetime'] : $this->lifeTime;
+
 		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
 				UPDATE `' . $this->app->db->prefix . 'sessions`
 				SET
 					`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
-					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $lifeTime . ' SECOND)
 				WHERE
 					`id` = ' . $this->id . '
 				LIMIT 1
 				;');
 		}
 
-		setcookie('sw_session', $this->id, time() + $this->lifeTime);//, $this->controller->absPath);
+		setcookie('sw_session', $this->id, time() + $lifeTime, $this->view->absPath);
 	}
 }

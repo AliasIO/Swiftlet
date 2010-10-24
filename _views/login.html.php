@@ -26,6 +26,14 @@
 		</fieldset>
 		<fieldset>
 			<dl>
+				<dt><label for="remember"><?php echo $this->t('Stay logged in') ?></label></dt>
+				<dd>
+					<input type="checkbox" name="remember" id="remember" value="1"<?php echo $app->input->POST_html_safe['remember'] ? ' checked="checked"' : '' ?>"/>
+				</dd>
+			</dl>
+		</fieldset>
+		<fieldset>
+			<dl>
 				<dt><br/></dt>
 				<dd>
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>

@@ -213,7 +213,7 @@ class User_Plugin extends Plugin
 	 * @param string $password
 	 * @return bool
 	 */
-	function login($username, $password)
+	function login($username, $password, $remember)
 	{
 		if ( $this->app->session->get('user id') !== FALSE )
 		{
@@ -238,11 +238,14 @@ class User_Plugin extends Plugin
 
 				if ( !empty($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 				{
+					$lifeTime = $remember ? 60 * 60 * 24 * 14 : $this->app->session->lifeTime;
+
 					$this->app->session->put(array(
 						'user id'       => $r['id'],
 						'user username' => $r['username'],
 						'user email'    => $r['email'],
-						'user is owner' => $r['owner']
+						'user is owner' => $r['owner'],
+						'lifetime'      => $lifeTime
 						));
 
 					return TRUE;
