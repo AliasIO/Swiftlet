@@ -1,7 +1,7 @@
 <div class="no-grid">
 	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
-	<?php if ( $this->method != 'upload' ): ?>
+	<?php if ( $this->method != 'upload' && $this->app->permission->check('admin upload upload') ): ?>
 	<p>
 		<a class="button" href="<?php echo $this->route('admin/upload/form/?callback=' . $this->callback) ?>"><?php echo $this->t('Upload files') ?></a>
 	</p>
@@ -15,7 +15,7 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( $this->method == 'form' ): ?>
+	<?php if ( $this->method == 'form' && $this->app->permission->check('admin upload upload') ): ?>
 	<h2><?php echo $this->t('Upload files') ?></h2>
 
 	<form id="form-file" method="post" action="<?php echo $this->route('admin/upload/?callback=' . $this->callback) ?>" enctype="multipart/form-data">
@@ -115,7 +115,9 @@
 				<td><?php echo $file['width'] && $file['height'] ? ( int ) $file['width'] . 'x' . ( int ) $file['height'] : $this->t('n/a') ?></td>
 				<td><?php echo $this->format_date($file['date'], 'date') ?></td>
 				<td>
+					<?php if ( $this->app->permission->check('admin upload delete') ): ?>
 					<a class="button caution" href="<?php echo $this->route('admin/upload/delete/' . $file['id'] . '?callback=' . $this->callback) ?>"><?php echo $this->t('Delete') ?></a>
+					<?php endif ?>
 				</td>
 				</td>
 			</tr>

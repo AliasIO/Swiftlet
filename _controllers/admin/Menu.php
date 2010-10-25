@@ -43,7 +43,7 @@ class Menu_Controller extends Controller
 
 				foreach ( explode("\n", $this->app->input->POST_html_safe['items']) as $item )
 				{
-					if ( trim($item) )
+					if ( trim($item) !== '' )
 					{
 						$nodeId = '';
 						$title  = '';
@@ -60,7 +60,7 @@ class Menu_Controller extends Controller
 							$path   = '';
 						}
 
-						if ( $path )
+						if ( $path !== '' )
 						{
 							$this->app->db->sql('
 								SELECT
@@ -78,11 +78,14 @@ class Menu_Controller extends Controller
 							}
 						}
 
-						$items[] = array(
-							'node_id' => ( int ) $nodeId,
-							'title'   => trim($title),
-							'path'    => trim($path)
-							);
+						if ( $nodeId != Node_Plugin::ROOT_ID )
+						{
+							$items[] = array(
+								'node_id' => ( int ) $nodeId,
+								'title'   => trim($title),
+								'path'    => trim($path)
+								);
+						}
 					}
 				}
 
@@ -160,7 +163,7 @@ class Menu_Controller extends Controller
 				{
 					if ( ( in_array($item['node_id'], $nodeIds) && isset($paths[$item['node_id']]) ) || !in_array($item['node_id'], $nodeIds) )
 					{
-						$path = !empty($paths[$item['node_id']]) ? $paths[$item['node_id']] : ( $item['path'] ? $item['path'] : 'node/' . $item['node_id'] );
+						$path = !empty($paths[$item['node_id']]) ? $paths[$item['node_id']] : ( $item['path'] !== '' ? $item['path'] : 'node/' . $item['node_id'] );
 
 						$v .= $item['title'] . ( $item['title'] ? '|' : '' ) . $path . "\n";
 					}

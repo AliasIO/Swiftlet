@@ -125,7 +125,7 @@ class Account_Controller extends Controller
 					$this->app->input->errors['new_password'] = $this->view->t('Please provide a password');
 				}
 			}
-			else if ( !$this->app->session->get('user is owner') )
+			else if ( !$this->app->session->get('user is owner') && $app->session->get('user id') == $this->id || !$this->id )
 			{
 				if ( !$this->app->user->validate_password($this->app->session->get('user username'), $this->app->input->POST_raw['password']) )
 				{

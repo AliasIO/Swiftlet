@@ -12,7 +12,7 @@ class Permission_Plugin extends Plugin
 	public
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$dependencies = array('session', 'user'),
+		$dependencies = array('db', 'session', 'user'),
 		$hooks        = array('dashboard' => 5, 'init' => 4, 'install' => 1, 'remove' => 1)
 		;
 
@@ -217,7 +217,7 @@ class Permission_Plugin extends Plugin
 	 * @param string $group
 	 * @param string $name
 	 * @param string $description
-	 * @return integer
+	 * @return bool
 	 */
 	function create($group, $name, $description)
 	{
@@ -233,6 +233,8 @@ class Permission_Plugin extends Plugin
 				"' . $this->app->db->escape($group)       . '"
 				)
 			;');
+
+		return ( bool ) $this->app->db->result;
 	}
 
 	/**
@@ -262,7 +264,7 @@ class Permission_Plugin extends Plugin
 					p.`id` = ' . ( int ) $id . '
 				;');
 
-			return !empty($this->app->db->result);
+			return ( bool ) $this->app->db->result;
 		}
 	}
 }

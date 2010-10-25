@@ -127,7 +127,7 @@
 			<?php endforeach ?>
 		</fieldset>
 		<?php endif ?>
-		<?php if ( !$this->method != 'create' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $this->id ) ): ?>
+		<?php if ( $this->method != 'create' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $this->id || !$this->id ) ): ?>
 		<fieldset>
 			<dl>
 				<dt><label for="password"><?php echo $this->t('Password') ?></label></dt>

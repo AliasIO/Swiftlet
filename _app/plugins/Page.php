@@ -13,7 +13,7 @@ class Page_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db', 'node', 'permission'),
-		$hooks        = array('dashboard' => 1, 'display_node' => 1, 'home' => 1, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
+		$hooks        = array('dashboard' => 1, 'display_node' => 1, 'home' => 1, 'init' => 5, 'init_after' => 1, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 		;
 
 	/*
@@ -78,6 +78,9 @@ class Page_Plugin extends Plugin
 		if ( !empty($this->app->permission->ready) )
 		{
 			$this->app->permission->delete('admin page access');
+			$this->app->permission->delete('admin page create');
+			$this->app->permission->delete('admin page edit');
+			$this->app->permission->delete('admin page delete');
 		}
 	}
 
@@ -86,19 +89,44 @@ class Page_Plugin extends Plugin
 	 */
 	function init()
 	{
-		if ( !empty($this->app->db->ready) )
+		/**
+		 * Check if the pages table exists
+		 */
+		if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
 		{
-			/**
-			 * Check if the pages table exists
-			 */
-			if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
-			{
-				$this->ready = TRUE;
+			$this->ready = TRUE;
 
-				if ( count($this->app->input->args) >= 2 && $this->app->input->args[0] == 'node' )
-				{
-					$this->view->controller = 'Page';
-				}
+			if ( count($this->app->input->args) >= 2 && $this->app->input->args[0] == 'node' )
+			{
+				$this->view->controller = 'Page';
+			}
+		}
+	}
+
+	/*
+	 * Implement init_after hook
+	 * Find out if a custom home page exists
+	 */
+	function init_after()
+	{
+		if ( !$this->view->request )
+		{
+			$this->app->db->sql('
+				SELECT
+					n.`id`
+				FROM      `' . $this->app->db->prefix . 'pages` AS p
+				LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
+				WHERE
+					p.`published` = 1      AND
+					n.`type`      = "page" AND
+					n.`home`      = 1
+				LIMIT 1
+				;');
+
+			if ( $r = $this->app->db->result )
+			{
+				$this->view->controller = 'Page';
+				$this->view->args       = array($r[0]['id']);
 			}
 		}
 	}
@@ -127,42 +155,6 @@ class Page_Plugin extends Plugin
 		if ( $params['type'] == 'page' )
 		{
 			$params['controller'] = 'Page';
-		}
-	}
-
-	/*
-	 * Implement home hook
-	 * @param array $params
-	 */
-	function home(&$params)
-	{
-		if ( !empty($this->app->page->ready) )
-		{
-			$params['controller'] = 'Page';
-		}
-	}
-
-	/**
-	 * Get route to home page
-	 * @return string
-	 */
-	function get_home()
-	{
-		$this->app->db->sql('
-			SELECT
-				n.`id`
-			FROM      `' . $this->app->db->prefix . 'pages` AS p
-			LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
-			WHERE
-				p.`published` = 1      AND
-				n.`type`      = "page" AND
-				n.`home`      = 1
-			LIMIT 1
-			;');
-
-		if ( $r = $this->app->db->result )
-		{
-			return $this->view->route('node/' . $r[0]['id']);
 		}
 	}
 

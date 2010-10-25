@@ -30,7 +30,7 @@ class Log_Plugin extends Plugin
 
 		if ( is_file('log/unit_test') )
 		{
-			unlink('log/unit_test');
+			@unlink('log/unit_test');
 		}
 	}
 

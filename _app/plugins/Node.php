@@ -10,9 +10,10 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 class Node_Plugin extends Plugin
 {
 	public
-		$version    = '1.0.0',
-		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('init' => 4, 'init_after' => 1, 'install' => 1, 'remove' => 1)
+		$version      = '1.0.0',
+		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
+		$dependencies = array('db'),
+		$hooks        = array('init' => 4, 'init_after' => 1, 'install' => 1, 'remove' => 1)
 		;
 
 	const
@@ -87,20 +88,18 @@ class Node_Plugin extends Plugin
 	 */
 	function init()
 	{
-		if ( !empty($this->app->db->ready) )
+		/**
+		 * Check if the nodes table exists
+		 */
+		if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
 		{
-			/**
-			 * Check if the nodes table exists
-			 */
-			if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
-			{
-				$this->ready = TRUE;
-			}
+			$this->ready = TRUE;
 		}
 	}
 
 	/*
 	 * Implement init_after hook
+	 * See if there is a node associated with the current path
 	 */
 	function init_after()
 	{
@@ -130,6 +129,7 @@ class Node_Plugin extends Plugin
 			}
 		}
 	}
+
 	/**
 	 * Create a node
 	 * @param string $title
@@ -297,8 +297,6 @@ class Node_Plugin extends Plugin
 	 */
 	function delete($id)
 	{
-		$this->app = $this->app;
-
 		$this->app->db->sql('
 			SELECT
 				`left_id`,

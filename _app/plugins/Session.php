@@ -13,11 +13,13 @@ class Session_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db'),
-		$hooks        = array('init' => 2, 'install' => 1, 'end' => 1, 'remove' => 1),
+		$hooks        = array('init' => 2, 'install' => 1, 'end' => 1, 'remove' => 1)
+		;
 
+	public
 		$id,
-		$lifeTime = 3600,
-		$contents = array()
+		$sessionLifeTime = 3600,
+		$contents        = array()
 		;
 
 	private
@@ -37,7 +39,7 @@ class Session_Plugin extends Plugin
 					`hash`        VARCHAR(40)          NOT NULL,
 					`contents`    TEXT                     NULL,
 					`date`        DATETIME             NOT NULL,
-					`date_expire` DATETIME             NOT NULL
+					`date_expire` DATETIME             NOT NULL,
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`)
 					) TYPE = INNODB
@@ -127,12 +129,12 @@ class Session_Plugin extends Plugin
 						"' . $this->hash                                        . '",
 						"' . $this->app->db->escape(serialize($this->contents)) . '",
 						"' . gmdate('Y-m-d H:i:s')                              . '",
-						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
 						)
 					ON DUPLICATE KEY UPDATE
 						`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
 						`date`        = "' . gmdate('Y-m-d H:i:s')                              . '",
-						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->lifeTime . ' SECOND)
+						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
 					;');
 
 				$this->id = $this->app->db->result;
@@ -185,7 +187,7 @@ class Session_Plugin extends Plugin
 	 */
 	function end()
 	{
-		$lifeTime = ( int ) !empty($this->contents['lifetime']) ? $this->contents['lifetime'] : $this->lifeTime;
+		$sessionLifeTime = ( int ) !empty($this->contents['lifetime']) ? $this->contents['lifetime'] : $this->sessionLifeTime;
 
 		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
@@ -193,13 +195,13 @@ class Session_Plugin extends Plugin
 				UPDATE `' . $this->app->db->prefix . 'sessions`
 				SET
 					`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
-					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $lifeTime . ' SECOND)
+					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $sessionLifeTime . ' SECOND)
 				WHERE
 					`id` = ' . $this->id . '
 				LIMIT 1
 				;');
 		}
 
-		setcookie('sw_session', $this->id, time() + $lifeTime, $this->view->absPath);
+		setcookie('sw_session', $this->id, time() + $sessionLifeTime, $this->view->absPath);
 	}
 }

@@ -12,19 +12,20 @@
 class File_Controller extends Controller
 {
 	public
-		$pageTitle  = 'File',
-		$standAlone = TRUE
+		$pageTitle    = 'File',
+		$dependencies = array('db', 'input'),
+		$standAlone   = TRUE
 		;
 
 	function init()
 	{
-		if ( !$this->args )
+		if ( !$this->app->input->args )
 		{
 			$this->app->end();
 		}
 
-		$thumb = isset($this->args[0]) && isset($this->args[1]) && $this->args[0] == 'thumb';
-		$id    = $thumb ? $this->args[1] : $this->args[0];
+		$thumb = isset($this->app->input->args[0]) && isset($this->app->input->args[1]) && $this->app->input->args[0] == 'thumb';
+		$id    = $thumb ? $this->app->input->args[1] : $this->app->input->args[0];
 
 		$id = basename($id, strstr($id, '.'));
 
@@ -56,7 +57,13 @@ class File_Controller extends Controller
 				}
 
 				readfile($file);
+
+				$this->app->end();
 			}
 		}
+
+		header('HTTP/1.0 404 Not Found');
+
+		echo $this->view->t('File not found.');
 	}
 }

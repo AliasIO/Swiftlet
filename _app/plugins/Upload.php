@@ -20,6 +20,10 @@ class Upload_Plugin extends Plugin
 		$hooks        = array('dashboard' => 2, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 		;
 
+	public
+		$thumbnailSize = 120
+		;
+
 	/*
 	 * Implement install hook
 	 */
@@ -48,9 +52,9 @@ class Upload_Plugin extends Plugin
 
 		if ( !empty($this->app->permission->ready) )
 		{
-			$this->app->permission->create('Uploads', 'admin upload access', 'Manage uploads');
-			$this->app->permission->create('Uploads', 'admin upload upload', 'Upload uploads');
-			$this->app->permission->create('Uploads', 'admin upload delete', 'Delete uploads');
+			$this->app->permission->create('Uploads', 'admin upload access', 'Manage files');
+			$this->app->permission->create('Uploads', 'admin upload upload', 'Upload files');
+			$this->app->permission->create('Uploads', 'admin upload delete', 'Delete files');
 		}
 	}
 
@@ -69,6 +73,8 @@ class Upload_Plugin extends Plugin
 		if ( !empty($this->app->permission->ready) )
 		{
 			$this->app->permission->delete('admin upload access');
+			$this->app->permission->delete('admin upload upload');
+			$this->app->permission->delete('admin upload delete');
 		}
 	}
 
@@ -77,15 +83,12 @@ class Upload_Plugin extends Plugin
 	 */
 	function init()
 	{
-		if ( !empty($this->app->db->ready) )
+		/**
+		 * Check if the uploads table exists
+		 */
+		if ( in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
 		{
-			/**
-			 * Check if the uploads table exists
-			 */
-			if ( in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
-			{
-				$this->ready = TRUE;
-			}
+			$this->ready = TRUE;
 		}
 	}
 
@@ -116,8 +119,6 @@ class Upload_Plugin extends Plugin
 	{
 		if ( is_file($file = 'uploads/files/' . $filename) )
 		{
-			$size = 120;
-
 			$image = FALSE;
 
 			switch ( $mimeType )
@@ -140,7 +141,7 @@ class Upload_Plugin extends Plugin
 
 			if ( $image )
 			{
-				$thumb = imagecreatetruecolor($size, $size);
+				$thumb = imagecreatetruecolor($thumbnailSize, $thumbnailSize);
 
 				$bgColor = imagecolorallocate($thumb, 253, 254, 255);
 
@@ -151,10 +152,10 @@ class Upload_Plugin extends Plugin
 				$widthRatio  = 1;
 				$heightRatio = 1;
 
-				if ( $width <= $size && $height <= $size )
+				if ( $width <= $thumbnailSize && $height <= $thumbnailSize )
 				{
-					$posX = ( $size - $width  ) / 2;
-					$posY = ( $size - $height ) / 2;
+					$posX = ( $thumbnailSize - $width  ) / 2;
+					$posY = ( $thumbnailSize - $height ) / 2;
 
 					$sizeX = $width;
 					$sizeY = $height;
@@ -164,11 +165,11 @@ class Upload_Plugin extends Plugin
 					$height > $width  ? $widthRatio  = $height / $width  : NULL;
 					$width  > $height ? $heightRatio = $width  / $height : NULL;
 
-					$posX = ceil(( $size - ( $size * ( $width  / ( $width  * $widthRatio  ) ) ) ) / 2);
-					$posY = ceil(( $size - ( $size * ( $height / ( $height * $heightRatio ) ) ) ) / 2);
+					$posX = ceil(( $thumbnailSize - ( $thumbnailSize * ( $width  / ( $width  * $widthRatio  ) ) ) ) / 2);
+					$posY = ceil(( $thumbnailSize - ( $thumbnailSize * ( $height / ( $height * $heightRatio ) ) ) ) / 2);
 
-					$sizeX = $size;
-					$sizeY = $size;
+					$sizeX = $thumbnailSize;
+					$sizeY = $thumbnailSize;
 				}
 
 				imagecopyresized(
@@ -188,10 +189,10 @@ class Upload_Plugin extends Plugin
 				{
 					imagefilledrectangle(
 						$thumb,
-						( $widthRatio  > 1 ? $size - $posX : 0 ),
-						( $heightRatio > 1 ? $size - $posY : 0 ),
-						$size,
-						$size,
+						( $widthRatio  > 1 ? $thumbnailSize - $posX : 0 ),
+						( $heightRatio > 1 ? $thumbnailSize - $posY : 0 ),
+						$thumbnailSize,
+						$thumbnailSize,
 						$bgColor
 						);
 				}

@@ -113,8 +113,8 @@ class Input_Plugin extends Plugin
 		 * $_POST and $_GET values can't be trusted
 		 * If neccesary, access them through $this->POST_raw and $this->GET_raw
 		 */
-		$this->POST_raw = isset($_POST)                 ? $_POST : array();
-		$this->GET_raw  = isset($_GET)                  ? $_GET  : array();
+		$this->POST_raw = isset($_POST)            ? $_POST            : array();
+		$this->GET_raw  = isset($_GET)             ? $_GET             : array();
 		$this->args     = isset($this->view->args) ? $this->view->args : array();
 
 		unset($_POST, $_GET, $this->view->args);

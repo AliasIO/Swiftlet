@@ -20,9 +20,10 @@ class Db_Plugin extends Plugin
 		;
 
 	public
+		$cacheLifeTime = 3600,
 		$link,
 		$prefix,
-		$tables = array()
+		$tables        = array()
 		;
 
 	/*
@@ -94,12 +95,9 @@ class Db_Plugin extends Plugin
 	 */
 	function input_sanitize()
 	{
-		if ( !empty($this->ready) )
-		{
-			$this->app->input->POST_db_safe = $this->app->db->sanitize($this->app->input->POST_raw);
-			$this->app->input->GET_db_safe  = $this->app->db->sanitize($this->app->input->GET_raw);
-			$this->app->input->args_db_safe = $this->app->db->sanitize($this->app->input->args);
-		}
+		$this->app->input->POST_db_safe = $this->app->db->sanitize($this->app->input->POST_raw);
+		$this->app->input->GET_db_safe  = $this->app->db->sanitize($this->app->input->GET_raw);
+		$this->app->input->args_db_safe = $this->app->db->sanitize($this->app->input->args);
 	}
 
 	/*
@@ -164,10 +162,6 @@ class Db_Plugin extends Plugin
 							cq.`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
 						;');
 				}
-				else
-				{
-					$this->app->config['caching'] = FALSE;
-				}
 			}
 		}
 	}
@@ -180,7 +174,7 @@ class Db_Plugin extends Plugin
 	{
 		if ( !$this->ready )
 		{
-			$this->app->error(FALSE, 'No database connection (SQL: ' . $sql . ')', __FILE__, __LINE__);
+			$this->app->error(FALSE, 'No database connection (SQL: ' . $this->view->h($sql) . ')', __FILE__, __LINE__);
 		}
 
 		$this->result = array();
@@ -333,7 +327,7 @@ class Db_Plugin extends Plugin
 						"' . $this->escape($hash)              . '",
 						"' . $this->escape(serialize($result)) . '",
 						"' . gmdate('Y-m-d H:i:s')             . '",
-						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL 1 HOUR)
+						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->cacheLifeTime . ' SECOND)
 						)
 					;');
 
@@ -393,7 +387,11 @@ class Db_Plugin extends Plugin
 		$r = mysql_query($this->sql)
 			or $this->app->error(mysql_errno(), mysql_error() . '<pre>' . $this->sql . '</pre>', __FILE__, __LINE__);
 
-		$this->app->debugOutput['mysql queries'][] = array('sql' => $this->sql, 'affected rows' => mysql_affected_rows(), 'execution time' => round(microtime(TRUE) - $timerStart, 3) . ' sec');
+		$this->app->debugOutput['mysql queries'][] = array(
+			'sql'            => $this->sql,
+			'affected rows'  => mysql_affected_rows(),
+			'execution time' => round(microtime(TRUE) - $timerStart, 3) . ' sec'
+			);
 	}
 
 	/**

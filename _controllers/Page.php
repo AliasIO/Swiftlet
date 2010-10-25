@@ -31,8 +31,8 @@ class Page_Controller extends Controller
 			FROM      `' . $this->app->db->prefix . 'pages` AS p
 			LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
 			WHERE
-				' . ( $this->app->input->args[0] ? '
 				(
+					' . ( !empty($this->app->input->args[0]) ? '
 					n.`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
 					n.`path` = "' . $this->app->db->escape($this->request)            . '"
 				) AND

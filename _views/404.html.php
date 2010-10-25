@@ -2,6 +2,6 @@
 	<h1><?php echo $this->pageTitle ?></h1>
 
 	<p>
-		<?php echo $this->t('The page you are looking for does not exist.') ?>
+		<?php echo $this->t('The page you requested does not exist.') ?>
 	</p>
 </div>

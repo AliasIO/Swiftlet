@@ -21,7 +21,7 @@ class Test_Plugin extends Plugin
 	 * @param array $params
 	 * @return array
 	 */
-	function post_request($url, $params, $guest = FALSE)
+	function post_request($url, &$params, $guest = FALSE)
 	{
 		if ( function_exists('curl_init') )
 		{

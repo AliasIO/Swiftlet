@@ -13,8 +13,10 @@ class Dashboard_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db', 'permission', 'session'),
-		$hooks        = array('init' => 5, 'install' => 1, 'menu' => 2, 'remove' => 1, 'unit_tests' => 1),
+		$hooks        = array('init' => 5, 'install' => 1, 'menu' => 2, 'remove' => 1, 'unit_tests' => 1)
+		;
 
+	public
 		$pages = array()
 		;
 
@@ -45,6 +47,7 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function init()
 	{
+		// Group pages
 		$pages = array();
 
 		$this->app->hook('dashboard', $pages);
@@ -73,12 +76,9 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function menu(&$params)
 	{
-		if ( !empty($this->app->permission->ready) )
+		if ( $this->app->permission->check('dashboard access') )
 		{
-			if ( $this->app->permission->check('dashboard access') )
-			{
-				$params['Dashboard'] = 'admin/dashboard';
-			}
+			$params['Dashboard'] = 'admin/dashboard';
 		}
 	}
 

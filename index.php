@@ -12,6 +12,6 @@ require('_app/Plugin.php');
 require('_app/Controller.php');
 require('_app/View.php');
 
-$swiftlet = new Application;
+new Application;
 
 exit;

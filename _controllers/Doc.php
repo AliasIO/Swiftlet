@@ -19,16 +19,16 @@ class Doc_Controller extends Controller
 	{
 		$file = 'intro.html';
 
-		if ( isset($this->view->routeParts[1]) )
+		if ( isset($this->app->input->args[1]) )
 		{
-			$file = './' . implode('/', array_slice($this->view->routeParts, 1)) . '.html';
+			$file = implode('/', $this->app->input->args) . '.html';
 		}
 
 		$contents = '';
 
-		if ( is_file ( $file ) )
+		if ( is_file('docs/' . $file) )
 		{
-			$contents = @file_get_contents($file);
+			$contents = @file_get_contents('docs/' . $file);
 
 			preg_match('/<h2>(.+?)<\/h2>/', $contents, $m);
 
@@ -64,6 +64,6 @@ class Doc_Controller extends Controller
 
 		$this->view->contents = $contents;
 
-		$this->view->load('docs.html.php');
+		$this->view->load('doc.html.php');
 	}
 }

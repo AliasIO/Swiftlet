@@ -12,7 +12,7 @@ class Menu_Plugin extends Plugin
 	public
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$dependencies = array('node'),
+		$dependencies = array('db', 'node'),
 		$hooks        = array('dashboard' => 3, 'init' => 5, 'install' => 1, 'menu' => 1, 'remove' => 1)
 		;
 
@@ -66,15 +66,12 @@ class Menu_Plugin extends Plugin
 	 */
 	function init()
 	{
-		if ( !empty($this->app->db->ready) )
+		/**
+		 * Check if the menu table exists
+		 */
+		if ( in_array($this->app->db->prefix . 'menu', $this->app->db->tables) )
 		{
-			/**
-			 * Check if the menu table exists
-			 */
-			if ( in_array($this->app->db->prefix . 'menu', $this->app->db->tables) )
-			{
-				$this->ready = TRUE;
-			}
+			$this->ready = TRUE;
 		}
 	}
 
@@ -95,78 +92,71 @@ class Menu_Plugin extends Plugin
 
 	/*
 	 * Implement menu hook
+	 * Get a list of menu items
 	 * @params array $params
 	 */
 	function menu(&$params)
 	{
 		if ( !empty($this->ready) )
 		{
-			$this->get_items($params);
-		}
-	}
+			$this->app->db->sql('
+				SELECT
+					`items`
+				FROM `' . $this->app->db->prefix . 'menu`
+				LIMIT 1
+				;');
 
-	/* Get menu items
-	 * @param array $params
-	 */
-	function get_items(&$params)
-	{
-		$this->app->db->sql('
-			SELECT
-				`items`
-			FROM `' . $this->app->db->prefix . 'menu`
-			LIMIT 1
-			;');
-
-		if ( $r = $this->app->db->result )
-		{
-			$items = @unserialize($r[0]['items']);
-
-			if ( is_array($items) )
+			if ( $r = $this->app->db->result )
 			{
-				$nodeIds = array();
-				$nodes   = array();
+				$items = @unserialize($r[0]['items']);
 
-				foreach ( $items as $item )
+				if ( is_array($items) )
 				{
-					if ( $item['node_id'] )
-					{
-						$nodeIds[] = ( int ) $item['node_id'];
-					}
-				}
+					$nodeIds = array();
+					$nodes   = array();
 
-				if ( $nodeIds )
-				{
-					$this->app->db->sql('
-						SELECT
-							`id`,
-							`title`,
-							`path`
-						FROM `' . $this->app->db->prefix . 'nodes`
-						WHERE
-							`id` IN (' . implode(', ', $nodeIds) . ')
-						LIMIT ' . count($nodeIds) .'
-						;');
-
-					if ( $r = $this->app->db->result )
+					foreach ( $items as $item )
 					{
-						foreach ( $r as $d )
+						if ( $item['node_id'] )
 						{
-							$nodes[$d['id']] = array(
-								'title' => $d['title'],
-								'path'  => $d['path'] ? $d['path'] : 'node/' . $d['id']
-								);
+							$nodeIds[] = ( int ) $item['node_id'];
 						}
 					}
-				}
 
-				foreach ( $items as $item )
-				{
-					if ( ( in_array($item['node_id'], $nodeIds) && isset($nodes[$item['node_id']]) ) || !in_array($item['node_id'], $nodeIds) )
+					if ( $nodeIds )
 					{
-						$path  = $item['path']  ? $item['path']  : ( !empty($nodes[$item['node_id']]['path'])  ? $nodes[$item['node_id']]['path']  : '' );
-						$title = $item['title'] ? $item['title'] : ( !empty($nodes[$item['node_id']]['title']) ? $nodes[$item['node_id']]['title'] : $item['path'] );
+						$this->app->db->sql('
+							SELECT
+								`id`,
+								`title`,
+								`path`
+							FROM `' . $this->app->db->prefix . 'nodes`
+							WHERE
+								`id` IN (' . implode(', ', $nodeIds) . ')
+							LIMIT ' . count($nodeIds) .'
+							;');
 
-						$params[$title] = $path;
+						if ( $r = $this->app->db->result )
+						{
+							foreach ( $r as $d )
+							{
+								$nodes[$d['id']] = array(
+									'title' => $d['title'],
+									'path'  => $d['path'] ? $d['path'] : 'node/' . $d['id']
+									);
+							}
+						}
+					}
+
+					foreach ( $items as $item )
+					{
+						if ( ( in_array($item['node_id'], $nodeIds) && isset($nodes[$item['node_id']]) ) || !in_array($item['node_id'], $nodeIds) )
+						{
+							$path  = $item['path']  !== '' ? $item['path']  : ( !empty($nodes[$item['node_id']]['path'])  ? $nodes[$item['node_id']]['path']  : '' );
+							$title = $item['title'] !== '' ? $item['title'] : ( !empty($nodes[$item['node_id']]['title']) ? $nodes[$item['node_id']]['title'] : $item['path'] );
+
+							$params[$title] = $path;
+						}
 					}
 				}
 			}

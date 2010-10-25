@@ -16,8 +16,10 @@ class Language_Plugin extends Plugin
 	public
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks        = array('init' => 5, 'translate' => 1),
+		$hooks        = array('init' => 5, 'translate' => 1)
+		;
 
+	public
 		$language  = 'English US',
 		$languages = array('English US' => 'English US')
 		;
@@ -31,6 +33,8 @@ class Language_Plugin extends Plugin
 	 */
 	function init()
 	{
+		$this->ready = TRUE;
+
 		$this->check_languages();
 
 		if ( !empty($this->app->session->ready) )
@@ -45,8 +49,6 @@ class Language_Plugin extends Plugin
 		}
 
 		$this->load();
-
-		$this->ready = TRUE;
 	}
 
 	/**
@@ -58,7 +60,7 @@ class Language_Plugin extends Plugin
 		{
 			$this->languages = array('English US' => 'English US');
 
-			if ( is_dir($dir = '../../lang/') )
+			if ( is_dir($dir = 'lang/') )
 			{
 				if ( $handle = opendir($dir) )
 				{
@@ -99,7 +101,7 @@ class Language_Plugin extends Plugin
 
 		if ( $this->language )
 		{
-			if ( is_dir($dir = '../../lang/' . $this->language . '/') )
+			if ( is_dir($dir = 'lang/' . $this->language . '/') )
 			{
 				if ( $handle = opendir($dir) )
 				{

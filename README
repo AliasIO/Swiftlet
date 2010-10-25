@@ -22,7 +22,7 @@ INSTALLATION
 
 GETTING STARTED
 
- - Read the documentation at http://swiftlet.org/docs/.
+ - Read the documentation at http://swiftlet.org/doc/.
  - Create and review the configuration file (copy /_config.default.php to /_config.php).
  - Use the plugin installer to install plugins (database connection required).
  - To change the welcome page, replace or modify /home.php and /_views/home.html.php.

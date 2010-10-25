@@ -12,7 +12,7 @@ class Doc_Plugin extends Plugin
 	public
 		$version    = '1.0.0',
 		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('dashboard' => 999, 'route' => 1)
+		$hooks      = array('dashboard' => 999)
 		;
 
 	/*
@@ -25,15 +25,7 @@ class Doc_Plugin extends Plugin
 			'name'        => 'Documentation',
 			'description' => 'Source code documentation and guides',
 			'group'       => 'Developer',
-			'path'        => 'docs',
+			'path'        => 'doc',
 			);
-	}
-
-	function route(&$params)
-	{
-		if ( $params['parts'][0] == 'docs' )
-		{
-			$params['path'] = 'docs/index.php';
-		}
 	}
 }

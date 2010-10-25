@@ -13,8 +13,9 @@ class User_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db', 'session'),
-		$hooks        = array('dashboard' => 4, 'init' => 3, 'install' => 1, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1),
+		$hooks        = array('dashboard' => 4, 'init' => 3, 'install' => 1, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1);
 
+	public
 		$prefs = array()
 		;
 
@@ -130,17 +131,14 @@ class User_Plugin extends Plugin
 	 */
 	function menu(&$params)
 	{
-		if ( !empty($this->app->session->ready) )
+		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
 		{
-			if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
-			{
-				$params['Login'] = 'login';
-			}
-			else
-			{
-				$params['Account'] = 'account';
-				$params['Log out (' .  $this->app->session->get('user username') . ')']  = 'login/logout';
-			}
+			$params['Login'] = 'login';
+		}
+		else
+		{
+			$params['Account'] = 'account';
+			$params['Log out (' .  $this->app->session->get('user username') . ')']  = 'login/logout';
 		}
 	}
 
@@ -149,46 +147,43 @@ class User_Plugin extends Plugin
 	 */
 	function init()
 	{
-		if ( !empty($this->app->db->ready) )
+		/**
+		 * Check if the users table exists
+		 */
+		if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
 		{
-			/**
-			 * Check if the users table exists
-			 */
-			if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
+			$this->ready = TRUE;
+
+			if ( in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
 			{
-				$this->ready = TRUE;
+				$this->app->db->sql('
+					SELECT
+						*
+					FROM `' . $this->app->db->prefix . 'user_prefs' . '`
+					;');
 
-				if ( in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
+				if ( $r = $this->app->db->result )
 				{
-					$this->app->db->sql('
-						SELECT
-							*
-						FROM `' . $this->app->db->prefix . 'user_prefs' . '`
-						;');
-
-					if ( $r = $this->app->db->result )
+					foreach ( $r as $d )
 					{
-						foreach ( $r as $d )
-						{
-							$this->prefs[$d['pref']] = $d;
+						$this->prefs[$d['pref']] = $d;
 
-							$this->prefs[$d['pref']]['options'] = unserialize($d['options']);
-						}
+						$this->prefs[$d['pref']]['options'] = unserialize($d['options']);
 					}
 				}
+			}
 
-				$this->app->session->put('pref_values', $this->get_pref_values($this->app->session->get('user id')));
+			$this->app->session->put('pref_values', $this->get_pref_values($this->app->session->get('user id')));
 
-				/**
-				 * Guest user
-				 */
-				if ( $this->app->session->get('user id') === FALSE )
-				{
-					$this->app->session->put(array(
-						'user id'       => User_Plugin::GUEST_ID,
-						'user username' => User_Plugin::GUEST_ID
-						));
-				}
+			/**
+			 * Guest user
+			 */
+			if ( $this->app->session->get('user id') === FALSE )
+			{
+				$this->app->session->put(array(
+					'user id'       => User_Plugin::GUEST_ID,
+					'user username' => User_Plugin::GUEST_ID
+					));
 			}
 		}
 	}
@@ -260,8 +255,6 @@ class User_Plugin extends Plugin
 	 */
 	function logout()
 	{
-		$this->app = $this->app;
-
 		$this->app->session->reset();
 		$this->app->session->end();
 	}
@@ -274,8 +267,6 @@ class User_Plugin extends Plugin
 	 */
 	function validate_password($username, $password)
 	{
-		$this->app = $this->app;
-
 		$this->app->db->sql('
 			SELECT
 				`pass_hash`
@@ -325,7 +316,7 @@ class User_Plugin extends Plugin
 		$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . strtolower($username));
 		$passHash = $salt . $password;
 
-		// Let's slow things down by hashing it a bunch of times
+		// Delay encryption by hashing many times, makes brute forcing more difficult
 		for ( $i = 0; $i < 100000; $i ++ )
 		{
 			$passHash = hash('sha256', $passHash);
@@ -373,8 +364,6 @@ class User_Plugin extends Plugin
 	 */
 	function delete_pref($pref)
 	{
-		$this->app = $this->app;
-
 		$this->app->db->sql('
 			DELETE
 				up, upx
@@ -391,8 +380,6 @@ class User_Plugin extends Plugin
 	 */
 	function save_pref_value($params)
 	{
-		$this->app = $this->app;
-
 		$this->app->db->sql('
 			INSERT INTO `' . $this->app->db->prefix . 'user_prefs_xref` (
 				`user_id`,
@@ -423,8 +410,6 @@ class User_Plugin extends Plugin
 	 */
 	function get_pref_values($userId)
 	{
-		$this->app = $this->app;
-
 		$prefs = array();
 
 		if ( ( int ) $userId )

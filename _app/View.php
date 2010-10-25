@@ -148,7 +148,7 @@ class View
 
 		$this->app->hook('translate', $params);
 
-		return $args ? ( is_array($args) ? vsprintf($params['string'], $args) : sprintf($params['string'], $args) ) : $v;
+		return $args ? ( is_array($args) ? vsprintf($params['string'], $args) : sprintf($params['string'], $args) ) : $params['string'];
 	}
 
 	/**

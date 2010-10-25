@@ -29,19 +29,9 @@ class Email_Plugin extends Plugin
 
 	/*
 	 * Implement email hook
-	 * @params $params
+	 * @params array $params
 	 */
 	function email(&$params)
-	{
-		$params['success'] = $app->email->send($params);
-	}
-
-	/**
-	 * Send an e-mail
-	 * @params array $params
-	 * @return boolean
-	 */
-	function send(&$params)
 	{
 		$headers = array(
 			'To'           => '<' . $params['to'] . '>',
@@ -52,14 +42,13 @@ class Email_Plugin extends Plugin
 			);
 
 		$headers = array_merge($headers, $params['headers']);
-
-		$head = '';
+		$head    = '';
 
 		foreach ( $headers as $k => $v )
 		{
 			$head .= $k . ': ' . $v . "\r\n";
 		}
 
-		return mail($params['to'], $params['subject'], $params['body'], $head);
+		$params['success'] = mail($params['to'], $params['subject'], $params['body'], $head);
 	}
 }

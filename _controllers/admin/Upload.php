@@ -33,7 +33,7 @@ class Upload_Controller extends Controller
 
 		$callback = isset($this->app->input->GET_raw['callback']) ? $this->app->input->GET_raw['callback'] : FALSE;
 
-		if ( $this->app->input->POST_valid['form-submit'] )
+		if ( $this->app->input->POST_valid['form-submit'] && $this->app->permission->check('admin upload upload') )
 		{
 			if ( isset($_FILES['file']) )
 			{
@@ -151,48 +151,51 @@ class Upload_Controller extends Controller
 		switch ( $this->method )
 		{
 			case 'delete':
-				if ( !$this->app->input->POST_valid['confirm'] )
+			 	if ( $this->app->permission->check('admin upload delete') )
 				{
-					$this->app->input->confirm($this->view->t('Are you sure you wish to delete this file?'));
-				}
-				else
-				{
-					$this->app->db->sql('
-						SELECT
-							`filename`
-						FROM `' . $this->app->db->prefix . 'uploads`
-						WHERE
-							`id` = ' . ( int ) $this->id . '
-						LIMIT 1
-						;');
-
-					if ( $r = $this->app->db->result )
+					if ( !$this->app->input->POST_valid['confirm'] )
 					{
-						$filename = $r[0]['filename'];
-
-						if ( is_file($file = 'uploads/files/' . $filename) )
-						{
-							unlink($file);
-						}
-
-						if ( is_file($file = 'uploads/thumbs/' . $filename) )
-						{
-							unlink($file);
-						}
-
+						$this->app->input->confirm($this->view->t('Are you sure you wish to delete this file?'));
+					}
+					else
+					{
 						$this->app->db->sql('
-							DELETE
+							SELECT
+								`filename`
 							FROM `' . $this->app->db->prefix . 'uploads`
 							WHERE
 								`id` = ' . ( int ) $this->id . '
 							LIMIT 1
 							;');
 
-						if ( $this->app->db->result )
+						if ( $r = $this->app->db->result )
 						{
-							header('Location: ' . $this->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
+							$filename = $r[0]['filename'];
 
-							$this->app->end();
+							if ( is_file($file = 'uploads/files/' . $filename) )
+							{
+								unlink($file);
+							}
+
+							if ( is_file($file = 'uploads/thumbs/' . $filename) )
+							{
+								unlink($file);
+							}
+
+							$this->app->db->sql('
+								DELETE
+								FROM `' . $this->app->db->prefix . 'uploads`
+								WHERE
+									`id` = ' . ( int ) $this->id . '
+								LIMIT 1
+								;');
+
+							if ( $this->app->db->result )
+							{
+								header('Location: ' . $this->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
+
+								$this->app->end();
+							}
 						}
 					}
 				}

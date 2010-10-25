@@ -13,8 +13,10 @@ class Time_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('user'),
-		$hooks        = array('init' => 5, 'install' => 1, 'format_date' => 1, 'remove' => 1),
+		$hooks        = array('init' => 5, 'install' => 1, 'format_date' => 1, 'remove' => 1)
+		;
 
+	public
 		$dateFormat = 'M j, Y',
 		$timeFormat = 'h:i',
 		$timeZone   = 'GMT',

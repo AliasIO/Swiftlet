@@ -105,6 +105,8 @@ class Buffer_Plugin extends Plugin
 			header('X-Powered-By: Swiftlet - http://swiftlet.org');
 
 			echo $contents;
+
+			unset($contents);
 		}
 	}
 

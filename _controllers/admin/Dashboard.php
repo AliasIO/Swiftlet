@@ -30,7 +30,7 @@
 		{
 			$this->app->clear_cache();
 
-			header('Location: ' . $this->view->route($this->path . '?notice=cache_cleared'));
+			header('Location: ' . $this->view->route($this->path . '?notice=caches_cleared'));
 
 			$this->app->end();
 		}
@@ -57,8 +57,8 @@
 		{
 			switch($this->app->input->GET_raw['notice'])
 			{
-				case 'cache_cleared':
-					$this->view->notice = $this->view->t('The cache has been cleared.');
+				case 'caches_cleared':
+					$this->view->notice = $this->view->t('The caches have been cleared.');
 
 					break;
 			}

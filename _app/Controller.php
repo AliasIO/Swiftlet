@@ -22,7 +22,6 @@ class Controller
 		;
 
 	protected
-		$args         = array(),
 		$app,
 		$dependencies = array(),
 		$id,

@@ -69,7 +69,7 @@ class Cache_Plugin extends Plugin
 			}
 			else
 			{
-				$this->app->error(FALSE, 'Could not open directory "/cache" for reading.', __FILE__, __LINE__);
+				$this->app->error(FALSE, 'Could not open directory "/cache/" for reading.', __FILE__, __LINE__);
 			}
 		}
 	}
@@ -82,60 +82,49 @@ class Cache_Plugin extends Plugin
 	{
 		if ( !empty($this->ready) )
 		{
-			$this->write($params['contents']);
-		}
-	}
-
-	/**
-	 * Write a file to cache
-	 * @param string $contents
-	 */
-	function write(&$contents)
-	{
-		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
-		{
-			return;
-		}
-
-		if ( $headers = headers_list() )
-		{
-			foreach ( $headers as $header )
+			if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 			{
-				if ( preg_match('/^Content\-type:/i', $header) )
+				return;
+			}
+
+			if ( $headers = headers_list() )
+			{
+				foreach ( $headers as $header )
 				{
-					return;
+					if ( preg_match('/^Content\-type:/i', $header) )
+					{
+						return;
+					}
 				}
 			}
+
+			if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) )
+			{
+				if ( !is_dir('cache') )
+				{
+					$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
+				}
+
+				if ( !is_writable('cache') )
+				{
+					$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
+				}
+
+				$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
+
+				if ( !$handle = fopen('cache/' . $filename, 'a+') )
+				{
+					$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
+				}
+
+				if ( fwrite($handle, $params['contents']) === FALSE )
+				{
+					$this->app->error(FALSE, 'Could not write to file "/cache/' . $filename . '".', __FILE__, __LINE__);
+				}
+
+				fclose($handle);
+			}
 		}
-
-		if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) )
-		{
-			if ( !is_dir('cache') )
-			{
-				$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
-			}
-
-			if ( !is_writable('cache') )
-			{
-				$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
-			}
-
-			$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
-
-			if ( !$handle = fopen('cache/' . $filename, 'a+') )
-			{
-				$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
-			}
-
-			if ( fwrite($handle, $contents) === FALSE )
-			{
-				$this->app->error(FALSE, 'Could not write to file "/cache/' . $filename . '".', __FILE__, __LINE__);
-			}
-
-			fclose($handle);
-		}
-
-		unset($contents);
 	}
 
 	/**
