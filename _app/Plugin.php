@@ -58,7 +58,7 @@ class Plugin
 
 		if ( version_compare(Application::VERSION, str_replace('*', '99999', $this->compatible['from']), '<') || version_compare(Application::VERSION, str_replace('*', '99999', $this->compatible['to']), '>') )
 		{
-			$app->error(FALSE, 'Plugin `' . $name . '` is designed for ' . ( $this->compatible['from'] == $this->compatible['to'] ? 'version ' . $this->info['compatible']['from'] : 'versions ' . $compatible['from'] . ' to ' . $compatible['to'] ) . ' of Swiftlet (running version ' . Model::VERSION . ')', __FILE__, __LINE__);
+			$app->error(FALSE, 'Plugin `' . $name . '` is designed for ' . ( $this->compatible['from'] == $this->compatible['to'] ? 'version ' . $this->info['compatible']['from'] : 'versions ' . $compatible['from'] . ' to ' . $compatible['to'] ) . ' of Swiftlet (running version ' . Application::VERSION . ')', __FILE__, __LINE__);
 		}
 
 		if ( $this->hooks )

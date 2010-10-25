@@ -39,7 +39,7 @@ switch ( $hook )
 </p>
 
 <p>
-	Initially the <a href="./model">Model</a> will use the <em>info</em> hook to gather information about the plugin.
+	Initially the <a href="./application">Application</a> will use the <em>info</em> hook to gather information about the plugin.
 	This includes the plugin's name, version number and compatibility info (Swiftlet version numbers). This is also
 	where other <a href="./hook">hooks</a> are registered, in the example's case only the <em>init</em> hook.
 </p>
@@ -144,7 +144,7 @@ class example
 </pre>
 
 <p>
-	An instance of <code>$app</code> should be passed to each class in order to access the <a href="./model">Model</a> inside
+	An instance of <code>$app</code> should be passed to each class in order to access the <a href="./application">Application</a> inside
 	the class.
 </p>
 

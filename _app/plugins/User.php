@@ -233,7 +233,7 @@ class User_Plugin extends Plugin
 
 				if ( !empty($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 				{
-					$lifeTime = $remember ? 60 * 60 * 24 * 14 : $this->app->session->lifeTime;
+					$lifeTime = $remember ? 60 * 60 * 24 * 14 : $this->app->session->sessionLifeTime;
 
 					$this->app->session->put(array(
 						'user id'       => $r['id'],

@@ -25,12 +25,12 @@
 			<h2>Concepts</h2>
 
 			<ul>
-				<li><a href="<?php echo $this->rootPath ?>doc/concepts/model"     >Model</a></li>
-				<li><a href="<?php echo $this->rootPath ?>doc/concepts/view"      >Views</a></li>
-				<li><a href="<?php echo $this->rootPath ?>doc/concepts/controller">Controllers</a></li>
-				<li><a href="<?php echo $this->rootPath ?>doc/concepts/hook"      >Hooks</a></li>
-				<li><a href="<?php echo $this->rootPath ?>doc/concepts/plugin"    >Plugins</a></li>
-				<li><a href="<?php echo $this->rootPath ?>doc/concepts/unit_test" >Unit Tests</a></li>
+				<li><a href="<?php echo $this->rootPath ?>doc/concepts/application">Application</a></li>
+				<li><a href="<?php echo $this->rootPath ?>doc/concepts/view"       >Views</a></li>
+				<li><a href="<?php echo $this->rootPath ?>doc/concepts/controller" >Controllers</a></li>
+				<li><a href="<?php echo $this->rootPath ?>doc/concepts/hook"       >Hooks</a></li>
+				<li><a href="<?php echo $this->rootPath ?>doc/concepts/plugin"     >Plugins</a></li>
+				<li><a href="<?php echo $this->rootPath ?>doc/concepts/unit_test"  >Unit Tests</a></li>
 			</ul>
 
 			<h2>Plugins</h2>
