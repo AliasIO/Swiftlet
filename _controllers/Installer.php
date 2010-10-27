@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Plugin installer
  * @abstract
@@ -164,7 +166,7 @@ class Installer_Controller extends Controller
 
 								if ( $pluginsInstalled )
 								{
-									header('Location: ?notice=installed&plugins=' . implode('|', $pluginsInstalled));
+									header('Location: ' . $this->view->route($this->request . '?notice=installed&plugins=' . implode('|', $pluginsInstalled), FALSE));
 
 									$this->app->end();
 								}
@@ -195,7 +197,7 @@ class Installer_Controller extends Controller
 
 								if ( $pluginsUpgraded )
 								{
-									header('Location: ?notice=upgraded&plugins=' . implode('|', $pluginsUpgraded));
+									header('Location: ' . $this->view->route($this->request . '?notice=upgraded&plugins=' . implode('|', $pluginsUpgraded), FALSE));
 
 									$this->app->end();
 								}
@@ -226,7 +228,7 @@ class Installer_Controller extends Controller
 
 								if ( $pluginsRemoved )
 								{
-									header('Location: ?notice=removed&plugins=' . implode('|', $pluginsRemoved));
+									header('Location: ' . $this->view->route($this->request . '?notice=removed&plugins=' . implode('|', $pluginsRemoved), FALSE));
 
 									$this->app->end();
 								}

@@ -17,7 +17,7 @@
 	<h2><?php echo $this->t('Install') ?></h2>
 
 	<?php if ( $this->newPlugins ): ?>
-	<form id="form-install" method="post" action="">
+	<form id="form-install" method="post" action="<?php echo $this->route('installer') ?>">
 		<fieldset>
 			<?php foreach ( $this->newPlugins as $plugin => $v ): ?>
 			<dl>

@@ -9,7 +9,7 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<form id="form-login" method="post" action="<?php echo !empty($app->input->GET_raw['ref']) ? '?ref=' . rawurlencode($app->input->GET_raw['ref']) : '' ?>">
+	<form id="form-login" method="post" action="<?php echo $this->route($this->request . ( !empty($app->input->GET_raw['ref']) ? '?ref=' . rawurlencode($app->input->GET_raw['ref']) : '' )) ?>">
 		<fieldset>
 			<dl>
 				<dt><label for="username"><?php echo $this->t('Username') ?></label></dt>

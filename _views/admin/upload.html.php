@@ -3,7 +3,7 @@
 
 	<?php if ( $this->method != 'upload' && $this->app->permission->check('admin upload upload') ): ?>
 	<p>
-		<a class="button" href="<?php echo $this->route('admin/upload/form/?callback=' . $this->callback) ?>"><?php echo $this->t('Upload files') ?></a>
+		<a class="button" href="<?php echo $this->route('admin/upload/form?callback=' . $this->callback) ?>"><?php echo $this->t('Upload files') ?></a>
 	</p>
 	<?php endif ?>
 
@@ -18,7 +18,7 @@
 	<?php if ( $this->method == 'form' && $this->app->permission->check('admin upload upload') ): ?>
 	<h2><?php echo $this->t('Upload files') ?></h2>
 
-	<form id="form-file" method="post" action="<?php echo $this->route('admin/upload/?callback=' . $this->callback) ?>" enctype="multipart/form-data">
+	<form id="form-file" method="post" action="<?php echo $this->route($this->request . '?callback=' . $this->callback) ?>" enctype="multipart/form-data">
 		<?php for ( $i = 0; $i < 5; $i ++ ): ?>
 		<fieldset>
 			<dl>

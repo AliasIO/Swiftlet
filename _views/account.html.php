@@ -96,7 +96,7 @@
 						case 'select':
 							?>
 							<select name="pref-<?php echo $pref['id'] ?>" id="pref-<?php echo $pref['id'] ?>">
-							<option value="" ><?php echo $this->t('Select&hellip;') ?></option>
+							<option value="" ><?php echo $this->t('Select') ?>&hellip;</option>
 							<?php foreach ( $pref['options'] as $k => $v ): ?>
 							<option value="<?php echo $this->h($k) ?>" <?php echo $this->h($k) == $app->input->POST_html_safe['pref-' . $pref['id']] ? 'selected="selected"' : '' ?>><?php echo $this->h($this->t($v)) ?></option>
 							<?php endforeach ?>

@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Upload
  * @abstract
@@ -21,7 +23,7 @@ class Upload_Controller extends Controller
 	{
 		if ( !$this->app->permission->check('admin upload access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -192,7 +194,7 @@ class Upload_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted'));
+								header('Location: ' . $this->view->route($this->path . '?callback=' . rawurlencode($callback) . '&notice=deleted', FALSE));
 
 								$this->app->end();
 							}

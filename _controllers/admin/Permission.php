@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Permission
  * @abstract
@@ -30,7 +32,7 @@ class Permission_Controller extends Controller
 
 		if ( !$this->app->permission->check('admin permission access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -126,7 +128,7 @@ class Permission_Controller extends Controller
 
 		if ( !$this->app->permission->check('admin permission access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -157,7 +159,7 @@ class Permission_Controller extends Controller
 
 					if ( $this->app->db->result )
 					{
-						header('Location: ' . $this->view->route($this->path . '?notice=created'));
+						header('Location: ' . $this->view->route($this->path . '?notice=created', FALSE));
 
 						$this->app->end();
 					}
@@ -174,7 +176,7 @@ class Permission_Controller extends Controller
 
 					if ( $this->app->db->result )
 					{
-						header('Location: ' . $this->view->route($this->path . '?notice=updated'));
+						header('Location: ' . $this->view->route($this->path . '?notice=updated', FALSE));
 
 						$this->app->end();
 					}
@@ -197,7 +199,7 @@ class Permission_Controller extends Controller
 						)
 					;');
 
-				header('Location: ' . $this->view->route($this->path . '?notice=added'));
+				header('Location: ' . $this->view->route($this->path . '?notice=added', FALSE));
 
 				$this->app->end();
 			}
@@ -228,7 +230,7 @@ class Permission_Controller extends Controller
 					}
 				}
 
-				header('Location: ' . $this->view->route($this->path . '?notice=permissions_updated'));
+				header('Location: ' . $this->view->route($this->path . '?notice=permissions_updated', FALSE));
 
 				$this->app->end();
 			}
@@ -332,7 +334,7 @@ class Permission_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->view->route($this->path . '?notice=removed'));
+								header('Location: ' . $this->view->route($this->path . '?notice=removed', FALSE));
 
 								$this->app->end();
 							}
@@ -361,7 +363,7 @@ class Permission_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->view->route($this->path . '?notice=deleted'));
+								header('Location: ' . $this->view->route($this->path . '?notice=deleted', FALSE));
 
 								$this->app->end();
 							}

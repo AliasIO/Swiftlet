@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Unit tests
  * @abstract
@@ -24,7 +26,7 @@ class Test_Controller extends Controller
 		if ( !$this->app->session->get('user is owner') )
 		{
 
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}

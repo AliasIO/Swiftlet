@@ -16,7 +16,6 @@ class Header_Plugin extends Plugin
 	public
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$dependencies = array('menu'),
 		$hooks        = array('init' => 999, 'header' => 999)
 		;
 

@@ -137,6 +137,11 @@ class Application
 				{
 					$timerStart = microtime(TRUE);
 
+					if ( !method_exists(get_class($this->{$plugin['name']}), $hook) )
+					{
+						$this->error(FALSE, 'The plugin `' . $plugin['name'] . '` has no hook `' . $hook . '`.');
+					}
+
 					$this->{$plugin['name']}->{$hook}($params);
 
 					$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
@@ -269,7 +274,7 @@ class Application
 
 			foreach ( $this->consoleMessages as $message )
 			{
-				$messages[] = 'console.' . $message['type'] . '(unescape(\'' . rawurlencode('SWIFTLET ' . addslashes($message['file']) . ' on line ' . ( int ) $message['line'] . '\n\n' . $message['message']) . '\'));';
+				$messages[] = 'console.' . $message['type'] . '(unescape(\'' . rawurlencode('SWIFTLET ' . addslashes($message['file']) . ' on line ' . ( int ) $message['line']) . '\n\n' . rawurlencode($message['message']) . '\'));';
 			}
 
 			echo '

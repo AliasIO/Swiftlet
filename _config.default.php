@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
-if ( !isset($app) ) die('Direct access to this file is not allowed');
+if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-$config = array(
+$this->config = array(
 	/**
 	 * Website settings
 	 */
@@ -31,38 +31,38 @@ $config = array(
 	 * Cache dynamic pages to improve load times
 	 */
 	'caching' => FALSE, // TRUE | FALSE
-	
+
 	/**
 	 * URL rewrites, working .htaccess file required
 	 */
-	'urlRewrite' => TRUE // TRUE | FALSE
+	'urlRewrite' => FALSE // TRUE | FALSE
 	);
 
 /*
  * testing should be set to FALSE when running in a production environment
  */
-switch ( $app->userIp )
+switch ( $this->userIp )
 {
 	case '127.0.0.1':
 	case '0.0.0.0':
 	case '::1':
-		$config['testing'] = TRUE;
-		
+		$this->config['testing'] = TRUE;
+
 		break;
 	default:
-		$config['testing'] = FALSE;
+		$this->config['testing'] = FALSE;
 }
 
 /**
  * MySQL Database settings
  * Leave dbName empty if no database is used
  */
-if ( $config['testing'] )
+if ( $this->config['testing'] )
 {
 	/**
 	 * Settings for local development and testing environment
 	 */
-	$config += array(
+	$this->config += array(
 		'dbHost'    => 'localhost',
 		'dbUser'    => '',
 		'dbPass'    => '',
@@ -75,7 +75,7 @@ else
 	/**
 	 * Settings for production environment
 	 */
-	$config += array(
+	$this->config += array(
 		'dbHost'    => 'localhost',
 		'dbUser'    => '',
 		'dbPass'    => '',
@@ -87,4 +87,4 @@ else
 /*
  * debugMode should be set to FALSE when running in a production environment
  */
-$config['debugMode'] = $config['testing']; // TRUE | FALSE
+$this->config['debugMode'] = $this->config['testing']; // TRUE | FALSE

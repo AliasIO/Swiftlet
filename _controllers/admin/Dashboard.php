@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Dashboard
  * @abstract
@@ -21,7 +23,7 @@
 	{
 		if ( !$this->app->permission->check('dashboard access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -30,7 +32,7 @@
 		{
 			$this->app->clear_cache();
 
-			header('Location: ' . $this->view->route($this->path . '?notice=caches_cleared'));
+			header('Location: ' . $this->view->route($this->path . '?notice=caches_cleared', FALSE));
 
 			$this->app->end();
 		}

@@ -27,7 +27,7 @@
 
 	<?php if ( $app->permission->check('admin page create') || $this->method == 'edit' && $app->permission->check('admin page edit') ): ?>
 
-	<form id="form-page" method="post" action="<?php echo $this->id ? $this->route('admin/page/edit/' . $this->id) : '' ?>">
+	<form id="form-page" method="post" action="<?php echo $this->route($this->request) ?>">
 		<?php foreach ( $this->languages as $i => $language ): ?>
 		<fieldset>
 			<dl>

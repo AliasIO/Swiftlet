@@ -16,7 +16,7 @@
 	<h2><?php echo $this->t('Edit role') ?></h2>
 	<?php endif ?>
 
-	<form id="form-role" method="post" action="<?php echo $this->route('admin/permission' . ( $this->method ? '/' . $this->method . ( $this->method == 'edit' ? '/' . $this->id : '' ) : '' )) ?>">
+	<form id="form-role" method="post" action="<?php echo $this->route($this->request) ?>">
 		<fieldset>
 			<dl>
 				<dt>

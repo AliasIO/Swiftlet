@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Account
  * @abstract
@@ -20,7 +22,7 @@ class Account_Controller extends Controller
 	{
 		if ( $this->method == 'create' && !$this->app->session->get('user is owner') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -48,7 +50,7 @@ class Account_Controller extends Controller
 
 		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -224,7 +226,7 @@ class Account_Controller extends Controller
 									));
 							}
 
-							header('Location: ' . $this->view->route($this->path . '/edit/' . $this->app->db->result . '&notice=created'));
+							header('Location: ' . $this->view->route($this->path . '/edit/' . $this->app->db->result . '&notice=created', FALSE));
 
 							$this->app->end();
 						}
@@ -263,7 +265,7 @@ class Account_Controller extends Controller
 									));
 							}
 
-							header('Location: ' . $this->view->route($this->path . '/edit/' . $this->id . '&notice=saved'));
+							header('Location: ' . $this->view->route($this->path . '/edit/' . $this->id . '&notice=saved', FALSE));
 
 							$this->app->end();
 						}
@@ -320,7 +322,7 @@ class Account_Controller extends Controller
 										`user_id` = ' . ( int ) $this->id . '
 									;');
 
-								header('Location: ' . $this->view->route($this->path . '?notice=deleted'));
+								header('Location: ' . $this->view->route($this->path . '?notice=deleted', FALSE));
 
 								$this->app->end();
 							}

@@ -84,9 +84,9 @@ class View
 		$this->method = $this->args           ?         $this->args[0] : '';
 		$this->id     = isset($this->args[1]) ? ( int ) $this->args[1] : '';
 
-		$this->rootPath = count($args) > 1 ? str_repeat('../', count($args) - 1) : './';
+		$this->rootPath = count($args) > 1 && $this->app->config['urlRewrite'] ? str_repeat('../', count($args) - 1) : './';
 		$this->viewPath = $this->rootPath . '_views/';
-		$this->absPath  = preg_replace('/([^\/]+\/){' . substr_count($this->rootPath, '../') . '}$/', '', dirname($_SERVER['REQUEST_URI'] . ' ') . '/');
+		$this->absPath  = $this->app->config['urlRewrite'] ? preg_replace('/([^\/]+\/){' . substr_count($this->rootPath, '../') . '}$/', '', dirname($_SERVER['REQUEST_URI'] . ' ') . '/') : '';
 	}
 
 	/*
@@ -180,11 +180,12 @@ class View
 	/**
 	 * Route URLs
 	 * @param string $route
+	 * @param bool $encode
 	 * @return string
 	 */
-	function route($route)
+	function route($route, $encode = TRUE)
 	{
-		$route = $this->rootPath . ( $this->app->config['urlRewrite'] ? $route : '?q=' . str_replace('?', '&amp;', $route) );
+		$route = $this->rootPath . ( $this->app->config['urlRewrite'] ? $route : '?q=' . str_replace('?', $encode ? '&amp;' : '&', $route) );
 
 		return $route;
 	}

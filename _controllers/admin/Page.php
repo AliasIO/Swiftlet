@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Page
  * @abstract
@@ -32,7 +34,7 @@ class Page_Controller extends Controller
 
 		if ( !$this->app->permission->check('admin page access') )
 		{
-			header('Location: ' . $this->view->route('login?ref=' . $this->request));
+			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
 			$this->app->end();
 		}
@@ -81,7 +83,7 @@ class Page_Controller extends Controller
 									`home`  =  ' . ( $this->app->input->POST_raw['home'] ? 1 : 0 )        . ',
 									`path`  = "' . $this->app->input->POST_db_safe['path']                . '"
 								WHERE
-									`id` = ' . $this->view->id . '
+									`id` = ' . $this->id . '
 								LIMIT 1
 								;');
 
@@ -93,7 +95,7 @@ class Page_Controller extends Controller
 									`lang`
 								FROM `' . $this->app->db->prefix . 'pages`
 								WHERE
-									`node_id` = ' . $this->view->id . '
+									`node_id` = ' . $this->id . '
 								;');
 
 							if ( $r = $this->app->db->result )
@@ -115,7 +117,7 @@ class Page_Controller extends Controller
 											`published` =  ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
 											`date_edit` = "' . gmdate('Y-m-d H:i:s')                                . '"
 										WHERE
-											`node_id` =  ' . $this->view->id                   . '  AND
+											`node_id` =  ' . $this->id                   . '  AND
 											`lang`    = "' . $this->app->db->escape($language) . '"
 										LIMIT 1
 										;');
@@ -133,7 +135,7 @@ class Page_Controller extends Controller
 											`date_edit`
 											)
 										VALUES (
-											 ' . $this->view->id                                      . ',
+											 ' . $this->id                                      . ',
 											"' . $this->app->input->POST_db_safe['title'][$language]  . '",
 											"' . $this->app->input->POST_db_safe['body'][$language]   . '",
 											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
@@ -145,11 +147,11 @@ class Page_Controller extends Controller
 								}
 							}
 
-							$this->app->node->move($this->view->id, $this->app->input->POST_raw['parent']);
+							$this->app->node->move($this->id, $this->app->input->POST_raw['parent']);
 
-							$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'page/' . ( int ) $this->view->id;
+							$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'page/' . ( int ) $this->id;
 
-							header('Location: ' . $this->view->route('admin/page/edit/' . ( int ) $this->view->id . '?path=' . rawurlencode($path) . '&notice=updated'));
+							header('Location: ' . $this->view->route('admin/page/edit/' . ( int ) $this->id . '?path=' . rawurlencode($path) . '&notice=updated', FALSE));
 
 							$this->app->end();
 						}
@@ -201,7 +203,7 @@ class Page_Controller extends Controller
 								{
 									$path = !empty($this->app->input->POST_raw['path']) ? $this->app->input->POST_raw['path'] : 'page/' . $nodeId;
 
-									header('Location: ' . $this->view->route('admin/page/edit/' . $nodeId . '?path=' . rawurlencode($path) . '&notice=created'));
+									header('Location: ' . $this->view->route('admin/page/edit/' . $nodeId . '?path=' . rawurlencode($path) . '&notice=created', FALSE));
 
 									exit;
 								}
@@ -216,14 +218,16 @@ class Page_Controller extends Controller
 		}
 		else if ( isset($this->app->input->GET_raw['notice']) )
 		{
+			$path = isset($this->app->input->GET_raw['path']) ? $this->app->input->GET_raw['path'] : '';
+
 			switch ( $this->app->input->GET_raw['notice'] )
 			{
 				case 'created':
-					$this->view->notice = $this->view->t('The page has been created (%1$sview%2$s).', array('<a href="' . $this->view->route($this->view->h($this->app->input->GET_raw['path'])) . '">', '</a>'));
+					$this->view->notice = $this->view->t('The page has been created (%1$sview%2$s).', array('<a href="' . $this->view->route($this->view->h($path)) . '">', '</a>'));
 
 					break;
 				case 'updated':
-					$this->view->notice = $this->view->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $this->view->route($this->view->h($this->app->input->GET_raw['path'])) . '">', '</a>'));
+					$this->view->notice = $this->view->t('The page has been updated (%1$sview%2$s).', array('<a href="' . $this->view->route($this->view->h($path)) . '">', '</a>'));
 
 					break;
 				case 'deleted':
@@ -305,7 +309,7 @@ class Page_Controller extends Controller
 
 							if ( $this->app->db->result )
 							{
-								header('Location: ' . $this->view->route($this->path . '?notice=deleted'));
+								header('Location: ' . $this->view->route($this->path . '?notice=deleted', FALSE));
 
 								$this->app->end();
 							}
@@ -364,7 +368,7 @@ class Page_Controller extends Controller
 		$this->view->nodesParents    = $listParents;
 		$this->view->nodes           = array_splice($list, $pagination['from'], 10);
 		$this->view->nodesPagination = $pagination;
-		$this->view->pagePath        = !empty($path) ? $path : 'page/' . $this->view->id;
+		$this->view->pagePath        = !empty($path) ? $path : 'page/' . $this->id;
 
 		$this->view->languages = $languages;
 

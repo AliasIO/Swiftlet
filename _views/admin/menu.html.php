@@ -9,7 +9,7 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<form id="form-menu" method="post" action="">
+	<form id="form-menu" method="post" action="<?php echo $this->route($this->request) ?>">
 		<fieldset>
 			<dl>
 				<dt>

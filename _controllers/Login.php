@@ -5,6 +5,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU Public License
  */
 
+if ( !isset($this) ) die('Direct access to this file is not allowed');
+
 /**
  * Login
  * @abstract
@@ -35,7 +37,7 @@ class Login_Controller extends Controller
 			{
 				$this->app->user->logout();
 
-				header('Location: ' . $this->view->route($this->path . '?notice=logout'));
+				header('Location: ' . $this->view->route($this->path . '?notice=logout', FALSE));
 
 				$this->app->end();
 			}
@@ -79,7 +81,7 @@ class Login_Controller extends Controller
 								 * Header injection is not an issue here, header()
 								 * prevents more than one header to be sent at once
 								 */
-								header('Location: ' . $this->view->route($this->app->input->GET_raw['ref']));
+								header('Location: ' . $this->view->route($this->app->input->GET_raw['ref'], FALSE));
 
 								$this->app->end();
 							}
