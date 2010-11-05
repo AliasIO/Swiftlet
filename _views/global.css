@@ -427,16 +427,6 @@ input[type="checkbox"], input[type="radio"] {
 	width: auto;
 }
 
-input, textarea, select, button {
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	background: var(input-background-color);
-	border: 1px solid var(input-border-color);
-	margin-right: .5em;
-	padding: .2em;
-}
-
 input:focus, textarea:focus, select:focus {
 	background: var(input-focus-background-color);
 }

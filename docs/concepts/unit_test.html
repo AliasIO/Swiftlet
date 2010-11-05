@@ -36,7 +36,7 @@ switch ( $hook )
 			);
 
 		// Simulate submitting a form with a POST request		
-		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->absPath . '/example/', $post);
+		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->rootPath . '/example/', $post);
 
 		// Check if the form was handled correctly and the value has been saved
 		$app->db->sql('

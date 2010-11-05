@@ -88,7 +88,7 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/dashboard', array(), TRUE);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/dashboard', array(), TRUE);
 
 		$params[] = array(
 			'test' => '<code>/admin/dashboard</code> should be inaccessible for guests.',

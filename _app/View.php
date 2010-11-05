@@ -84,9 +84,12 @@ class View
 		$this->method = $this->args           ?         $this->args[0] : '';
 		$this->id     = isset($this->args[1]) ? ( int ) $this->args[1] : '';
 
-		$this->rootPath = count($args) > 1 && $this->app->config['urlRewrite'] ? str_repeat('../', count($args) - 1) : './';
+		// Determine client-side path to root
+		$level = count($args) > 1 && $this->app->config['urlRewrite'] ? count($args) - 1 : 0;
+
+		$this->absPath  = dirname(preg_replace('/(.+?)\?.+$/', '$1', $_SERVER['REQUEST_URI']) . ' ') . '/';
+		$this->rootPath = $this->app->config['urlRewrite'] ? preg_replace('/([^\/]+\/){' . $level . '}$/', '', $this->absPath) : './';
 		$this->viewPath = $this->rootPath . '_views/';
-		$this->absPath  = $this->app->config['urlRewrite'] ? preg_replace('/([^\/]+\/){' . substr_count($this->rootPath, '../') . '}$/', '', dirname($_SERVER['REQUEST_URI'] . ' ') . '/') : '';
 	}
 
 	/*

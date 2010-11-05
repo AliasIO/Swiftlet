@@ -46,7 +46,7 @@ class Test_Controller extends Controller
 				'foo' => 'bar'
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'index.php', $params);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'index.php', $params);
 
 			$tests[] = array(
 				'test' => 'Submitting a form without authenticity token should result in an error (503).',

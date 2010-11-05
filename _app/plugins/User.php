@@ -133,7 +133,7 @@ class User_Plugin extends Plugin
 	{
 		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
 		{
-			$params['Login'] = 'login';
+			$params['Log in'] = 'login';
 		}
 		else
 		{
@@ -454,7 +454,7 @@ class User_Plugin extends Plugin
 			'auth-token'           => $this->app->input->authToken
 			);
 
-		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'account/create', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'account/create', $post);
 
 		$this->app->db->sql('
 			SELECT
@@ -486,7 +486,7 @@ class User_Plugin extends Plugin
 				'auth-token'  => $this->app->input->authToken
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'account/edit/' . ( int ) $user['id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'account/edit/' . ( int ) $user['id'], $post);
 		}
 
 		$this->app->db->sql('
@@ -519,7 +519,7 @@ class User_Plugin extends Plugin
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'account/delete/' . ( int ) $user['id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'account/delete/' . ( int ) $user['id'], $post);
 		}
 
 		$this->app->db->sql('

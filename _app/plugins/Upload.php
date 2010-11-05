@@ -218,7 +218,7 @@ class Upload_Plugin extends Plugin
 			'auth-token'  => $this->app->input->authToken
 			);
 
-		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/upload', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/upload', $post);
 
 		$this->app->db->sql('
 			SELECT
@@ -246,7 +246,7 @@ class Upload_Plugin extends Plugin
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/upload/delete/' . ( int ) $file['id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/upload/delete/' . ( int ) $file['id'], $post);
 		}
 
 		$this->app->db->sql('

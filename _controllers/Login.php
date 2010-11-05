@@ -86,7 +86,7 @@ class Login_Controller extends Controller
 								$this->app->end();
 							}
 
-							header('Location: ?notice=login');
+							header('Location: ' . $this->view->route($this->path . '?notice=login', FALSE));
 
 							$this->app->end();
 						}

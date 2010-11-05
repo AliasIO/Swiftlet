@@ -202,7 +202,7 @@ class Page_Plugin extends Plugin
 			$post['body['  . $this->view->h($language) . ']'] = 'Unit Test Page - Create';
 		}
 
-		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/page', $post);
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/page', $post);
 
 		$this->app->db->sql('
 			SELECT
@@ -241,7 +241,7 @@ class Page_Plugin extends Plugin
 				$post['body['  . $this->view->h($language) . ']'] = 'Unit Test Page - Edit';
 			}
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/page/edit/' . ( int ) $page['node_id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/page/edit/' . ( int ) $page['node_id'], $post);
 		}
 
 		$this->app->db->sql('
@@ -270,7 +270,7 @@ class Page_Plugin extends Plugin
 				'auth-token' => $this->app->input->authToken
 				);
 
-			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->absPath . 'admin/page/delete/' . ( int ) $page['node_id'], $post);
+			$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/page/delete/' . ( int ) $page['node_id'], $post);
 		}
 
 		$this->app->db->sql('

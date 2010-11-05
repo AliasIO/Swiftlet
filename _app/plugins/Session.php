@@ -23,7 +23,8 @@ class Session_Plugin extends Plugin
 		;
 
 	private
-		$hash
+		$hash,
+		$key
 		;
 
 	/*
@@ -70,12 +71,6 @@ class Session_Plugin extends Plugin
 		{
 			$this->ready = TRUE;
 
-			$this->id = !empty($_COOKIE['sw_session']) ? ( int ) $_COOKIE['sw_session'] : FALSE;
-
-			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-
-			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->view->absPath);
-
 			/**
 			 * Delete expired sessions
 			 */
@@ -85,6 +80,20 @@ class Session_Plugin extends Plugin
 				WHERE
 					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
 				;');
+
+			if ( !empty($_COOKIE['sw_session']) && strstr($_COOKIE['sw_session'], ':') )
+			{
+				list($this->id, $this->key) = explode(':', $_COOKIE['sw_session']);
+			}
+
+			if ( !$this->key )
+			{
+				$this->key = sha1(uniqid(mt_rand(), TRUE));
+			}
+
+			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->view->absPath . $this->key);
 
 			/**
 			 * Get session contents
@@ -202,6 +211,6 @@ class Session_Plugin extends Plugin
 				;');
 		}
 
-		setcookie('sw_session', $this->id, time() + $sessionLifeTime, $this->view->absPath);
+		setcookie('sw_session', $this->id . ':' . $this->key, time() + $sessionLifeTime, $this->view->absPath);
 	}
 }

@@ -1,5 +1,6 @@
 # 1.2.0.RC1 - 1.3.0.A1
 #
+# Added key to cookie to prevent brute forcing of session id
 # Added persistent login feature
 # Switched from GPLv2 to GPLv3
 # Added write to console feature
@@ -243,7 +244,7 @@
 #
 # 1.0.2 - 1.0.3
 #
-# Bug #8 (reported by svenn.dhert) Fixed $controller->absPath bug for installs in root directory
+# Bug #8 (reported by svenn.dhert) Fixed $controller->rootPath bug for installs in root directory
 #
 #
 # 1.0.1 - 1.0.2
@@ -306,7 +307,7 @@
 # - Added user authentication plugin
 # - Added login controller
 # - Improved session plugin
-# - Fixed $controller->absPath bug
+# - Fixed $controller->rootPath bug
 # - Changes to the default layout
 # - Input sanitizing now works with arrays
 #
@@ -320,7 +321,7 @@
 #
 # 0.11 - 0.12
 #
-# - Added $controller->absPath variable containing the absolute path
+# - Added $controller->rootPath variable containing the absolute path
 # - Added $app->session->lifeTime variable containing the session lifetime in seconds
 # - Added session cookies
 # - Made sessions faster by using id instead of hash when selecting from database

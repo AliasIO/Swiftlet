@@ -30,14 +30,14 @@ if ( !class_exists('Controller') )
 
 if ( isset($controller) )
 {
-	$absPath = $controller->absPath;
+	$rootPath = $controller->rootPath;
 }
 
 $controller = new Controller($controllerSetup);
 
-if ( isset($absPath) )
+if ( isset($rootPath) )
 {
-	$controller->absPath = $absPath;
+	$controller->rootPath = $rootPath;
 }
 
 if ( !isset($app) )
