@@ -129,7 +129,7 @@ class Input_Plugin extends Plugin
 			$this->GET_html_safe[$k] = $this->view->h($v);
 		}
 
-		foreach ( $this->args as $v )
+		foreach ( $this->args as $k => $v )
 		{
 			$this->args_html_safe[$k] = $this->view->h($v);
 		}

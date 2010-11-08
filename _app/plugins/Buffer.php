@@ -104,6 +104,9 @@ class Buffer_Plugin extends Plugin
 
 			header('X-Powered-By: Swiftlet - http://swiftlet.org');
 
+			// Prevent click-jacking attacks
+			header('X-Frame-Options: SAMEORIGIN');
+
 			echo $contents;
 
 			unset($contents);

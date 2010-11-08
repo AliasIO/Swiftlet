@@ -86,9 +86,10 @@ class View
 
 		// Determine client-side path to root
 		$level = count($args) > 1 && $this->app->config['urlRewrite'] ? count($args) - 1 : 0;
+		$path  = dirname(preg_replace('/(.+?)\?.+$/', '$1', $_SERVER['REQUEST_URI']) . ' ') . '/';
 
-		$this->absPath  = dirname(preg_replace('/(.+?)\?.+$/', '$1', $_SERVER['REQUEST_URI']) . ' ') . '/';
-		$this->rootPath = $this->app->config['urlRewrite'] ? preg_replace('/([^\/]+\/){' . $level . '}$/', '', $this->absPath) : './';
+		$this->absPath  = preg_replace('/([^\/]+\/){' . $level . '}$/', '', $path);
+		$this->rootPath = $this->app->config['urlRewrite'] ? $this->absPath : './';
 		$this->viewPath = $this->rootPath . '_views/';
 	}
 
