@@ -1,4 +1,5 @@
 _config.php
 cache/*
+tags
 uploads/files/*
 uploads/thumbs/*

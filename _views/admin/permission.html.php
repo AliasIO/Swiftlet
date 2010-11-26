@@ -39,7 +39,7 @@
 
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Save role') ?>"/>
 
-					<a href="<?php echo $this->route('admin/permission') ?>"><?php echo $this->t('Cancel') ?></a>
+					<a href="<?php echo $this->route($this->path) ?>"><?php echo $this->t('Cancel') ?></a>
 				</dd>
 			</dl>
 		</fieldset>
@@ -53,7 +53,7 @@
 	</script><?php else: ?>
 	<?php if ( $app->permission->check('admin permission role create') ): ?>
 	<p>
-		<a class="button" href="<?php echo $this->route('admin/permission/create') ?>"><?php echo $this->t('Create a new role') ?></a>
+		<a class="button" href="<?php echo $this->route($this->path . '/create') ?>"><?php echo $this->t('Create a new role') ?></a>
 	</p>
 	<?php endif ?>
 	<?php endif ?>
@@ -69,10 +69,10 @@
 			<?php if ( $app->permission->check('admin permission edit') || $app->permission->check('admin permission delete') ): ?>
 			<p>
 				<?php if ( $app->permission->check('admin permission edit') ): ?>
-				<a class="button" href="<?php echo $this->route('admin/permission/edit/' . $role['id']) ?>"><?php echo $this->t('Edit this role') ?></a>
+				<a class="button" href="<?php echo $this->route($this->path . '/edit/' . $role['id']) ?>"><?php echo $this->t('Edit this role') ?></a>
 				<?php endif ?>
 				<?php if ( $app->permission->check('admin permission delete') ): ?>
-				<a class="button caution" href="<?php echo $this->route('admin/permission/delete/' . $role['id']) ?>"><?php echo $this->t('Delete this role') ?></a>
+				<a class="button caution" href="<?php echo $this->route($this->path . '/delete/' . $role['id']) ?>"><?php echo $this->t('Delete this role') ?></a>
 				<?php endif ?>
 			</p>
 			<?php endif ?>
@@ -80,7 +80,7 @@
 			<?php if ( $this->method == 'add_user' && $this->id == $role['id'] ): ?>
 			<h4><?php echo $this->t('Add user') ?></h4>
 
-			<form id="form-user<?php echo $role['id'] ?>" method="post" action="<?php echo $this->route('admin/permission/add_user/' . $role['id']) ?>">
+			<form id="form-user<?php echo $role['id'] ?>" method="post" action="<?php echo $this->route($this->path . '/add_user/' . $role['id']) ?>">
 				<fieldset>
 					<dl>
 						<dt>
@@ -106,7 +106,7 @@
 
 							<input type="submit" name="form-submit-2" id="form-submit-2" value="<?php echo $this->t('Add user') ?>"/>
 
-							<a href="<?php echo $this->route('admin/permission') ?>"><?php echo $this->t('Cancel') ?></a>
+							<a href="<?php echo $this->route($this->path) ?>"><?php echo $this->t('Cancel') ?></a>
 						</dd>
 					</dl>
 				</fieldset>
@@ -116,14 +116,14 @@
 			<h4><?php echo $this->t('Users') ?></h4>
 
 			<p>
-				<a class="button" href="<?php echo $this->route('admin/permission/add_user/' . $role['id']) ?>"><?php echo $this->t('Add a user') ?></a>
+				<a class="button" href="<?php echo $this->route($this->path . '/add_user/' . $role['id']) ?>"><?php echo $this->t('Add a user') ?></a>
 			</p>
 
 			<?php if ( $role['users'] ): ?>
 			<ul>
 				<?php foreach ( $role['users'] as $user ): ?>
 				<li>
-					<a class="button caution" href="<?php echo $this->route('admin/permission/remove_user/' . $role['id'] . '/' . $user['id']) ?>"><?php echo $this->t('Remove') ?></a>
+					<a class="button caution" href="<?php echo $this->route($this->path . '/remove_user/' . $role['id'] . '/' . $user['id']) ?>"><?php echo $this->t('Remove') ?></a>
 					<?php echo $user['username'] ?>
 				</li>
 				<?php endforeach ?>
@@ -140,7 +140,7 @@
 
 	<h2><?php echo $this->t('Permissions') ?></h2>
 
-	<form id="form-perm" method="post" action="<?php echo $this->route('admin/permission') ?>">
+	<form id="form-perm" method="post" action="<?php echo $this->route($this->path) ?>">
 		<fieldset>
 			<table>
 				<thead>

@@ -3,7 +3,7 @@
 
 	<?php if ( $this->method != 'upload' && $this->app->permission->check('admin upload upload') ): ?>
 	<p>
-		<a class="button" href="<?php echo $this->route('admin/upload/form?callback=' . $this->callback) ?>"><?php echo $this->t('Upload files') ?></a>
+		<a class="button" href="<?php echo $this->route($this->path . '/form?callback=' . $this->callback) ?>"><?php echo $this->t('Upload files') ?></a>
 	</p>
 	<?php endif ?>
 
@@ -52,7 +52,7 @@
 					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Upload files') ?>"/>
 
 					<p>
-						<a href="<?php echo $this->route('admin/upload?callback=' . $this->callback) ?>"><?php echo $this->t('Cancel') ?></a>
+						<a href="<?php echo $this->route($this->path . '?callback=' . $this->callback) ?>"><?php echo $this->t('Cancel') ?></a>
 					</p>
 				</dd>
 			</dl>
@@ -116,7 +116,7 @@
 				<td><?php echo $this->format_date($file['date'], 'date') ?></td>
 				<td>
 					<?php if ( $this->app->permission->check('admin upload delete') ): ?>
-					<a class="button caution" href="<?php echo $this->route('admin/upload/delete/' . $file['id'] . '?callback=' . $this->callback) ?>"><?php echo $this->t('Delete') ?></a>
+					<a class="button caution" href="<?php echo $this->route($this->path . '/delete/' . $file['id'] . '?callback=' . $this->callback) ?>"><?php echo $this->t('Delete') ?></a>
 					<?php endif ?>
 				</td>
 				</td>

@@ -14,11 +14,11 @@
 
 	<p>
 		<?php if ( $app->permission->check('admin page create') ): ?>
-		<a class="button" href="<?php echo $this->route('admin/page') ?>"><?php echo $this->t('Create a new page') ?></a>
+		<a class="button" href="<?php echo $this->route($this->path) ?>"><?php echo $this->t('Create a new page') ?></a>
 		<?php endif ?>
 		<a class="button" href="<?php echo $this->route($this->pagePath) ?>"><?php echo $this->t('View this page') ?></a>
 		<?php if ( $app->permission->check('admin page delete') ): ?>
-		<a class="button caution" href="<?php echo $this->route('admin/page/delete/' . $this->id) ?>"><?php echo $this->t('Delete this page') ?></a>
+		<a class="button caution" href="<?php echo $this->route($this->path . '/delete/' . $this->id) ?>"><?php echo $this->t('Delete this page') ?></a>
 		<?php endif ?>
 	</p>
 	<?php elseif ( $app->permission->check('admin page create') ): ?>
@@ -135,10 +135,10 @@
 				</td>
 				<td>
 					<?php if ( $app->permission->check('admin page edit') ): ?>
-					<a class="button" href="<?php echo $this->route('admin/page/edit/' . $node['id']) ?>"><?php echo $this->t('Edit') ?></a>
+					<a class="button" href="<?php echo $this->route($this->path . '/edit/' . $node['id']) ?>"><?php echo $this->t('Edit') ?></a>
 					<?php endif ?>
 					<?php if ( $app->permission->check('admin page delete') ): ?>
-					<a class="button caution" href="<?php echo $this->route('admin/page/delete/' . $node['id']) ?>"><?php echo $this->t('Delete') ?></a>
+					<a class="button caution" href="<?php echo $this->route($this->path . '/delete/' . $node['id']) ?>"><?php echo $this->t('Delete') ?></a>
 					<?php endif ?>
 				</td>
 			</tr>
