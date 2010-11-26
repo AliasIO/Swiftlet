@@ -88,6 +88,15 @@ class View
 		$level = count($args) > 1 && $this->app->config['urlRewrite'] ? count($args) - 1 : 0;
 		$path  = dirname(preg_replace('/(.+?)\?.+$/', '$1', $_SERVER['REQUEST_URI']) . ' ') . '/';
 
+		$this->app->debugOutput['request'] = array(
+			'controller' => $this->controller,
+			'request'    => $this->request,
+			'path'       => $this->path,
+			'method'     => $this->method,
+			'id'         => $this->id,
+			'arguments'  => $this->args
+			);
+
 		$this->absPath  = preg_replace('/([^\/]+\/){' . $level . '}$/', '', $path);
 		$this->rootPath = $this->app->config['urlRewrite'] ? $this->absPath : './';
 		$this->viewPath = $this->rootPath . '_views/';

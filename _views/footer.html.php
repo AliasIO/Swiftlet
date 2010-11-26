@@ -8,7 +8,7 @@
 
 		<script type="text/javascript">
 			<!-- /* <![CDATA[ */
-			// Fade in message and error messages
+			// Fade in notifications
 			$('.message')
 				.css({
 					display: 'none'

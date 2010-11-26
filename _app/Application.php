@@ -20,6 +20,7 @@ class Application
 	public
 		$configMissing   = FALSE,
 		$consoleMessages = array(),
+		$debugOutput     = array(),
 		$plugins         = array()
 		;
 
