@@ -1,7 +1,5 @@
 <h2>Permission</h2>
 
-<p><code>/_plugins/permission.php</code></p>
-
 <p>
 	Permissions can be used to grant specific users access to pages or functionality.
 	Permissions can be managed through the administrative interface linked from the
@@ -17,7 +15,7 @@
 
 <pre>
 <?php
-if ( !isset($app) ) die('Direct access to this file is not allowed');
+if ( !isset($this->app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -31,16 +29,16 @@ switch ( $hook )
 
         break;
     case 'install':
-		if ( !empty($app->node->ready) )
+		if ( !empty($this->app->node->ready) )
 		{
-			$app->permission->create('Secrets', 'secret access', 'Access to secret');
+			$this->app->permission->create('Secrets', 'secret access', 'Access to secret');
 		}
 
         break;
     case 'remove':
-		if ( !empty($app->node->ready) )
+		if ( !empty($this->app->node->ready) )
 		{
-			$app->permission->delete('secret access');
+			$this->app->permission->delete('secret access');
 		}
 
         break;
@@ -54,7 +52,7 @@ switch ( $hook )
 
 <pre>
 <?php
-if ( $app->permission->check('secret access') )
+if ( $this->app->permission->check('secret access') )
 {
 	// User has access to secret
 }
@@ -63,23 +61,24 @@ if ( $app->permission->check('secret access') )
 
 <h3>Class</h3>
 
-<p>
-	<code>$app-&gt;permission</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Permission_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Permission.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;permission-&gt;check ( <em>string</em> $name )</code><br/>
+		<code>check ( <em>string</em> $name )</code><br/>
 		Checks if the current user has permission.
 	</li>
 	<li>
-		<code>$app-&gt;permission-&gt;create ( <em>string</em> $group, <em>string</em> $name, <em>string</em> $description )</code><br/>
+		<code>create ( <em>string</em> $group, <em>string</em> $name, <em>string</em> $description )</code><br/>
 		Creates a new permission.
 	</li>
 	<li>
-		<code>$app-&gt;permission-&gt;delete ( <em>string</em> $name )</code><br/>
+		<code>delete ( <em>string</em> $name )</code><br/>
 		Deletes a permission
 	</li>
 </ul>
@@ -88,19 +87,19 @@ if ( $app->permission->check('secret access') )
 
 <ul>
 	<li>
-		<code>Permission_Plugin::ROLE_OWNER_ID</code><br/>
+		<code>ROLE_OWNER_ID</code><br/>
 		User id of the default owner (the first user).
 	</li>
 	<li>
-		<code>Permission_Plugin::YES</code><br/>
+		<code>YES</code><br/>
 		The user has permission.
 	</li>
 	<li>
-		<code>Permission_Plugin::NO</code><br/>
+		<code>NO</code><br/>
 		The user has no permission (default).
 	</li>
 	<li>
-		<code>Permission_Plugin::NEVER</code><br/>
+		<code>NEVER</code><br/>
 		The user has no permission, can not be overridden.
 	</li>
 </ul>

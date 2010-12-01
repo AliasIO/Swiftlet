@@ -1,0 +1,31 @@
+<h2>Upload</h2>
+
+<p>
+	This plugin is mainly used by the <code>/admin/upload/</code> controller to create thumbnails for
+	uploaded images.
+</p>
+
+<p>
+	Uploaded files are stored in the <code>/uploads/files/</code> directory. Generated thumbnails
+	are stored in <code>/uploads/thumbs/</code>
+</p>
+
+<p>
+	The <code>/uploads/</code> folder and sub-folders need to be writable.
+</p>
+
+<h3>Class</h3>
+
+<dl>
+	<dt>Name</dt>     <dd><code>Upload_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Upload.php</code></dd>
+</dl>
+
+<h4>Public functions</h4>
+
+<ul>
+	<li>
+		<code>thumb ( <em>string</em> $filename, <em>string</em> $mimeType, <em>string</em> $width, <em>string</em> $height )</code><br/>
+		Creates a thumbnail of an uploaded image. Thumbnails are stored in <code>/uploads/thumbs/</code>.
+	</li>
+</ul>

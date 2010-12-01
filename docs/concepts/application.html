@@ -1,66 +1,57 @@
 <h2>The Application</h2>
 
 <p>
-	The Application is the core of the framework. Without it none of Swiftlet functions will work.
+	The Application is the core of the framework.
 </p>
 
 <p>
-	The Application can be accessed through the <code>$app</code> object, an instance of the
-	<code>application</code> class (<code>/_app/application.class.php</code>)	which should be available
-	throughout the entire code. Most global functions and values are stored here
-	(e.g. <code>$app-&gt;siteName</code>).
+	The Application can be accessed through the <code>$this-&gt;app</code> object, an instance of the
+	<code>Application</code> class, which should be available throughout the entire code. Most global
+	functions and values are stored here (e.g. <code>$this-&gt;app-&gt;config</code>).
 </p>
 
 <h3>Class</h3>
 
-<p>
-	<code>$app</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Application</code>          </dd>
+	<dt>Location</dt> <dd><code>/_app/Application.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;hook ( <em>string</em> $hook )</code><br/>
-		Use to create a <a href="./hook">hook</a>.
-	</li>
-	<li>
-		<code>$app-&gt;hook_register ( <em>string</em> $plugin, <em>array</em> $hooks )</code><br/>
-		Used in <a href="./plugin">plugins</a> to register <a href="./hook">hooks</a>.
-	</li>
-	<li>
-		<code>$app-&gt;check_dependencies ( <em>array</em> $dependencies )</code><br/>
-		Use to make sure a required plugin is installed and ready (e.g. <code>$app-&gt;check_dependencies(array('db'))</code> if database
+		<code>check_dependencies ( <em>array</em> $dependencies )</code><br/>
+		Use to make sure a required plugin is installed and ready (e.g. <code>$this-&gt;app-&gt;check_dependencies(array('db'))</code> if database
 		access is needed). If not, an error message is displayed.
 	</li>
 	<li>
-		<code>$app-&gt;h ( <em>string</em> $v )</code><br/>
-		Shorthand for <code>htmlentities($v, ENT_QUOTES, 'UTF-8')</code>, used to make values safe for HTML.
+		<code>clear_cache (  )</code><br/>
+		Calls the <code>clear_cache</code> hook to clear caches.
 	</li>
 	<li>
-		<code>$app-&gt;t ( <em>string</em> $v )</code><br/>
-		Translates a string. Requires a <a href="../plugins/language">Language</a> plugin.
-	</li>
-	<li>
-		<code>$app-&gt;format_date ( <em>string</em> $date [ , <em>string</em> $type ] )</code><br/>
-		Formats a date and time. <code>$type</code> can be <em>date</em>, <em>time</em> or <em>datetime</em> (default). Also see <a href="../plugins/time">Time</a>.
-	</li>
-	<li>
-		<code>$app-&gt;email ( <em>string</em> $to, <em>string</em> $subject, <em>string</em> $body [ , <em>array</em> $headers ] )</code><br/>
+		<code>email ( <em>string</em> $to, <em>string</em> $subject, <em>string</em> $body [ , <em>array</em> $headers ] )</code><br/>
 		Send an e-mail. Requires an <a href="../plugins/email">E-mail</a> plugin.
 	</li>
 	<li>
-		<code>$app-&gt;route ( <em>string</em> $route )</code><br/>
-		Create a route ("pretty URL") to a page or file. This works best with URL rewrites enabled in <code>/_config.php</code> and on the server.
+		<code>end ( )</code><br/>
+		Calls the <code>end</code> hook and stops the script.
 	</li>
 	<li>
-		<code>$app-&gt;confirm ( <em>string</em> $notice )</code><br/>
-		Displays a confirmation page. This can be used to get confirmation from the user when making permissionanent changes like deleting a page.
-		See <a href="../plugins/form#confirmation">Forms</a>.
-	</li>
-	<li>
-		<code>$app-&gt;error ( <em>string</em> $errNo, <em>string</em> $errStr [, <em>string</em> $errFile ] [, <em>string</em> $errLine ] [, <em>array</em> $errCont ] )</code><br/>
+		<code>error ( <em>string</em> $errNo, <em>string</em> $errStr [, <em>string</em> $errFile ] [, <em>string</em> $errLine ] [, <em>array</em> $errCont ] )</code><br/>
 		Use to display an error message and stop the script.
+	</li>
+	<li>
+		<code>format_date ( <em>string</em> $date [ , <em>string</em> $type ] )</code><br/>
+		Formats a date and time. <code>$type</code> can be <em>date</em>, <em>time</em> or <em>datetime</em> (default). Also see <a href="../plugins/time">Time</a>.
+	</li>
+	<li>
+		<code>hook ( <em>string</em> $hook )</code><br/>
+		Use to create a <a href="./hook">hook</a>.
+	</li>
+	<li>
+		<code>hook_register ( <em>string</em> $plugin, <em>array</em> $hooks )</code><br/>
+		Used in <a href="./plugin">plugins</a> to register <a href="./hook">hooks</a>.
 	</li>
 </ul>
 
@@ -68,41 +59,37 @@
 
 <ul>
 	<li>
-		<code>$app-&gt;userIp</code><br/>
-		The user's internet IP address (this can be IPv4 or IPv6).
+		<code>$config</code><br/>
+		Configuration values, see <a href="../guides/config">Configuration</a>.
 	</li>
 	<li>
-		<code>$app-&gt;authToken</code><br/>
-		Authenticity token used with forms (see <a href="../plugins/form#auth_token">Forms</a>).
-	</li>
-	<li>
-		<code>$app-&gt;contr</code><br/>
-		Instance of the <code>controller</code> class (same as <code>$controller</code>). See <a href="./controller">Controllers</a>.
-	</li>
-	<li>
-		<code>$app-&gt;view</code><br/>
-		Instance of the <code>view</code> class (same as <code>$view</code>). See <a href="./view">Views</a>.
-	</li>
-	<li>
-		<code>$app-&gt;configMissing</code><br/>
+		<code>$configMissing</code><br/>
 		This variable is set to <code>TRUE</code> if the configuration file is missing.
 	</li>
 	<li>
-		<code>$app-&gt;debugOutput</code><br/>
-		Debug notices generated throughout the code. The contents are shown when an error occurs (and in the generated source code) if
+		<code>$controller</code><br/>
+		Instance of the controller, see <a href="./controller">Controllers</a>.
+	</li>
+	<li>
+		<code>$debugOutput</code><br/>
+		Debug notices generated throughout the code. The contents are shown when an error occurs (and send to the console) if
 		<code>config['debugMode']</code> is set to <code>TRUE</code> in <code>/_config.php</code>. The notices can be used to track down bugs.
 	</li>
+	<li>
+		<code>$userIp</code><br/>
+		The user's internet IP address (this can be IPv4 or IPv6).
+	</li>
+	<li>
+		<code>$view</code><br/>
+		Instance of the view, see <a href="./view">Views</a>.
+	</li>
 </ul>
-
-<p>
-	Every value of the <a href="../guides/config">configuration</a> file is also available as a variable, e.g. <code>$app->config['debugMode']</code>.
-</p>
 
 <h4>Constants</h4>
 
 <ul>
 	<li>
-		<code>Application::VERSION</code><br/>
+		<code>VERSION</code><br/>
 		Application version number.
 	</li>
 </ul>

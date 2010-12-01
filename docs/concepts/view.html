@@ -8,7 +8,7 @@
 </p>
 
 <p>
-	Views are stored in the <code>_views</code> directory.
+	Views are stored in the <code>/_views/</code> directory.
 </p>
 
 <h5>Example View</h5>
@@ -19,23 +19,24 @@
 
 <h3>Class</h3>
 
-<p>
-	<code>$view</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>View</code>          </dd>
+	<dt>Location</dt> <dd><code>/_app/View.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$view-&gt;load ( <em>string</em> $file )</code><br/>
+		<code>load ( <em>string</em> $file )</code><br/>
 		Loads a View.
 	</li>
 	<li>
-		<code>$view-&gt;output ( )</code><br/>
+		<code>output ( )</code><br/>
 		Output loaded views.
 	</li>
 	<li>
-		<code>$view-&gt;allow_html ( <em>string</em> $v )</code><br/>
+		<code>allow_html ( <em>string</em> $v )</code><br/>
 		Decode an HTML entity encoded string.
 	</li>
 </ul>
@@ -44,43 +45,43 @@
 
 <ul>
 	<li>
-		<code>$view-&gt;rootPath</code><br/>
+		<code>$rootPath</code><br/>
 		Absolute path to the root. Note that this can be different from <code>$controller-&gt;rootPath</code> (e.g. when URL rewrites or AJAX
 		is used).
 	</li>
 	<li>
-		<code>$view-&gt;viewPath</code><br/>
+		<code>$viewPath</code><br/>
 		Absolute path to the View directory (<code>/_views</code>).
 	</li>
 	<li>
-		<code>$view-&gt;siteName</code><br/>
-		Name of the website (value of <code>$app-&gt;siteName</code>, safe for HTML).
+		<code>$siteName</code><br/>
+		Name of the website (value of <code>$this-&gt;app-&gt;siteName</code>, safe for HTML).
 	</li>
 	<li>
-		<code>$view-&gt;siteCopyright</code><br/>
-		Copyright of the website (value of <code>$app-&gt;siteCopyright</code>, safe
+		<code>$siteCopyright</code><br/>
+		Copyright of the website (value of <code>$this-&gt;app-&gt;siteCopyright</code>, safe
 		for HTML).
 	</li>
 	<li>
 		<code>$siteDesigner</code><br/>
-		Name of the website designer (value of <code>$app-&gt;siteDesigner</code>, safe for HTML).
+		Name of the website designer (value of <code>$this-&gt;app-&gt;siteDesigner</code>, safe for HTML).
 	</li>
 	<li>
-		<code>$view-&gt;pageTitle</code><br/>
+		<code>$pageTitle</code><br/>
 		Title of the page (value of <code>$controller-&gt;pageTitle</code>, safe for HTML).
 	</li>
 	<li>
-		<code>$view-&gt;pageDescription</code><br/>
-		Description of the page (value of <code>$controller-&gt;pageDescription</code> or <code>$app-&gt;siteDescription</code> if missing,
+		<code>$pageDescription</code><br/>
+		Description of the page (value of <code>$controller-&gt;pageDescription</code> or <code>$this-&gt;app-&gt;siteDescription</code> if missing,
 		safe for HTML).
 	</li>
 	<li>
-		<code>$view-&gt;pageKeywords</code><br/>
-		Keywords relevant to the contents of the page (value of <code>$controller-&gt;pageKeywords</code> or <code>$app-&gt;siteKeywords</code>
+		<code>$pageKeywords</code><br/>
+		Keywords relevant to the contents of the page (value of <code>$controller-&gt;pageKeywords</code> or <code>$this-&gt;app-&gt;siteKeywords</code>
 		if missing,	safe for HTML).
 	</li>
 	<li>
-		<code>$view-&gt;inAdmin</code><br/>
+		<code>$inAdmin</code><br/>
 		Used to distinguish between regular and administrative pages.
 	</li>
 </ul>

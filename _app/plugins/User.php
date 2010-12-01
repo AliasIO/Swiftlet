@@ -139,7 +139,7 @@ class User_Plugin extends Plugin
 		else
 		{
 			$params['Account'] = 'account';
-			$params['Log out (' .  $this->app->session->get('user username') . ')']  = 'login/logout';
+			$params['Log out (' .  $this->view->allow_html($this->app->session->get('user username')) . ')']  = 'login/logout';
 		}
 	}
 
@@ -211,6 +211,8 @@ class User_Plugin extends Plugin
 	 */
 	function login($username, $password, $remember)
 	{
+		$username = $this->view->h($username);
+
 		if ( $this->app->session->get('user id') !== FALSE )
 		{
 			$this->app->db->sql('

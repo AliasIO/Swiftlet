@@ -18,10 +18,14 @@ class Application
 		;
 
 	public
+		$config          = array(),
 		$configMissing   = FALSE,
 		$consoleMessages = array(),
+		$controller,
 		$debugOutput     = array(),
-		$plugins         = array()
+		$plugins         = array(),
+		$userIp          = '',
+		$view
 		;
 
 	/**

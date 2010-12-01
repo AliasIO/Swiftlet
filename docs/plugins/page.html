@@ -1,7 +1,5 @@
 <h2>Page</h2>
 
-<p><code>/_plugins/page.php</code></p>
-
 <p>
 	A plugin to create static pages which are stored in a database. Pages can be managed through the administrative
 	interface linked from the <a href="./dashboard">Dashboard</a>. Also requires the <a href="?mysql">MySQL</a> (or other
@@ -10,22 +8,16 @@
 
 <h3>Class</h3>
 
-<p>
-	<code>$app-&gt;page</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Page_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Page.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;page-&gt;nodes_to_list ( <em>array</em> $nodes, <em>array</em> $list )</code><br/>
-		Creates a flat array of nodes.
-	</li>
-	<li>
-		<code>$app-&gt;page-&gt;rewrite ( <em>string</em> $url )</code><br/>
-		If <code>urlRewrite</code> is set to <code>TRUE</code> in <code>/_config.php</code> this function makes URLs more readable.
-		In this case it transforms <code>/page/?permissionalink=example</code> into <code>/p/example</code> (this requires a working
-		.htaccess file in the root directory).
+		<code>parse_urls ( <em>string</em> &amp;$v )</code><br/>
 	</li>
 </ul>
 

@@ -1,7 +1,5 @@
 <h2>Node</h2>
 
-<p><code>/_plugins/node.php</code></p>
-
 <p>
 	<a href="http://en.wikipedia.org/wiki/Node_(computer_science)">Nodes</a> are used to built linked data structures (trees).
 	They can be used to store a references to pages or files hierarchically.
@@ -9,47 +7,44 @@
 
 <h3>Class</h3>
 
-<p>
-	<code>$app-&gt;node</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Node_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Node.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;node-&gt;route ( <em>array</em> $params )</code><br/>
-		Finds the node id for a route and let the appropriate plugin to handle the route further.
-	</li>
-	<li>
-		<code>$app-&gt;node-&gt;permissionalink ( <em>string</em> $title [ , <em>int</em> $id ] )</code><br/>
-		Creates a machine-readable version of the title of a node.
-	</li>
-	<li>
-		<code>$app-&gt;node-&gt;create ( <em>string</em> $title, <em>string</em> $type, <em>int</em> $parentId )</code><br/>
+		<code>create ( <em>string</em> $title, <em>string</em> $type, <em>int</em> $parentId )</code><br/>
 		Creates a new node.
 	</li>
 	<li>
-		<code>$app-&gt;node-&gt;move ( <em>int</em> $id, <em>int</em> $parentId )</code><br/>
-		Moves a node to another branch.
-	</li>
-	<li>
-		<code>$app-&gt;node-&gt;delete ( <em>int</em> $id )</code><br/>
+		<code>delete ( <em>int</em> $id )</code><br/>
 		Deletes a node.
 	</li>
 	<li>
-		<code>$app-&gt;node-&gt;get ( <em>int</em> $id )</code><br/>
+		<code>get ( <em>int</em> $id )</code><br/>
 		Gets information about a node.
 	</li>
 	<li>
-		<code>$app-&gt;node-&gt;get_parents ( <em>int</em> $id )</code><br/>
-		Gets a list of all parent nodes, starting from the root.
-	</li>
-	<li>
-		<code>$app-&gt;node-&gt;get_children ( <em>int</em> $id )</code><br/>
+		<code>get_children ( <em>int</em> $id )</code><br/>
 		Gets a list of all child nodes.
 	</li>
 	<li>
-		<code>$app-&gt;node-&gt;tree ( <em>array</em> $nodes )</code><br/>
+		<code>get_parents ( <em>int</em> $id )</code><br/>
+		Gets a list of all parent nodes, starting from the root.
+	</li>
+	<li>
+		<code>move ( <em>int</em> $id, <em>int</em> $parentId )</code><br/>
+		Moves a node to another branch.
+	</li>
+	<li>
+		<code>nodes_to_array ( <em>array</em> $nodes, <em>array</em> &amp;$list )</code><br/>
+		Turn an array of nodes into a flat list (one dimensional array).
+	</li>
+	<li>
+		<code>tree ( <em>array</em> $nodes )</code><br/>
 		Creates a structured array of nodes.
 	</li>
 </ul>
@@ -58,7 +53,7 @@
 
 <ul>
 	<li>
-		<code>Node::ROOT_ID</code><br/>
+		<code>ROOT_ID</code><br/>
 		Reserved user ID for the root node.
 	</li>
 </ul>

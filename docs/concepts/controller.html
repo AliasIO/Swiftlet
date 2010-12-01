@@ -13,13 +13,13 @@ $controllerSetup = array(
 
 require($controllerSetup['rootPath'] . 'init.php');
 
-$app->check_dependencies(array('db')); // Use if database access is needed
+$this-&gt;app->check_dependencies(array('db')); // Use if database access is needed
 
 $view->hello = 'Hello world!';
 
 $view->load('index.html.php');
 
-$app->end();
+$this-&gt;app->end();
 ?>
 </pre>
 
@@ -72,47 +72,48 @@ $app->end();
 <p>After <code>$controllerSetup</code> the <code>/init.php</code> file needs to be included.</p>
 
 <p>
-	<code>$app-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
+	<code>$this-&gt;app-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
 	an error message will be displayed.
 </p>
 
-<p>At the end of the Controller, the <code>$app-&gt;end()</code> function need to be called.</p>
+<p>At the end of the Controller, the <code>$this-&gt;app-&gt;end()</code> function need to be called.</p>
 
 <h3>Class</h3>
 
-<p>
-	<code>$controller</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Controller</code>          </dd>
+	<dt>Location</dt> <dd><code>/_app/Controller.php</code></dd>
+</dl>
 
 <h4>Public variables</h4>
 
 <ul>
 	<li>
-		<code>$controller-&gt;rootPath</code><br/>
+		<code>$rootPath</code><br/>
 		Relative path to the root (e.g. <code>./</code>).
 	</li>
 	<li>
-		<code>$controller-&gt;rootPath</code><br/>
+		<code>$rootPath</code><br/>
 		Absolute path to the root (e.g. <code>/</code>).
 	</li>
 	<li>
-		<code>$controller-&gt;pageTitle</code><br/>
+		<code>$pageTitle</code><br/>
 		Title of the page.
 	</li>
 	<li>
-		<code>$controller-&gt;pageDescription</code><br/>
+		<code>$pageDescription</code><br/>
 		Description of the page.
 	</li>
 	<li>
-		<code>$controller-&gt;pageKeywords</code><br/>
+		<code>$pageKeywords</code><br/>
 		Keywords relevant to the contents of the page.
 	</li>
 	<li>
-		<code>$controller-&gt;standAlone</code><br/>
+		<code>$standAlone</code><br/>
 		If this variable is set to <code>TRUE</code> the header and footer hooks will not be executed.
 	</li>
 	<li>
-		<code>$controller-&gt;inAdmin</code><br/>
+		<code>$inAdmin</code><br/>
 		Used for administrative pages.
 	</li>
 </ul>

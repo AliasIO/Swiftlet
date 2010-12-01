@@ -5,8 +5,13 @@
 </p>
 
 <p>
-	Plugins are stored in the <code>/_plugins/</code> directory. Swiftlet will scan this directory and include every plugin it finds.
+	Plugins are stored in the <code>/_app/plugins/</code> directory. Swiftlet will scan this directory and include every plugin it finds.
 	Plugins that require a database need to be installed using the plugin installer at <code>/installer/</code>.
+</p>
+
+<p>
+	Each plugin is a class that extends the "Plugin" class (described below). An instance of the class is automatically created when
+	a plugin is loaded and can be access through the <a href="./Application">Application</a> (e.g. <code>$this->app->plugin_name</code>).
 </p>
 
 <p>
@@ -15,31 +20,32 @@
 
 <h3>Class</h3>
 
-<p>
-	<code>$pluginsLoaded['plugin_name']</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Plugin</code>          </dd>
+	<dt>Location</dt> <dd><code>/_app/Plugin.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
+		<code>hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
 		Hook a plugin into the code.
 	</li>
 	<li>
-		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;install ( )</code><br/>
+		<code>install ( )</code><br/>
 		Install a plugin (call the 'install' hook).
 	</li>
 	<li>
-		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;upgrade ( )</code><br/>
+		<code>upgrade ( )</code><br/>
 		Upgrade a plugin (call the 'upgrade' hook).
 	</li>
 	<li>
-		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;remove ( )</code><br/>
+		<code>remove ( )</code><br/>
 		Remove a plugin (call the 'remove' hook).
 	</li>
 	<li>
-		<code>$app-&gt;pluginsLoaded['plugin_name']-&gt;get_version ( )</code><br/>
+		<code>get_version ( )</code><br/>
 		Get version number of a plugin.
 	</li>
 </ul>

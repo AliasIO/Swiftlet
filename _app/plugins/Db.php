@@ -23,6 +23,7 @@ class Db_Plugin extends Plugin
 		$cacheLifeTime = 3600,
 		$link,
 		$prefix,
+		$result,
 		$tables        = array()
 		;
 
@@ -109,6 +110,24 @@ class Db_Plugin extends Plugin
 	}
 
 	/**
+	 * Implement clear_cache hook
+	 * Clear cache
+	 */
+	function clear_cache()
+	{
+		if ( $this->ready )
+		{
+			$this->sql('
+				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
+				');
+
+			$this->sql('
+				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
+				');
+		}
+	}
+
+	/**
 	 * Initialize database connection
 	 * @param object $this->app
 	 * @param string $host
@@ -169,6 +188,7 @@ class Db_Plugin extends Plugin
 	/**
 	 * Perform a MySQL query
 	 * @param string $sql
+	 * @param bool $cache
 	 */
 	function sql($sql, $cache = TRUE)
 	{
@@ -396,7 +416,6 @@ class Db_Plugin extends Plugin
 
 	/**
 	* Get table names from query
-	* @param string $sql
 	* @return array
 	*/
 	private function get_tables()
@@ -435,7 +454,7 @@ class Db_Plugin extends Plugin
 	/**
 	 * Escape values for safe database insertion
 	 * @param mixed $v
-	 * @return mixed $v
+	 * @return mixed
 	 */
 	function escape($v)
 	{
@@ -466,23 +485,6 @@ class Db_Plugin extends Plugin
 		else
 		{
 			return $this->escape($this->view->h($v));
-		}
-	}
-
-	/**
-	 * Clear cache
-	 */
-	function clear_cache()
-	{
-		if ( $this->ready )
-		{
-			$this->sql('
-				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
-				');
-
-			$this->sql('
-				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
-				');
 		}
 	}
 }

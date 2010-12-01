@@ -59,7 +59,7 @@ class Login_Controller extends Controller
 						`date_login_attempt`
 					FROM `' . $this->app->db->prefix . 'users`
 					WHERE
-						`username` = "' . $this->app->input->POST_html_safe['username'] . '"
+						`username` = "' . $this->app->input->POST_db_safe['username'] . '"
 					LIMIT 1
 					;');
 
@@ -71,7 +71,7 @@ class Login_Controller extends Controller
 					}
 					else
 					{
-						$r = $this->app->user->login($this->app->input->POST_html_safe['username'], $this->app->input->POST_raw['password'], $this->app->input->POST_raw['remember']);
+						$r = $this->app->user->login($this->app->input->POST_raw['username'], $this->app->input->POST_raw['password'], $this->app->input->POST_raw['remember']);
 
 						if ( $r )
 						{

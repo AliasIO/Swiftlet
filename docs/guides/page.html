@@ -12,34 +12,30 @@
 	<a href="../concepts/controller">Controller</a> and a <a href="../concepts/view">View</a>.
 </p>
 
-<h4>Example Controller (<code>/hello.php</code>)</h4>
+<h4>Example Controller (<code>/controllers/Hello.php</code>)</h4>
 
 <pre>
 <?php
-$controllerSetup = array(
-    'rootPath'  => './',
-    'pageTitle' => 'Hello'
-    );
+if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-require($controllerSetup['rootPath'] . 'init.php');
+class Home_Controller extends Controller
+{
+	public
+		$pageTitle = 'Hello'
+		;
 
-// Your code goes here
+	function init()
+	{
+		// Your code
 
-$view->load('hello.html.php');
-
-$app->end();
+		$this->view->load('hello.html.php');
+	}
+}
 ?>
 </pre>
 
 <p>
-	The <code>$controllerSetup</code> variable is a requirement that lets you configure the Controller. The value of <code>rootPath</code>
-	is the relative path to the root directory, in this case <code>./</code>. If you place the controller in a subdirectory it should
-	be <code>../</code> or perhaps <code>../../</code>.
-</p>
-
-<p>
-	The next step is to initialize <a href="../concepts/application">Application</a> by including <code>/init.php</code>. Without the Application
-	you won't be able to use any of Swiftlet's functions.
+	The <code>$controllerSetup</code> variable is a requirement that lets you configure the Controller.
 </p>
 
 <p>
@@ -52,19 +48,14 @@ $app->end();
 </p>
 
 <p>
-	Finally you need to call <code>$app-&gt;end()</code> to finalize the request. This will make sure database connections are closed,
-	sessions are saved and output is sent to the browser.
-</p>
-
-<p>
-	When you browse to the Controller (<code>/hello.php</code>) in your web browser the page should appear.
+	When you browse to the Controller (<code>/hello</code>) in your web browser the page should appear.
 </p>
 
 <h3>See also</h3>
 
 <ul>
-	<li><a href="../concepts/application"     >Application</a></li>
-	<li><a href="../concepts/controller">Controllers</a></li>
-	<li><a href="../concepts/view"      >Views</a></li>
-	<li><a href="../plugins/page"       >Page (plugin)</a></li>
+	<li><a href="../concepts/application">Application</a></li>
+	<li><a href="../concepts/controller" >Controllers</a></li>
+	<li><a href="../concepts/view"       >Views</a></li>
+	<li><a href="../plugins/page"        >Page (plugin)</a></li>
 </ul>

@@ -1,7 +1,5 @@
 <h2>Log</h2>
 
-<p><code>/_plugins/log.php</code></p>
-
 <p>
 	A simple plugin to write messages to a log file.
 </p>
@@ -11,15 +9,16 @@
 
 <h3>Class</h3>
 
-<p>
-	<code>$app-&gt;log</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Log_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Log.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;log-&gt;write ( <em>string</em> $filename, <em>string</em> $contents )</code><br/>
+		<code>write ( <em>string</em> $filename, <em>string</em> $contents )</code><br/>
 		Writes a message to a log file in the <code>/log/</code> directory. If the file doesn't exist it will be created.
 	</li>
 </ul>

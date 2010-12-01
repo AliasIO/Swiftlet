@@ -12,8 +12,8 @@
 <h4>Why are <code>$_GET</code> and <code>$_POST</code> always empty?</h4>
 
 <p>
-	Swiftlet has a safer way to handle GET and POST. In short, you should use <code>$app-&gt;input-&gt;POST_db_safe</code>,
-	<code>$app-&gt;input-&gt;POST_html_safe</code> or <code>$app-&gt;input-&gt;POST_raw</code> where appropriate (the same for GET).
+	Swiftlet has a safer way to handle GET and POST. In short, you should use <code>$this-&gt;app-&gt;input-&gt;POST_db_safe</code>,
+	<code>$this-&gt;app-&gt;input-&gt;POST_html_safe</code> or <code>$this-&gt;app-&gt;input-&gt;POST_raw</code> where appropriate (the same for GET).
 	See <a href="./input">Inputs</a> for more information.
 </p>
 

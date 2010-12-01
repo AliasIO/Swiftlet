@@ -1,6 +1,6 @@
 <h2>Unit tests</h2>
 
-<p>	
+<p>
 	Swiftlet can perform automated tests to ensure everything keeps working as expected during plugin development.
 	Unit test can be executed by going to <code>/unit_tests/</code>.
 </p>
@@ -11,10 +11,9 @@
 
 <h4>Example</h4>
 
-
 <pre>
 <?php
-if ( !isset($app) ) die('Direct access to this file is not allowed');
+if ( !isset($this-&gt;app) ) die('Direct access to this file is not allowed');
 
 switch ( $hook )
 {
@@ -32,17 +31,17 @@ switch ( $hook )
 		$post = array(
 			'foo'         => 'bar',
 			'form-submit' => 'Submit',
-			'auth_token'  => $app->input->authToken
+			'auth_token'  => $this-&gt;app->input->authToken
 			);
 
-		// Simulate submitting a form with a POST request		
+		// Simulate submitting a form with a POST request
 		$r = post_request('http://' . $_SERVER['SERVER_NAME'] . $controller->rootPath . '/example/', $post);
 
 		// Check if the form was handled correctly and the value has been saved
-		$app->db->sql('
+		$this-&gt;app->db->sql('
 			SELECT
 				*
-			FROM `' . $app->db->prefix . 'example`
+			FROM `' . $this-&gt;app->db->prefix . 'example`
 			WHERE
 				`foo` = "bar"
 			LIMIT 1
@@ -51,7 +50,7 @@ switch ( $hook )
 		// Return the test result
 		$params[] = array(
 			'test' => 'Saving a value in <code>/example/</code>.',
-			'pass' => ( bool ) $app->db->result
+			'pass' => ( bool ) $this-&gt;app->db->result
 			);
 
         break;

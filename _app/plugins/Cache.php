@@ -128,7 +128,7 @@ class Cache_Plugin extends Plugin
 	}
 
 	/**
-	 * Clear cache
+	 * Implement clear_cache hook
 	 */
 	function clear_cache()
 	{

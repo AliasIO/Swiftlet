@@ -179,7 +179,7 @@ class Account_Controller extends Controller
 
 				if ( $this->app->session->get('user is owner') )
 				{
-					$username = $this->app->input->POST_db_safe['username'];
+					$username = $this->app->input->POST_html_safe['username'];
 
 					if ( $this->app->session->get('user id') != $user['id'] )
 					{

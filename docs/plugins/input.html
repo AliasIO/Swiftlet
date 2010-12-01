@@ -1,24 +1,22 @@
 <h2>Input</h2>
 
-<p><code>/_plugins/input.php</code></p>
-
 <p>This is a plugin to sanitize and validate user input.</p>
 
 <h4>Example</h4>
 
 <pre>
 <?php
-$app->input->validate(array(
+$this->app->input->validate(array(
 	'submit' => 'bool',
 	'name'   => 'string, empty'
 	'email'  => 'email'
 	));
 
-if ( $app->input->POST_valid['submit'] )
+if ( $this->app->input->POST_valid['submit'] )
 {
-	if ( $app->input->errors )
+	if ( $this->app->input->errors )
 	{
-		if ( $app->input->errors['email'] )
+		if ( $this->app->input->errors['email'] )
 		{
 			$view->error = 'Please provide a valid e-mail address.';
 		}
@@ -64,15 +62,16 @@ if ( $app->input->POST_valid['submit'] )
 
 <h3>Class</h3>
 
-<p>
-	<code>$app-&gt;input</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Input_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Input.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;input-&gt;validate ( <em>array</em> $vars )</code><br/>
+		<code>validate ( <em>array</em> $vars )</code><br/>
 	</li>
 </ul>
 
@@ -80,8 +79,8 @@ if ( $app->input->POST_valid['submit'] )
 
 <ul>
 	<li>
-		<code>$app-&gt;input-&gt;errors</code><br/>
-		Array containing all fields that failed validation (<code>$app-&gt;input-&gt;errors[$k] = TRUE</code>).
+		<code>errors</code><br/>
+		Array containing all fields that failed validation (<code>$this-&gt;app-&gt;input-&gt;errors[$k] = TRUE</code>).
 	</li>
 </ul>
 

@@ -1,7 +1,5 @@
 <h2>Time</h2>
 
-<p><code>/_plugins/time.php</code></p>
-
 <p>
 	Plugin to format dates/times and adjust them to the user's time zone.
 </p>
@@ -10,24 +8,25 @@
 
 <pre>
 <?php
-echo $view->format_date(gmdate(), 'date');
+echo $this->view->format_date(gmdate(), 'date');
 ?>
 </pre>
 
 <h3>Class</h3>
 
-<p>
-	<code>$app-&gt;time</code>
-</p>
+<dl>
+	<dt>Name</dt>     <dd><code>Time_Plugin</code>           </dd>
+	<dt>Location</dt> <dd><code>/_app/plugins/Time.php</code></dd>
+</dl>
 
 <h4>Public functions</h4>
 
 <ul>
 	<li>
-		<code>$app-&gt;time-&gt;format_date ( <em>string</em> $date [, <em>string</em> $type ] )</code><br/>
+		<code>format_date ( <em>string</em> $date [, <em>string</em> $type ] )</code><br/>
 		Formats a date as $type (one of <em>date</em>, <em>datetime</em> (default) or <em>time</em>), adjusted
 		to the user's time zone (default is GMT). Do not call this function directly, use
-		<code>$app-&gt;format_date()</code> instead.
+		<code>$this-&gt;app-&gt;format_date()</code> instead.
 	</li>
 </ul>
 
@@ -35,19 +34,19 @@ echo $view->format_date(gmdate(), 'date');
 
 <ul>
 	<li>
-		<code>$app-&gt;time-&gt;dateFormat</code><br/>
+		<code>$dateFormat</code><br/>
 		Date format.
 	</li>
 	<li>
-		<code>$app-&gt;time-&gt;timeFormat</code><br/>
+		<code>$timeFormat</code><br/>
 		Time format.
 	</li>
 	<li>
-		<code>$app-&gt;time-&gt;timeZone</code><br/>
+		<code>$timeZone</code><br/>
 		The current user's time zone (default is GMT).
 	</li>
 	<li>
-		<code>$app-&gt;time-&gt;timeOffset</code><br/>
+		<code>$timeOffset</code><br/>
 		The difference in seconds between the user's time zone and GMT.
 	</li>
 </ul>

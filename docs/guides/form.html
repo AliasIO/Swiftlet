@@ -7,12 +7,12 @@
 <h5>Example</h5>
 
 <pre>
-<form id="form" method="post" action="./">
+<form id="form" method="post" action="<?php echo $this->route($this->request) ?>">
 	<fieldset>
 		<dl>
 			<dt><label for="foo">Foo</label></dt>
 			<dd>
-				<input type="text" class="text" name="foo" id="foo" value="<?php echo $app->input->POST_html_safe['foo'] ?>"/>
+				<input type="text" class="text" name="foo" id="foo" value="<?php echo $this->app->input->POST_html_safe['foo'] ?>"/>
 			</dd>
 		</dl>
 	</fieldset>
@@ -20,7 +20,7 @@
 		<dl>
 			<dt><br/></dt>
 			<dd>
-				<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
+				<input type="hidden" name="auth-token" value="<?php echo $this->app->input->authToken ?>"/>
 
 				<input type="submit" class="button" name="submit" id="submit" value="Submit"/>
 			</dd>
@@ -48,7 +48,7 @@
 </p>
 
 <pre>
-<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
+<input type="hidden" name="auth-token" value="<?php echo $this->app->input->authToken ?>"/>
 </pre>
 
 <h3>Confirmation</h3>
@@ -56,21 +56,21 @@
 <p>
 	Information send as GET does not require an authentication token to verify its integrity and can therefore not be trusted.
 	When using a link to perform administrative tasks (e.g. <code>?id=1&amp;action=delete</code> to delete a page)
-	confirmation should be requested from the user using <code>$app-&gt;confirm()</code>. The request is then resubmitted using POST.
+	confirmation should be requested from the user using <code>$this-&gt;app-&gt;confirm()</code>. The request is then resubmitted using POST.
 </p>
 
 <h5>Example</h5>
 
 <pre>
 <?php
-$app->input->validate(array(
+$this->app->input->validate(array(
 	));
 
-if ( isset($app->input->GET_raw['action']) && $app->input->GET_raw['action'] == 'delete' )
+if ( isset($this->app->input->GET_raw['action']) && $this->app->input->GET_raw['action'] == 'delete' )
 {
-	if ( !$app->input->POST_valid['confirm'] )
+	if ( !$this->app->input->POST_valid['confirm'] )
 	{
-		$app->input->confirm('Are you sure you wish to delete this page?');
+		$this->app->input->confirm('Are you sure you wish to delete this page?');
 	}
 	else
 	{
@@ -81,34 +81,34 @@ if ( isset($app->input->GET_raw['action']) && $app->input->GET_raw['action'] == 
 </pre>
 
 <p>
-	The <code>$app-&gt;confirm()</code> function terminates the code and displays a form to the user with an option to either
-	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$app-&gt;input-&gt;POST_valid['confirm']</code> is set
+	The <code>$this-&gt;app-&gt;input-&gt;confirm()</code> function terminates the code and displays a form to the user with an option to either
+	proceed or cancel. If the user chooses to proceed the page is reloaded and <code>$this-&gt;app-&gt;input-&gt;POST_valid['confirm']</code> is set
 	to <code>TRUE</code> (this requires the <a href="../plugins/input">Input</a> plugin).
 </p>
 
 <h3>Handling user input</h3>
 
-<p>For security reasons <code>$_GET</code> and <code>$_POST</code> can not be used. It is better to use the filtered alternatives below.</p>
+<p>For security reasons <code>$_GET</code> and <code>$_POST</code> can not be used in Swiftlet. Instead you can use the filtered alternatives below.</p>
 
 <h5>Safe for HTML</h5>
 
 <ul>
-	<li><code>$app-&gt;input-&gt;GET_html_safe</code></li>
-	<li><code>$app-&gt;input-&gt;POST_html_safe</code></li>
+	<li><code>$this-&gt;app-&gt;input-&gt;GET_html_safe</code></li>
+	<li><code>$this-&gt;app-&gt;input-&gt;POST_html_safe</code></li>
 </ul>
 
-<h5>Safe for database insertion (requires a database plugin)</h5>
+<h5>Safe for database insertion (requires the <a href="../plugins/db">Database</a> plugin)</h5>
 
 <ul>
-	<li><code>$app-&gt;input-&gt;GET_db_safe</code></li>
-	<li><code>$app-&gt;input-&gt;POST_db_safe</code></li>
+	<li><code>$this-&gt;app-&gt;input-&gt;GET_db_safe</code></li>
+	<li><code>$this-&gt;app-&gt;input-&gt;POST_db_safe</code></li>
 </ul>
 
 <h5>Unfiltered (and unsafe!)</h5>
 
 <ul>
-	<li><code>$app-&gt;input-&gt;GET_raw</code></li>
-	<li><code>$app-&gt;input-&gt;POST_raw</code></li>
+	<li><code>$this-&gt;app-&gt;input-&gt;GET_raw</code></li>
+	<li><code>$this-&gt;app-&gt;input-&gt;POST_raw</code></li>
 </ul>
 
 <h3>See also</h3>
