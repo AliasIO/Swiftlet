@@ -3,7 +3,7 @@
 <div class="no-grid">
 	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
-	<?php if ( $this->method != 'upload' && $this->app->permission->check('admin upload upload') ): ?>
+	<?php if ( $this->action != 'upload' && $this->app->permission->check('admin upload upload') ): ?>
 	<p>
 		<a class="button" href="<?php echo $this->route($this->path . '/form?callback=' . $this->callback) ?>"><?php echo $this->t('Upload files') ?></a>
 	</p>
@@ -17,7 +17,7 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( $this->method == 'form' && $this->app->permission->check('admin upload upload') ): ?>
+	<?php if ( $this->action == 'form' && $this->app->permission->check('admin upload upload') ): ?>
 	<h2><?php echo $this->t('Upload files') ?></h2>
 
 	<form id="form-file" method="post" action="<?php echo $this->route($this->request . '?callback=' . $this->callback) ?>" enctype="multipart/form-data">

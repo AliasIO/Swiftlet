@@ -27,7 +27,7 @@ class Login_Controller extends Controller
 			'remember'    => 'bool'
 			));
 
-		if ( $this->method == 'logout' )
+		if ( $this->action == 'logout' )
 		{
 			if ( !$this->app->input->POST_valid['confirm'] )
 			{

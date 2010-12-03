@@ -20,7 +20,7 @@ class Account_Controller extends Controller
 
 	function init()
 	{
-		if ( $this->method == 'create' && !$this->app->session->get('user is owner') )
+		if ( $this->action == 'create' && !$this->app->session->get('user is owner') )
 		{
 			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
@@ -79,7 +79,7 @@ class Account_Controller extends Controller
 
 		if ( !isset($user) )
 		{
-			if ( $this->method == 'create' )
+			if ( $this->action == 'create' )
 			{
 				$user = array(
 					'id'       => '',
@@ -120,7 +120,7 @@ class Account_Controller extends Controller
 
 		if ( $this->app->input->POST_valid['form-submit'] )
 		{
-			if ( $this->method == 'create' )
+			if ( $this->action == 'create' )
 			{
 				if ( !$this->app->input->POST_valid['new_password'] )
 				{
@@ -193,7 +193,7 @@ class Account_Controller extends Controller
 
 				$email = $this->app->input->POST_valid['email'] ? $this->app->input->POST_db_safe['email'] : FALSE;
 
-				switch ( $this->method )
+				switch ( $this->action )
 				{
 					case 'create':
 						$this->app->db->sql('
@@ -293,7 +293,7 @@ class Account_Controller extends Controller
 
 		if ( $this->id )
 		{
-			switch ( $this->method )
+			switch ( $this->action )
 			{
 				case 'delete':
 					if ( $user && $this->app->session->get('user is owner') )

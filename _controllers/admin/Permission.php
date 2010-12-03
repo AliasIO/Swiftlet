@@ -146,7 +146,7 @@ class Permission_Controller extends Controller
 			}
 			else
 			{
-				if ( $this->method == 'create' && $this->app->permission->check('admin permission create') )
+				if ( $this->action == 'create' && $this->app->permission->check('admin permission create') )
 				{
 					$this->app->db->sql('
 						INSERT IGNORE INTO `' . $this->app->db->prefix . 'perms_roles` (
@@ -164,7 +164,7 @@ class Permission_Controller extends Controller
 						$this->app->end();
 					}
 				}
-				else if ( $this->method == 'edit' && $this->app->permission->check('admin permission edit') )
+				else if ( $this->action == 'edit' && $this->app->permission->check('admin permission edit') )
 				{
 					$this->app->db->sql('
 						UPDATE `' . $this->app->db->prefix . 'perms_roles` SET
@@ -307,9 +307,9 @@ class Permission_Controller extends Controller
 			}
 		}
 
-		if ( $this->method && $this->id )
+		if ( $this->action && $this->id )
 		{
-			switch ( $this->method )
+			switch ( $this->action )
 			{
 				case 'edit':
 					$this->app->input->POST_html_safe['name'] = $roles[$this->id]['name'];

@@ -11,7 +11,7 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( $this->method == 'edit' && $app->permission->check('admin page edit') ): ?>
+	<?php if ( $this->action == 'edit' && $app->permission->check('admin page edit') ): ?>
 	<h2><?php echo $this->t('Edit page') ?></h2>
 
 	<p>
@@ -27,7 +27,7 @@
 	<h2><?php echo $this->t('New page') ?></h2>
 	<?php endif ?>
 
-	<?php if ( $app->permission->check('admin page create') || $this->method == 'edit' && $app->permission->check('admin page edit') ): ?>
+	<?php if ( $app->permission->check('admin page create') || $this->action == 'edit' && $app->permission->check('admin page edit') ): ?>
 
 	<form id="form-page" method="post" action="<?php echo $this->route($this->request) ?>">
 		<?php foreach ( $this->languages as $i => $language ): ?>

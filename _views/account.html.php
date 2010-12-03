@@ -4,7 +4,7 @@
 	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
 	<?php if ( $app->session->get('user is owner') ): ?>
-	<?php if ( !$this->method || $this->method == 'edit' ): ?>
+	<?php if ( !$this->action || $this->action == 'edit' ): ?>
 	<h2><?php echo $this->t('Edit account') ?></h2>
 
 	<p>
@@ -44,7 +44,7 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="new_password"><?php echo $this->method == 'edit' ? $this->t('New password') : $this->t('Password') ?> (2x)</label></dt>
+				<dt><label for="new_password"><?php echo $this->action == 'edit' ? $this->t('New password') : $this->t('Password') ?> (2x)</label></dt>
 				<dd>
 					<input type="password" name="new_password" id="new_password"/>
 
@@ -129,7 +129,7 @@
 			<?php endforeach ?>
 		</fieldset>
 		<?php endif ?>
-		<?php if ( $this->method != 'create' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $this->id || !$this->id ) ): ?>
+		<?php if ( $this->action != 'create' && ( !$app->session->get('user is owner') || $app->session->get('user id') == $this->id || !$this->id ) ): ?>
 		<fieldset>
 			<dl>
 				<dt><label for="password"><?php echo $this->t('Password') ?></label></dt>
@@ -191,7 +191,7 @@
 	</p>
 	<?php endif ?>
 
-	<?php if ( $this->method == 'create' ): ?>
+	<?php if ( $this->action == 'create' ): ?>
 	<script type="text/javascript">
 		<!-- /* <![CDATA[ */
 		// Focus the username field

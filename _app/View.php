@@ -14,11 +14,12 @@ if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 class View
 {
 	public
+		$absPath,
+		$action,
 		$args       = array(),
 		$controller = 'Home',
 		$id,
 		$inAdmin,
-		$method,
 		$siteName,
 		$siteCopyright,
 		$siteDesigner,
@@ -81,7 +82,7 @@ class View
 
 		$this->request = $this->path . ( $this->args ? ( $this->path ? '/' : '' ) . implode('/', $this->args) : '' );
 
-		$this->method = $this->args           ?         $this->args[0] : '';
+		$this->action = $this->args           ?         $this->args[0] : '';
 		$this->id     = isset($this->args[1]) ? ( int ) $this->args[1] : '';
 
 		// Determine client-side path to root
@@ -92,7 +93,7 @@ class View
 			'controller' => $this->controller,
 			'request'    => $this->request,
 			'path'       => $this->path,
-			'method'     => $this->method,
+			'method'     => $this->action,
 			'id'         => $this->id,
 			'arguments'  => $this->args
 			);

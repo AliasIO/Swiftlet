@@ -25,7 +25,7 @@ class Controller
 		$app,
 		$dependencies = array(),
 		$id,
-		$method,
+		$action,
 		$path,
 		$request,
 		$view
@@ -41,7 +41,7 @@ class Controller
 		$this->view = $app->view;
 
 		$this->id      = ( int ) $this->view->id;
-		$this->method  = $this->view->method;
+		$this->action  = $this->view->action;
 		$this->path    = $this->view->path;
 		$this->request = $this->view->request;
 

@@ -150,7 +150,7 @@ class Upload_Controller extends Controller
 			}
 		}
 
-		switch ( $this->method )
+		switch ( $this->action )
 		{
 			case 'delete':
 			 	if ( $this->app->permission->check('admin upload delete') )

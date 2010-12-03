@@ -11,8 +11,8 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
-	<?php if ( $this->method == 'create' && $app->permission->check('admin permission create') || $this->method == 'edit' && $app->permission->check('admin permission edit') ): ?>
-	<?php if ( $this->method == 'create' ): ?>
+	<?php if ( $this->action == 'create' && $app->permission->check('admin permission create') || $this->action == 'edit' && $app->permission->check('admin permission edit') ): ?>
+	<?php if ( $this->action == 'create' ): ?>
 	<h2><?php echo $this->t('New role') ?></h2>
 	<?php else: ?>
 	<h2><?php echo $this->t('Edit role') ?></h2>
@@ -79,7 +79,7 @@
 			</p>
 			<?php endif ?>
 
-			<?php if ( $this->method == 'add_user' && $this->id == $role['id'] ): ?>
+			<?php if ( $this->action == 'add_user' && $this->id == $role['id'] ): ?>
 			<h4><?php echo $this->t('Add user') ?></h4>
 
 			<form id="form-user<?php echo $role['id'] ?>" method="post" action="<?php echo $this->route($this->path . '/add_user/' . $role['id']) ?>">

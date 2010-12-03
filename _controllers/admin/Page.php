@@ -72,7 +72,7 @@ class Page_Controller extends Controller
 						;');
 				}
 
-				switch ( $this->method )
+				switch ( $this->action )
 				{
 					case 'edit':
 						if ( $this->app->permission->check('admin page edit') )
@@ -237,7 +237,7 @@ class Page_Controller extends Controller
 			}
 		}
 
-		switch ( $this->method )
+		switch ( $this->action )
 		{
 			case 'edit':
 				$editLeftId  = 0;
@@ -352,7 +352,7 @@ class Page_Controller extends Controller
 		$listParents = $list;
 
 		// A page can not be a child of itself or a descendant, remove those pages from dropdown
-		if ( $this->method == 'edit' )
+		if ( $this->action == 'edit' )
 		{
 			foreach ( $listParents as $i => $d )
 			{

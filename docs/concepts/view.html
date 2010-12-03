@@ -3,8 +3,8 @@
 <p>
 	Views are files that contain layout elements for pages, written in HTML.
 	PHP code can be used but should be limited to presentational logic, all other
-	code belongs in the accompanied <a href="./controller">Controller</a>. View are
-	always loaded by a Controller and never called directly.
+	code belongs in the accompanied <a href="./controller">Controller</a>. Views are
+	always loaded by a controller and never accessed directly.
 </p>
 
 <p>
@@ -14,8 +14,13 @@
 <h5>Example View</h5>
 
 <pre>
-<p><?php echo $view->siteName ?></p>
+<p><?php echo $this->siteName ?></p>
 </pre>
+
+<p>
+	The main <code>View</code> class handles everything that is presented to the user. This includes
+	HTML code, URLs, localization and more.
+</p>
 
 <h3>Class</h3>
 
@@ -28,6 +33,18 @@
 
 <ul>
 	<li>
+		<code>allow_html ( <em>string</em> $v )</code><br/>
+		Decode an HTML entity encoded string.
+	</li>
+	<li>
+		<code>format_date ( <em>string</em> $date [ , <em>string</em> $type ] )</code><br/>
+		Format a date and/or time. <code>$type</code> can be <em>date</em>, <em>time</em> or <em>datetime</em> (default). Also see <a href="../plugins/time">Time</a>.
+	</li>
+	<li>
+		<code>h ( <em>string</em> $v )</code><br/>
+		Make a string safe for HTML.
+	</li>
+	<li>
 		<code>load ( <em>string</em> $file )</code><br/>
 		Loads a View.
 	</li>
@@ -36,8 +53,15 @@
 		Output loaded views.
 	</li>
 	<li>
-		<code>allow_html ( <em>string</em> $v )</code><br/>
-		Decode an HTML entity encoded string.
+		<code>paginate ( <em>string</em> $id, <em>int</em> $rows, <em>int</em> $maxRows [, <em>array</em> $exclude ] )</code>
+	</li>
+	<li>
+		<code>route ( <em>string</em> $route, <em>bool</em> $encode )</code><br/>
+		Format a route (see <a href="../guides/routes">Routes</a>).
+	</li>
+	<li>
+		<code>t ( <em>string</em> $v )</code><br/>
+		Translate a string.
 	</li>
 </ul>
 
@@ -45,43 +69,77 @@
 
 <ul>
 	<li>
-		<code>$rootPath</code><br/>
-		Absolute path to the root. Note that this can be different from <code>$controller-&gt;rootPath</code> (e.g. when URL rewrites or AJAX
-		is used).
+		<code>$absPath</code><br/>
+		Absolute path to the website's root directory in the browser.
 	</li>
 	<li>
-		<code>$viewPath</code><br/>
-		Absolute path to the View directory (<code>/_views</code>).
+		<code>$action</code><br/>
+		Shortcut to <code>$args[1]</code>. The first argument in the URL is generally
+		used to specify an action, e.g. "edit" or "delete", followed by the id number of a row in the
+		database (see <a href="../guides/routes">Routes</a>).
 	</li>
 	<li>
-		<code>$siteName</code><br/>
-		Name of the website (value of <code>$this-&gt;app-&gt;siteName</code>, safe for HTML).
+		<code>$args</code><br/>
+		List of arguments passed in the URL (see <a href="../guides/routes">Routes</a>).
 	</li>
 	<li>
-		<code>$siteCopyright</code><br/>
-		Copyright of the website (value of <code>$this-&gt;app-&gt;siteCopyright</code>, safe
-		for HTML).
+		<code>$controller</code><br/>
+		Name of the controller that is being called.
 	</li>
 	<li>
-		<code>$siteDesigner</code><br/>
-		Name of the website designer (value of <code>$this-&gt;app-&gt;siteDesigner</code>, safe for HTML).
-	</li>
-	<li>
-		<code>$pageTitle</code><br/>
-		Title of the page (value of <code>$controller-&gt;pageTitle</code>, safe for HTML).
-	</li>
-	<li>
-		<code>$pageDescription</code><br/>
-		Description of the page (value of <code>$controller-&gt;pageDescription</code> or <code>$this-&gt;app-&gt;siteDescription</code> if missing,
-		safe for HTML).
-	</li>
-	<li>
-		<code>$pageKeywords</code><br/>
-		Keywords relevant to the contents of the page (value of <code>$controller-&gt;pageKeywords</code> or <code>$this-&gt;app-&gt;siteKeywords</code>
-		if missing,	safe for HTML).
+		<code>$id</code><br/>
+		Shortcut to <code>$args[2]</code>, generally used in combination with <code>$action</code>
+		(see <a href="../guides/routes">Routes</a>).
 	</li>
 	<li>
 		<code>$inAdmin</code><br/>
 		Used to distinguish between regular and administrative pages.
 	</li>
+	<li>
+		<code>$siteName</code><br/>
+		Name of the website (see <a href="../guides/config">Configuration</a>).
+	</li>
+	<li>
+		<code>$siteCopyright</code><br/>
+		Copyright of the website (see <a href="../guides/config">Configuration</a>).
+	</li>
+	<li>
+		<code>$siteDesigner</code><br/>
+		Name of the website designer (see <a href="../guides/config">Configuration</a>).
+	</li>
+	<li>
+		<code>$pageDescription</code><br/>
+		Description of the page (see <a href="../guides/config">Configuration</a>).
+	</li>
+	<li>
+		<code>$pageKeywords</code><br/>
+		Keywords relevant to the contents of the page (see <a href="../guides/config">Configuration</a>).
+	</li>
+	<li>
+		<code>$pageTitle</code><br/>
+		Title of the page (see <a href="./controller">Controller</a>).
+	</li>
+	<li>
+		<code>$path</code><br/>
+		Path to the current controller.
+	</li>
+	<li>
+		<code>$request</code><br/>
+		Path to the current controller, including arguments.
+	</li>
+	<li>
+		<code>$rootPath</code><br/>
+		Path to the website's root directory in the browser.
+	</li>
+	<li>
+		<code>$viewPath</code><br/>
+		Path to the views directory in the browser (<code>/_views/</code>).
+	</li>
 </ul>
+
+<h3>See also</h3>
+
+<ul>
+	<li><a href="../guides/routes">Routes</a></li>
+</ul>
+
