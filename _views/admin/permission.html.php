@@ -1,3 +1,5 @@
+<?php if ( !isset($this) ) die('Direct access to this file is not allowed') ?>
+
 <div class="no-grid">
 	<h1><?php echo $this->t($controller->pageTitle) ?></h1>
 
@@ -142,7 +144,7 @@
 
 	<form id="form-perm" method="post" action="<?php echo $this->route($this->path) ?>">
 		<fieldset>
-			<table>
+			<table rules="groups">
 				<thead>
 					<tr>
 						<th><?php $this->t('Permission') ?></th>
@@ -151,8 +153,8 @@
 						<?php endforeach ?>
 					</tr>
 				</thead>
+				<?php foreach ( $this->permissionsGroups as $group => $permissions ): ?>
 				<tbody>
-					<?php foreach ( $this->permissionsGroups as $group => $permissions ): ?>
 					<tr>
 						<th>
 							<strong><?php echo $this->t($group) ?></strong>
@@ -177,8 +179,8 @@
 						<?php endforeach ?>
 					</tr>
 					<?php endforeach ?>
-					<?php endforeach ?>
 				</tbody>
+				<?php endforeach ?>
 			</table>
 		</fieldset>
 		<fieldset>

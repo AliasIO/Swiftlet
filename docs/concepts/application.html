@@ -1,13 +1,12 @@
 <h2>The Application</h2>
 
 <p>
-	The Application is the core of the framework.
+	The Application is the core of the Swiftlet framework.
 </p>
 
 <p>
-	The Application can be accessed through the <code>$this-&gt;app</code> object, an instance of the
-	<code>Application</code> class, which should be available throughout the entire code. Most global
-	functions and values are stored here (e.g. <code>$this-&gt;app-&gt;config</code>).
+	In plugins, controllers and views the Application can be accessed through the <code>$this-&gt;app</code> object, an instance of the
+	<code>Application</code> class. Many global functions and variables are stored here (e.g. <code>$this-&gt;app-&gt;config</code>).
 </p>
 
 <h3>Class</h3>
@@ -84,6 +83,10 @@
 		Instance of the view, see <a href="./view">Views</a>.
 	</li>
 </ul>
+
+<p>
+	Instances of plugins are also available as public variables, e.g. <code>$this->app->db</code> (see <a href="./plugin">Plugins</a>).
+</p>
 
 <h4>Constants</h4>
 

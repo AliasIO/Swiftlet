@@ -171,15 +171,12 @@ a:hover {
 	}
 
 	#content h2 {
-		font-size: 15px;
-		font-weight: bold;
-		text-transform: uppercase;
+		font-size: 18px;
 	}
 
 	#content h3 {
 		font-size: 13px;
 		font-weight: bold;
-		text-transform: uppercase;
 	}
 
 	#content h4 {
@@ -221,11 +218,11 @@ a:hover {
 		display: block;
 		float: left;
 		margin-right: 1em;
-		width: 140px;
+		width: 180px;
 	}
 
 	#content dd {
-		margin-left: 140px;
+		margin-left: 180px;
 	}
 
 	#content .message {
@@ -336,9 +333,7 @@ th, td {
 }
 
 th {
-	font-size: 11px;
 	font-weight: bold;
-	text-transform: uppercase;
 }
 
 td {
@@ -510,10 +505,14 @@ form th, form td {
 	padding: .5em .5em 0 .5em;
 }
 
-form tbody th {
-	font-weight: normal;
-	width: 160px;
+form tbody {
 }
+
+	form tbody th {
+		font-weight: normal;
+		padding-right: 1.5em;
+		width: 180px;
+	}
 
 /* Installer */
 

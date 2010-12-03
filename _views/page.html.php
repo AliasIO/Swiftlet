@@ -1,3 +1,5 @@
+<?php if ( !isset($this) ) die('Direct access to this file is not allowed') ?>
+
 <div class="no-grid">
 	<?php if ( isset($this->body) ): ?>
 	<?php if ( $app->permission->check('admin page edit') || $app->permission->check('admin page delete') ): ?>

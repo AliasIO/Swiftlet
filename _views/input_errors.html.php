@@ -1,3 +1,5 @@
+<?php if ( !isset($this) ) die('Direct access to this file is not allowed') ?>
+
 <?php if ( !empty($app->input->errors) ): ?>
 <script type="text/javascript">
 	<!-- /* <![CDATA[ */

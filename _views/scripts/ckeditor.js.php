@@ -1,3 +1,5 @@
+<?php if ( !isset($this) ) die('Direct access to this file is not allowed') ?>
+
 CKEDITOR.config.baseHref    = 'http://<?php echo $_SERVER['SERVER_NAME'] . $this->rootPath ?>';
 CKEDITOR.config.height      = '400';
 CKEDITOR.config.bodyId      = 'content';

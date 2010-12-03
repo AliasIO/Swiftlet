@@ -1,3 +1,4 @@
+				<?php if ( !isset($this) ) die('Direct access to this file is not allowed') ?>
 			</div><!--/#content-->
 		</div><!--/#page-->
 
