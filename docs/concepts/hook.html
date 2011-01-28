@@ -9,71 +9,75 @@
 
 <ul>
 	<li>
-		<code>cache</code> (<code>/_plugins/classes/buffer.php</code>)<br/>
+		<code>cache</code> (<code>/_app/plugins/Buffer.php</code>)<br/>
 		Use to write HTML output to cache (see <a href="../plugins/buffer">Buffer</a>).
 	</li>
 	<li>
-		<code>clear_cache</code> (<code>/_app/application.class.php</code>)<br/>
+		<code>clear_cache</code> (<code>/_app/Application.php</code>)<br/>
 		Clear the cache.
 	</li>
 	<li>
-		<code>dashboard</code> (<code>/_plugins/classes/dashboard.php</code>)<br/>
+		<code>dashboard</code> (<code>/_app/plugins/Dashboard.php</code>)<br/>
 		Adds a link to the dashboard (see <a href="../plugins/dashboard">Dashboard</a>).
 	</li>
 	<li>
-		<code>display_node</code> (<code>/_plugins/classes/nodes.php</code>)<br/>
+		<code>display_node</code> (<code>/_app/plugins/Node.php</code>)<br/>
 		Display a node (see <a href="../plugins/node">Node</a>).
 	</li>
 	<li>
-		<code>email</code> (<code>/_app/application.class.php</code>)<br/>
+		<code>email</code> (<code>/_app/Application.php</code>)<br/>
 		Use to send e-mails.
 	</li>
 	<li>
-		<code>end</code> (<code>/_app/application.class.php</code>)<br/>
-		Use to include code at the bottom of each page.
+		<code>end</code> (<code>/_app/Application.php</code>)<br/>
+		Use to execute code at the end of the script.
 	</li>
 	<li>
-		<code>error</code> (<code>/_app/application.class.php</code>)<br/>
+		<code>error</code> (<code>/_app/Application.php</code>)<br/>
 		Use to output errors.
 	</li>
 	<li>
-		<code>header</code> (<code>/init.php</code>)<br/>
-		Use to include code on top of each page. Skipped when <code>$controller-&gt;standAlone</code> is set.
+		<code>footer</code> (<code>/_app/Application.php</code>)<br/>
+		Use to include code at the end of each page. Skipped when <code>$controller-&gt;standAlone</code> is set.
 	</li>
 	<li>
-		<code>home</code> (<code>/index.php</code>)<br/>
-		Use to change the home page.
+		<code>header</code> (<code>/_app/Application.php</code>)<br/>
+		Use to include code at the start of each page. Skipped when <code>$controller-&gt;standAlone</code> is set.
 	</li>
 	<li>
-		<code>init</code> (<code>/_app/application.class.php</code>)<br/>
-		Use to extend the <a href="./application">Application</a>. This hook is called on every page, when the Application (core code) is initialized. 
+		<code>init</code> (<code>/_app/Application.php</code>)<br/>
+		Use to extend the <a href="./application">Application</a>. This hook is called on every page when the Application is initialized.
 	</li>
 	<li>
-		<code>input_sanitize</code> (<code>/_app/application.class.php</code>)<br/>
+		<code>init_after</code> (<code>/_app/Application.php</code>)<br/>
+		Called right after <code>init</code>, useful to execute code after plugins have been initialized.
+	</li>
+	<li>
+		<code>input_sanitize</code> (<code>/_app/plugins/Input.php</code>)<br/>
 		Use to filter user input (GET and POST).
 	</li>
 	<li>
-		<code>footer</code> (<code>/_app/application.class.php</code>)<br/>
-		Use to include code at the bottom of each page. Skipped when <code>$controller-&gt;standAlone</code> is set.
+		<code>footer</code> (<code>/_app/Application.php</code>)<br/>
+		Use to include code at the bottom of each page. Skipped when <code>$standAlone</code> is <code>TRUE</code> (see <a href="./controller">Controllers</a>).
 	</li>
 	<li>
-		<code>format_date</code> (<code>/_app/application.class.php</code>)<br/>
+		<code>format_date</code> (<code>/_app/View.php</code>)<br/>
 		Use to format a date.
 	</li>
 	<li>
-		<code>menu</code> (<code>/_plugins/classes/header.php</code>)<br/>
+		<code>header</code> (<code>/_app/Application.php</code>)<br/>
+		Use to include code at the start of each page. Skipped when <code>$standAlone</code> is <code>TRUE</code> (see <a href="./controller">Controllers</a>).
+	</li>
+	<li>
+		<code>menu</code> (<code>/_app/plugins/Header.php</code>)<br/>
 		Use to add a item to the main navigation menu.
 	</li>
 	<li>
-		<code>route</code> (<code>/_app/application.class.php</code>)<br/>
-		Use to route URLs. Requires a <code>/.htaccess</code> file witch matching settings.
-	</li>
-	<li>
-		<code>translate</code> (<code>/_app/application.class.php</code>)<br/>
+		<code>translate</code> (<code>/_app/View.php</code>)<br/>
 		Use to translate strings.
 	</li>
 	<li>
-		<code>unit_tests</code> (<code>/unit_tests/index.php</code>)<br/>
+		<code>unit_tests</code> (<code>/_controllers/Test.php</code>)<br/>
 		Use to add unit tests.
 	</li>
 </ul>

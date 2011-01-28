@@ -1,82 +1,34 @@
 <h2>Controllers</h2>
 
-<p>Each page consists of a Controller (logic, PHP code) and a <a href="./view">View</a> (presentation, HTML code).</p>
+<p>Each page consists of a controller (logic, PHP code) and a <a href="./view">View</a> (presentation, HTML code).</p>
 
-<h4>Example Controller (<code>/index.php</code>)</h4>
+<h4>Example controller (<code>/_controllers/Example.php</code>)</h4>
 
 <pre>
 <?php
-$controllerSetup = array(
-	'rootPath'  => './',
-	'pageTitle' => 'Hello world'
-	);
+if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-require($controllerSetup['rootPath'] . 'init.php');
+class Example_Controller extends Controller
+{
+	public
+		$pageTitle = 'Example'
+		;
 
-$this-&gt;app->check_dependencies(array('db')); // Use if database access is needed
+	function init()
+	{
+		$this->view->foo = 'Bar';
 
-$view->hello = 'Hello world!';
-
-$view->load('index.html.php');
-
-$this-&gt;app->end();
+		$this->view->load('example.html.php');
+	}
+}
 ?>
 </pre>
 
-<h4>Example View (<code>/_views/index.html.php</code>)</h4>
+<h4>Example View (<code>/_views/example.html.php</code>)</h4>
 
 <pre>
-<p><?php echo $view->hello ?></p>
+<p><?php echo $this->foo ?></p>
 </pre>
-
-<h3>Setup</h3>
-
-<p>The <code>$controllerSetup</code> array needs to be defined at the top of the Controller file.</p>
-
-<h4>List of possible keys</h4>
-
-<ul>
-	<li>
-		<code>rootPath</code> (required)<br/>
-		Relative path to the root, i.e. <code>./</code> or <code>../../</code>. The root path can not be empty, and should never be
-		set to <code>/</code> (this defeats the purpose of the root path and can break the installation if it's moved to another
-		directory).
-	</li>
-	<li>
-		<code>pageTitle</code><br/>
-		The title of the page as displayed in the browser's title bar.
-	</li>
-	<li>
-		<code>pageDescription</code><br/>
-		Description of the page (for search engine optimization).
-	</li>
-	<li>
-		<code>pageKeywords</code><br/>
-		Keywords relevant to the contents of the page (for search engine optimization).
-	</li>
-	<li>
-		<code>inAdmin</code><br/>
-		Used for administrative pages.
-	</li>
-	<li>
-		<code>standAlone</code><br/>
-		If set to <code>TRUE</code> the "header" and "footer" hooks will be excluded.
-	</li>
-</ul>
-
-<p>
-	All the defined keys are available as a variable of the <code>$controller</code> object (i.e.
-	<code>$controller-&gt;rootPath</code>).
-</p>
-
-<p>After <code>$controllerSetup</code> the <code>/init.php</code> file needs to be included.</p>
-
-<p>
-	<code>$this-&gt;app-&gt;check_dependencies()</code> can be used to check if any required plugins are ready. If not ready,
-	an error message will be displayed.
-</p>
-
-<p>At the end of the Controller, the <code>$this-&gt;app-&gt;end()</code> function need to be called.</p>
 
 <h3>Class</h3>
 
@@ -89,16 +41,8 @@ $this-&gt;app->end();
 
 <ul>
 	<li>
-		<code>$rootPath</code><br/>
-		Relative path to the root (e.g. <code>./</code>).
-	</li>
-	<li>
-		<code>$rootPath</code><br/>
-		Absolute path to the root (e.g. <code>/</code>).
-	</li>
-	<li>
-		<code>$pageTitle</code><br/>
-		Title of the page.
+		<code>$inAdmin</code><br/>
+		Used for administrative pages to differentiate between normal pages.
 	</li>
 	<li>
 		<code>$pageDescription</code><br/>
@@ -109,11 +53,43 @@ $this-&gt;app->end();
 		Keywords relevant to the contents of the page.
 	</li>
 	<li>
+		<code>$pageTitle</code><br/>
+		Title of the page.
+	</li>
+	<li>
 		<code>$standAlone</code><br/>
 		If this variable is set to <code>TRUE</code> the header and footer hooks will not be executed.
 	</li>
+</ul>
+
+<h4>Protected variables</h4>
+
+<ul>
 	<li>
-		<code>$inAdmin</code><br/>
-		Used for administrative pages.
+		<code>$action</code><br/>
+		Action specified in the request (see <a href="../guides/routes">Routes</a>).
+	</li>
+	<li>
+		<code>$app</code><br/>
+		Refers to the main instance of the <a href="./application">Application</a> class.
+	</li>
+	<li>
+		<code>$dependencies</code><br/>
+	</li>
+	<li>
+		<code>$id</code><br/>
+		The id specified in the request (see <a href="../guides/routes">Routes</a>).
+	</li>
+	<li>
+		<code>$path</code><br/>
+		Path to the current controller (see <a href="../guides/routes">Routes</a>).
+	</li>
+	<li>
+		<code>$request</code><br/>
+		Path to the current controller, including arguments (see <a href="../guides/routes">Routes</a>).
+	</li>
+	<li>
+		<code>$view</code><br/>
+		Refers to the main instance of the <a href="./view">View</a> class.
 	</li>
 </ul>

@@ -11,7 +11,6 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
  * CKEditor
  * @abstract
  */
-
 class Ckeditor_Controller extends Controller
 {
 	public

@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
 	<head>
-		<title><?php echo $this->siteName ?> - <?php echo $this->t($this->pageTitle) ?></title>
+		<title><?php echo $this->siteName . ( $this->pageTitle ? ' - ' : '' ) . $this->t($this->pageTitle) ?></title>
 
 		<link type="text/css"  rel="stylesheet"    href="<?php echo $this->route('css/global.css/grid.css') ?>"/>
 
@@ -21,11 +21,11 @@
 		<meta name="keywords"     content="<?php echo $this->pageKeywords    ?>"/>
 
 		<?php if ( $controller->inAdmin ): ?>
-		<script type="text/javascript" src="<?php echo $this->rootPath ?>lib/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="<?php echo $this->viewPath ?>scripts/ckeditor/ckeditor.js"></script>
 		<script type="text/javascript" src="<?php echo $this->route('ckeditor') ?>"></script>
 		<?php endif ?>
 
-		<script type="text/javascript" src="<?php echo $this->rootPath ?>lib/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="<?php echo $this->viewPath ?>scripts/jquery/jquery-1.4.4.min.js"></script>
 	</head>
 	<body class="<?php echo $controller->inAdmin ? 'in-admin' : '' ?>">
 		<div id="header">

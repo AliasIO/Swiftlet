@@ -14,7 +14,7 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 class Home_Controller extends Controller
 {
 	public
-		$pageTitle = 'Installation successful'
+		$pageTitle = ''
 		;
 
 	function init()

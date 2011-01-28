@@ -22,10 +22,10 @@ class Controller
 		;
 
 	protected
+		$action,
 		$app,
 		$dependencies = array(),
 		$id,
-		$action,
 		$path,
 		$request,
 		$view

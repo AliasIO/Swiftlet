@@ -100,6 +100,7 @@ a:hover {
 
 	#menu li {
 		border-left: 1px solid rgba(255, 255, 255, .2);
+		border-right: 1px solid #FFF;
 		border-right: 1px solid rgba(0, 0, 0, .2);
 		display: inline-block;
 		float: left;
@@ -161,6 +162,7 @@ a:hover {
 	}
 
 	#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+		font-weight: normal;
 		line-height: 1em;
 		margin-bottom: 15px;
 	}
@@ -412,8 +414,9 @@ input, textarea, select, button {
 	-webkit-border-radius: 3px;
 	background: var(input-background-color);
 	border: 1px solid var(input-border-color);
+	color: var(text-color);
 	margin-right: .5em;
-	padding: .2em;
+	padding: .2em .2em .3em .2em;
 }
 
 input, textarea, select {
@@ -442,11 +445,15 @@ textarea.code {
 
 button, button:focus, input[type="submit"], input[type="submit"]:focus {
 	background: var(text-color);
+	background-image: -moz-linear-gradient(top, var(text-color), #000);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(var(text-color)), to(#000));
+	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFFFF,endColorstr=#FFF8F8F8);
 	border-color: var(text-color);
 	color: var(content-background-color);
 	font-size: 11px;
-	padding: .3em 2em .4em 2em;
+	padding: .4em 2em .5em 2em;
 	text-transform: uppercase;
+	text-shadow: 0 -1px 0 #000;
 	width: auto;
 }
 
