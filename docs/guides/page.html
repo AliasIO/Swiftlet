@@ -3,7 +3,7 @@
 <p>
 	The easiest way to add a page to your website is using the <a href="../plugins/page">Page</a> plugin.
 	After installation you'll find a link on the <a href="../plugins/dashboard">Dashboard</a> where you can add
-	and edit pages. These pages can only contain static content such as text and images and are useful for simple
+	and edit pages. These pages can only contain static content such as text and images and are useful for basic
 	documents and articles.
 </p>
 
@@ -18,7 +18,7 @@
 <?php
 if ( !isset($this) ) die('Direct access to this file is not allowed');
 
-class Home_Controller extends Controller
+class Example_Controller extends Controller
 {
 	public
 		$pageTitle = 'Hello'
@@ -35,8 +35,34 @@ class Home_Controller extends Controller
 </pre>
 
 <p>
-	The <code>$controllerSetup</code> variable is a requirement that lets you configure the Controller.
+	Optional properties can be specified as public variables, such as <code>$pageTitle</code>.
 </p>
+
+<ul>
+	<li>
+		<code>$dependencies</code><br/>
+	</li>
+	<li>
+		<code>$pageDescription</code><br/>
+		Description of the page, use for the 'description' meta tag.
+	</li>
+	<li>
+		<code>$pageKeywords</code><br/>
+		A list of keywords relevant to the page, use for the 'keywords' meta tag.
+	</li>
+	<li>
+		<code>$pageTitle</code><br/>
+		Title of the page. This value will be displayed in the web browser's title bar.
+	</li>
+	<li>
+		<code>$standAlone</code><br/>
+		If <code>TRUE</code>, the header and footer views will not be included. This is useful for
+		pages such as RSS feeds that don't need to be wrapped in the website's main layout.
+	</li>
+	<li>
+		<code>$inAdmin</code><br/>
+	</li>
+</ul>
 
 <p>
 	At this point you can add your own PHP code.
@@ -48,7 +74,8 @@ class Home_Controller extends Controller
 </p>
 
 <p>
-	When you browse to the Controller (<code>/hello</code>) in your web browser the page should appear.
+	When you browse to the Controller in your web browser (<code>?q=/hello</code> or <code>/hello</code> if URL rewrites are enabled) the
+	page should appear.
 </p>
 
 <h3>See also</h3>

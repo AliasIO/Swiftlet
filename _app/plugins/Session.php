@@ -71,83 +71,109 @@ class Session_Plugin extends Plugin
 		{
 			$this->ready = TRUE;
 
-			/**
-			 * Delete expired sessions
-			 */
-			$this->app->db->sql('
-				DELETE
-				FROM `' . $this->app->db->prefix . 'sessions`
-				WHERE
-					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
-				;');
-
-			if ( !empty($_COOKIE['sw_session']) && strstr($_COOKIE['sw_session'], ':') )
-			{
-				list($this->id, $this->key) = explode(':', $_COOKIE['sw_session']);
-			}
-
-			if ( !$this->key )
-			{
-				$this->key = sha1(uniqid(mt_rand(), TRUE));
-			}
-
 			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
 			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->view->absPath . $this->key);
 
-			/**
-			 * Get session contents
-			 */
-			if ( $this->id )
+			if ( !empty($_COOKIE['sw_session']) && strstr($_COOKIE['sw_session'], ':') )
 			{
+				list($this->id, $this->key) = explode(':', $_COOKIE['sw_session']);
+
+				if ( !$this->key )
+				{
+					$this->key = sha1(uniqid(mt_rand(), TRUE));
+				}
+
+				/**
+				 * Delete expired sessions
+				 */
 				$this->app->db->sql('
-					SELECT
-						`contents`
+					DELETE
 					FROM `' . $this->app->db->prefix . 'sessions`
 					WHERE
-						`id`   =  ' . $this->id   . ' AND
-						`hash` = "' . $this->hash . '"
-					LIMIT 1
-					;', FALSE);
+						`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
+					;');
 
-				if ( $r = $this->app->db->result )
+				/**
+				 * Get session contents
+				 */
+				if ( $this->id )
 				{
-					$this->contents = unserialize($r[0]['contents']);
+					$this->app->db->sql('
+						SELECT
+							`contents`
+						FROM `' . $this->app->db->prefix . 'sessions`
+						WHERE
+							`id`   =  ' . $this->id   . ' AND
+							`hash` = "' . $this->hash . '"
+						LIMIT 1
+						;', FALSE);
 
-					if ( !is_array($this->contents) )
+					if ( $r = $this->app->db->result )
 					{
-						$this->contents = array($this->contents);
+						$this->contents = unserialize($r[0]['contents']);
+
+						if ( !is_array($this->contents) )
+						{
+							$this->contents = array($this->contents);
+						}
+					}
+					else
+					{
+						$this->id = FALSE;
 					}
 				}
 			}
+		}
+	}
 
-			if ( !$this->id || !$r )
-			{
-				/**
-				 * Create a new sessions if no session exists
-				 */
-				$this->app->db->sql('
-					INSERT
-					INTO `' . $this->app->db->prefix . 'sessions` (
-						`hash`,
-						`contents`,
-						`date`,
-						`date_expire`
-						)
-					VALUES (
-						"' . $this->hash                                        . '",
-						"' . $this->app->db->escape(serialize($this->contents)) . '",
-						"' . gmdate('Y-m-d H:i:s')                              . '",
-						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
-						)
-					ON DUPLICATE KEY UPDATE
-						`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
-						`date`        = "' . gmdate('Y-m-d H:i:s')                              . '",
-						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
-					;');
+	/**
+	 * Create a new session
+	 */
+	function create()
+	{
+		if ( !$this->id )
+		{
+			$this->app->db->sql('
+				INSERT
+				INTO `' . $this->app->db->prefix . 'sessions` (
+					`hash`,
+					`contents`,
+					`date`,
+					`date_expire`
+					)
+				VALUES (
+					"' . $this->hash                                        . '",
+					"' . $this->app->db->escape(serialize($this->contents)) . '",
+					"' . gmdate('Y-m-d H:i:s')                              . '",
+					DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
+					)
+				ON DUPLICATE KEY UPDATE
+					`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
+					`date`        = "' . gmdate('Y-m-d H:i:s')                              . '",
+					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
+				;');
 
-				$this->id = $this->app->db->result;
-			}
+			$this->id = $this->app->db->result;
+		}
+	}
+
+	/**
+	 * End session
+	 */
+	function destroy()
+	{
+		if ( $this->id )
+		{
+			$this->app->db->sql('
+				DELETE
+				FROM `' . $this->app->db->prefix . 'sessions`
+				WHERE
+					`id` = ' . ( int ) $this->id . '
+				LIMIT 1
+				;');
+
+			$this->id = FALSE;
 		}
 	}
 
@@ -196,24 +222,27 @@ class Session_Plugin extends Plugin
 	 */
 	function end()
 	{
-		$sessionLifeTime = ( int ) !empty($this->contents['lifetime']) ? $this->contents['lifetime'] : $this->sessionLifeTime;
-
-		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
+		if ( $this->id )
 		{
-			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'sessions`
-				SET
-					`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
-					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $sessionLifeTime . ' SECOND)
-				WHERE
-					`id` = ' . $this->id . '
-				LIMIT 1
-				;');
+			$sessionLifeTime = ( int ) !empty($this->contents['lifetime']) ? $this->contents['lifetime'] : $this->sessionLifeTime;
+
+			if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
+			{
+				$this->app->db->sql('
+					UPDATE `' . $this->app->db->prefix . 'sessions`
+					SET
+						`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
+						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $sessionLifeTime . ' SECOND)
+					WHERE
+						`id` = ' . $this->id . '
+					LIMIT 1
+					;');
+			}
+
+			$host   = !empty($_SERVER['SERVER_NAME'])                         ? $_SERVER['SERVER_NAME'] : '';
+			$secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? TRUE                    : FALSE;
+
+			setcookie('sw_session', $this->id . ':' . $this->key, time() + $sessionLifeTime, $this->view->absPath, $host, $secure, TRUE);
 		}
-
-		$host   = !empty($_SERVER['SERVER_NAME'])                         ? $_SERVER['SERVER_NAME'] : '';
-		$secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? TRUE                    : FALSE;
-
-		setcookie('sw_session', $this->id . ':' . $this->key, time() + $sessionLifeTime, $this->view->absPath, $host, $secure, TRUE);
 	}
 }

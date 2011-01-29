@@ -13,6 +13,7 @@
 # Fixed .htaccess bug (check for existence of mod_rewrite module)
 # Renamed /_view/ folder to /_views/
 # Moved CKEditor and JQuery to /_views/scripts
+# Disabled guest sessions for better performance
 #
 #
 # 1.2.0.B3 - 1.2.0.RC1

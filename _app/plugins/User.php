@@ -238,6 +238,8 @@ class User_Plugin extends Plugin
 				{
 					$lifeTime = $remember ? 60 * 60 * 24 * 14 : $this->app->session->sessionLifeTime;
 
+					$this->app->session->create();
+
 					$this->app->session->put(array(
 						'user id'       => $r['id'],
 						'user username' => $r['username'],
@@ -258,8 +260,7 @@ class User_Plugin extends Plugin
 	 */
 	function logout()
 	{
-		$this->app->session->reset();
-		$this->app->session->end();
+		$this->app->session->destroy();
 	}
 
 	/**
