@@ -18,7 +18,7 @@
 	</li>
 	<li>
 		<code>INSERT</code><br/>
-		The id of the inserted row.
+		The id of the last inserted row.
 	</li>
 	<li>
 		<code>UPDATE</code>, <code>DELETE</code> and all others<br/>
@@ -61,7 +61,7 @@ if ( $r = $this->app->db->result )
 	</li>
 	<li>
 		<code>sql ( <em>string</em> $sql [, <em>boolean</em> $cache ] )</code><br/>
-		Executes an SQL query.
+		Executes an SQL query. If the second argument is set to <code>FALSE</code> the query will never be cached.
 	</li>
 	<li>
 		<code>close ( <em>resource</em> $link )</code><br/>
@@ -69,7 +69,8 @@ if ( $r = $this->app->db->result )
 	</li>
 	<li>
 		<code>escape ( <em>string|array</em> $v )</code><br/>
-		Escapes strings for safe database insertion and HTML. Note that <code>$this-&gt;app-&gt;input-&gt;POST_db_safe</code> values are already escaped.
+		Escapes strings for safe database insertion and HTML. Note that <code>$this-&gt;app-&gt;input-&gt;POST_db_safe</code>
+		values are already escaped using this function.
 	</li>
 	<li>
 		<code>sanitize ( <em>string|array</em> $v )</code><br/>

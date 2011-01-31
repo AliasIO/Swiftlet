@@ -7,7 +7,13 @@
 <p>
 	Pages are cached if <code>caching</code> is set to <code>TRUE</code> in <code>/_config.php</code>, the user is
 	not logged in, no <code>Content-type</code> headers are being send and no POST request was made. Cached files
-	are stored in the <code>/cache/</code> directory. Requires the <a href="?buffer">Buffer</a> plugin.
+	are stored in the <code>/cache/</code> directory (this directory should be writable). Requires the
+	<a href="./buffer">Buffer</a> plugin.
+</p>
+
+<p>
+	Page caches can be cleared by manually truncating the contents of the <code>/cache/</code> directory or via
+	the <a href="./dashboard">Dashboard</a>.
 </p>
 
 <h3>Class</h3>

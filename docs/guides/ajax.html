@@ -14,7 +14,7 @@
 <script type="text/javascript">
 	$('#result').load('ajax.php', {
 		'key': 'value',
-		'auth-token': '<?php echo $this-&gt;app->input->authToken ?>'
+		'auth-token': '<?php echo $this->app->input->authToken ?>'
 	}, function() {
 		alert('Success!');
 	});
@@ -34,87 +34,6 @@
 
 <ul>
 	<li>
-		<a href="./input">Input /**
-* Undo magic quotes
-* @param mixed $v
-* @return mixed $v
-* @see http://php.net/magic_quotes
-*/
-private function undo_magic_quotes($v)
-{
-if ( is_array($v) )
-{
-return array_map(array($this, 'undo_magic_quotes'), $v);
-}
-else
-{
-return stripslashes($v);
-}
-}
-
-/**
-* Convert special characters to HTML entities
-* @param mixed $v
-* @return mixed $v
-*/
-private function html_safe($v)
-{
-if ( is_array($v) )
-{
-return array_map(array($this, 'html_safe'), $v);
-}
-else
-{
-return htmlentities($v, ENT_QUOTES, 'UTF-8');
-}
-}
-
-/**
-* Sanatize user input
-*/
-private function input_sanitize()
-{
-     /**
-* Recursively remove magic quotes
-*/
-if ( function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc() )
-{
-$_GET = array_map(array($this, 'undo_magic_quotes'), $_GET);
-$_POST = array_map(array($this, 'undo_magic_quotes'), $_POST);
-$_COOKIE = array_map(array($this, 'undo_magic_quotes'), $_COOKIE);
-}
-
-/*
-* Check integrety of confirmed information (see $this->confirm())
-*/
-if ( isset($_POST['confirm']) && !empty($_POST['get-data']) && !empty($_GET) )
-{
-if ( unserialize($_POST['get-data']) != $_GET )
-{
-unset($_POST['confirm']);
-}
-}
-
-/*
-* $_POST and $_GET values can't be trusted
-* If neccesary, access them through $this->POST_raw and $this->GET_raw
-*/
-$this->POST_raw = isset($_POST) ? $_POST : array();
-$this->GET_raw = isset($_GET) ? $_GET : array();
-
-unset($_POST, $_GET);
-
-foreach ( $this->POST_raw as $k => $v )
-{
-$this->POST_html_safe[$k] = $this->html_safe($v);
-}
-
-foreach ( $this->GET_raw as $k => $v )
-{
-$this->GET_html_safe[$k] = $this->html_safe($v);
-}
-
-$this->hook('input_sanitize');
-}s</a>
+		<a href="./input">Input</a>
 	</li>
 </ul>

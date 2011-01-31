@@ -167,7 +167,7 @@ class Db_Plugin extends Plugin
 				/**
 				 * Check if the cache tables exists
 				 */
-				if ( in_array($this->prefix . 'cache_queries', $this->tables) && in_array($this->prefix . 'cache_tables', $this->tables) )
+				if ( $this->app->config['caching'] && in_array($this->prefix . 'cache_queries', $this->tables) && in_array($this->prefix . 'cache_tables', $this->tables) )
 				{
 					/**
 					 * Clear cache

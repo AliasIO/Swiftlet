@@ -2,7 +2,7 @@
 
 <p>
 	This plugin manages user session data and can be used to temporarily store preferences and other information. This plugin
-	requires a database and depends on the <a href="?mysql">MySQL</a> (or any other database) plugin.
+	requires a database and depends on the <a href="./db">Database</a> plugin.
 </p>
 
 <h3>Class</h3>
@@ -15,6 +15,14 @@
 <h4>Public functions</h4>
 
 <ul>
+	<li>
+		<code>create ( )</code><br/>
+		Create a new session.
+	</li>
+	<li>
+		<code>destroy ( )</code><br/>
+		End the current session.
+	</li>
 	<li>
 		<code>get ( <em>string</em> $k [, <em>string</em> $default ] )</code><br/>
 		Retrieves a session value (e.g. <code>$this-&gt;app-&gt;session-&gt;get('user id')</code>). If no value is set,

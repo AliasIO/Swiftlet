@@ -6,14 +6,18 @@
 </p>
 
 <p>
-	This plugin comes with an additional <a href="../concepts/hook">hook</a> for other plugins to hook into.
+	This plugin comes with an additional <a href="../concepts/hook">hook</a> named 'dashboard' for other plugins to hook into.
+</p>
+
+<p>
+	The <a href="./db">Database</a>, <a href="./permission">Permission</a> and <a href="./session">Session</a> plugins are required for this plugin.
 </p>
 
 <h5>Example</h5>
 
 <pre>
 <?php
-if ( !isset($this->app) ) die('Direct access to this file is not allowed');
+if ( !isset($this) ) die('Direct access to this file is not allowed');
 
 class Example_Plugin extends Plugin
 {

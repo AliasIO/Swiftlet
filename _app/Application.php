@@ -74,18 +74,32 @@ class Application
 		{
 			while ( ( $file = readdir($handle) ) !== FALSE )
 			{
-				if ( is_file('_app/plugins/' . $file) && preg_match('/\.php$/', $file) )
+				if ( is_file('_app/plugins/' . $file) && preg_match('/.php$/', $file) )
 				{
-					require('_app/plugins/' . $file);
+					if ( preg_match('/^[A-Z][A-Za-z0-9_]*\.php$/', $file) )
+					{
+						require('_app/plugins/' . $file);
 
-					$plugin      = basename($file, '.php');
-					$pluginClass = $plugin . '_Plugin';
+						$plugin      = basename($file, '.php');
+						$pluginClass = $plugin . '_Plugin';
 
-					$plugin = strtolower($plugin);
+						$plugin = strtolower($plugin);
 
-					$this->{$plugin} = new $pluginClass($this, $plugin, $file, $pluginClass);
+						if ( class_exists($pluginClass) )
+						{
+							$this->{$plugin} = new $pluginClass($this, $plugin, $file, $pluginClass);
+						}
+						else
+						{
+							$this->error(FALSE, 'Class `' . $pluginClass . '` missing from file `/_app/plugins/' . $this->view->h($file) . '`.');
+						}
 
-					$this->plugins[$plugin] = $plugin;
+						$this->plugins[$plugin] = $plugin;
+					}
+					else
+					{
+						$this->error(FALSE, 'Invalid plugin filename name `' . $this->view->h($file) . '`.');
+					}
 				}
 			}
 
@@ -100,7 +114,14 @@ class Application
 
 		$controllerClass = basename($this->view->controller) . '_Controller';
 
-		$this->controller = new $controllerClass($this);
+		if ( class_exists($controllerClass) )
+		{
+			$this->controller = new $controllerClass($this);
+		}
+		else
+		{
+			$this->error(FALSE, 'Class `' . $controllerClass . '` missing from file `/_controllers/' . $this->view->h($this->view->controller) . '.php`.');
+		}
 
 		$this->controller->init();
 

@@ -1,14 +1,14 @@
 @variables {
-	form-background-color: #F8F8F8;
-	form-border-color: #CCC;
-	input-background-color: #FFF;
-	input-focus-background-color: #FFC;
+	form-background-color: #f8f8f8;
+	form-border-color: #ccc;
+	input-background-color: #fff;
+	input-focus-background-color: #ffc;
 	input-border-color: #999;
-	link-color: #05A2C7;
-	heading-border-color: #DDD;
-	page-background-color: #FFF;
-	content-background-color: #FFF;
-	text-color: #2E2D2B;
+	link-color: #05a2c7;
+	heading-border-color: #ddd;
+	page-background-color: #fff;
+	content-background-color: #fff;
+	text-color: #2e2d2b;
 	spacing: 25px;
 }
 
@@ -100,7 +100,7 @@ a:hover {
 
 	#menu li {
 		border-left: 1px solid rgba(255, 255, 255, .2);
-		border-right: 1px solid #FFF;
+		border-right: 1px solid #fff;
 		border-right: 1px solid rgba(0, 0, 0, .2);
 		display: inline-block;
 		float: left;
@@ -142,7 +142,7 @@ a:hover {
 		display: block;
 		height: 120px;
 		overflow: hidden;
-		text-indent: -99999%;
+		text-indent: -999px;
 		width: 400px;
 	}
 
@@ -237,13 +237,13 @@ a:hover {
 	}
 
 		#content .message.notice {
-			background-color: #FFC;
-			border-color: #DD7;
+			background-color: #ffc;
+			border-color: #dd7;
 		}
 
 		#content .message.error {
-			background-color: #FEE;
-			border-color: #D77;
+			background-color: #fee;
+			border-color: #d77;
 		}
 
 		#content .message code {
@@ -361,12 +361,12 @@ form {
 	}
 
 	form .error {
-		color: #E00;
+		color: #e00;
 	}
 
 	form .field-error {
-		background: #FEE;
-		border-color: #D77;
+		background: #fee;
+		border-color: #d77;
 	}
 
 	form dl {
@@ -447,7 +447,7 @@ button, button:focus, input[type="submit"], input[type="submit"]:focus {
 	background: var(text-color);
 	background-image: -moz-linear-gradient(top, var(text-color), #000);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(var(text-color)), to(#000));
-	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#FFFFFFFF,endColorstr=#FFF8F8F8);
+	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#ff2e2d2b,endColorstr=#ff000000);
 	border-color: var(text-color);
 	color: var(content-background-color);
 	font-size: 11px;
@@ -465,7 +465,7 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 	background: var(form-background-color);
 	background-image: -moz-linear-gradient(top, var(content-background-color), var(form-background-color));
 	background-image: -webkit-gradient(linear, left top, left bottom, from(var(content-background-color)), to(var(form-background-color)));
-	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='var(content-background-color)',endColorstr='var(form-background-color)');
+	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff,endColorstr=#fff8f8F8);
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -492,8 +492,8 @@ a:hover.button {
 	}
 
 	a:hover.button.caution {
-		border: 1px solid #C00;
-		color: #C00;
+		border: 1px solid #c00;
+		color: #c00;
 	}
 
 /* Table elements in forms */
@@ -528,5 +528,5 @@ form tbody {
 }
 
 .dependency-fail {
-	color: #C00;
+	color: #c00;
 }
