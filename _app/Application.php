@@ -33,7 +33,9 @@ class Application
 	 */
 	function __construct()
 	{
-		set_error_handler(array($this, 'error'), E_ALL);
+		ini_set('display_errors', 1);
+
+		set_error_handler(array($this, 'error'), E_ALL | E_STRICT);
 
 		$this->timerStart = microtime(TRUE);
 
@@ -437,7 +439,7 @@ class Application
 
 					<pre id="error_backtrace" style="display: none; margin-left: 2em;">';
 
-				print_r(array_pop(debug_backtrace(FALSE)));
+				print_r(debug_backtrace(FALSE));
 
 				echo '</pre>';
 			}

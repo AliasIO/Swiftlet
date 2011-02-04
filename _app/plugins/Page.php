@@ -25,18 +25,33 @@ class Page_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'pages` (
+					`id`          INT(10)      UNSIGNED NOT NULL AUTO_INCREMENT,
+					`node_id`     INT(10)      UNSIGNED NOT NULL,
+					`revision_id` INT(10)      UNSIGNED NOT NULL,
+					`published`   TINYINT(1)   UNSIGNED NOT NULL DEFAULT 0,
+					`lang`        VARCHAR(255)          NOT NULL,
+					`date`        DATETIME              NOT NULL,
+					`date_edit`   DATETIME              NOT NULL,
+					INDEX  `node_id`   (`node_id`),
+					INDEX  `published` (`published`),
+					UNIQUE `node_lang` (`node_id`, `lang`),
+					PRIMARY KEY (`id`)
+					) TYPE = INNODB
+				;');
+		}
+
+		if ( !in_array($this->app->db->prefix . 'pages_revisions', $this->app->db->tables) )
+		{
+			$this->app->db->sql('
+				CREATE TABLE `' . $this->app->db->prefix . 'pages_revisions` (
 					`id`        INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
-					`node_id`   INT(10)    UNSIGNED NOT NULL,
+					`page_id`   INT(10)    UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)        NOT NULL,
 					`body`      TEXT                    NULL,
-					`published` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-					`lang`      VARCHAR(255)        NOT NULL,
 					`date`      DATETIME            NOT NULL,
-					`date_edit` DATETIME            NOT NULL,
-					INDEX `node_id`   (`node_id`),
-					INDEX `published` (`published`),
+					INDEX `page_id` (`page_id`),
 					PRIMARY KEY (`id`)
-					) TYPE = MyISAM
+					) TYPE = INNODB
 				;');
 		}
 

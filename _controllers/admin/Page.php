@@ -29,7 +29,8 @@ class Page_Controller extends Controller
 			'path'        => '/^(([a-z0-9_\-]+\/)*[a-z0-9_\-]+)*$/i',
 			'published'   => 'bool',
 			'parent'      => 'int',
-			'home'        => 'bool'
+			'home'        => 'bool',
+			'revision'    => 'empty, int'
 			));
 
 		if ( !$this->app->permission->check('admin page access') )
@@ -92,6 +93,7 @@ class Page_Controller extends Controller
 
 							$this->app->db->sql('
 								SELECT
+									`id`,
 									`lang`
 								FROM `' . $this->app->db->prefix . 'pages`
 								WHERE
@@ -102,23 +104,24 @@ class Page_Controller extends Controller
 							{
 								foreach ( $r as $d )
 								{
-									$langExist[] = $d['lang'];
+									$langExist[$d['lang']] = $d['id'];
 								}
 							}
 
 							foreach ( $languages as $language )
 							{
-								if ( in_array($language, $langExist) )
+								$pageId = FALSE;
+
+								if ( isset($langExist[$language]) )
 								{
+									$pageId = $langExist[$language];
+
 									$this->app->db->sql('
 										UPDATE `' . $this->app->db->prefix . 'pages` SET
-											`title`     = "' . $this->app->input->POST_db_safe['title'][$language]  . '",
-											`body`      = "' . $this->app->input->POST_db_safe['body'][$language]   . '",
 											`published` =  ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
-											`date_edit` = "' . gmdate('Y-m-d H:i:s')                                . '"
+											`date_edit` = "' . gmdate('y-m-d h:i:s')                                . '"
 										WHERE
-											`node_id` =  ' . $this->id                   . '  AND
-											`lang`    = "' . $this->app->db->escape($language) . '"
+											`id` =  ' . $pageId . '
 										LIMIT 1
 										;');
 								}
@@ -127,23 +130,57 @@ class Page_Controller extends Controller
 									$this->app->db->sql('
 										INSERT INTO `' . $this->app->db->prefix . 'pages` (
 											`node_id`,
-											`title`,
-											`body`,
 											`published`,
 											`lang`,
 											`date`,
 											`date_edit`
 											)
 										VALUES (
-											 ' . $this->id                                      . ',
-											"' . $this->app->input->POST_db_safe['title'][$language]  . '",
-											"' . $this->app->input->POST_db_safe['body'][$language]   . '",
+											 ' . $this->id                                            . ',
 											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
 											"' . $this->app->db->escape($language)                    . '",
 											"' . gmdate('Y-m-d H:i:s')                                . '",
 											"' . gmdate('Y-m-d H:i:s')                                . '"
 											)
 										;');
+
+									$pageId = $this->app->db->result;
+								}
+
+								if ( $pageId )
+								{
+									$this->app->db->sql('
+										INSERT INTO `' . $this->app->db->prefix . 'pages_revisions` (
+											`page_id`,
+											`title`,
+											`body`,
+											`date`
+											)
+										VALUES (
+											 ' . $pageId                                             . ',
+											"' . $this->app->input->POST_db_safe['title'][$language] . '",
+											"' . $this->app->input->POST_db_safe['body'][$language]  . '",
+											"' . gmdate('Y-m-d H:i:s')                               . '"
+											)
+										;');
+
+									$revisionId = $this->app->db->result;
+
+									if ( $this->app->input->POST_db_safe['revision'] )
+									{
+										$revisionId = ( int ) $this->app->input->POST_db_safe['revision'];
+									}
+
+									if ( $revisionId )
+									{
+										$this->app->db->sql('
+											UPDATE `' . $this->app->db->prefix . 'pages` SET
+												`revision_id` =  ' . ( int ) $revisionId . '
+											WHERE
+												`id` =  ' . $pageId . '
+											LIMIT 1
+											;');
+									}
 								}
 							}
 
@@ -180,8 +217,6 @@ class Page_Controller extends Controller
 									$this->app->db->sql('
 										INSERT INTO `' . $this->app->db->prefix . 'pages` (
 											`node_id`,
-											`title`,
-											`body`,
 											`published`,
 											`lang`,
 											`date`,
@@ -189,14 +224,41 @@ class Page_Controller extends Controller
 											)
 										VALUES (
 											 ' . ( int ) $nodeId                                      . ',
-											"' . $this->app->input->POST_db_safe['title'][$language]  . '",
-											"' . $this->app->input->POST_db_safe['body'][$language]   . '",
 											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
 											"' . $this->app->db->escape($language)                    . '",
 											"' . gmdate('Y-m-d H:i:s')                                . '",
 											"' . gmdate('Y-m-d H:i:s')                                . '"
 											)
 										;');
+
+									if ( $pageId = $this->app->db->result )
+									{
+										$this->app->db->sql('
+											INSERT INTO `' . $this->app->db->prefix . 'pages_revisions` (
+												`page_id`,
+												`title`,
+												`body`,
+												`date`
+												)
+											VALUES (
+												 ' . $pageId                                             . ',
+												"' . $this->app->input->POST_db_safe['title'][$language] . '",
+												"' . $this->app->input->POST_db_safe['body'][$language]  . '",
+												"' . gmdate('Y-m-d H:i:s')                               . '"
+												)
+											;');
+
+										if ( $revisionId = $this->app->db->result )
+										{
+											$this->app->db->sql('
+												UPDATE `' . $this->app->db->prefix . 'pages` SET
+													`revision_id` =  ' . ( int ) $revisionId . '
+												WHERE
+													`id` =  ' . $pageId . '
+												LIMIT 1
+												;');
+										}
+									}
 								}
 
 								if ( $this->app->db->result )
@@ -251,16 +313,19 @@ class Page_Controller extends Controller
 					{
 						$this->app->db->sql('
 							SELECT
-								p.`title`,
-								p.`body`,
-								p.`published`,
-								p.`lang`,
-								n.`left_id`,
-								n.`right_id`,
-								n.`home`,
-								n.`path`
-							FROM      `' . $this->app->db->prefix . 'nodes` AS n
-							LEFT JOIN `' . $this->app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+								pr.`title`,
+								pr.`body`,
+								 p.`id`,
+								 p.`revision_id`,
+								 p.`published`,
+								 p.`lang`,
+								 n.`left_id`,
+								 n.`right_id`,
+								 n.`home`,
+								 n.`path`
+							FROM      `' . $this->app->db->prefix . 'nodes`           AS  n
+							LEFT JOIN `' . $this->app->db->prefix . 'pages`           AS  p ON n.`id`          = p.`node_id`
+							LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
 							WHERE
 								n.`id`= ' . ( int ) $this->id . '
 							;');
@@ -282,6 +347,21 @@ class Page_Controller extends Controller
 							$this->app->input->POST_html_safe['path']      = $r[0]['path'];
 
 							$path = $r[0]['path'];
+
+							$this->app->db->sql('
+								SELECT
+									`id`,
+									`date`,
+									LENGTH(`title`) + LENGTH(`body`) AS bytes
+								FROM `' . $this->app->db->prefix . 'pages_revisions`
+								WHERE
+									`page_id`  = ' . ( int ) $r[0]['id']          . ' AND
+									`id`      != ' . ( int ) $r[0]['revision_id'] . '
+								ORDER BY `date` DESC
+								LIMIT 10
+								;');
+
+							$revisions = $this->app->db->result;
 						}
 					}
 				}
@@ -292,17 +372,18 @@ class Page_Controller extends Controller
 				{
 					if ( !$this->app->input->POST_valid['confirm'] )
 					{
-						$this->app->input->confirm($this->view->t('Are you sure you wish to delete this page?'));
+						$this->app->input->confirm($this->view->t('Are you sure you wish to permanently delete this page and all its revisions?'));
 					}
 					else
 					{
 						// Delete page
 						if ( $this->app->node->delete($this->id) )
 						{
-							// Not using LIMIT 1 because a node can have several pages (translations)
 							$this->app->db->sql('
 								DELETE
-								FROM `' . $this->app->db->prefix . 'pages`
+									p, pr
+								FROM      `' . $this->app->db->prefix . 'pages`           AS  p
+								LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`id` = pr.`page_id`
 								WHERE
 									`node_id` = ' . ( int ) $this->id . '
 								;');
@@ -351,7 +432,7 @@ class Page_Controller extends Controller
 
 		$listParents = $list;
 
-		// A page can not be a child of itself or a descendant, remove those pages from dropdown
+		// A page can not be a child of itself or its descendants, remove those pages from dropdown
 		if ( $this->action == 'edit' )
 		{
 			foreach ( $listParents as $i => $d )
@@ -368,7 +449,8 @@ class Page_Controller extends Controller
 		$this->view->nodesParents    = $listParents;
 		$this->view->nodes           = array_splice($list, $pagination['from'], 10);
 		$this->view->nodesPagination = $pagination;
-		$this->view->pagePath        = !empty($path) ? $path : 'page/' . $this->id;
+		$this->view->pagePath        = !empty($path)      ? $path      : 'page/' . $this->id;
+		$this->view->revisions       = !empty($revisions) ? $revisions : array();
 
 		$this->view->languages = $languages;
 

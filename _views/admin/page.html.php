@@ -93,6 +93,21 @@
 				</dd>
 			</dl>
 		</fieldset>
+		<?php if ( $this->revisions ): ?>
+		<fieldset>
+			<dl>
+				<dt><label for="revision"><?php echo $this->t('Restore to revision') ?></label></dt>
+				<dd>
+					<select class="select" name="revision" id="revision">
+						<option value=""><?php echo $this->t('None') ?></option>
+						<?php foreach ( $this->revisions as $revision ): ?>
+						<option value="<?php echo $revision['id'] ?>"><?php echo $this->format_date($revision['date']) . ' (' . number_format(( int ) $revision['bytes']) . 'B)' ?></option>
+						<?php endforeach ?>
+					</select>
+				</dd>
+			</dl>
+		</fieldset>
+		<?php endif ?>
 		<fieldset>
 			<dl>
 				<dt><br/></dt>

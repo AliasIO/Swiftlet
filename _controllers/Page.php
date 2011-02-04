@@ -24,14 +24,15 @@ class Page_Controller extends Controller
 
 		$this->app->db->sql('
 			SELECT
-				p.`id`,
-				p.`node_id`,
-				p.`title`,
-				p.`body`,
-				p.`published`,
-				n.`home`
-			FROM      `' . $this->app->db->prefix . 'pages` AS p
-			LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
+				 p.`id`,
+				 p.`node_id`,
+				pr.`title`,
+				pr.`body`,
+				 p.`published`,
+				 n.`home`
+			FROM      `' . $this->app->db->prefix . 'pages`           AS  p
+			LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
+			LEFT JOIN `' . $this->app->db->prefix . 'nodes`           AS  n ON p.`node_id`     = n.`id`
 			WHERE
 				(
 					' . ( !empty($this->app->input->args[0]) ? '

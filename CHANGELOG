@@ -1,5 +1,6 @@
 # 1.2.0.RC1 - 1.3.0.A1
 #
+# Added content revisions
 # Made session cookie HTTP only and secure if SSL enabled
 # Added key to session cookie to prevent brute forcing of session id
 # Added persistent login feature

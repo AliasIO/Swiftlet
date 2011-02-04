@@ -143,7 +143,7 @@
 
 	<?php if ( $this->installedPlugins ): ?>
 	<p>
-		<?php echo $this->t('Removing a plugin will also <em>permanently remove all data</em> associated with it. Backup your database first!') ?>
+		<?php echo $this->t('Removing a plugin will also %1$spermanently remove all data%2$s associated with it. Backup your database first!', array('<em>', '</em>')) ?>
 	</p>
 
 	<form id="form-remove" method="post" action="">
