@@ -65,7 +65,7 @@ class Login_Controller extends Controller
 
 				if ( isset($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 				{
-					if ( strtotime($r['date_login_attempt']) > gmmktime() - 3 )
+					if ( strtotime($r['date_login_attempt']) > gmdate('U') - 3 )
 					{
 						$this->view->error = $this->view->t('Only one log in attempt per 3 seconds allowed, please try again.');
 					}

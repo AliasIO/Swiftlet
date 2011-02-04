@@ -8,9 +8,9 @@
 /**
  * Check PHP version
  */
-if ( version_compare(PHP_VERSION, '5.1', '<') )
+if ( version_compare(PHP_VERSION, '5.3', '<') )
 {
-	die('<p>PHP 5.1 or higher is required.</p>');
+	die('<p>PHP 5.3 or higher is required.</p>');
 }
 
 if ( empty($controllerSetup) )

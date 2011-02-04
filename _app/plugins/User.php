@@ -40,21 +40,13 @@ class User_Plugin extends Plugin
 					`date`               DATETIME            NOT NULL,
 					`date_edit`          DATETIME            NOT NULL,
 					`date_login_attempt` DATETIME NOT            NULL,
-					`pass_hash`          VARCHAR(128)        NOT NULL,
+					`pass_hash`          VARCHAR(60)         NOT NULL,
 					UNIQUE `username` (`username`),
 					PRIMARY KEY (`id`)
 					) TYPE = INNODB
 				;');
 
-			$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . 'admin');
-			$passHash = $salt . $this->app->config['sysPassword'];
-
-			for ( $i = 0; $i < 100000; $i ++ )
-			{
-				$passHash = hash('sha256', $passHash);
-			}
-
-			$passHash = $salt . $passHash;
+			$passHash = $this->make_pass_hash('Admin', $this->app->config['sysPassword']);
 
 			$this->app->db->sql('
 				INSERT INTO `' . $this->app->db->prefix . 'users` (
@@ -282,30 +274,7 @@ class User_Plugin extends Plugin
 
 		if ( !empty($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 		{
-			$salt     = substr($r['pass_hash'], 0, 64);
-			$passHash = $salt . $password;
-
-			for ( $i = 0; $i < 100000; $i ++ )
-			{
-				$passHash = hash('sha256', $passHash);
-			}
-
-			$passHash = $salt . $passHash;
-
-			if ( $passHash == $r['pass_hash'] )
-			{
-				$passHash = $this->make_pass_hash($username, $password);
-
-				$this->app->db->sql('
-					UPDATE `' . $this->app->db->prefix . 'users` SET
-						`pass_hash` = "' . $passHash . '"
-					WHERE
-						`username` = "' . $this->app->db->escape($username) . '"
-					LIMIT 1
-					;');
-
-				return true;
-			}
+			return crypt($password, $r['pass_hash']) == $r['pass_hash'];
 		}
 	}
 
@@ -317,18 +286,15 @@ class User_Plugin extends Plugin
 	 */
 	function make_pass_hash($username, $password)
 	{
-		$salt     = hash('sha256', uniqid(mt_rand(), true) . 'swiftlet' . strtolower($username));
-		$passHash = $salt . $password;
-
-		// Delay encryption by hashing many times, makes brute forcing more difficult
-		for ( $i = 0; $i < 100000; $i ++ )
+		if ( CRYPT_BLOWFISH == 1 )
 		{
-			$passHash = hash('sha256', $passHash);
+			$salt     = '$2a$13$' . substr(hash('sha256', uniqid(mt_rand(), TRUE) . 'swiftlet' . strtolower($username)), 0, 22);
+			$passHash = $salt . $password;
+
+			$passHash = crypt($password, $salt);
+
+			return $passHash;
 		}
-
-		$passHash = $salt . $passHash;
-
-		return $passHash;
 	}
 
 	/**
