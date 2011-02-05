@@ -2,6 +2,15 @@
 
 <p>
 	Swiftlet's routing system maps URLs to <a href="../concepts/controller">Controllers</a>, actions and arguments.
+	A typical route looks like this:
+</p>
+
+<p>
+	<code>/{controller}/{action}/{id}</code>
+</p>
+
+<p>
+	The <code>action</code> and <code>id</code> segments are arguments which are provided to the controller:
 </p>
 
 <p>
@@ -9,6 +18,46 @@
 </p>
 
 <p>
+	In this case Swiftlet will load the <em>Account</em> controller (<code>/_controllers/Account.php</code>) and tell
+	it we want to <em>edit</em> the account with id <em>3</em>.
+</p>
+
+<pre>
+<?php
+switch ( $this->action )
+{
+	case 'edit':
+		// Do something with $this->id
+
+		break;
+}
+?>
+</pre>
+
+<p>
+	The <code>$this->action</code> and <code>$this->id</code> variables are shorthands for the first and second arguments
+	of the route. Different or additional arguments may be used as well:
+</p>
+
+<p>
+	<code>/{controller}/{argument_1}/{argument_2}/{argument_3}</code>
+</p>
+
+<p>
+	If the <a href="../plugins/input">Input</a> plugin is installed these arguments can be accessed through
+	the <code>$this-&gt;app-&gt;input-&gt;args</code> variable.
+</p>
+
+<p>
+	If the controller is in a subdirectory Swiftlet is smart enough to find the actual file:
+</p>
+
+<p>
+	<code>/admin/page/delete/4</code>
+</p>
+
+<p>
+	In this example <em>page</em> is not treated as an argument and <code>/_controllers/admin/Page.php</code> is loaded.
 </p>
 
 <h3>Generating URLs</h3>

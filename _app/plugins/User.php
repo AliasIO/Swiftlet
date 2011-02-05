@@ -51,6 +51,7 @@ class User_Plugin extends Plugin
 			$this->app->db->sql('
 				INSERT INTO `' . $this->app->db->prefix . 'users` (
 					`username`,
+					`email`,
 					`owner`,
 					`date`,
 					`date_edit`,
@@ -58,6 +59,7 @@ class User_Plugin extends Plugin
 					)
 				VALUES (
 					"Admin",
+					"' . $this->app->db->escape($this->app->config['adminEmail']) . '",
 					1,
 					"' . gmdate('Y-m-d H:i:s') . '",
 					"' . gmdate('Y-m-d H:i:s') . '",

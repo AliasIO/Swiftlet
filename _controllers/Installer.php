@@ -27,6 +27,11 @@ class Installer_Controller extends Controller
 			'form-submit'     => 'bool',
 			));
 
+		if ( !session_id() )
+		{
+			session_start();
+		}
+
 		$authenticated = isset($_SESSION['swiftlet authenticated']);
 
 		$this->view->newPlugins       = array();
@@ -71,11 +76,25 @@ class Installer_Controller extends Controller
 				}
 				else
 				{
-					if ( isset($this->app->{$plugin}->hooks['upgrade']) )
+					if ( isset($this->app->{$plugin}->hooks['upgrade']) && version_compare($this->app->{$plugin}->version, $version, '>') )
 					{
+						$dependencyStatus = array();
+
+						foreach ( $this->app->{$plugin}->dependencies as $dependency )
+						{
+							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->ready) ? 1 : 0;
+						}
+
+						$this->view->outdatedPlugins[$plugin]                    = $this->app->{$plugin};
+						$this->view->outdatedPlugins[$plugin]->dependency_status = $dependencyStatus;
+
 						if ( version_compare($version, str_replace('*', '99999', $this->app->{$plugin}->upgradable['from']), '>=') && version_compare($version, str_replace('*', '99999', $this->app->{$plugin}->upgradable['to']), '<=') )
 						{
-							$this->view->outdatedPlugins[$plugin] = $plugin;
+							$this->view->outdatedPlugins[$plugin]->upgradable = TRUE;
+						}
+						else
+						{
+							$this->view->outdatedPlugins[$plugin]->upgradable = FALSE;
 						}
 					}
 
@@ -134,7 +153,8 @@ class Installer_Controller extends Controller
 											`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 											`plugin`  VARCHAR(256)     NOT NULL,
 											`version` VARCHAR(10)      NOT NULL,
-											PRIMARY KEY (`id`)
+											PRIMARY KEY (`id`),
+											UNIQUE `plugin` (`plugin`)
 											) TYPE = INNODB
 										;');
 								}
@@ -177,15 +197,15 @@ class Installer_Controller extends Controller
 
 								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->outdatedPlugins[$plugin]) )
+									if ( isset($this->view->outdatedPlugins[$plugin]) && !in_array(0, $this->view->outdatedPlugins[$plugin]->dependency_status) )
 									{
-										$this->app->plugins[$plugin]->upgrade();
+										$this->app->{$plugin}->upgrade();
 
 										$this->app->db->sql('
 											UPDATE `' . $this->app->db->prefix . 'versions` SET
-												`version` = "' . $this->view->outdatedPlugins[$plugin]['version'] . '"
+												`version` = "' . $this->view->outdatedPlugins[$plugin]->version . '"
 											WHERE
-												`plugin` = "' . $plugin . '"
+												`plugin` = "' . $this->app->db->escape($plugin) . '"
 											LIMIT 1
 											;');
 

@@ -36,12 +36,7 @@ class Input_Plugin extends Plugin
 		 * Authenticity token to secure forms
 		 * @see http://en.wikipedia.org/wiki/Cross-site_request_forgery
 		 */
-		if ( !session_id() )
-		{
-			session_start();
-		}
-
-		$this->authToken = sha1(session_id() . phpversion() . $this->app->config['sysPassword'] . $this->app->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
+		$this->authToken = sha1(( !empty($this->app->session->ready) ? $this->app->session->id : '' ) . phpversion() . $this->app->config['sysPassword'] . $this->app->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
 
 		if ( ( !empty($_POST) && !isset($_POST['auth-token']) ) || ( isset($_POST['auth-token']) && $_POST['auth-token'] != $this->authToken ) )
 		{

@@ -26,8 +26,8 @@
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
 						<?php echo $plugin ?> (<?php echo $v->file ?>)
-						<em>v<?php echo $v->version ?></em>
-						<em><?php echo $v->description ?></em>
+						<em>v<?php echo $v->version     ?></em>
+						<em><?php  echo $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
@@ -85,29 +85,35 @@
 	<h2><?php echo $this->t('Upgrade') ?></h2>
 
 	<?php if ( $this->outdatedPlugins ): ?>
-	<form id="form-upgrade" method="post" action="">
+	<form id="form-upgrade" method="post" action="<?php echo $this->route('installer') ?>">
 		<fieldset>
 			<?php foreach ( $this->outdatedPlugins as $plugin => $v ): ?>
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
-						<?php echo $plugin ?>
-						<em>v<?php echo $v->version ?></em>
+						<?php echo $plugin ?> (<?php echo $v->file ?>)
+						<em>v<?php echo $v->version     ?></em>
+						<em><?php  echo $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
-					<?php if ( $v['upgradable'] ): ?>
-					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"/>
-					<em>(<a href="javascript: void(0);" onclick="
-						e = document.getElementById('sql_<?php echo $plugin ?>');
-						e.style.display = e.style.display == 'none' ? 'block' : 'none';
-						"><?php echo $this->t('View SQL') ?></a>)</em>
+					<?php if ( $v->upgradable ): ?>
+					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v->dependency_status) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 					<?php else: ?>
-					<em><?php echo $this->t('No upgrade available from version') ?> <?php echo $v['installed_version'] ?></em>
-					<?php endif; ?>
+					<em class="dependency-fail"><?php echo $this->t('Unable to upgrade from currently installed version.') ?></em>
+					<?php endif ?>
+
+					<?php if ( $v->dependency_status ): ?>
+					<em>
+						<?php echo $this->t('Depends on') ?>:
+
+						<?php foreach ( $v->dependency_status as $dependency => $ready ): ?>
+						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $this->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $this->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
+						<?php endforeach ?>
+					</em>
+					<?php endif ?>
 				</dd>
 			</dl>
-			<p id="sql_<?php echo $plugin ?>" style="display: none;"><code><?php echo $v['sql'] ?></code></p>
 			<?php endforeach; ?>
 		</fieldset>
 		<fieldset>
@@ -153,8 +159,8 @@
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
 						<?php echo $plugin ?> (<?php echo $v->file ?>)
-						<em>v<?php echo $v->version ?></em>
-						<em><?php echo $v->description ?></em>
+						<em>v<?php echo $v->version     ?></em>
+						<em><?php echo  $v->description ?></em>
 					</label>
 				</dt>
 				<dd>

@@ -36,7 +36,7 @@ class Doc_Controller extends Controller
 
 			if ( $m )
 			{
-				$this->view->pageTitle = $this->view->h($m[1]);
+				$this->pageTitle = $m[1];
 			}
 
 			/*
