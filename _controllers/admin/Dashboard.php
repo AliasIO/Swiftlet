@@ -21,7 +21,7 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 
 	function init()
 	{
-		if ( !$this->app->permission->check('dashboard access') )
+		if ( !$this->app->permission->check('admin dashboard access') )
 		{
 			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 

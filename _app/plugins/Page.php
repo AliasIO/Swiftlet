@@ -222,12 +222,13 @@ class Page_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				p.*
-			FROM      `' . $this->app->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $this->app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+			FROM      `' . $this->app->db->prefix . 'nodes`           AS  n
+			LEFT JOIN `' . $this->app->db->prefix . 'pages`           AS  p ON n.`id`          =  p.`node_id`
+			LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
 			WHERE
-				n.`type`  = "page"           AND
-				p.`title` = "Unit Test Page" AND
-				p.`lang`  = "English US"
+				 n.`type`  = "page"           AND
+				 p.`lang`  = "English US"     AND
+				pr.`title` = "Unit Test Page"
 			LIMIT 1
 			;', FALSE);
 
@@ -261,10 +262,11 @@ class Page_Plugin extends Plugin
 
 		$this->app->db->sql('
 			SELECT
-				`body`
-			FROM `' . $this->app->db->prefix . 'pages`
+				pr.`body`
+			FROM      `' . $this->app->db->prefix . 'pages`           AS  p
+			LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
 			WHERE
-				`id` = ' . ( int ) $page['id'] . '
+				p.`id` = ' . ( int ) $page['id'] . '
 			LIMIT 1
 			;', FALSE);
 

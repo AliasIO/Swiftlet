@@ -27,7 +27,8 @@ class Dashboard_Plugin extends Plugin
 	{
 		if ( !empty($this->app->permission->ready) )
 		{
-			$this->app->permission->create('Administration', 'dashboard access', 'Access to the dashboard');
+			$this->app->permission->create('Administration', 'admin dashboard access',          'Access to the dashboard');
+			$this->app->permission->create('Administration', 'admin dashboard overview access', 'See installation and configuration details');
 		}
 	}
 
@@ -88,7 +89,9 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function unit_tests(&$params)
 	{
-		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/dashboard', array(), TRUE);
+		$post = array();
+
+		$r = $this->app->test->post_request('http://' . $_SERVER['SERVER_NAME'] . $this->view->rootPath . 'admin/dashboard', $post, TRUE);
 
 		$params[] = array(
 			'test' => '<code>/admin/dashboard</code> should be inaccessible for guests.',

@@ -13,7 +13,11 @@
 </div>
 
 <div class="grid">
+	<?php if ( $this->app->permission->check('admin dashboard overview access') ): ?>
 	<div class="span-7">
+	<?php else: ?>
+	<div class="span-12">
+	<?php endif ?>
 		<?php if ( $this->pages ): ?>
 		<?php foreach ( $this->pages as $group => $pages ): ?>
 		<h2><?php echo $group ?></h2>
@@ -34,6 +38,7 @@
 		<?php endif ?>
 	</div>
 
+	<?php if ( $this->app->permission->check('admin dashboard overview access') ): ?>
 	<div class="span-5">
 		<h2><?php echo $this->t('Installation details') ?></h2>
 
@@ -61,4 +66,5 @@
 			<dd><?php echo $app->config['caching'] ? $this->t('On (%1$sclear%2$s)', array('<a href="?action=clear_cache">', '</a>')) : $this->t('Off') ?></dd>
 		</dl>
 	</div>
+	<?php endif ?>
 </div>
