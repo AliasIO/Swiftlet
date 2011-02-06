@@ -88,7 +88,10 @@ if ( isset($this->app->input->GET_raw['action']) && $this->app->input->GET_raw['
 
 <h3>Handling user input</h3>
 
-<p>For security reasons <code>$_GET</code> and <code>$_POST</code> can not be used in Swiftlet. Instead you can use the filtered alternatives below.</p>
+<p>
+	For security reasons it's recommended to avoid using <code>$_GET</code> and <code>$_POST</code> altogether. Instead you can use the filtered
+	alternatives below.
+</p>
 
 <h5>Safe for HTML</h5>
 

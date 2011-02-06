@@ -1,8 +1,34 @@
 <h2>Helpers</h2>
 
+<p>
+	Helpers are snippets of code that can be called in <a href="./view">Views</a> to help with tasks and keep your code
+	<a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a>. Any code that you are repeating
+	regularly can likely be moved into a helper.
+</p>
+
+<p>
+	Helpers are stored in <code>/_views/_helpers/</code>.
+</p>
+
+<h4>Example</h4>
+
+<pre>
+<?php
+
+$this->helper('pagination', array('name' => 'users', 'page' => 1, 'pages' => 3));
+
+?>
+</pre>
+
+<p>
+	The helper function takes two arguments; the name of the helper you want to call and optionally an array of
+	parameters. In the example's case the file <code>/_views/_helpers/pagination.hmtl.php</code> will be included to
+	display pagination.
+</p>
+
 <h3>See also</h3>
 
 <ul>
-	<li><a href="./views">Views</a></li>
+	<li><a href="./view">Views</a></li>
 </ul>
 

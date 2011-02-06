@@ -1,5 +1,6 @@
 # 1.2.0.RC1 - 1.3.0.A1
 #
+# Added helpers (/_views/_helpers/)
 # Switched to blowfish for password hashing
 # Added content revisions
 # Made session cookie HTTP only and secure if SSL enabled

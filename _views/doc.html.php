@@ -19,10 +19,8 @@
 				<li><a href="<?php echo $this->route('doc/guides/page')    ?>">Creating pages</a></li>
 				<li><a href="<?php echo $this->route('doc/guides/theme')   ?>">Theming</a></li>
 				<li><a href="<?php echo $this->route('doc/guides/form')    ?>">Forms</a></li>
-				<li><a href="<?php echo $this->route('doc/guides/routes')  ?>">Routes</a></li>
 				<li><a href="<?php echo $this->route('doc/guides/plugin')  ?>">Creating plugins</a></li>
 				<li><a href="<?php echo $this->route('doc/guides/ajax')    ?>">AJAX</a></li>
-				<li><a href="<?php echo $this->route('doc/guides/faq')     ?>">FAQ</a></li>
 			</ul>
 
 			<h2>Concepts</h2>
@@ -34,6 +32,7 @@
 				<li><a href="<?php echo $this->route('doc/concepts/hook')        ?>">Hooks</a></li>
 				<li><a href="<?php echo $this->route('doc/concepts/plugin')      ?>">Plugins</a></li>
 				<li><a href="<?php echo $this->route('doc/concepts/helper')      ?>">Helpers</a></li>
+				<li><a href="<?php echo $this->route('doc/concepts/route')       ?>">Routes</a></li>
 				<li><a href="<?php echo $this->route('doc/concepts/unit_test')   ?>">Unit Tests</a></li>
 			</ul>
 
