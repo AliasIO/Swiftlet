@@ -221,92 +221,43 @@ class View
 		return $params['date'];
 	}
 
+	function helper($helper, $params = array())
+	{
+		if ( !is_file($filename = '_views/_helpers/' . $helper . '.html.php') )
+		{
+			$this->app->error(FALSE, 'Helper `' . $this->h($helper) . '` doesn\'t exist (/' . $this->h($filename) . ').');
+		}
+
+		require($filename);
+	}
+
 	/**
 	 * Create pagination
-	 * @param string $id
-	 * @param int $rows
-	 * @param int $maxRows
+	 * @param string $name
+	 * @param int $items
+	 * @param int $show
 	 * @return array
 	 */
-	function paginate($id, $rows, $maxRows, $exclude = array())
+	function paginate($name, $items, $show)
 	{
-		$pageNum = isset($this->app->input->GET_raw['p_' . $id]) ? $this->app->input->GET_raw['p_' . $id] : 1;
+		$page = 1;
 
-		$query = !empty($this->app->input->GET_raw) ? $this->app->input->GET_raw : array();
-
-		unset($query['p_' . $id]);
-
-		$params = '';
-
-		if ( $query )
+		foreach ( $this->args as $arg )
 		{
-			foreach ( $query as $k => $v )
+			preg_match('/^' . preg_quote($name) . '\-page\-([0-9])+$/', $arg, $m);
+
+			if ( !empty($m[1]) )
 			{
-				if ( !in_array($k, $exclude) )
-				{
-					$params[] = $k . '=' . $v;
-				}
+				$page = $m[1];
 			}
 		}
 
-		$url = '?' . ( $params ? implode('&', $params) . '&' : '' ) . 'p_' . $id . '=';
-
-		$pages = ceil($rows / $maxRows);
-
-		$pagination = '';
-
-		if ( $pageNum > 1 )
-		{
-			$pagination = '<a class="pagination" href="' . $url . ( $pageNum - 1 ) . '#' . $id . '">' . $this->t('previous') . '</a> ';
-		}
-
-		for ( $i = 1; $i <= 3; $i ++ )
-		{
-			if ( $i > $pages )
-			{
-				break;
-			}
-
-			$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
-		}
-
-
-		if ( $pageNum > 7 )
-		{
-			$pagination .= '&hellip; ';
-		}
-
-		for ( $i = $pageNum - 3; $i <= $pageNum + 3; $i ++ )
-		{
-			if ( $i > 3 && $i < $pages - 2 )
-			{
-				$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
-			}
-		}
-
-		if ( $pageNum < $pages - 6 )
-		{
-			$pagination .= '&hellip; ';
-		}
-
-		if ( $pages > 3 )
-		{
-			for ( $i = $pages - 2; $i <= $pages; $i ++)
-			{
-				if ( $i > 3 )
-				{
-					$pagination .= ( $i == $pageNum ? $i : '<a class="pagination" href="' . $url . $i . '#' . $id . '">' . $i . '</a>' ) . ' ';
-				}
-			}
-		}
-
-		if ( $pageNum < $pages )
-		{
-			$pagination .= '<a class="pagination" href="' . $url . ( $pageNum + 1 ) . '#' . $id . '">' . $this->t('next') . '</a> ';
-		}
-
-		$pagination = $this->t('Go to page') . ': ' . $pagination;
-
-		return array('from' => ( $pageNum - 1 ) * $maxRows, 'to' => ( $pageNum * $maxRows < $rows ? ( $pageNum * $maxRows) : $rows ), 'html' => $pagination);
+		return array(
+			'name'  => $name,
+			'from'  => $show * ( $page - 1 ),
+			'to'    => $show * $page < $items ? $show * $page : $items,
+			'page'  => $page,
+			'pages' => ceil($items / $show)
+			);
 	}
 }

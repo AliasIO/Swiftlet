@@ -161,9 +161,7 @@
 	<h2><?php echo $this->t('All accounts') ?></h2>
 
 	<?php if ( $this->users ): ?>
-	<p>
-		<?php echo $this->usersPagination['html'] ?>
-	</p>
+	<?php $this->helper('pagination', $this->usersPagination) ?>
 
 	<table>
 		<thead>
@@ -182,9 +180,7 @@
 		</tbody>
 	</table>
 
-	<p>
-		<?php echo $this->usersPagination['html'] ?>
-	</p>
+	<?php $this->helper('pagination', $this->usersPagination) ?>
 	<?php else: ?>
 	<p>
 		<em><?php echo $this->t('No accounts') ?></em>

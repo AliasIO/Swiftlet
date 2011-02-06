@@ -126,9 +126,7 @@
 	<h2><?php echo $this->t('All pages') ?></h2>
 
 	<?php if ( $this->nodes ): ?>
-	<p class="pagination">
-		<?php echo $this->nodesPagination['html'] ?>
-	</p>
+	<?php $this->helper('pagination', $this->nodesPagination) ?>
 
 	<table>
 		<thead>
@@ -163,9 +161,7 @@
 		</tbody>
 	</table>
 
-	<p class="pagination">
-		<?php echo $this->nodesPagination['html'] ?>
-	</p>
+	<?php $this->helper('pagination', $this->nodesPagination) ?>
 	<?php else: ?>
 	<p>
 		<em><?php echo $this->t('No pages') ?></em>

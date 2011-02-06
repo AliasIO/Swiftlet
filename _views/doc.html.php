@@ -33,6 +33,7 @@
 				<li><a href="<?php echo $this->route('doc/concepts/controller')  ?>">Controllers</a></li>
 				<li><a href="<?php echo $this->route('doc/concepts/hook')        ?>">Hooks</a></li>
 				<li><a href="<?php echo $this->route('doc/concepts/plugin')      ?>">Plugins</a></li>
+				<li><a href="<?php echo $this->route('doc/concepts/helper')      ?>">Helpers</a></li>
 				<li><a href="<?php echo $this->route('doc/concepts/unit_test')   ?>">Unit Tests</a></li>
 			</ul>
 

@@ -12,7 +12,7 @@
 		<meta http-equiv="content-type"     content="text/html; charset=UTF-8"/>
 		<meta http-equiv="content-language" content="en-US"/>
 
-		<meta name="title"        content="<?php echo $this->siteName ?> - <?php echo $this->t($this->pageTitle) ?>"/>
+		<meta name="title"        content="<?php echo $this->siteName . ( $this->pageTitle ? ' - ' : '' ) . $this->t($this->pageTitle) ?>"/>
 		<meta name="distribution" content="global"/>
 		<meta name="generator"    content="Swiftlet - http://swiftlet.org"/>
 		<meta name="copyright"    content="<?php echo $this->siteCopyright   ?>"/>

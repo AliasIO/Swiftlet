@@ -112,7 +112,7 @@ class Input_Plugin extends Plugin
 		$this->GET_raw  = isset($_GET)             ? $_GET             : array();
 		$this->args     = isset($this->view->args) ? $this->view->args : array();
 
-		unset($_POST, $_GET, $this->view->args);
+		unset($_POST, $_GET);
 
 		foreach ( $this->POST_raw as $k => $v )
 		{

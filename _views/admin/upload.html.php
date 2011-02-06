@@ -75,9 +75,7 @@
 
 	<?php if ( $this->files ): ?>
 
-	<p>
-		<?php echo $this->filesPagination['html'] ?>
-	</p>
+	<?php $this->helper('pagination', $this->filesPagination) ?>
 
 	<table>
 		<thead>
@@ -127,9 +125,7 @@
 		</tbody>
 	</table>
 
-	<p>
-		<?php echo $this->filesPagination['html'] ?>
-	</p>
+	<?php $this->helper('pagination', $this->filesPagination) ?>
 	<?php else: ?>
 	<p>
 		<em><?php echo $this->t('No files') ?></em>
