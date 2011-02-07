@@ -93,7 +93,7 @@ class View
 			'controller' => $this->controller,
 			'request'    => $this->request,
 			'path'       => $this->path,
-			'method'     => $this->action,
+			'action'     => $this->action,
 			'id'         => $this->id,
 			'arguments'  => $this->args
 			);
