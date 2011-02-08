@@ -16,16 +16,8 @@ class Email_Plugin extends Plugin
 	public
 		$version    = '1.0.0',
 		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('init' => 1, 'email' => 1)
+		$hooks      = array('email' => 1)
 		;
-
-	/*
-	 * Implement init hook
-	 */
-	function init()
-	{
-		$this->ready = TRUE;
-	}
 
 	/*
 	 * Implement email hook

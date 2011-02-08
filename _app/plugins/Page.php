@@ -55,7 +55,7 @@ class Page_Plugin extends Plugin
 				;');
 		}
 
-		if ( !empty($this->app->permission->ready) )
+		if ( isset($this->app->permission) )
 		{
 			$this->app->permission->create('Pages', 'admin page access', 'Manage pages');
 			$this->app->permission->create('Pages', 'admin page create', 'Create pages');
@@ -90,7 +90,7 @@ class Page_Plugin extends Plugin
 			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'pages`;');
 		}
 
-		if ( !empty($this->app->permission->ready) )
+		if ( isset($this->app->permission) )
 		{
 			$this->app->permission->delete('admin page access');
 			$this->app->permission->delete('admin page create');
@@ -104,17 +104,9 @@ class Page_Plugin extends Plugin
 	 */
 	function init()
 	{
-		/**
-		 * Check if the pages table exists
-		 */
-		if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
+		if ( count($this->app->input->args) >= 2 && $this->app->input->args[0] == 'node' )
 		{
-			$this->ready = TRUE;
-
-			if ( count($this->app->input->args) >= 2 && $this->app->input->args[0] == 'node' )
-			{
-				$this->view->controller = 'Page';
-			}
+			$this->view->controller = 'Page';
 		}
 	}
 
@@ -209,7 +201,7 @@ class Page_Plugin extends Plugin
 			'auth-token'  => $this->app->input->authToken
 			);
 
-		$languages = !empty($this->app->lang->ready) ? $this->app->lang->languages : array('English US');
+		$languages = isset($this->app->lang) ? $this->app->lang->languages : array('English US');
 
 		foreach ( $languages as $language )
 		{

@@ -15,7 +15,7 @@ class Test_Controller extends Controller
 {
 	public
 		$pageTitle    = 'Unit tests',
-		$dependencies = array('db', 'session', 'user')
+		$dependencies = array('db', 'session', 'test', 'user')
 		;
 
 	function init()

@@ -19,17 +19,18 @@ class Buffer_Plugin extends Plugin
 		$hooks      = array('init' => 4, 'end' => 999, 'error' => 999)
 		;
 
+	public
+		$active = FALSE
+		;
+
 	/*
 	 * Implement init hook
 	 */
 	function init()
 	{
-		if ( !$this->ready )
-		{
-			ob_start();
+		ob_start();
 
-			$this->ready = TRUE;
-		}
+		$this->active = TRUE;
 	}
 
 	/*
@@ -37,7 +38,7 @@ class Buffer_Plugin extends Plugin
 	 */
 	function end()
 	{
-		if ( !empty($this->ready) && !$this->app->controller->standAlone )
+		if ( $this->active && !$this->app->controller->standAlone )
 		{
 			$this->app->debugOutput['buffer output size'] = round(strlen(ob_get_contents()) / 1024 / 1024, 3) . ' MB';
 
@@ -50,10 +51,7 @@ class Buffer_Plugin extends Plugin
 	 */
 	function error()
 	{
-		if ( !empty($this->ready) )
-		{
-			$this->clean();
-		}
+		$this->clean();
 	}
 
 	/**
@@ -61,7 +59,7 @@ class Buffer_Plugin extends Plugin
 	 */
 	function flush()
 	{
-		if ( $this->ready )
+		if ( $this->active )
 		{
 			$params = array(
 				'contents' => ob_get_contents()
@@ -118,7 +116,7 @@ class Buffer_Plugin extends Plugin
 	 */
 	function clean()
 	{
-		if ( $this->ready )
+		if ( $this->active )
 		{
 			if ( ob_get_length() > 0 )
 			{

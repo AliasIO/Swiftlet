@@ -21,18 +21,13 @@ class Home_Controller extends Controller
 	{
 		$newPlugins = 0;
 
-		if ( isset($this->app->db) )
+		foreach ( $this->app->plugins as $plugin )
 		{
-			foreach ( $this->app->plugins as $plugin )
+			if ( !$this->app->{$plugin}->installed )
 			{
-				$version = $this->app->{$plugin}->get_version();
-
-				if ( !$version )
+				if ( isset($this->app->{$plugin}->hooks['install']) )
 				{
-					if ( isset($this->app->{$plugin}->hooks['install']) )
-					{
-						$newPlugins ++;
-					}
+					$newPlugins ++;
 				}
 			}
 		}
@@ -75,7 +70,7 @@ class Home_Controller extends Controller
 					);
 			}
 
-			if ( empty($this->app->db->ready) )
+			if ( !isset($this->app->db) || !$this->app->db->link )
 			{
 				$this->view->notices[] = $this->view->t(
 					'No database connected (required for some plugins). You may need to change the database settings in %s.',

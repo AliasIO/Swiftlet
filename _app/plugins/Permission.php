@@ -144,45 +144,37 @@ class Permission_Plugin extends Plugin
 	 */
 	function init()
 	{
-		/**
-		 * Check if the permissions table exists
-		 */
-		if ( in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
+		$this->app->db->sql('
+			SELECT
+				p.`name`  AS `permission`,
+				pr.`name` AS `role`,
+				prx.`value`
+			FROM      `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux
+			LEFT JOIN `' . $this->app->db->prefix . 'perms_roles`            AS pr   ON prux.`role_id` = pr.`id`
+			LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id`
+			LEFT JOIN `' . $this->app->db->prefix . 'perms`                  AS p    ON prx.`perm_id`  = p.`id`
+			WHERE
+				 p.`name` IS NOT NULL AND
+				pr.`name` IS NOT NULL AND
+				prux.`user_id` = ' . ( int ) $this->app->session->get('user id') . '
+			', FALSE);
+
+		if ( $r = $this->app->db->result )
 		{
-			$this->app->db->sql('
-				SELECT
-					p.`name`  AS `permission`,
-					pr.`name` AS `role`,
-					prx.`value`
-				FROM      `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux
-				LEFT JOIN `' . $this->app->db->prefix . 'perms_roles`            AS pr   ON prux.`role_id` = pr.`id`
-				LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id`
-				LEFT JOIN `' . $this->app->db->prefix . 'perms`                  AS p    ON prx.`perm_id`  = p.`id`
-				WHERE
-					 p.`name` IS NOT NULL AND
-					pr.`name` IS NOT NULL AND
-					prux.`user_id` = ' . ( int ) $this->app->session->get('user id') . '
-				', FALSE);
+			$permissions = array();
 
-			if ( $r = $this->app->db->result )
+			foreach ( $r as $d )
 			{
-				$permissions = array();
-
-				foreach ( $r as $d )
+				if ( empty($permissions[$d['permission']]) || $permissions[$d['permission']] != -1 )
 				{
-					if ( empty($permissions[$d['permission']]) || $permissions[$d['permission']] != -1 )
-					{
-						$permissions[$d['permission']] = $d['value'];
-					}
-				}
-
-				foreach ( $permissions as $name => $value )
-				{
-					$this->app->session->put('permission ' . $name, ( $this->app->session->get('user id owner') or $value == 1 ) ? 1 : 0);
+					$permissions[$d['permission']] = $d['value'];
 				}
 			}
 
-			$this->ready = TRUE;
+			foreach ( $permissions as $name => $value )
+			{
+				$this->app->session->put('permission ' . $name, ( $this->app->session->get('user id owner') or $value == 1 ) ? 1 : 0);
+			}
 		}
 	}
 

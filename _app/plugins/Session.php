@@ -64,64 +64,56 @@ class Session_Plugin extends Plugin
 	 */
 	function init()
 	{
-		/**
-		 * Check if the sessions table exists
-		 */
-		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
+		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+		$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->view->absPath . $this->key);
+
+		if ( !empty($_COOKIE['sw_session']) && strstr($_COOKIE['sw_session'], ':') )
 		{
-			$this->ready = TRUE;
+			list($this->id, $this->key) = explode(':', $_COOKIE['sw_session']);
 
-			$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-
-			$this->hash = sha1($this->app->userIp . $userAgent . $_SERVER['SERVER_NAME'] . $this->view->absPath . $this->key);
-
-			if ( !empty($_COOKIE['sw_session']) && strstr($_COOKIE['sw_session'], ':') )
+			if ( !$this->key )
 			{
-				list($this->id, $this->key) = explode(':', $_COOKIE['sw_session']);
+				$this->key = sha1(uniqid(mt_rand(), TRUE));
+			}
 
-				if ( !$this->key )
-				{
-					$this->key = sha1(uniqid(mt_rand(), TRUE));
-				}
+			/**
+			 * Delete expired sessions
+			 */
+			$this->app->db->sql('
+				DELETE
+				FROM `' . $this->app->db->prefix . 'sessions`
+				WHERE
+					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
+				;');
 
-				/**
-				 * Delete expired sessions
-				 */
+			/**
+			 * Get session contents
+			 */
+			if ( $this->id )
+			{
 				$this->app->db->sql('
-					DELETE
+					SELECT
+						`contents`
 					FROM `' . $this->app->db->prefix . 'sessions`
 					WHERE
-						`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
-					;');
+						`id`   =  ' . $this->id   . ' AND
+						`hash` = "' . $this->hash . '"
+					LIMIT 1
+					;', FALSE);
 
-				/**
-				 * Get session contents
-				 */
-				if ( $this->id )
+				if ( $r = $this->app->db->result )
 				{
-					$this->app->db->sql('
-						SELECT
-							`contents`
-						FROM `' . $this->app->db->prefix . 'sessions`
-						WHERE
-							`id`   =  ' . $this->id   . ' AND
-							`hash` = "' . $this->hash . '"
-						LIMIT 1
-						;', FALSE);
+					$this->contents = unserialize($r[0]['contents']);
 
-					if ( $r = $this->app->db->result )
+					if ( !is_array($this->contents) )
 					{
-						$this->contents = unserialize($r[0]['contents']);
-
-						if ( !is_array($this->contents) )
-						{
-							$this->contents = array($this->contents);
-						}
+						$this->contents = array($this->contents);
 					}
-					else
-					{
-						$this->id = FALSE;
-					}
+				}
+				else
+				{
+					$this->id = FALSE;
 				}
 			}
 		}

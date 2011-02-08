@@ -51,15 +51,13 @@ class Installer_Controller extends Controller
 						$requiredBy[$dependency] = array();
 					}
 
-					$requiredBy[$dependency][$plugin] = !empty($this->app->{$dependency}->ready) && $this->app->{$plugin}->version ? 1 : 0;
+					$requiredBy[$dependency][$plugin] = !empty($this->app->{$dependency}->installed) && $this->app->{$plugin}->version ? 1 : 0;
 				}
 			}
 
 			foreach ( $this->app->plugins as $plugin )
 			{
-				$version = $this->app->{$plugin}->get_version();
-
-				if ( !$version )
+				if ( !$this->app->{$plugin}->installed )
 				{
 					if ( isset($this->app->{$plugin}->hooks['install']) )
 					{
@@ -67,7 +65,7 @@ class Installer_Controller extends Controller
 
 						foreach ( $this->app->{$plugin}->dependencies as $dependency )
 						{
-							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->ready) ? 1 : 0;
+							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->installed) ? 1 : 0;
 						}
 
 						$this->view->newPlugins[$plugin]                    = $this->app->{$plugin};
@@ -82,7 +80,7 @@ class Installer_Controller extends Controller
 
 						foreach ( $this->app->{$plugin}->dependencies as $dependency )
 						{
-							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->ready) ? 1 : 0;
+							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->installed) ? 1 : 0;
 						}
 
 						$this->view->outdatedPlugins[$plugin]                    = $this->app->{$plugin};
@@ -113,7 +111,7 @@ class Installer_Controller extends Controller
 		{
 			$this->view->error = $this->view->t('%1$s has no value in %2$s (required).', array('<code>sysPassword</code>', '<code>/_config.php</code>'));
 		}
-		elseif ( empty($this->app->db->ready) )
+		elseif ( !isset($this->app->db) )
 		{
 			$this->view->error = $this->view->t('No database connected (required). You may need to change the database settings in %1$s.', '<code>/_config.php</code>');
 		}

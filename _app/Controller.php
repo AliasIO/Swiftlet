@@ -45,24 +45,6 @@ class Controller
 		$this->path    = $this->view->path;
 		$this->request = $this->view->request;
 
-		if ( $this->dependencies )
-		{
-			$missing = array();
-
-			foreach ( $this->dependencies as $dependency )
-			{
-				if ( empty($app->{$dependency}->ready) )
-				{
-					$missing[] = $dependency;
-				}
-			}
-
-			if ( $missing )
-			{
-				$app->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
-			}
-		}
-
 		if ( !$this->standAlone )
 		{
 			$app->hook('header');

@@ -11,14 +11,14 @@ class Test_Plugin extends Plugin
 {
 	public
 		$version    = '1.0.0',
-		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$ready      = TRUE
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*')
 		;
 
 	/**
 	 * Make a POST request
 	 * @param string $url
 	 * @param array $params
+	 * @param bool $guest
 	 * @return array
 	 */
 	function post_request($url, &$params, $guest = FALSE)

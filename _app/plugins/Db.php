@@ -16,7 +16,7 @@ class Db_Plugin extends Plugin
 	public
 		$version    = '1.0.0',
 		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('clear_cache' => 1, 'init' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
+		$hooks      = array('clear_cache' => 1, 'init_force' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
 		;
 
 	public
@@ -84,9 +84,9 @@ class Db_Plugin extends Plugin
 	}
 
 	/*
-	 * Implement init hook
+	 * Implement init_force hook
 	 */
-	function init()
+	function init_force()
 	{
 		$this->connect($this->app->config['dbHost'], $this->app->config['dbUser'], $this->app->config['dbPass'], $this->app->config['dbName'], $this->app->config['dbPrefix']);
 	}
@@ -115,7 +115,7 @@ class Db_Plugin extends Plugin
 	 */
 	function clear_cache()
 	{
-		if ( $this->ready )
+		if ( $this->link )
 		{
 			$this->sql('
 				TRUNCATE TABLE `' . $this->prefix . 'cache_queries`
@@ -151,8 +151,6 @@ class Db_Plugin extends Plugin
 			{
 				mysql_select_db($name, $this->link)
 					or $this->app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
-
-				$this->ready = TRUE;
 
 				$this->sql('SHOW TABLES;');
 
@@ -192,9 +190,9 @@ class Db_Plugin extends Plugin
 	 */
 	function sql($sql, $cache = TRUE)
 	{
-		if ( !$this->ready )
+		if ( !$this->link )
 		{
-			$this->app->error(FALSE, 'No database connection (SQL: ' . $this->view->h($sql) . ')', __FILE__, __LINE__);
+			return;
 		}
 
 		$this->result = array();
@@ -443,11 +441,11 @@ class Db_Plugin extends Plugin
 	 */
 	function close()
 	{
-		if ( $this->ready )
+		if ( $this->link )
 		{
 			mysql_close($this->link);
 
-			$this->ready = FALSE;
+			$this->link = FALSE;
 		}
 	}
 
@@ -458,7 +456,7 @@ class Db_Plugin extends Plugin
 	 */
 	function escape($v)
 	{
-		if ( $this->ready )
+		if ( $this->link )
 		{
 			if ( is_array($v) )
 			{

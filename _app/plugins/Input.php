@@ -41,13 +41,11 @@ class Input_Plugin extends Plugin
 	 */
 	function init()
 	{
-		$this->ready = TRUE;
-
 		/**
 		 * Authenticity token to secure forms
 		 * @see http://en.wikipedia.org/wiki/Cross-site_request_forgery
 		 */
-		$this->authToken = sha1(( !empty($this->app->session->ready) ? $this->app->session->id : '' ) . phpversion() . $this->app->config['sysPassword'] . $this->app->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
+		$this->authToken = sha1(( isset($this->app->session) ? $this->app->session->id : '' ) . phpversion() . $this->app->config['sysPassword'] . $this->app->userIp . ( !empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '' ));
 
 		if ( ( !empty($_POST) && !isset($_POST['auth-token']) ) || ( isset($_POST['auth-token']) && $_POST['auth-token'] != $this->authToken ) )
 		{
@@ -60,8 +58,6 @@ class Input_Plugin extends Plugin
 		}
 
 		$this->input_sanitize();
-
-		$this->ready = TRUE;
 
 	}
 

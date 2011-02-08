@@ -25,16 +25,14 @@ class Cache_Plugin extends Plugin
 	 */
 	function init()
 	{
-		$this->ready = TRUE;
-
-		if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
+		if ( isset($this->app->session) && isset($this->app->user) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 		{
 			return;
 		}
 
 		if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) && empty($_POST) )
 		{
-			if ( $handle = @opendir('cache') )
+			if ( $handle = opendir('cache') )
 			{
 				while ( $filename = readdir($handle) )
 				{
@@ -80,50 +78,47 @@ class Cache_Plugin extends Plugin
 	 */
 	function cache(&$params)
 	{
-		if ( !empty($this->ready) )
+		if ( isset($this->app->session) && isset($this->app->user) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
 		{
-			if ( !empty($this->app->session->ready) && !empty($this->app->user->ready) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
-			{
-				return;
-			}
+			return;
+		}
 
-			if ( $headers = headers_list() )
+		if ( $headers = headers_list() )
+		{
+			foreach ( $headers as $header )
 			{
-				foreach ( $headers as $header )
+				if ( preg_match('/^Content\-type:/i', $header) )
 				{
-					if ( preg_match('/^Content\-type:/i', $header) )
-					{
-						return;
-					}
+					return;
 				}
 			}
+		}
 
-			if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) )
+		if ( $this->app->config['caching'] && empty($this->app->input->POST_raw) )
+		{
+			if ( !is_dir('cache') )
 			{
-				if ( !is_dir('cache') )
-				{
-					$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
-				}
-
-				if ( !is_writable('cache') )
-				{
-					$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
-				}
-
-				$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
-
-				if ( !$handle = fopen('cache/' . $filename, 'a+') )
-				{
-					$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
-				}
-
-				if ( fwrite($handle, $params['contents']) === FALSE )
-				{
-					$this->app->error(FALSE, 'Could not write to file "/cache/' . $filename . '".', __FILE__, __LINE__);
-				}
-
-				fclose($handle);
+				$this->app->error(FALSE, 'Directory "/cache" does not exist.', __FILE__, __LINE__);
 			}
+
+			if ( !is_writable('cache') )
+			{
+				$this->app->error(FALSE, 'Directory "/cache" is not writable.', __FILE__, __LINE__);
+			}
+
+			$filename = ( time() + $this->cacheLifeTime ) . '_' . sha1($_SERVER['REQUEST_URI']);
+
+			if ( !$handle = fopen('cache/' . $filename, 'a+') )
+			{
+				$this->app->error(FALSE, 'Could not open file "/cache/' . $filename . '".', __FILE__, __LINE__);
+			}
+
+			if ( fwrite($handle, $params['contents']) === FALSE )
+			{
+				$this->app->error(FALSE, 'Could not write to file "/cache/' . $filename . '".', __FILE__, __LINE__);
+			}
+
+			fclose($handle);
 		}
 	}
 

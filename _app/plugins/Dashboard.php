@@ -25,11 +25,8 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function install()
 	{
-		if ( !empty($this->app->permission->ready) )
-		{
-			$this->app->permission->create('Administration', 'admin dashboard access',          'Access to the dashboard');
-			$this->app->permission->create('Administration', 'admin dashboard overview access', 'See installation and configuration details');
-		}
+		$this->app->permission->create('Administration', 'admin dashboard access',          'Access to the dashboard');
+		$this->app->permission->create('Administration', 'admin dashboard overview access', 'See installation and configuration details');
 	}
 
 	/*
@@ -37,10 +34,7 @@ class Dashboard_Plugin extends Plugin
 	 */
 	function remove()
 	{
-		if ( !empty($this->app->permission->ready) )
-		{
-			$this->app->permission->delete('dashboard access');
-		}
+		$this->app->permission->delete('dashboard access');
 	}
 
 	/*

@@ -18,11 +18,11 @@ class Plugin
 		$file,
 		$class,
 		$description,
+		$installed    = FALSE,
 		$version,
 		$compatible   = array('from' => '', 'to' => ''),
 		$dependencies = array(),
-		$hooks        = array(),
-		$ready        = FALSE
+		$hooks        = array()
 		;
 
 	protected
@@ -65,6 +65,11 @@ class Plugin
 		{
 			$app->hook_register($name, $this->hooks);
 		}
+
+		if ( !isset($this->hooks['install']) )
+		{
+			$this->installed = $this->version;
+		}
 	}
 
 	/**
@@ -84,28 +89,5 @@ class Plugin
 			'plugin'         => $this->info['name'] . ' (' . $this->info['file'] . ')',
 			'execution time' => round(microtime(TRUE) - $timerStart, 3) . ' sec'
 			);
-	}
-
-	/**
-	 * Get version number of an installed plugin
-	 */
-	function get_version()
-	{
-		if ( !empty($this->app->db->ready) && in_array($this->app->db->prefix . 'versions', $this->app->db->tables) )
-		{
-			$this->app->db->sql('
-				SELECT
-					`version`
-				FROM `' . $this->app->db->prefix . 'versions`
-				WHERE
-					`plugin` = "' . $this->name . '"
-				LIMIT 1
-				;');
-
-			if ( isset($this->app->db->result[0]) && $r = $this->app->db->result[0] )
-			{
-				return $r['version'];
-			}
-		}
 	}
 }

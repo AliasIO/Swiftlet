@@ -14,9 +14,9 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 class Header_Plugin extends Plugin
 {
 	public
-		$version      = '1.0.0',
-		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks        = array('init' => 999, 'header' => 999)
+		$version    = '1.0.0',
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
+		$hooks      = array('init' => 999, 'header' => 999)
 		;
 
 	public
@@ -28,8 +28,6 @@ class Header_Plugin extends Plugin
 	 */
 	function init()
 	{
-		$this->ready = TRUE;
-
 		$this->app->hook('menu', $this->menu);
 
 		foreach ( $this->menu as $title => $path )
@@ -37,7 +35,7 @@ class Header_Plugin extends Plugin
 			// Check if the path is absolute
 			if ( !preg_match('/^[a-z]+:\/\//', $path) )
 			{
-				$this->menu[$title] = $this->view->route($path);;
+				$this->menu[$title] = $this->view->route($path);
 			}
 		}
 	}

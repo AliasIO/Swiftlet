@@ -13,7 +13,7 @@ class User_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db', 'session'),
-		$hooks        = array('dashboard' => 4, 'init' => 3, 'install' => 1, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1)
+		$hooks        = array('dashboard' => 4, 'init' => 3, 'install' => 3, 'menu' => 999, 'unit_tests' => 1, 'remove' => 1)
 		;
 
 	public
@@ -142,44 +142,36 @@ class User_Plugin extends Plugin
 	 */
 	function init()
 	{
-		/**
-		 * Check if the users table exists
-		 */
-		if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
 		{
-			$this->ready = TRUE;
+			$this->app->db->sql('
+				SELECT
+					*
+				FROM `' . $this->app->db->prefix . 'user_prefs' . '`
+				;');
 
-			if ( in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
+			if ( $r = $this->app->db->result )
 			{
-				$this->app->db->sql('
-					SELECT
-						*
-					FROM `' . $this->app->db->prefix . 'user_prefs' . '`
-					;');
-
-				if ( $r = $this->app->db->result )
+				foreach ( $r as $d )
 				{
-					foreach ( $r as $d )
-					{
-						$this->prefs[$d['pref']] = $d;
+					$this->prefs[$d['pref']] = $d;
 
-						$this->prefs[$d['pref']]['options'] = unserialize($d['options']);
-					}
+					$this->prefs[$d['pref']]['options'] = unserialize($d['options']);
 				}
 			}
+		}
 
-			$this->app->session->put('pref_values', $this->get_pref_values($this->app->session->get('user id')));
+		$this->app->session->put('pref_values', $this->get_pref_values($this->app->session->get('user id')));
 
-			/**
-			 * Guest user
-			 */
-			if ( $this->app->session->get('user id') === FALSE )
-			{
-				$this->app->session->put(array(
-					'user id'       => User_Plugin::GUEST_ID,
-					'user username' => User_Plugin::GUEST_ID
-					));
-			}
+		/**
+		 * Guest user
+		 */
+		if ( $this->app->session->get('user id') === FALSE )
+		{
+			$this->app->session->put(array(
+				'user id'       => User_Plugin::GUEST_ID,
+				'user username' => User_Plugin::GUEST_ID
+				));
 		}
 	}
 

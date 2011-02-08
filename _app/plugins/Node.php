@@ -13,7 +13,7 @@ class Node_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db'),
-		$hooks        = array('init' => 4, 'init_after' => 1, 'install' => 1, 'remove' => 1)
+		$hooks        = array('init_after' => 1, 'install' => 1, 'remove' => 1)
 		;
 
 	const
@@ -84,26 +84,12 @@ class Node_Plugin extends Plugin
 	}
 
 	/*
-	 * Implement init hook
-	 */
-	function init()
-	{
-		/**
-		 * Check if the nodes table exists
-		 */
-		if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
-		{
-			$this->ready = TRUE;
-		}
-	}
-
-	/*
 	 * Implement init_after hook
 	 * See if there is a node associated with the current path
 	 */
 	function init_after()
 	{
-		if ( !empty($this->ready) && $this->view->request )
+		if ( $this->view->request )
 		{
 			$this->app->db->sql('
 				SELECT
@@ -184,12 +170,12 @@ class Node_Plugin extends Plugin
 					`date_edit`
 					)
 				VALUES (
-					 ' . ( ( int ) $parentNode['left_id'] + 1 )              . ',
-					 ' . ( ( int ) $parentNode['left_id'] + 2 )              . ',
-					"' . $this->app->db->escape($type)                       . '",
+					 ' . ( ( int ) $parentNode['left_id'] + 1 )         . ',
+					 ' . ( ( int ) $parentNode['left_id'] + 2 )         . ',
+					"' . $this->app->db->escape($type)                  . '",
 					"' . $this->app->db->escape($this->view->h($title)) . '",
-					"' . gmdate('Y-m-d H:i:s')                               . '",
-					"' . gmdate('Y-m-d H:i:s')                               . '"
+					"' . gmdate('Y-m-d H:i:s')                          . '",
+					"' . gmdate('Y-m-d H:i:s')                          . '"
 					)
 				;');
 
@@ -430,7 +416,7 @@ class Node_Plugin extends Plugin
 				WHERE
 					`id` = ' . ( int ) $id . ' OR (
 						`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
-						' . ( $type ? 'AND `type` = "' . $this->app->db->escape($type) . '"' : '' ) . '
+						' . ( $type ? 'AND `type` = "' . $this->app->db->escape($type) . '"' : '' )           . '
 						)
 				ORDER BY `left_id` ASC
 				;');

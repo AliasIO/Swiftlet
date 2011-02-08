@@ -14,9 +14,9 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 class Language_Plugin extends Plugin
 {
 	public
-		$version      = '1.0.0',
-		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks        = array('init' => 5, 'translate' => 1)
+		$version    = '1.0.0',
+		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
+		$hooks      = array('init' => 5, 'translate' => 1)
 		;
 
 	public
@@ -33,11 +33,9 @@ class Language_Plugin extends Plugin
 	 */
 	function init()
 	{
-		$this->ready = TRUE;
-
 		$this->check_languages();
 
-		if ( !empty($this->app->session->ready) )
+		if ( !empty($this->app->session->installed) )
 		{
 			if ( $d = $this->app->session->get('pref_values') )
 			{
@@ -56,19 +54,19 @@ class Language_Plugin extends Plugin
 	 */
 	function check_languages()
 	{
-		if ( !empty($this->app->user->ready) )
+		if ( !empty($this->app->user->installed) )
 		{
 			$this->languages = array('English US' => 'English US');
 
-			if ( is_dir($dir = 'lang/') )
+			if ( is_dir($dirname = 'lang/') )
 			{
-				if ( $handle = opendir($dir) )
+				if ( $handle = opendir($dirname) )
 				{
-					while ( ( $file = readdir($handle) ) !== FALSE )
+					while ( ( $filename = readdir($handle) ) !== FALSE )
 					{
-						if ( is_dir($dir . $file) && substr($file, 0, 1) != '.' )
+						if ( is_dir($dirname . $filename) && substr($filename, 0, 1) != '.' )
 						{
-							$this->languages[$file] = $file;
+							$this->languages[$filename] = $filename;
 						}
 					}
 
@@ -101,15 +99,15 @@ class Language_Plugin extends Plugin
 
 		if ( $this->language )
 		{
-			if ( is_dir($dir = 'lang/' . $this->language . '/') )
+			if ( is_dir($dirname = 'lang/' . $this->language . '/') )
 			{
-				if ( $handle = opendir($dir) )
+				if ( $handle = opendir($dirname) )
 				{
-					while ( ( $file = readdir($handle) ) !== FALSE )
+					while ( ( $filename = readdir($handle) ) !== FALSE )
 					{
-						if ( is_file($dir . $file) && substr($file, -4) == '.php' )
+						if ( is_file($dirname . $filename) && substr($filename, -4) == '.php' )
 						{
-							require($dir . $file);
+							require($dirname . $filename);
 
 							if ( !empty($translation) && is_array($translation) )
 							{

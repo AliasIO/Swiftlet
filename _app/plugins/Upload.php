@@ -17,7 +17,7 @@ class Upload_Plugin extends Plugin
 		$version      = '1.0.0',
 		$compatible   = array('from' => '1.3.0', 'to' => '1.3.*'),
 		$dependencies = array('db', 'permission'),
-		$hooks        = array('dashboard' => 2, 'init' => 5, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
+		$hooks        = array('dashboard' => 2, 'install' => 1, 'remove' => 1, 'unit_tests' => 1)
 		;
 
 	public
@@ -50,12 +50,9 @@ class Upload_Plugin extends Plugin
 				;');
 		}
 
-		if ( !empty($this->app->permission->ready) )
-		{
-			$this->app->permission->create('Uploads', 'admin upload access', 'Manage files');
-			$this->app->permission->create('Uploads', 'admin upload upload', 'Upload files');
-			$this->app->permission->create('Uploads', 'admin upload delete', 'Delete files');
-		}
+		$this->app->permission->create('Uploads', 'admin upload access', 'Manage files');
+		$this->app->permission->create('Uploads', 'admin upload upload', 'Upload files');
+		$this->app->permission->create('Uploads', 'admin upload delete', 'Delete files');
 	}
 
 	/*
@@ -70,26 +67,9 @@ class Upload_Plugin extends Plugin
 				;');
 		}
 
-		if ( !empty($this->app->permission->ready) )
-		{
-			$this->app->permission->delete('admin upload access');
-			$this->app->permission->delete('admin upload upload');
-			$this->app->permission->delete('admin upload delete');
-		}
-	}
-
-	/*
-	 * Implement init hook
-	 */
-	function init()
-	{
-		/**
-		 * Check if the uploads table exists
-		 */
-		if ( in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
-		{
-			$this->ready = TRUE;
-		}
+		$this->app->permission->delete('admin upload access');
+		$this->app->permission->delete('admin upload upload');
+		$this->app->permission->delete('admin upload delete');
 	}
 
 	/*

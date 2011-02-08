@@ -23,6 +23,7 @@ class Application
 		$consoleMessages = array(),
 		$controller,
 		$debugOutput     = array(),
+		$dependencies    = array(),
 		$plugins         = array(),
 		$userIp          = '',
 		$view
@@ -74,55 +75,95 @@ class Application
 		 */
 		if ( $handle = opendir('_app/plugins') )
 		{
-			while ( ( $file = readdir($handle) ) !== FALSE )
+			while ( ( $filename = readdir($handle) ) !== FALSE )
 			{
-				if ( is_file('_app/plugins/' . $file) && preg_match('/.php$/', $file) )
-				{
-					if ( preg_match('/^[A-Z][A-Za-z0-9_]*\.php$/', $file) )
-					{
-						require('_app/plugins/' . $file);
-
-						$plugin      = basename($file, '.php');
-						$pluginClass = $plugin . '_Plugin';
-
-						$plugin = strtolower($plugin);
-
-						if ( class_exists($pluginClass) )
-						{
-							$this->{$plugin} = new $pluginClass($this, $plugin, $file, $pluginClass);
-						}
-						else
-						{
-							$this->error(FALSE, 'Class `' . $pluginClass . '` missing from file `/_app/plugins/' . $this->view->h($file) . '`.');
-						}
-
-						$this->plugins[$plugin] = $plugin;
-					}
-					else
-					{
-						$this->error(FALSE, 'Invalid plugin filename name `' . $this->view->h($file) . '`.');
-					}
-				}
+				$this->load_plugin(strtolower(basename($filename, '.php')));
 			}
 
 			closedir($handle);
 		}
 
+		$this->hook('init_force');
+
 		$this->hook('init');
 
 		$this->hook('init_after');
 
+		if ( isset($this->db) && in_array($this->db->prefix . 'versions', $this->db->tables) )
+		{
+			$this->db->sql('
+				SELECT
+					`plugin`,
+					`version`
+				FROM `' . $this->db->prefix . 'versions`
+				;');
+
+			if ( $r = $this->db->result )
+			{
+				foreach ( $r as $d )
+				{
+					if ( isset($this->{$d['plugin']}) )
+					{
+						$this->{$d['plugin']}->installed = $d['version'];
+					}
+				}
+			}
+		}
+
+		/*
+		 * Controller
+		 */
 		require('_controllers/' . $this->view->controller . '.php');
 
-		$controllerClass = basename($this->view->controller) . '_Controller';
+		$className = basename($this->view->controller) . '_Controller';
 
-		if ( class_exists($controllerClass) )
+		if ( class_exists($className) )
 		{
-			$this->controller = new $controllerClass($this);
+			$this->controller = new $className($this);
+
+			if ( !empty($this->controller->dependencies) )
+			{
+				$this->dependencies = array_merge($this->dependencies, $this->controller->dependencies);
+			}
 		}
 		else
 		{
-			$this->error(FALSE, 'Class `' . $controllerClass . '` missing from file `/_controllers/' . $this->view->h($this->view->controller) . '.php`.');
+			$this->error(FALSE, 'Class `' . $className . '` missing from file `/_controllers/' . $this->view->h($this->view->controller) . '.php`.');
+		}
+
+		/*
+		 * Load dependencies on demand
+		 */
+		if ( !empty($this->dependencies) )
+		{
+			$missing = array();
+
+			while ( $this->dependencies )
+			{
+				foreach ( $this->dependencies as $i => $plugin )
+				{
+					if ( !isset($this->{$plugin}) )
+					{
+						if ( !$this->load_plugin($plugin, TRUE) )
+						{
+							$missing[] = $plugin;
+						}
+					}
+
+					unset($this->dependencies[$i]);
+				}
+			}
+
+			/*
+			 * Check if any of the controller's dependencies are still missing
+			 */
+			if ( !empty($this->controller->dependencies) )
+			{
+				if ( $missing = array_intersect($this->controller->dependencies, $missing) )
+				{
+					$this->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
+				}
+			}
 		}
 
 		$this->controller->init();
@@ -131,8 +172,46 @@ class Application
 	}
 
 	/**
+	 * Load a plugin
+	 * @param string $plugin
+	 * @param bool $onDemand
+	 */
+	private function load_plugin($plugin, $onDemand = FALSE)
+	{
+		$file = '_app/plugins/' . ( $onDemand ? 'on_demand/' : '' ) . str_replace(' ', '_', ucwords(str_replace('_', ' ', $plugin))) . '.php';
+
+		if ( is_file($file) )
+		{
+			require($file);
+
+			$className = basename($file, '.php') . '_Plugin';
+
+			if ( class_exists($className) )
+			{
+				$this->{$plugin} = new $className($this, $plugin, basename($file), $className);
+
+				if ( !empty($this->{$plugin}->dependencies) )
+				{
+					$this->dependencies = array_merge($this->dependencies, $this->{$plugin}->dependencies);
+				}
+			}
+			else
+			{
+				$this->error(FALSE, 'Class `' . $className . '` missing from file `' . $this->view->h($file) . '`.');
+			}
+
+			$this->plugins[$plugin] = $plugin;
+
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
 	 * Hook a plugin
-	 * @param string plugin
+	 * @param string $plugin
+	 * @param array $params
 	 */
 	function hook($hook, &$params = array())
 	{
@@ -143,7 +222,7 @@ class Application
 			/**
 			 * Hook plugins in order
 			 */
-			usort($this->hooksRegistered[$hook], array($this, 'hook_sort'));
+			usort($this->hooksRegistered[$hook], function($a, $b) { return $a['order'] == $b['order'] ? 0 : $a['order'] > $b['order'] ? 1 : -1; });
 
 			foreach ( $this->hooksRegistered[$hook] as $plugin )
 			{
@@ -154,7 +233,7 @@ class Application
 				{
 					foreach ( $this->{$plugin['name']}->dependencies as $dependency )
 					{
-						if ( empty($this->{$dependency}->ready) )
+						if ( !isset($this->{$dependency}) )
 						{
 							$missing[] = $dependency;
 						}
@@ -163,22 +242,25 @@ class Application
 
 				if ( !$missing )
 				{
-					$timerStart = microtime(TRUE);
-
-					if ( !method_exists(get_class($this->{$plugin['name']}), $hook) )
+					if ( $hook == 'install' || $hook == 'init_force' || $this->{$plugin['name']}->installed )
 					{
-						$this->error(FALSE, 'The plugin `' . $plugin['name'] . '` has no hook `' . $hook . '`.');
+						$timerStart = microtime(TRUE);
+
+						if ( !method_exists(get_class($this->{$plugin['name']}), $hook) )
+						{
+							$this->error(FALSE, 'The plugin `' . $plugin['name'] . '` has no hook `' . $hook . '`.');
+						}
+
+						$this->{$plugin['name']}->{$hook}($params);
+
+						$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
+
+						$this->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
+							'order'          => $plugin['order'],
+							'plugin'         => $plugin['name'],
+							'execution time' => round(microtime(TRUE) - $this->timerStart, 3) . ' sec'
+							);
 					}
-
-					$this->{$plugin['name']}->{$hook}($params);
-
-					$this->pluginsHooked[$plugin['name']][$hook] = TRUE;
-
-					$this->debugOutput['plugins hooked']['hook: ' . $hook][] = array(
-						'order'          => $plugin['order'],
-						'plugin'         => $plugin['name'],
-						'execution time' => round(microtime(TRUE) - $this->timerStart, 3) . ' sec'
-						);
 				}
 				else
 				{
@@ -200,17 +282,6 @@ class Application
 	}
 
 	/**
-	 * Sort plugins by order of inclusion
-	 * @param array $a
-	 * @param array $b
-	 * @return int
-	 */
-	private function hook_sort($a, $b)
-	{
-		return ( $a['order'] == $b['order'] ) ? 0 : $a['order'] > $b['order'] ? 1 : -1;
-	}
-
-	/**
 	 * Register a hook
 	 * @param string $name
 	 * @param array $hooks
@@ -221,28 +292,6 @@ class Application
 		foreach ( $hooks as $hook => $order )
 		{
 			$this->hooksRegistered[$hook][] = array('name' => $pluginName, 'order' => $order);
-		}
-	}
-
-	/**
-	 * Check to see if required plugins are ready
-	 * @param array $dependencies
-	 */
-	function check_dependencies($dependencies)
-	{
-		$missing = array();
-
-		foreach ( $dependencies as $dependency )
-		{
-			if ( empty($this->{$dependency}->ready ) )
-			{
-				$missing[] = $dependency;
-			}
-		}
-
-		if ( $missing )
-		{
-			$this->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
 		}
 	}
 
