@@ -26,7 +26,6 @@ class Example_Plugin extends Plugin
 
 	function init()
 	{
-		$this->ready = TRUE;
 	}
 }
 ?>
@@ -138,7 +137,7 @@ class Example_Plugin extends Plugin
 <p>
 	Because this plugin requires a database, the <em>db</em> plugin should be declared as a dependency. This
 	ensures the plugin will not be installed unless the <a href="../plugins/mysql">Database</a> plugin is
-	installed and ready.
+	installed.
 </p>
 
 <h3>See also</h3>

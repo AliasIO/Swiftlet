@@ -45,6 +45,27 @@ class Controller
 		$this->path    = $this->view->path;
 		$this->request = $this->view->request;
 
+		/*
+		 * Check dependencies
+		 */
+		if ( !empty($this->dependencies) )
+		{
+			$missing = array();
+
+			foreach ( $this->dependencies as $i => $plugin )
+			{
+				if ( !isset($this->{$plugin}->installed) )
+				{
+					$missing[] = $plugin;
+				}
+			}
+
+			if ( $missing )
+			{
+				$this->app->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
+			}
+		}
+
 		if ( !$this->standAlone )
 		{
 			$app->hook('header');

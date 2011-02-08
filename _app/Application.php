@@ -23,7 +23,6 @@ class Application
 		$consoleMessages = array(),
 		$controller,
 		$debugOutput     = array(),
-		$dependencies    = array(),
 		$plugins         = array(),
 		$userIp          = '',
 		$view
@@ -77,7 +76,25 @@ class Application
 		{
 			while ( ( $filename = readdir($handle) ) !== FALSE )
 			{
-				$this->load_plugin(strtolower(basename($filename, '.php')));
+				if ( is_file('_app/plugins/' . $filename) && preg_match('/^[A-Z][A-Za-z0-9_]*\.php$/', $filename) )
+				{
+					require('_app/plugins/' . $filename);
+
+					$plugin = strtolower(basename($filename, '.php'));
+
+					$className = basename($filename, '.php') . '_Plugin';
+
+					if ( class_exists($className) )
+					{
+						$this->{$plugin} = new $className($this, $plugin, $filename, $className);
+					}
+					else
+					{
+						$this->error(FALSE, 'Class `' . $className . '` missing from file `/_app/plugins/' . $this->view->h($filename) . '`.');
+					}
+
+					$this->plugins[$plugin] = $plugin;
+				}
 			}
 
 			closedir($handle);
@@ -120,92 +137,15 @@ class Application
 		if ( class_exists($className) )
 		{
 			$this->controller = new $className($this);
-
-			if ( !empty($this->controller->dependencies) )
-			{
-				$this->dependencies = array_merge($this->dependencies, $this->controller->dependencies);
-			}
 		}
 		else
 		{
 			$this->error(FALSE, 'Class `' . $className . '` missing from file `/_controllers/' . $this->view->h($this->view->controller) . '.php`.');
 		}
 
-		/*
-		 * Load dependencies on demand
-		 */
-		if ( !empty($this->dependencies) )
-		{
-			$missing = array();
-
-			while ( $this->dependencies )
-			{
-				foreach ( $this->dependencies as $i => $plugin )
-				{
-					if ( !isset($this->{$plugin}) )
-					{
-						if ( !$this->load_plugin($plugin, TRUE) )
-						{
-							$missing[] = $plugin;
-						}
-					}
-
-					unset($this->dependencies[$i]);
-				}
-			}
-
-			/*
-			 * Check if any of the controller's dependencies are still missing
-			 */
-			if ( !empty($this->controller->dependencies) )
-			{
-				if ( $missing = array_intersect($this->controller->dependencies, $missing) )
-				{
-					$this->error(FALSE, 'Plugins required for this page: `' . implode('`, `', $missing) . '`.', __FILE__, __LINE__);
-				}
-			}
-		}
-
 		$this->controller->init();
 
 		$this->end();
-	}
-
-	/**
-	 * Load a plugin
-	 * @param string $plugin
-	 * @param bool $onDemand
-	 */
-	private function load_plugin($plugin, $onDemand = FALSE)
-	{
-		$file = '_app/plugins/' . ( $onDemand ? 'on_demand/' : '' ) . str_replace(' ', '_', ucwords(str_replace('_', ' ', $plugin))) . '.php';
-
-		if ( is_file($file) )
-		{
-			require($file);
-
-			$className = basename($file, '.php') . '_Plugin';
-
-			if ( class_exists($className) )
-			{
-				$this->{$plugin} = new $className($this, $plugin, basename($file), $className);
-
-				if ( !empty($this->{$plugin}->dependencies) )
-				{
-					$this->dependencies = array_merge($this->dependencies, $this->{$plugin}->dependencies);
-				}
-			}
-			else
-			{
-				$this->error(FALSE, 'Class `' . $className . '` missing from file `' . $this->view->h($file) . '`.');
-			}
-
-			$this->plugins[$plugin] = $plugin;
-
-			return TRUE;
-		}
-
-		return FALSE;
 	}
 
 	/**
