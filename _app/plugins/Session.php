@@ -231,10 +231,10 @@ class Session_Plugin extends Plugin
 					;');
 			}
 
-			$host   = !empty($_SERVER['SERVER_NAME'])                         ? $_SERVER['SERVER_NAME'] : '';
 			$secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? TRUE                    : FALSE;
 
-			setcookie('sw_session', $this->id . ':' . $this->key, time() + $sessionLifeTime, $this->view->absPath, $host, $secure, TRUE);
+			// Using FALSE for hostname, $_SERVER['SERVER_NAME'] doesn't work on WAMP
+			setcookie('sw_session', $this->id . ':' . $this->key, time() + $sessionLifeTime, $this->view->absPath, FALSE, $secure, TRUE);
 		}
 	}
 }
