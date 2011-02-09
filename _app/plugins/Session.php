@@ -43,7 +43,7 @@ class Session_Plugin extends Plugin
 					`date_expire` DATETIME             NOT NULL,
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 	}

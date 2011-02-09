@@ -48,7 +48,7 @@ class Node_Plugin extends Plugin
 					INDEX `home`     (`home`),
 					INDEX `path`     (`path`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 
 			$this->app->db->sql('

@@ -38,7 +38,7 @@ class Permission_Plugin extends Plugin
 					`group` VARCHAR(255)     NOT NULL,
 					UNIQUE `name` (`name`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 
 			$this->app->db->sql('
@@ -76,7 +76,7 @@ class Permission_Plugin extends Plugin
 					`name` VARCHAR(255)     NOT NULL,
 					UNIQUE `name` (`name`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 
 			$this->app->db->sql('
@@ -97,7 +97,7 @@ class Permission_Plugin extends Plugin
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`value`   INT(1)               NULL,
 					UNIQUE `perm_user` (`perm_id`, `role_id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 
@@ -108,7 +108,7 @@ class Permission_Plugin extends Plugin
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`user_id` INT(10) UNSIGNED NOT NULL,
 					UNIQUE `role_user` (`role_id`, `user_id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 	}

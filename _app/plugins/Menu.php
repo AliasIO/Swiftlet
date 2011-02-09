@@ -26,7 +26,7 @@ class Menu_Plugin extends Plugin
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'menu` (
 					`items` TEXT NULL
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 
 			$this->app->db->sql('

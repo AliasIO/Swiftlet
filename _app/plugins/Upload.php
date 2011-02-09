@@ -46,7 +46,7 @@ class Upload_Plugin extends Plugin
 					`date_edit` DATETIME              NOT NULL,
 					INDEX `image` (`image`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 

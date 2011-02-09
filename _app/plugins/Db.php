@@ -44,7 +44,7 @@ class Db_Plugin extends Plugin
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `hash` (`hash`),
 					INDEX `date_expire` (`date_expire`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 
@@ -58,7 +58,7 @@ class Db_Plugin extends Plugin
 					PRIMARY KEY (`id`),
 					INDEX `query_id` (`query_id`),
 					INDEX `table`    (`table`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 	}

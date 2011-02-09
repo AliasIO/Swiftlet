@@ -153,7 +153,7 @@ class Installer_Controller extends Controller
 											`version` VARCHAR(10)      NOT NULL,
 											PRIMARY KEY (`id`),
 											UNIQUE `plugin` (`plugin`)
-											) TYPE = INNODB
+											) ENGINE = INNODB
 										;');
 								}
 

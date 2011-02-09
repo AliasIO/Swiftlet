@@ -36,7 +36,7 @@ class Page_Plugin extends Plugin
 					INDEX  `published` (`published`),
 					UNIQUE `node_lang` (`node_id`, `lang`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 
@@ -51,7 +51,7 @@ class Page_Plugin extends Plugin
 					`date`      DATETIME            NOT NULL,
 					INDEX `page_id` (`page_id`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 

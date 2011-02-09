@@ -43,7 +43,7 @@ class User_Plugin extends Plugin
 					`pass_hash`          VARCHAR(60)         NOT NULL,
 					UNIQUE `username` (`username`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 
 			$passHash = $this->make_pass_hash('Admin', $this->app->config['sysPassword']);
@@ -79,7 +79,7 @@ class User_Plugin extends Plugin
 					`options` TEXT                 NULL,
 					UNIQUE `pref` (`pref`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 
@@ -93,7 +93,7 @@ class User_Plugin extends Plugin
 					`value`   VARCHAR(255)     NOT NULL,
 					UNIQUE `user_pref_id` (`user_id`, `pref_id`),
 					PRIMARY KEY (`id`)
-					) TYPE = INNODB
+					) ENGINE = INNODB
 				;');
 		}
 
