@@ -219,8 +219,7 @@ a:hover {
 	#content dt {
 		display: block;
 		float: left;
-		margin-right: 1em;
-		width: 180px;
+		width: 160px;
 	}
 
 	#content dd {

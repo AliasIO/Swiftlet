@@ -43,11 +43,9 @@ if ( !isset($this) ) die('Direct access to this file is not allowed');
 		{
 			foreach ( $this->app->plugins as $plugin )
 			{
-				$version = $this->app->$plugin->get_version();
-
-				if ( !$version )
+				if ( !$this->app->$plugin->installed )
 				{
-					if ( isset($this->app->$plugin->info['hooks']['install']) )
+					if ( isset($this->app->$plugin->hooks['install']) )
 					{
 						$newPlugins ++;
 					}

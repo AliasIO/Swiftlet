@@ -149,7 +149,7 @@ class Installer_Controller extends Controller
 									$this->app->db->sql('
 										CREATE TABLE `' . $this->app->db->prefix . 'versions` (
 											`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-											`plugin`  VARCHAR(256)     NOT NULL,
+											`plugin`  VARCHAR(255)     NOT NULL,
 											`version` VARCHAR(10)      NOT NULL,
 											PRIMARY KEY (`id`),
 											UNIQUE `plugin` (`plugin`)

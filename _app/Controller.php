@@ -54,7 +54,7 @@ class Controller
 
 			foreach ( $this->dependencies as $i => $plugin )
 			{
-				if ( !isset($this->{$plugin}->installed) )
+				if ( !isset($this->app->{$plugin}->installed) )
 				{
 					$missing[] = $plugin;
 				}

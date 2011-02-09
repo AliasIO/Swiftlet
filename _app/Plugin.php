@@ -61,14 +61,14 @@ class Plugin
 			$app->error(FALSE, 'Plugin `' . $name . '` is designed for ' . ( $this->compatible['from'] == $this->compatible['to'] ? 'version ' . $this->info['compatible']['from'] : 'versions ' . $compatible['from'] . ' to ' . $compatible['to'] ) . ' of Swiftlet (running version ' . Application::VERSION . ')', __FILE__, __LINE__);
 		}
 
-		if ( $this->hooks )
-		{
-			$app->hook_register($name, $this->hooks);
-		}
-
 		if ( !isset($this->hooks['install']) )
 		{
 			$this->installed = $this->version;
+		}
+
+		if ( $this->hooks )
+		{
+			$app->hook_register($name, $this->hooks);
 		}
 	}
 

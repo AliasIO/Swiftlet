@@ -16,7 +16,7 @@ class Db_Plugin extends Plugin
 	public
 		$version    = '1.0.0',
 		$compatible = array('from' => '1.3.0', 'to' => '1.3.*'),
-		$hooks      = array('clear_cache' => 1, 'init_force' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
+		$hooks      = array('clear_cache' => 1, 'init_before' => 1, 'install' => 1, 'input_sanitize' => 1, 'end' => 999, 'remove' => 1)
 		;
 
 	public
@@ -86,7 +86,7 @@ class Db_Plugin extends Plugin
 	/*
 	 * Implement init_force hook
 	 */
-	function init_force()
+	function init_before()
 	{
 		$this->connect($this->app->config['dbHost'], $this->app->config['dbUser'], $this->app->config['dbPass'], $this->app->config['dbName'], $this->app->config['dbPrefix']);
 	}

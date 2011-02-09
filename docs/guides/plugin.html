@@ -100,7 +100,7 @@ class Example_Plugin extends Plugin
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'example` (
 					`id`  INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`foo` VARCHAR(256)     NOT NULL,
+					`foo` VARCHAR(255)     NOT NULL,
 					PRIMARY KEY (`id`)
 					)
 				;');

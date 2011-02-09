@@ -100,11 +100,7 @@ class Application
 			closedir($handle);
 		}
 
-		$this->hook('init_force');
-
-		$this->hook('init');
-
-		$this->hook('init_after');
+		$this->hook('init_before');
 
 		if ( isset($this->db) && in_array($this->db->prefix . 'versions', $this->db->tables) )
 		{
@@ -126,6 +122,10 @@ class Application
 				}
 			}
 		}
+
+		$this->hook('init');
+
+		$this->hook('init_after');
 
 		/*
 		 * Controller
@@ -182,7 +182,7 @@ class Application
 
 				if ( !$missing )
 				{
-					if ( $hook == 'install' || $hook == 'init_force' || $this->{$plugin['name']}->installed )
+					if ( $hook == 'install' || $hook == 'init_before' || $this->{$plugin['name']}->installed )
 					{
 						$timerStart = microtime(TRUE);
 
