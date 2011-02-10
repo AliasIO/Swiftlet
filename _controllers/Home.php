@@ -84,7 +84,7 @@ class Home_Controller extends Controller
 					'%1$s Plugin(s) require installation (go to %2$s).',
 					array(
 						$newPlugins,
-						'<a href="' . $this->view->rootPath . 'installer"><code>/installer</code></a>'
+						'<a href="' . $this->view->route('installer') . '"><code>/installer</code></a>'
 						)
 					);
 			}

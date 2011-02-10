@@ -32,12 +32,10 @@ class Permission_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'perms` (
-					`id`    INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`name`  VARCHAR(255)     NOT NULL,
+					`id`    INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`name`  VARCHAR(255)     NOT NULL UNIQUE,
 					`desc`  VARCHAR(255)     NOT NULL,
-					`group` VARCHAR(255)     NOT NULL,
-					UNIQUE `name` (`name`),
-					PRIMARY KEY (`id`)
+					`group` VARCHAR(255)     NOT NULL
 					) ENGINE = INNODB
 				;');
 
@@ -72,10 +70,8 @@ class Permission_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'perms_roles` (
-					`id`   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`name` VARCHAR(255)     NOT NULL,
-					UNIQUE `name` (`name`),
-					PRIMARY KEY (`id`)
+					`id`   INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`name` VARCHAR(255)     NOT NULL UNIQUE
 					) ENGINE = INNODB
 				;');
 
@@ -96,7 +92,8 @@ class Permission_Plugin extends Plugin
 					`perm_id` INT(10) UNSIGNED NOT NULL,
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`value`   INT(1)               NULL,
-					UNIQUE `perm_user` (`perm_id`, `role_id`)
+					FOREIGN KEY (`perm_id`) REFERENCES `' . $this->app->db->prefix . 'perms`       (`id`) ON DELETE CASCADE,
+					FOREIGN KEY (`role_id`) REFERENCES `' . $this->app->db->prefix . 'perms_roles` (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
 				;');
 		}
@@ -107,7 +104,8 @@ class Permission_Plugin extends Plugin
 				CREATE TABLE `' . $this->app->db->prefix . 'perms_roles_users_xref` (
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`user_id` INT(10) UNSIGNED NOT NULL,
-					UNIQUE `role_user` (`role_id`, `user_id`)
+					FOREIGN KEY (`role_id`) REFERENCES `' . $this->app->db->prefix . 'perms_roles` (`id`) ON DELETE CASCADE,
+					FOREIGN KEY (`user_id`) REFERENCES `' . $this->app->db->prefix . 'users`       (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
 				;');
 		}

@@ -33,7 +33,7 @@ class Node_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'nodes` (
-					`id`        INT(10)      UNSIGNED NOT NULL AUTO_INCREMENT,
+					`id`        INT(10)      UNSIGNED NOT NULL PRIMARY kEY AUTO_INCREMENT,
 					`left_id`   INT(10)      UNSIGNED NOT NULL,
 					`right_id`  INT(10)      UNSIGNED NOT NULL,
 					`type`      VARCHAR(255)          NOT NULL,
@@ -46,8 +46,7 @@ class Node_Plugin extends Plugin
 					INDEX `right_id` (`right_id`),
 					INDEX `type`     (`type`),
 					INDEX `home`     (`home`),
-					INDEX `path`     (`path`),
-					PRIMARY KEY (`id`)
+					INDEX `path`     (`path`)
 					) ENGINE = INNODB
 				;');
 

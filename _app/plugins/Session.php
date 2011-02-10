@@ -36,13 +36,11 @@ class Session_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'sessions` (
-					`id`          INT(10)     UNSIGNED NOT NULL AUTO_INCREMENT,
-					`hash`        VARCHAR(40)          NOT NULL,
+					`id`          INT(10)     UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`hash`        VARCHAR(40)          NOT NULL UNIQUE,
 					`contents`    TEXT                     NULL,
 					`date`        DATETIME             NOT NULL,
-					`date_expire` DATETIME             NOT NULL,
-					PRIMARY KEY (`id`),
-					UNIQUE KEY `hash` (`hash`)
+					`date_expire` DATETIME             NOT NULL
 					) ENGINE = INNODB
 				;');
 		}

@@ -33,16 +33,14 @@ class User_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'users` (
-					`id`                 INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
-					`username`           VARCHAR(255)        NOT NULL,
+					`id`                 INT(10)    UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`username`           VARCHAR(255)        NOT NULL UNIQUE,
 					`email`              VARCHAR(255)            NULL,
 					`owner`              TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
 					`date`               DATETIME            NOT NULL,
 					`date_edit`          DATETIME            NOT NULL,
 					`date_login_attempt` DATETIME NOT            NULL,
-					`pass_hash`          VARCHAR(60)         NOT NULL,
-					UNIQUE `username` (`username`),
-					PRIMARY KEY (`id`)
+					`pass_hash`          VARCHAR(60)         NOT NULL
 					) ENGINE = INNODB
 				;');
 
@@ -72,13 +70,11 @@ class User_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'user_prefs` (
-					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`pref`    VARCHAR(255)     NOT NULL,
+					`id`      INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`pref`    VARCHAR(255)     NOT NULL UNIQUE,
 					`type`    VARCHAR(255)     NOT NULL,
 					`match`   VARCHAR(255)     NOT NULL,
-					`options` TEXT                 NULL,
-					UNIQUE `pref` (`pref`),
-					PRIMARY KEY (`id`)
+					`options` TEXT                 NULL
 					) ENGINE = INNODB
 				;');
 		}
@@ -87,12 +83,12 @@ class User_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'user_prefs_xref` (
-					`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`user_id` INT(10)          NOT NULL,
-					`pref_id` INT(10)          NOT NULL,
+					`id`      INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`user_id` INT(10) UNSIGNED NOT NULL,
+					`pref_id` INT(10) UNSIGNED NOT NULL,
 					`value`   VARCHAR(255)     NOT NULL,
-					UNIQUE `user_pref_id` (`user_id`, `pref_id`),
-					PRIMARY KEY (`id`)
+					FOREIGN KEY (`user_id`) REFERENCES `' . $this->app->db->prefix . 'users`      (`id`) ON DELETE CASCADE,
+					FOREIGN KEY (`pref_id`) REFERENCES `' . $this->app->db->prefix . 'user_prefs` (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
 				;');
 		}

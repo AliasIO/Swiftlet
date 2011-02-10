@@ -50,6 +50,10 @@
 		<!-- /* <![CDATA[ */
 		// Focus the username field
 		$('#username').focus();
+
+		<?php if ( isset($this->app->input->GET_raw['notice']) && $this->app->input->GET_raw['notice'] == 'login' ): ?>
+		$('#form-login').fadeTo('slow', 0);
+		<?php endif ?>
 		/* ]]> */ -->
 	</script>
 </div>

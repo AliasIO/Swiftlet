@@ -36,14 +36,12 @@ class Db_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'cache_queries` (
-					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-					`hash`        VARCHAR(40)      NOT NULL,
+					`id`          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`hash`        VARCHAR(40)      NOT NULL UNIQUE,
 					`results`     TEXT             NOT NULL,
 					`date`        DATETIME         NOT NULL,
 					`date_expire` DATETIME         NOT NULL,
-					PRIMARY KEY (`id`),
-					UNIQUE KEY `hash` (`hash`),
-					INDEX `date_expire` (`date_expire`)
+					INDEX (`date`)
 					) ENGINE = INNODB
 				;');
 		}
@@ -52,12 +50,11 @@ class Db_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'cache_tables` (
-					`id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					`id`          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`query_id`    INT(10) UNSIGNED NOT NULL,
 					`table`       VARCHAR(255)     NOT NULL,
-					PRIMARY KEY (`id`),
-					INDEX `query_id` (`query_id`),
-					INDEX `table`    (`table`)
+					INDEX (`table`),
+					FOREIGN KEY (`query_id`) REFERENCES `' . $this->app->db->prefix . 'cache_queries` (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
 				;');
 		}

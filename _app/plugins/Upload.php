@@ -33,7 +33,7 @@ class Upload_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE `' . $this->app->db->prefix . 'uploads` (
-					`id`        INT(10)      UNSIGNED NOT NULL AUTO_INCREMENT,
+					`id`        INT(10)      UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`title`     VARCHAR(255)          NOT NULL,
 					`extension` VARCHAR(255)              NULL,
 					`image`     TINYINT(1)   UNSIGNED NOT NULL DEFAULT 0,
@@ -44,8 +44,7 @@ class Upload_Plugin extends Plugin
 					`size`      INT(10)      UNSIGNED     NULL,
 					`date`      DATETIME              NOT NULL,
 					`date_edit` DATETIME              NOT NULL,
-					INDEX `image` (`image`),
-					PRIMARY KEY (`id`)
+					INDEX (`image`)
 					) ENGINE = INNODB
 				;');
 		}
