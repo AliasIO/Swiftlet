@@ -62,11 +62,11 @@ class View
 					$this->args = array_slice($args, $i, count($args));
 				}
 
-				$file = ltrim(implode('/', array_slice($args, 0, $i - 1)) . '/' . ucfirst($args[$i - 1]), '/');
+				$filename = ltrim(implode('/', array_slice($args, 0, $i - 1)) . '/' . ucfirst($args[$i - 1]), '/');
 
-				if ( is_file('_controllers/' . $file . '.php') )
+				if ( is_file('_controllers/' . $filename . '.php') )
 				{
-					$this->controller = $file;
+					$this->controller = $filename;
 					$this->path       = implode('/', array_slice($args, 0, $i));
 
 					break;

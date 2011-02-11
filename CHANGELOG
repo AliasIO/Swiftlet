@@ -1,6 +1,8 @@
 # 1.3.0.B1 - 1.3.0.B2
 #
+# No longer handling 404 errors for binary files
 # Plugin installer recursively installs dependencies automatically
+# Hide login form after logging in
 #
 #
 # 1.2.0.RC1 - 1.3.0.B1

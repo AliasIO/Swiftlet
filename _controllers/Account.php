@@ -48,7 +48,7 @@ class Account_Controller extends Controller
 			'owner'                => 'bool'
 			) + $prefsValidate);
 
-		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
+		if ( !$this->app->session->id )
 		{
 			header('Location: ' . $this->view->route('login?ref=' . $this->request, FALSE));
 
@@ -127,7 +127,7 @@ class Account_Controller extends Controller
 					$this->app->input->errors['new_password'] = $this->view->t('Please provide a password');
 				}
 			}
-			else if ( !$this->app->session->get('user is owner') && $app->session->get('user id') == $this->id || !$this->id )
+			else if ( !$this->app->session->get('user is owner') && $this->app->session->get('user id') == $this->id || !$this->id )
 			{
 				if ( !$this->app->user->validate_password($this->app->session->get('user username'), $this->app->input->POST_raw['password']) )
 				{

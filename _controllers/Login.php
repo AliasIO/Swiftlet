@@ -29,6 +29,8 @@ class Login_Controller extends Controller
 
 		if ( $this->action == 'logout' )
 		{
+			$this->pageTitle = 'Log out';
+
 			if ( !$this->app->input->POST_valid['confirm'] )
 			{
 				$this->app->input->confirm($this->view->t('Do you want to log out?'));
@@ -109,7 +111,7 @@ class Login_Controller extends Controller
 			$this->view->notice = $this->view->t('Please log in with an authenticated account.');
 		}
 
-		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
+		if ( !$this->app->session->id )
 		{
 			$this->app->db->sql('
 				SELECT
@@ -132,14 +134,14 @@ class Login_Controller extends Controller
 			switch ( $this->app->input->GET_raw['notice'] )
 			{
 				case 'login':
-					if ( $this->app->session->get('user id') != User_Plugin::GUEST_ID )
+					if ( $this->app->session->id )
 					{
 						$this->view->notice = $this->view->t('Hello %1$s, you are now logged in.', $this->app->session->get('user username'));
 					}
 
 					break;
 				case 'logout':
-					if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
+					if ( !$this->app->session->id )
 					{
 						$this->view->notice = $this->view->t('You are now logged out.');
 					}

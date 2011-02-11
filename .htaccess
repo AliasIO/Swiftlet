@@ -2,8 +2,9 @@ Options All -Indexes
 
 <IfModule mod_rewrite.c>
 	RewriteEngine on
+	RewriteCond %{REQUEST_URI} !\.(bmp|cgi|css|flv|gif|ico|jpe?g|js|png|swf|xml)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{query_string} (.*)
+	RewriteCond %{QUERY_STRING} (.*)
 	RewriteRule (.*) ?q=$1&%1 [L]
 </IfModule>

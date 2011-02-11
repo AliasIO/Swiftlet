@@ -25,7 +25,7 @@ class Cache_Plugin extends Plugin
 	 */
 	function init()
 	{
-		if ( isset($this->app->session) && isset($this->app->user) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
+		if ( !empty($this->app->session->id) )
 		{
 			return;
 		}
@@ -78,7 +78,7 @@ class Cache_Plugin extends Plugin
 	 */
 	function cache(&$params)
 	{
-		if ( isset($this->app->session) && isset($this->app->user) && $this->app->session->get('user id') != User_Plugin::GUEST_ID )
+		if ( !empty($this->app->session->id) )
 		{
 			return;
 		}

@@ -9,14 +9,14 @@
 
 <pre>
 <?php
-if ( $this->app->session->get('user id') != User::GUEST_ID )
+if ( $this->app->session->id )
 {
 	// User is logged in
 }
 
 if ( $this->app->session->get('user is owner') )
 {
-	// User is the website owner
+	// User has website owner privileges
 }
 ?>
 </pre>
@@ -104,15 +104,5 @@ $this->app->user->save_pref(array(
 	<li>
 		<code>get_pref_values ( <em>int</em> $userId )</code><br/>
 		Gets a user's preferences.
-	</li>
-</ul>
-
-<h4>Constants</h4>
-
-<ul>
-	<li>
-		<code>GUEST_ID</code><br/>
-		Reserved user ID for all guest users (users who are not logged in). This can be used to test if a user is logged in or not
-		(e.g. <code>if ( $this-&gt;app->session->get('user id') != User::GUEST_ID )</code>).
 	</li>
 </ul>

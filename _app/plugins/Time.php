@@ -182,7 +182,7 @@ class Time_Plugin extends Plugin
 		{
 			if ( $d = $this->app->session->get('pref_values') )
 			{
-				if ( isset($d['Time zone']) )
+				if ( !empty($d['Time zone']) )
 				{
 					$this->timeZone = $d['Time zone'];
 				}

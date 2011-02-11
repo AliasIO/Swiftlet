@@ -45,7 +45,8 @@ switch ( $this->action )
 
 <p>
 	If the <a href="../plugins/input">Input</a> plugin is installed these arguments can be accessed through
-	the <code>$this-&gt;app-&gt;input-&gt;args</code> variable.
+	the <code>$this-&gt;app-&gt;input-&gt;args</code> variable. Alternatively <code>$this-&gt;view-&gt;args</code> can
+	be used (routes are handled by the <a href="./view">View</a> class).
 </p>
 
 <p>
@@ -60,14 +61,34 @@ switch ( $this->action )
 	In this example <em>page</em> is not treated as an argument and <code>/_controllers/admin/Page.php</code> is loaded.
 </p>
 
-<h3>Generating URLs</h3>
+<h3>Generating routes</h3>
 
 <p>
-	<code>$this->route('admin/dashboard')</code>
+	Routes look different depending on <a href="../guides/config">configuration</a>. When URL rewrites are
+	disabled all requests are routed directly through <code>/index.php</code> using a GET parameter:
 </p>
 
 <p>
-	TODO
+	<code>?q=/account/edit/3</code>
+</p>
+
+<p>
+	To ensure the right format is used the <code>$this-&gt;view-&gt;route()</code> function (or <code>$this-&gt;route()</code>
+	within views) should be used to generate the route.
+</p>
+
+<p>
+	<code>$this->view->route('admin/dashboard')</code>
+</p>
+
+<p>
+	To create a route that points to the current page with or without arguments, use <code>$this->view->path</code> or
+	<code>$this->view->request</code> respectively:
+</p>
+
+<p>
+	<code>$this->view->route($this->view->path)</code><br/>
+	<code>$this->view->route($this->view->request)</code>
 </p>
 
 <h3>See also</h3>

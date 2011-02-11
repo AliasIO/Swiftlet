@@ -11,7 +11,7 @@
 
 <p>
 	Each plugin is a class that extends the 'Plugin' class (described below). An instance of the class is automatically created when
-	a plugin is loaded and can be access through the <a href="./Application">Application</a> (e.g. <code>$this->app->plugin_name</code>).
+	a plugin is loaded and can be access through the <a href="./Application">Application</a> (e.g. <code>$this-&gt;app-&gt;{plugin_name}</code>).
 </p>
 
 <p>
@@ -32,21 +32,47 @@
 		<code>hook ( <em>string</em> $hook, <em>int</em> $order [ , <em>array</em> $params ] )</code><br/>
 		Hook a plugin into the code.
 	</li>
+</ul>
+
+<h4>Public variables</h4>
+
+<ul>
 	<li>
-		<code>install ( )</code><br/>
-		Install a plugin (call the 'install' hook).
+		<code>$class</code><br/>
+		The name of the plugin class.
 	</li>
 	<li>
-		<code>upgrade ( )</code><br/>
-		Upgrade a plugin (call the 'upgrade' hook).
+		<code>$compatible</code><br/>
+		The lowest and highest version numbers of Swiftlet that this plugin is compatible with. A wildcard character (*)
+		may be used to specify multiple versions.
 	</li>
 	<li>
-		<code>remove ( )</code><br/>
-		Remove a plugin (call the 'remove' hook).
+		<code>$dependencies</code><br/>
+		An array containing the names of plugins that are required for the plugin to work.
 	</li>
 	<li>
-		<code>get_version ( )</code><br/>
-		Get version number of a plugin.
+		<code>$file</code><br/>
+		The filename of the plugin.
+	</li>
+	<li>
+		<code>$hooks</code><br/>
+		List of <a href="../concepts/hook">hooks</a> the plugin utilizes and the order in which they should be executed.
+	</li>
+	<li>
+		<code>$installed</code><br/>
+		The installed version number of the plugin, or <code>FALSE</code> if the plugin is not installed.
+	</li>
+	<li>
+		<code>$name</code><br/>
+		The name of the plugin.
+	</li>
+	<li>
+		<code>$upgradable</code><br/>
+		List of plugin version numbers that are upgradable to the current version.
+	</li>
+	<li>
+		<code>$version</code><br/>
+		Version number of the plugin.
 	</li>
 </ul>
 

@@ -17,7 +17,7 @@ class Session_Plugin extends Plugin
 		;
 
 	public
-		$id,
+		$id              = FALSE,
 		$sessionLifeTime = 3600,
 		$contents        = array()
 		;

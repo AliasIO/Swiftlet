@@ -14,15 +14,16 @@ if ( !isset($swiftlet) ) die('Direct access to this file is not allowed');
 class Plugin
 {
 	public
-		$name,
-		$file,
 		$class,
-		$description,
-		$installed    = FALSE,
-		$version,
 		$compatible   = array('from' => '', 'to' => ''),
 		$dependencies = array(),
-		$hooks        = array()
+		$description,
+		$file,
+		$hooks        = array(),
+		$installed    = FALSE,
+		$name,
+		$upgradable   = array('from' => '', 'to' => ''),
+		$version
 		;
 
 	protected

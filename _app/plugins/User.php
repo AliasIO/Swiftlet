@@ -20,10 +20,6 @@ class User_Plugin extends Plugin
 		$prefs = array()
 		;
 
-	const
-		GUEST_ID = 0
-		;
-
 	/*
 	 * Implement install hook
 	 */
@@ -122,7 +118,7 @@ class User_Plugin extends Plugin
 	 */
 	function menu(&$params)
 	{
-		if ( $this->app->session->get('user id') == User_Plugin::GUEST_ID )
+		if ( !$this->app->session->id )
 		{
 			$params['Log in'] = 'login';
 		}
@@ -158,17 +154,6 @@ class User_Plugin extends Plugin
 		}
 
 		$this->app->session->put('pref_values', $this->get_pref_values($this->app->session->get('user id')));
-
-		/**
-		 * Guest user
-		 */
-		if ( $this->app->session->get('user id') === FALSE )
-		{
-			$this->app->session->put(array(
-				'user id'       => User_Plugin::GUEST_ID,
-				'user username' => User_Plugin::GUEST_ID
-				));
-		}
 	}
 
 	/*
@@ -195,7 +180,7 @@ class User_Plugin extends Plugin
 	{
 		$username = $this->view->h($username);
 
-		if ( $this->app->session->get('user id') !== FALSE )
+		if ( !$this->app->session->id )
 		{
 			$this->app->db->sql('
 				UPDATE `' . $this->app->db->prefix . 'users` SET
