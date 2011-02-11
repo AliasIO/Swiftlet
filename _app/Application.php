@@ -456,7 +456,7 @@ class Application
 			echo '
 						<p>
 							<br/>
-							Please contact us at <a href="mailto:' . $this->view->h($this->config['adminEmail']) . '">' . $this->view->h($this->config['adminEmail']) . '</a>.
+							Please contact us at <a href="mailto:' . $this->config['adminEmail'] . '">' . $this->config['adminEmail'] . '</a>.
 						</p>
 				';
 		}

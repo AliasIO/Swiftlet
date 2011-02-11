@@ -5,7 +5,8 @@
 	<head>
 		<title><?php echo $this->siteName . ( $this->pageTitle ? ' - ' : '' ) . $this->t($this->pageTitle) ?></title>
 
-		<link type="text/css"  rel="stylesheet"    href="<?php echo $this->route('css/global.css/grid.css') ?>"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $this->viewPath ?>global.css"/>
+		<link type="text/css"  rel="stylesheet"    href="<?php echo $this->viewPath ?>grid.css"  />
 
 		<link type="image/png" rel="shortcut icon" href="<?php echo $this->rootPath ?>favicon.ico"/>
 

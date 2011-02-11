@@ -1,17 +1,3 @@
-@variables {
-	form-background-color: #f8f8f8;
-	form-border-color: #ccc;
-	input-background-color: #fff;
-	input-focus-background-color: #ffc;
-	input-border-color: #999;
-	link-color: #05a2c7;
-	heading-border-color: #ddd;
-	page-background-color: #fff;
-	content-background-color: #fff;
-	text-color: #2e2d2b;
-	spacing: 25px;
-}
-
 /* Normalize */
 
 * {
@@ -37,8 +23,8 @@ html {
 }
 
 body {
-	background: var(page-background-color);
-	color: var(text-color);
+	background: #fff;
+	color: #2e2d2b;
 	font-family: Verdana, Arial;
 	font-size: 13px;
 	line-height: 20px;
@@ -61,7 +47,7 @@ pre, code {
 }
 
 a:link, a:hover, a:active, a:visited {
-	color: var(link-color);
+	color: #05a2c7;
 	outline: none;
 	text-decoration: underline;
 }
@@ -78,13 +64,13 @@ a:hover {
 }
 
 #menu {
-	background: var(link-color);
+	background: #05a2c7;
 	border-bottom: 1px solid rgba(0, 0, 0, .2);
 	border-radius: 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-top: 1px solid rgba(255, 255, 255, .2);
-	color: var(content-background-color);
+	color: #fff;
 	font-size: 11px;
 	line-height: 20px;
 	overflow: hidden;
@@ -121,7 +107,7 @@ a:hover {
 	}
 
 	#menu a:link, #menu a:hover, #menu a:active, #menu a:visited {
-		color: var(content-background-color);
+		color: #fff;
 		float: left;
 		padding: 0 1em;
 		text-decoration: none;
@@ -147,18 +133,18 @@ a:hover {
 	}
 
 #page {
-	background: var(content-background-color);
+	background: #fff;
 	margin: 0 auto;
 	text-align: left;
 	width: 960px;
 }
 
 #content {
-	padding: var(spacing) 0 0 0;
+	padding: 25px 0 0 0;
 }
 
 	#content p {
-		margin-bottom: var(spacing);
+		margin-bottom: 25px;
 	}
 
 	#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
@@ -192,7 +178,7 @@ a:hover {
 	}
 
 	#content ul, #content ol {
-		margin-bottom: var(spacing);
+		margin-bottom: 25px;
 	}
 
 		#content ul ul, #content ol ol, #content ul ol, #content ol ul {
@@ -213,7 +199,7 @@ a:hover {
 
 	#content dl {
 		clear: both;
-		margin-bottom: var(spacing);
+		margin-bottom: 25px;
 	}
 
 	#content dt {
@@ -246,13 +232,13 @@ a:hover {
 		}
 
 		#content .message code {
-			color: var(text-color);
+			color: #2e2d2b;
 		}
 
 	#content .separator {
-		border-top: 1px solid var(form-border-color);
+		border-top: 1px solid #ccc;
 		height: 1px;
-		margin-bottom: var(spacing);
+		margin-bottom: 25px;
 		overflow: hidden;
 	}
 
@@ -280,16 +266,16 @@ a:hover {
 	/* Documentation */
 
 	#content .syntax {
-		background: var(form-background-color);
+		background: #f8f8f8;
 		font-family: monospace;
-		margin-bottom: var(spacing);
+		margin-bottom: 25px;
 		overflow-x: auto;
 		width: 100%;
 		white-space: nowrap;
 	}
 
 		#content .syntax .gutter {
-			border-right: 1px solid var(form-border-color);
+			border-right: 1px solid #ccc;
 			float: left;
 			padding: .5em;
 			margin-right: .5em;
@@ -313,20 +299,20 @@ a:hover {
 /* Table elements */
 
 table {
-	border-color: var(form-border-color);
+	border-color: #ccc;
 	border-style: solid;
 	border-width: 1px 0 0 1px;
-	margin-bottom: var(spacing);
+	margin-bottom: 25px;
 	text-align: left;
 	width: 100%;
 }
 
 thead {
-	background: var(form-background-color);
+	background: #f8f8f8;
 }
 
 th, td {
-	border-color: var(form-border-color);
+	border-color: #ccc;
 	border-style: solid;
 	border-width: 0 1px 1px 0;
 	padding: .5em;
@@ -343,7 +329,7 @@ td {
 /* Form elements */
 
 form {
-	margin-bottom: var(spacing);
+	margin-bottom: 25px;
 }
 
 	form.hide {
@@ -393,11 +379,11 @@ form {
 	}
 
 fieldset {
-	background: var(form-background-color);
+	background: #f8f8f8;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	border: 1px solid var(form-border-color);
+	border: 1px solid #ccc;
 	margin-bottom: -1px;
 	padding: .5em .5em 1em .5em;
 }
@@ -411,9 +397,9 @@ input, textarea, select, button {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	background: var(input-background-color);
-	border: 1px solid var(input-border-color);
-	color: var(text-color);
+	background: #fff;
+	border: 1px solid #999;
+	color: #2e2d2b;
 	margin-right: .5em;
 	padding: .2em .2em .3em .2em;
 }
@@ -430,7 +416,7 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 input:focus, textarea:focus, select:focus {
-	background: var(input-focus-background-color);
+	background: #ffc;
 }
 
 textarea.large {
@@ -443,12 +429,12 @@ textarea.code {
 }
 
 button, button:focus, input[type="submit"], input[type="submit"]:focus {
-	background: var(text-color);
-	background-image: -moz-linear-gradient(top, var(text-color), #000);
-	background-image: -webkit-gradient(linear, left top, left bottom, from(var(text-color)), to(#000));
+	background: #2e2d2b;
+	background-image: -moz-linear-gradient(top, #2e2d2b, #000);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#2e2d2b), to(#000));
 	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#ff2e2d2b,endColorstr=#ff000000);
-	border-color: var(text-color);
-	color: var(content-background-color);
+	border-color: #2e2d2b;
+	color: #fff;
 	font-size: 11px;
 	padding: .4em 2em .5em 2em;
 	text-transform: uppercase;
@@ -461,15 +447,15 @@ button:hover, input[type="submit"]:hover {
 }
 
 a:link.button, a:hover.button, a:active.button, a:visited.button {
-	background: var(form-background-color);
-	background-image: -moz-linear-gradient(top, var(content-background-color), var(form-background-color));
-	background-image: -webkit-gradient(linear, left top, left bottom, from(var(content-background-color)), to(var(form-background-color)));
+	background: #f8f8f8;
+	background-image: -moz-linear-gradient(top, #fff, #f8f8f8);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f8f8f8));
 	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr=#ffffffff,endColorstr=#fff8f8F8);
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	border: 1px solid var(form-border-color);
-	color: var(text-color);
+	border: 1px solid #ccc;
+	color: #2e2d2b;
 	display: inline-block;
 	font-size: 11px;
 	line-height: 25px;
@@ -483,11 +469,11 @@ a:link.button, a:hover.button, a:active.button, a:visited.button {
 }
 
 a:hover.button {
-	border: 1px solid var(text-color);
+	border: 1px solid #2e2d2b;
 }
 
 	a.button.caution {
-		color: var(form-border-color);
+		color: #ccc;
 	}
 
 	a:hover.button.caution {

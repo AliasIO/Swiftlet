@@ -5,6 +5,5 @@ Options All -Indexes
 	RewriteCond %{REQUEST_URI} !\.(bmp|cgi|css|flv|gif|ico|jpe?g|js|png|swf|xml)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{QUERY_STRING} (.*)
-	RewriteRule (.*) ?q=$1&%1 [L]
+	RewriteRule (.*) ?q=$1&%1 [L,QSA]
 </IfModule>
