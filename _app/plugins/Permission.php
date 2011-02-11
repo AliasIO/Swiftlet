@@ -116,14 +116,9 @@ class Permission_Plugin extends Plugin
 	 */
 	function remove()
 	{
-		if ( in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'perms_roles_users_xref', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms`;');
-		}
-
-		if ( in_array($this->app->db->prefix . 'perms_roles', $this->app->db->tables) )
-		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles_users_xref`;');
 		}
 
 		if ( in_array($this->app->db->prefix . 'perms_roles_xref', $this->app->db->tables) )
@@ -131,9 +126,14 @@ class Permission_Plugin extends Plugin
 			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles_xref`;');
 		}
 
-		if ( in_array($this->app->db->prefix . 'perms_roles_users_xref', $this->app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'perms_roles', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles_users_xref`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles`;');
+		}
+
+		if ( in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
+		{
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms`;');
 		}
 	}
 

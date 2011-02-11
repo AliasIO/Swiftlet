@@ -100,9 +100,9 @@ class User_Plugin extends Plugin
 	 */
 	function remove()
 	{
-		if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'user_prefs_xref', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'users`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'user_prefs_xref`;');
 		}
 
 		if ( in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
@@ -110,9 +110,9 @@ class User_Plugin extends Plugin
 			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'user_prefs`;');
 		}
 
-		if ( in_array($this->app->db->prefix . 'user_prefs_xref', $this->app->db->tables) )
+		if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'user_prefs_xref`;');
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'users`;');
 		}
 	}
 

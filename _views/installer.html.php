@@ -13,7 +13,7 @@
 
 	<?php if ( $this->authenticated ): ?>
 	<p>
-		<?php echo $this->t('Select the plugins you wish to install, upgrade or remove. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
+		<?php echo $this->t('Select the plugins you wish to install, upgrade or uninstall. The system password is stored in %1$s.', '<code>/_config.php</code>') ?>
 	</p>
 
 	<h2><?php echo $this->t('Install') ?></h2>
@@ -25,21 +25,25 @@
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
-						<?php echo $plugin ?> (<?php echo $v->file ?>)
+						<?php echo $plugin ?>
 						<em>v<?php echo $v->version     ?></em>
 						<em><?php  echo $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
-					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v->dependency_status) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !$this->app->{$plugin}->dependencyStatus['missing'] ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
-					<?php if ( $v->dependency_status ): ?>
+					<?php if ( $this->app->{$plugin}->dependencyStatus['missing'] ): ?>
+					<em class="installer-warning">
+						<?php echo $this->t('Missing dependencies') ?>:
+
+						<?php echo implode(', ', $this->app->{$plugin}->dependencyStatus['missing']) ?>
+					</em>
+					<?php elseif ( $this->app->{$plugin}->dependencyStatus['installable'] ): ?>
 					<em>
-						<?php echo $this->t('Depends on') ?>:
+						<?php echo $this->t('Also enable') ?>:
 
-						<?php foreach ( $v->dependency_status as $dependency => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $this->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $this->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
-						<?php endforeach ?>
+						<?php echo implode(', ', $this->app->{$plugin}->dependencyStatus['installable']) ?>
 					</em>
 					<?php endif ?>
 				</dd>
@@ -91,26 +95,24 @@
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
-						<?php echo $plugin ?> (<?php echo $v->file ?>)
+						<?php echo $plugin ?>
 						<em>v<?php echo $v->version     ?></em>
 						<em><?php  echo $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
 					<?php if ( $v->upgradable ): ?>
-					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(0, $v->dependency_status) ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
-					<?php else: ?>
-					<em class="dependency-fail"><?php echo $this->t('Unable to upgrade from currently installed version.') ?></em>
-					<?php endif ?>
+					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !$this->app->{$plugin}->dependencyStatus['missing'] ? ' checked="checked"' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
-					<?php if ( $v->dependency_status ): ?>
+					<?php if ( $this->app->{$plugin}->dependencyStatus['missing'] ): ?>
 					<em>
-						<?php echo $this->t('Depends on') ?>:
+						<?php echo $this->t('Missing dependencies') ?>:
 
-						<?php foreach ( $v->dependency_status as $dependency => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $this->t('Active') . '">' . $dependency . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $this->t('Not active') . '">' . $dependency . ' &#10008;</span>' ) . '&nbsp;' ?>
-						<?php endforeach ?>
+						<span class="installer-warning"><?php echo implode(', ', $this->app->{$plugin}->dependencyStatus['missing']) ?></span>
 					</em>
+					<?php endif ?>
+					<?php else: ?>
+					<em class="installer-warning"><?php echo $this->t('Unable to upgrade from currently installed version.') ?></em>
 					<?php endif ?>
 				</dd>
 			</dl>
@@ -145,34 +147,32 @@
 	</p>
 	<?php endif ?>
 
-	<h2><?php echo $this->t('Remove') ?></h2>
+	<h2><?php echo $this->t('Uninstall') ?></h2>
 
 	<?php if ( $this->installedPlugins ): ?>
 	<p>
-		<?php echo $this->t('Removing a plugin will also %1$spermanently remove all data%2$s associated with it. Backup your database first!', array('<em>', '</em>')) ?>
+		<?php echo $this->t('Uninstalling a plugin will also %1$spermanently remove all data%2$s associated with it. Backup your database first!', array('<em>', '</em>')) ?>
 	</p>
 
-	<form id="form-remove" method="post" action="">
+	<form id="form-uninstall" method="post" action="">
 		<fieldset>
 			<?php foreach ( $this->installedPlugins as $plugin => $v ): ?>
 			<dl>
 				<dt>
 					<label for="plugin_<?php echo $plugin ?>">
-						<?php echo $plugin ?> (<?php echo $v->file ?>)
+						<?php echo $plugin ?>
 						<em>v<?php echo $v->version     ?></em>
 						<em><?php echo  $v->description ?></em>
 					</label>
 				</dt>
 				<dd>
-					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !in_array(1, $v->required_by_status) ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
+					<input type="checkbox" name="plugin[<?php echo $plugin ?>]" id="plugin_<?php echo $plugin ?>"<?php echo ( !$this->app->{$plugin}->dependencyStatus['required by'] ? '' : ' disabled="disabled" style="visibility: hidden"' ) ?>/>
 
-					<?php if ( $v->required_by_status ): ?>
-					<em>
+					<?php if ( $this->app->{$plugin}->dependencyStatus['required by'] ): ?>
+					<em class="installer-warning">
 						<?php echo $this->t('Required by') ?>:
 
-						<?php foreach ( $v->required_by_status as $requiredBy => $ready ): ?>
-						<?php echo ( $ready ? '<span class="dependency-ok" title="' . $this->t('Active') . '">' . $requiredBy . ' &#10004;</span>' : '<span class="dependency-fail" title="' . $this->t('Not active') . '">' . $requiredBy . ' &#10008;</span>' ) . '&nbsp;' ?>
-						<?php endforeach ?>
+						<?php echo implode(', ', $this->app->{$plugin}->dependencyStatus['required by']) ?>
 					</em>
 					<?php endif ?>
 				</dd>
@@ -197,14 +197,14 @@
 
 					<input type="hidden" name="auth-token" value="<?php echo $app->input->authToken ?>"/>
 
-					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Remove') ?>"/>
+					<input type="submit" name="form-submit" id="form-submit" value="<?php echo $this->t('Uninstall') ?>"/>
 				</dd>
 			</dl>
 		</fieldset>
 	</form>
 	<?php else: ?>
 	<p>
-		<em><?php echo $this->t('There are no plugins to be removed.') ?></em>
+		<em><?php echo $this->t('There are no plugins to be uninstalled.') ?></em>
 	</p>
 	<?php endif ?>
 

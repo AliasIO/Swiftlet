@@ -11,6 +11,7 @@
 	<p class="message notice"><?php echo $this->notice ?></p>
 	<?php endif ?>
 
+	<?php if ( !isset($this->app->input->GET_raw['notice']) || $this->app->input->GET_raw['notice'] != 'login' ): ?>
 	<form id="form-login" method="post" action="<?php echo $this->route($this->request . ( !empty($app->input->GET_raw['ref']) ? '?ref=' . rawurlencode($app->input->GET_raw['ref']) : '' )) ?>">
 		<fieldset>
 			<dl>
@@ -30,7 +31,7 @@
 			<dl>
 				<dt><label for="remember"><?php echo $this->t('Stay logged in') ?></label></dt>
 				<dd>
-					<input type="checkbox" name="remember" id="remember" value="1"<?php echo $app->input->POST_html_safe['remember'] ? ' checked="checked"' : '' ?>"/>
+					<input type="checkbox" name="remember" id="remember" value="1"<?php echo $app->input->POST_html_safe['remember'] ? ' checked="checked"' : '' ?>/>
 				</dd>
 			</dl>
 		</fieldset>
@@ -50,10 +51,7 @@
 		<!-- /* <![CDATA[ */
 		// Focus the username field
 		$('#username').focus();
-
-		<?php if ( isset($this->app->input->GET_raw['notice']) && $this->app->input->GET_raw['notice'] == 'login' ): ?>
-		$('#form-login').fadeTo('slow', 0);
-		<?php endif ?>
 		/* ]]> */ -->
 	</script>
+	<?php endif ?>
 </div>

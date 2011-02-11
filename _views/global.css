@@ -522,10 +522,6 @@ form tbody {
 
 /* Installer */
 
-.dependency-ok {
-	color: #090;
-}
-
-.dependency-fail {
+.installer-warning {
 	color: #c00;
 }

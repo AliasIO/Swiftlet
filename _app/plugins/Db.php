@@ -65,18 +65,18 @@ class Db_Plugin extends Plugin
 	 */
 	function remove()
 	{
-		if ( in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
-		{
-			unset($this->app->db->tables[$this->app->db->prefix . 'cache_queries']);
-
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_queries`;');
-		}
-
 		if ( in_array($this->app->db->prefix . 'cache_tables', $this->app->db->tables) )
 		{
 			unset($this->app->db->tables[$this->app->db->prefix . 'cache_tables']);
 
 			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_tables`;');
+		}
+
+		if ( in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
+		{
+			unset($this->app->db->tables[$this->app->db->prefix . 'cache_queries']);
+
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_queries`;');
 		}
 	}
 

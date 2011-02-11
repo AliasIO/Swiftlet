@@ -34,78 +34,65 @@ class Installer_Controller extends Controller
 
 		$authenticated = isset($_SESSION['swiftlet authenticated']);
 
-		$this->view->newPlugins       = array();
-		$this->view->outdatedPlugins  = array();
-		$this->view->installedPlugins = array();
+		$this->newPlugins       = array();
+		$this->outdatedPlugins  = array();
+		$this->installedPlugins = array();
 
-		if ( isset($this->app->db) )
+		$requiredBy = array();
+
+		foreach ( $this->app->plugins as $plugin )
 		{
-			$requiredBy = array();
-
-			foreach ( $this->app->plugins as $plugin )
+			if ( $this->app->{$plugin}->installed )
 			{
-				foreach ( $this->app->{$plugin}->dependencies as $dependency )
+				// Removable
+				if ( isset($this->app->{$plugin}->hooks['remove']) )
 				{
-					if ( !isset($requiredBy[$dependency]) )
-					{
-						$requiredBy[$dependency] = array();
-					}
+					$this->installedPlugins[$plugin] = $this->app->{$plugin};
+				}
 
-					$requiredBy[$dependency][$plugin] = !empty($this->app->{$dependency}->installed) && $this->app->{$plugin}->version ? 1 : 0;
+				// Upgradable
+				if ( isset($this->app->{$plugin}->hooks['upgrade']) && version_compare($this->app->{$plugin}->version, $this->app->{$plugin}->installed, '>') )
+				{
+					$this->outdatedPlugins[$plugin] = $this->app->{$plugin};
+
+					if ( version_compare($this->app->{$plugin}->installed, str_replace('*', '99999', $this->app->{$plugin}->upgradable['from']), '>=') && version_compare($this->app->{$plugin}->installed, str_replace('*', '99999', $this->app->{$plugin}->upgradable['to']), '<=') )
+					{
+						$this->outdatedPlugins[$plugin]->upgradable = TRUE;
+					}
+					else
+					{
+						$this->outdatedPlugins[$plugin]->upgradable = FALSE;
+					}
 				}
 			}
-
-			foreach ( $this->app->plugins as $plugin )
+			else
 			{
-				if ( !$this->app->{$plugin}->installed )
+				// Installable
+				$this->newPlugins[$plugin] = $this->app->{$plugin};
+			}
+
+			$this->app->{$plugin}->dependencyStatus = array(
+				'required by'  => array(),
+				'installable'  => array(),
+				'installed'    => array(),
+				'missing'      => array()
+				);
+		}
+
+		foreach ( $this->app->plugins as $plugin )
+		{
+			$this->check_dependencies($plugin, $this->app->{$plugin}->dependencyStatus);
+
+			foreach ( $this->app->{$plugin}->dependencies as $dependency )
+			{
+				if ( $this->app->{$plugin}->installed )
 				{
-					if ( isset($this->app->{$plugin}->hooks['install']) )
-					{
-						$dependencyStatus = array();
-
-						foreach ( $this->app->{$plugin}->dependencies as $dependency )
-						{
-							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->installed) ? 1 : 0;
-						}
-
-						$this->view->newPlugins[$plugin]                    = $this->app->{$plugin};
-						$this->view->newPlugins[$plugin]->dependency_status = $dependencyStatus;
-					}
-				}
-				else
-				{
-					if ( isset($this->app->{$plugin}->hooks['upgrade']) && version_compare($this->app->{$plugin}->version, $version, '>') )
-					{
-						$dependencyStatus = array();
-
-						foreach ( $this->app->{$plugin}->dependencies as $dependency )
-						{
-							$dependencyStatus[$dependency] = !empty($this->app->{$dependency}->installed) ? 1 : 0;
-						}
-
-						$this->view->outdatedPlugins[$plugin]                    = $this->app->{$plugin};
-						$this->view->outdatedPlugins[$plugin]->dependency_status = $dependencyStatus;
-
-						if ( version_compare($version, str_replace('*', '99999', $this->app->{$plugin}->upgradable['from']), '>=') && version_compare($version, str_replace('*', '99999', $this->app->{$plugin}->upgradable['to']), '<=') )
-						{
-							$this->view->outdatedPlugins[$plugin]->upgradable = TRUE;
-						}
-						else
-						{
-							$this->view->outdatedPlugins[$plugin]->upgradable = FALSE;
-						}
-					}
-
-					if ( isset($this->app->{$plugin}->hooks['remove']) )
-					{
-						$this->view->installedPlugins[$plugin]                     = $this->app->{$plugin};
-						$this->view->installedPlugins[$plugin]->required_by_status = isset($requiredBy[$plugin]) ? $requiredBy[$plugin] : array();
-					}
+					$this->app->{$dependency}->dependencyStatus['required by'][] = $plugin;
 				}
 			}
 		}
 
-		ksort($this->view->newPlugins);
+		ksort($this->newPlugins);
 
 		if ( !$this->app->config['sysPassword'] )
 		{
@@ -161,25 +148,7 @@ class Installer_Controller extends Controller
 
 								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->newPlugins[$plugin]) && !in_array(0, $this->view->newPlugins[$plugin]->dependency_status) )
-									{
-										$this->app->{$plugin}->install();
-
-										$this->app->db->sql('
-											INSERT INTO `' . $this->app->db->prefix . 'versions` (
-												`plugin`,
-												`version`
-												)
-											VALUES (
-												"' . $this->app->db->escape($plugin)           . '",
-												"' . $this->view->newPlugins[$plugin]->version . '"
-												)
-											;');
-
-										$pluginsInstalled[] = $plugin;
-
-										unset($this->view->newPlugins[$plugin]);
-									}
+									$this->install($plugin, $pluginsInstalled);
 								}
 
 								if ( $pluginsInstalled )
@@ -195,13 +164,13 @@ class Installer_Controller extends Controller
 
 								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->outdatedPlugins[$plugin]) && !in_array(0, $this->view->outdatedPlugins[$plugin]->dependency_status) )
+									if ( isset($this->outdatedPlugins[$plugin]) && !$this->app->{$plugin}->dependencyStatus['missing'] )
 									{
 										$this->app->{$plugin}->upgrade();
 
 										$this->app->db->sql('
 											UPDATE `' . $this->app->db->prefix . 'versions` SET
-												`version` = "' . $this->view->outdatedPlugins[$plugin]->version . '"
+												`version` = "' . $this->outdatedPlugins[$plugin]->version . '"
 											WHERE
 												`plugin` = "' . $this->app->db->escape($plugin) . '"
 											LIMIT 1
@@ -209,7 +178,7 @@ class Installer_Controller extends Controller
 
 										$pluginsUpgraded[] = $plugin;
 
-										unset($this->view->outdatedPlugins[$plugin]);
+										unset($this->outdatedPlugins[$plugin]);
 									}
 								}
 
@@ -226,7 +195,7 @@ class Installer_Controller extends Controller
 
 								foreach ( $this->app->input->POST_valid['plugin'] as $plugin => $v )
 								{
-									if ( isset($this->view->installedPlugins[$plugin]) && !in_array(1, $this->view->installedPlugins[$plugin]->required_by_status) )
+									if ( isset($this->installedPlugins[$plugin]) && !$this->app->{$plugin}->dependencyStatus['required by'] )
 									{
 										$this->app->db->sql('
 											DELETE
@@ -240,7 +209,7 @@ class Installer_Controller extends Controller
 
 										$pluginsRemoved[] = $plugin;
 
-										unset($this->view->installedPlugins[$plugin]);
+										unset($this->installedPlugins[$plugin]);
 									}
 								}
 
@@ -277,8 +246,80 @@ class Installer_Controller extends Controller
 			}
 		}
 
-		$this->view->authenticated = $authenticated;
+		$this->view->authenticated    = $authenticated;
+		$this->view->newPlugins       = $this->newPlugins;
+		$this->view->outdatedPlugins  = $this->outdatedPlugins;
+		$this->view->installedPlugins = $this->installedPlugins;
 
 		$this->view->load('installer.html.php');
+	}
+
+	/*
+	 * Check dependencies recursively
+	 * @param string $plugin
+	 * @param array $status
+	 */
+	private function check_dependencies($plugin, &$status)
+	{
+		if ( !empty($this->app->{$plugin}->dependencies) )
+		{
+			foreach ( $this->app->{$plugin}->dependencies as $dependency )
+			{
+				$this->check_dependencies($dependency, $status);
+
+				if ( !isset($this->app->{$dependency}) )
+				{
+					$status['missing'][] = $dependency;
+				}
+				else if ( empty($this->app->{$dependency}->installed) )
+				{
+					$status['installable'][] = $dependency;
+				}
+				else
+				{
+					$status['installed'][] = $dependency;
+				}
+			}
+		}
+
+		$status['missing']     = array_unique($status['missing']);
+		$status['installable'] = array_unique($status['installable']);
+		$status['installed']   = array_unique($status['installed']);
+	}
+
+	/*
+	 * Recursively install plugins and dependencies
+	 * @param string $plugin
+	 * @param array $pluginsInstalled
+	 */
+	private function install($plugin, &$pluginsInstalled)
+	{
+		if ( isset($this->newPlugins[$plugin]) && !$this->app->{$plugin}->dependencyStatus['missing'] )
+		{
+			if ( !empty($this->app->{$plugin}->dependencyStatus['installable']) )
+			{
+				foreach ( $this->app->{$plugin}->dependencyStatus['installable'] as $dependency )
+				{
+					$this->install($dependency, $pluginsInstalled);
+				}
+			}
+
+			$this->app->{$plugin}->install();
+
+			$this->app->db->sql('
+				INSERT INTO `' . $this->app->db->prefix . 'versions` (
+					`plugin`,
+					`version`
+					)
+				VALUES (
+					"' . $this->app->db->escape($plugin)           . '",
+					"' . $this->newPlugins[$plugin]->version . '"
+					)
+				;');
+
+			$pluginsInstalled[] = $plugin;
+
+			unset($this->newPlugins[$plugin]);
+		}
 	}
 }

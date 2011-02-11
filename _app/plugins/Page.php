@@ -68,6 +68,11 @@ class Page_Plugin extends Plugin
 	 */
 	function remove()
 	{
+		if ( in_array($this->app->db->prefix . 'pages_revisions', $this->app->db->tables) )
+		{
+			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'pages_revisions`;');
+		}
+
 		if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
 		{
 			// Remove nodes
@@ -85,6 +90,8 @@ class Page_Plugin extends Plugin
 				}
 
 			}
+
+			//$this->app->db->sql('ALTER TABLE `' . $this->app->db->prefix . 'pages` DROP FOREIGN KEY `page_id;');
 
 			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'pages`;');
 		}
