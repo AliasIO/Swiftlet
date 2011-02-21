@@ -41,6 +41,8 @@ class Application
 
 		$this->debugOutput['version'] = Application::VERSION;
 
+		date_default_timezone_set('UTC');
+
 		/**
 		 * Get the user's real IP address (this can be either IPv4 or IPv6)
 		 */

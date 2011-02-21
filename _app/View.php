@@ -87,7 +87,7 @@ class View
 
 		// Determine client-side path to root
 		$level = count($args) > 1 && $this->app->config['urlRewrite'] ? count($args) - 1 : 0;
-		$path  = dirname(preg_replace('/(.+?)\?.+$/', '$1', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : __FILE__) . ' ') . '/';
+		$path  = preg_replace('/\/\//', '/', dirname(preg_replace('/(.+?)\?.+$/', '$1', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : __FILE__) . ' ') . '/');
 
 		$this->app->debugOutput['request'] = array(
 			'controller' => $this->controller,
