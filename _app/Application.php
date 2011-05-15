@@ -110,8 +110,8 @@ class Application
 				SELECT
 					`plugin`,
 					`version`
-				FROM `' . $this->db->prefix . 'versions`
-				;');
+				FROM {versions}
+				');
 
 			if ( $r = $this->db->result )
 			{

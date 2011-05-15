@@ -68,9 +68,9 @@ class Page_Controller extends Controller
 				if ( $this->app->input->POST_valid['home'] )
 				{
 					$this->app->db->sql('
-						UPDATE `' . $this->app->db->prefix . 'nodes` SET
+						UPDATE {nodes} SET
 							`home` = 0
-						;');
+						');
 				}
 
 				switch ( $this->action )
@@ -79,14 +79,14 @@ class Page_Controller extends Controller
 						if ( $this->app->permission->check('admin page edit') )
 						{
 							$this->app->db->sql('
-								UPDATE `' . $this->app->db->prefix . 'nodes` SET
+								UPDATE {nodes} SET
 									`title` = "' . $this->app->input->POST_db_safe['title']['English US'] . '",
 									`home`  =  ' . ( $this->app->input->POST_raw['home'] ? 1 : 0 )        . ',
 									`path`  = "' . $this->app->input->POST_db_safe['path']                . '"
 								WHERE
 									`id` = ' . $this->id . '
 								LIMIT 1
-								;');
+								');
 
 							// Check in which languages the page is stored
 							$langExist = array();
@@ -95,10 +95,10 @@ class Page_Controller extends Controller
 								SELECT
 									`id`,
 									`lang`
-								FROM `' . $this->app->db->prefix . 'pages`
+								FROM {pages}
 								WHERE
 									`node_id` = ' . $this->id . '
-								;');
+								');
 
 							if ( $r = $this->app->db->result )
 							{
@@ -117,18 +117,18 @@ class Page_Controller extends Controller
 									$pageId = $langExist[$language];
 
 									$this->app->db->sql('
-										UPDATE `' . $this->app->db->prefix . 'pages` SET
+										UPDATE {pages} SET
 											`published` =  ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
 											`date_edit` = "' . gmdate('y-m-d h:i:s')                                . '"
 										WHERE
 											`id` =  ' . $pageId . '
 										LIMIT 1
-										;');
+										');
 								}
 								else
 								{
 									$this->app->db->sql('
-										INSERT INTO `' . $this->app->db->prefix . 'pages` (
+										INSERT INTO {pages} (
 											`node_id`,
 											`published`,
 											`lang`,
@@ -142,7 +142,7 @@ class Page_Controller extends Controller
 											"' . gmdate('Y-m-d H:i:s')                                . '",
 											"' . gmdate('Y-m-d H:i:s')                                . '"
 											)
-										;');
+										');
 
 									$pageId = $this->app->db->result;
 								}
@@ -150,7 +150,7 @@ class Page_Controller extends Controller
 								if ( $pageId )
 								{
 									$this->app->db->sql('
-										INSERT INTO `' . $this->app->db->prefix . 'pages_revisions` (
+										INSERT INTO {pages_revisions} (
 											`page_id`,
 											`title`,
 											`body`,
@@ -162,7 +162,7 @@ class Page_Controller extends Controller
 											"' . $this->app->input->POST_db_safe['body'][$language]  . '",
 											"' . gmdate('Y-m-d H:i:s')                               . '"
 											)
-										;');
+										');
 
 									$revisionId = $this->app->db->result;
 
@@ -174,12 +174,12 @@ class Page_Controller extends Controller
 									if ( $revisionId )
 									{
 										$this->app->db->sql('
-											UPDATE `' . $this->app->db->prefix . 'pages` SET
+											UPDATE {pages} SET
 												`revision_id` =  ' . ( int ) $revisionId . '
 											WHERE
 												`id` =  ' . $pageId . '
 											LIMIT 1
-											;');
+											');
 									}
 								}
 							}
@@ -202,20 +202,20 @@ class Page_Controller extends Controller
 							if ( $nodeId )
 							{
 								$this->app->db->sql('
-									UPDATE `' . $this->app->db->prefix . 'nodes` SET
+									UPDATE {nodes} SET
 										`home` =  ' . ( $this->app->input->POST_raw['home'] ? 1 : 0 ) . ',
 										`path` = "' . $this->app->input->POST_db_safe['path']         . '"
 									WHERE
 										`id` = ' . ( $nodeId ) . '
 									LIMIT 1
-									;');
+									');
 
 								$this->app->db->result = FALSE;
 
 								foreach ( $languages as $language )
 								{
 									$this->app->db->sql('
-										INSERT INTO `' . $this->app->db->prefix . 'pages` (
+										INSERT INTO {pages} (
 											`node_id`,
 											`published`,
 											`lang`,
@@ -229,12 +229,12 @@ class Page_Controller extends Controller
 											"' . gmdate('Y-m-d H:i:s')                                . '",
 											"' . gmdate('Y-m-d H:i:s')                                . '"
 											)
-										;');
+										');
 
 									if ( $pageId = $this->app->db->result )
 									{
 										$this->app->db->sql('
-											INSERT INTO `' . $this->app->db->prefix . 'pages_revisions` (
+											INSERT INTO {pages_revisions} (
 												`page_id`,
 												`title`,
 												`body`,
@@ -246,17 +246,17 @@ class Page_Controller extends Controller
 												"' . $this->app->input->POST_db_safe['body'][$language]  . '",
 												"' . gmdate('Y-m-d H:i:s')                               . '"
 												)
-											;');
+											');
 
 										if ( $revisionId = $this->app->db->result )
 										{
 											$this->app->db->sql('
-												UPDATE `' . $this->app->db->prefix . 'pages` SET
+												UPDATE {pages} SET
 													`revision_id` =  ' . ( int ) $revisionId . '
 												WHERE
 													`id` =  ' . $pageId . '
 												LIMIT 1
-												;');
+												');
 										}
 									}
 								}
@@ -323,12 +323,12 @@ class Page_Controller extends Controller
 								 n.`right_id`,
 								 n.`home`,
 								 n.`path`
-							FROM      `' . $this->app->db->prefix . 'nodes`           AS  n
-							LEFT JOIN `' . $this->app->db->prefix . 'pages`           AS  p ON n.`id`          = p.`node_id`
-							LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
+							FROM      {nodes}           AS  n
+							LEFT JOIN {pages}           AS  p ON n.`id`          = p.`node_id`
+							LEFT JOIN {pages_revisions} AS pr ON p.`revision_id` = pr.`id`
 							WHERE
 								n.`id`= ' . ( int ) $this->id . '
-							;');
+							');
 
 						if ( $r = $this->app->db->result )
 						{
@@ -353,13 +353,13 @@ class Page_Controller extends Controller
 									`id`,
 									`date`,
 									LENGTH(`title`) + LENGTH(`body`) AS bytes
-								FROM `' . $this->app->db->prefix . 'pages_revisions`
+								FROM {pages_revisions}
 								WHERE
 									`page_id`  = ' . ( int ) $r[0]['id']          . ' AND
 									`id`      != ' . ( int ) $r[0]['revision_id'] . '
 								ORDER BY `date` DESC
 								LIMIT 10
-								;');
+								');
 
 							$revisions = $this->app->db->result;
 						}
@@ -382,11 +382,11 @@ class Page_Controller extends Controller
 							$this->app->db->sql('
 								DELETE
 									p, pr
-								FROM      `' . $this->app->db->prefix . 'pages`           AS  p
-								LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`id` = pr.`page_id`
+								FROM      {pages}           AS  p
+								LEFT JOIN {pages_revisions} AS pr ON p.`id` = pr.`page_id`
 								WHERE
 									`node_id` = ' . ( int ) $this->id . '
-								;');
+								');
 
 							if ( $this->app->db->result )
 							{

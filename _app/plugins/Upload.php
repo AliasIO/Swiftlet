@@ -32,7 +32,7 @@ class Upload_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'uploads` (
+				CREATE TABLE {uploads} (
 					`id`        INT(10)      UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`title`     VARCHAR(255)          NOT NULL,
 					`extension` VARCHAR(255)              NULL,
@@ -46,7 +46,7 @@ class Upload_Plugin extends Plugin
 					`date_edit` DATETIME              NOT NULL,
 					INDEX (`image`)
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 		$this->app->permission->create('Uploads', 'admin upload access', 'Manage files');
@@ -62,8 +62,8 @@ class Upload_Plugin extends Plugin
 		if ( in_array($this->app->db->prefix . 'uploads', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				DROP TABLE `' . $this->app->db->prefix . 'uploads`
-				;');
+				DROP TABLE {uploads}
+				');
 		}
 
 		$this->app->permission->delete('admin upload access');
@@ -202,11 +202,11 @@ class Upload_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->app->db->prefix . 'uploads`
+			FROM {uploads}
 			WHERE
 				`title` = "Unit Test File"
 			LIMIT 1
-			;', FALSE);
+			', FALSE);
 
 		$file = isset($this->app->db->result[0]) ? $this->app->db->result[0] : FALSE;
 
@@ -231,11 +231,14 @@ class Upload_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->app->db->prefix . 'uploads`
+			FROM {uploads}
 			WHERE
-				`id` = ' . ( int ) $file['id'] . '
+				`id` = :id
 			LIMIT 1
-			;', FALSE);
+			', array(
+				':id' => ( int ) $file['id']
+				), FALSE
+			);
 
 		$params[] = array(
 			'test' => 'Deleting a file in <code>/admin/upload</code>.',

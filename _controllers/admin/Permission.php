@@ -44,9 +44,9 @@ class Permission_Controller extends Controller
 			SELECT
 				`id`,
 				`username`
-			FROM `' . $this->app->db->prefix . 'users`
+			FROM {users}
 			ORDER BY `username` ASC
-			;');
+			');
 
 		$users = $this->app->db->result;
 
@@ -56,9 +56,9 @@ class Permission_Controller extends Controller
 		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->app->db->prefix . 'perms`
+			FROM {perms}
 			ORDER BY `name` ASC
-			;');
+			');
 
 		$permissions = $this->app->db->result;
 
@@ -86,9 +86,9 @@ class Permission_Controller extends Controller
 			SELECT
 				`id`,
 				`name`
-			FROM `' . $this->app->db->prefix . 'perms_roles`
+			FROM {perms_roles}
 			ORDER BY `name` ASC
-			;');
+			');
 
 		if ( $r = $this->app->db->result )
 		{
@@ -110,10 +110,10 @@ class Permission_Controller extends Controller
 				prux.`role_id`,
 				u.`id`,
 				u.`username`
-			FROM      `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux
-			LEFT JOIN `' . $this->app->db->prefix . 'users`                  AS u    ON prux.`user_id` = u.`id`
+			FROM      {perms_roles_users_xref} AS prux
+			LEFT JOIN {users}                  AS u    ON prux.`user_id` = u.`id`
 			ORDER BY `username` ASC
-			;');
+			');
 
 		if ( $r = $this->app->db->result )
 		{
@@ -149,13 +149,13 @@ class Permission_Controller extends Controller
 				if ( $this->action == 'create' && $this->app->permission->check('admin permission create') )
 				{
 					$this->app->db->sql('
-						INSERT IGNORE INTO `' . $this->app->db->prefix . 'perms_roles` (
+						INSERT IGNORE INTO {perms_roles} (
 							`name`
 						)
 						VALUES (
 							"' . $this->app->input->POST_db_safe['name'] . '"
 						)
-						;');
+						');
 
 					if ( $this->app->db->result )
 					{
@@ -167,12 +167,12 @@ class Permission_Controller extends Controller
 				else if ( $this->action == 'edit' && $this->app->permission->check('admin permission edit') )
 				{
 					$this->app->db->sql('
-						UPDATE `' . $this->app->db->prefix . 'perms_roles` SET
+						UPDATE {perms_roles} SET
 							`name` = "' . $this->app->input->POST_db_safe['name'] . '"
 						WHERE
 							`id` = ' . ( int ) $this->id . '
 						LIMIT 1
-						;');
+						');
 
 					if ( $this->app->db->result )
 					{
@@ -189,7 +189,7 @@ class Permission_Controller extends Controller
 			if ( !$this->app->input->errors )
 			{
 				$this->app->db->sql('
-					INSERT IGNORE INTO `' . $this->app->db->prefix . 'perms_roles_users_xref` (
+					INSERT IGNORE INTO {perms_roles_users_xref} (
 						`role_id`,
 						`user_id`
 						)
@@ -197,7 +197,7 @@ class Permission_Controller extends Controller
 						' . ( int ) $this->id                               . ',
 						' . ( int ) $this->app->input->POST_db_safe['user'] . '
 						)
-					;');
+					');
 
 				header('Location: ' . $this->view->route($this->path . '?notice=added', FALSE));
 
@@ -214,7 +214,7 @@ class Permission_Controller extends Controller
 					foreach ( $roles as $role )
 					{
 						$this->app->db->sql('
-							INSERT INTO `' . $this->app->db->prefix . 'perms_roles_xref` (
+							INSERT INTO {perms_roles_xref} (
 								`perm_id`,
 								`role_id`,
 								`value`
@@ -226,7 +226,7 @@ class Permission_Controller extends Controller
 								)
 							ON DUPLICATE KEY UPDATE
 								`value` = ' . ( int ) $this->app->input->POST_db_safe['value'][$permission['id']][$role['id']] . '
-							;');
+							');
 					}
 				}
 
@@ -276,8 +276,8 @@ class Permission_Controller extends Controller
 			$this->app->db->sql('
 				SELECT
 					*
-				FROM `' . $this->app->db->prefix . 'perms_roles_xref`
-				;');
+				FROM {perms_roles_xref}
+				');
 
 			if ( $r = $this->app->db->result )
 			{
@@ -326,11 +326,11 @@ class Permission_Controller extends Controller
 						{
 							$this->app->db->sql('
 								DELETE
-								FROM `' . $this->app->db->prefix . 'perms_roles_users_xref`
+								FROM {perms_roles_users_xref}
 								WHERE
 									`user_id` = ' . ( int ) $userId   . ' AND
 									`role_id` = ' . ( int ) $this->id . '
-								;');
+								');
 
 							if ( $this->app->db->result )
 							{
@@ -354,12 +354,12 @@ class Permission_Controller extends Controller
 							$this->app->db->sql('
 								DELETE
 									pr, prx, prux
-								FROM      `' . $this->app->db->prefix . 'perms_roles`            AS   pr
-								LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref`       AS  prx ON pr.`id` =  prx.`role_id`
-								LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux ON pr.`id` = prux.`role_id`
+								FROM      {perms_roles}            AS   pr
+								LEFT JOIN {perms_roles_xref}       AS  prx ON pr.`id` =  prx.`role_id`
+								LEFT JOIN {perms_roles_users_xref} AS prux ON pr.`id` = prux.`role_id`
 								WHERE
 									pr.`id` = ' . ( int ) $this->id . '
-								;');
+								');
 
 							if ( $this->app->db->result )
 							{

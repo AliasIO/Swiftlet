@@ -35,14 +35,14 @@ class Session_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'sessions` (
+				CREATE TABLE {sessions} (
 					`id`          INT(10)     UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`hash`        VARCHAR(40)          NOT NULL UNIQUE,
 					`contents`    TEXT                     NULL,
 					`date`        DATETIME             NOT NULL,
 					`date_expire` DATETIME             NOT NULL
 					) ENGINE = INNODB
-				;');
+				');
 		}
 	}
 
@@ -53,7 +53,7 @@ class Session_Plugin extends Plugin
 	{
 		if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'sessions`;');
+			$this->app->db->sql('DROP TABLE {sessions}');
 		}
 	}
 
@@ -80,10 +80,13 @@ class Session_Plugin extends Plugin
 			 */
 			$this->app->db->sql('
 				DELETE
-				FROM `' . $this->app->db->prefix . 'sessions`
+				FROM {sessions}
 				WHERE
-					`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
-				;');
+					`date_expire` <= :date
+				', array(
+					':date' => gmdate('Y-m-d H:i:s')
+					)
+				);
 
 			/**
 			 * Get session contents
@@ -93,12 +96,16 @@ class Session_Plugin extends Plugin
 				$this->app->db->sql('
 					SELECT
 						`contents`
-					FROM `' . $this->app->db->prefix . 'sessions`
+					FROM {sessions}
 					WHERE
-						`id`   =  ' . $this->id   . ' AND
-						`hash` = "' . $this->hash . '"
+						`id`   = :id   AND
+						`hash` = :hash
 					LIMIT 1
-					;', FALSE);
+					', array(
+						':id'   => $this->id,
+						':hash' => $this->hash
+						), FALSE
+					);
 
 				if ( $r = $this->app->db->result )
 				{
@@ -126,23 +133,29 @@ class Session_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				INSERT
-				INTO `' . $this->app->db->prefix . 'sessions` (
+				INTO {sessions} (
 					`hash`,
 					`contents`,
 					`date`,
 					`date_expire`
 					)
 				VALUES (
-					"' . $this->hash                                        . '",
-					"' . $this->app->db->escape(serialize($this->contents)) . '",
-					"' . gmdate('Y-m-d H:i:s')                              . '",
-					DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
+					:hash,
+					:contents,
+					:date,
+					DATE_ADD(:date, INTERVAL :session_life_time SECOND)
 					)
 				ON DUPLICATE KEY UPDATE
-					`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
-					`date`        = "' . gmdate('Y-m-d H:i:s')                              . '",
-					`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->sessionLifeTime . ' SECOND)
-				;');
+					`contents`    = :contents,
+					`date`        = :date,
+					`date_expire` = DATE_ADD(:date, INTERVAL :session_life_time SECOND)
+				', array(
+					':hash'              => $this->hash,
+					':contents'          => serialize($this->contents),
+					':date'              => gmdate('Y-m-d H:i:s'),
+					':session_life_time' => ( int ) $this->sessionLifeTime
+					)
+				);
 
 			$this->id = $this->app->db->result;
 		}
@@ -157,11 +170,14 @@ class Session_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				DELETE
-				FROM `' . $this->app->db->prefix . 'sessions`
+				FROM {sessions}
 				WHERE
-					`id` = ' . ( int ) $this->id . '
+					`id` = :id
 				LIMIT 1
-				;');
+				', array(
+					':id' => ( int ) $id
+					)
+				);
 
 			$this->id = FALSE;
 		}
@@ -219,17 +235,23 @@ class Session_Plugin extends Plugin
 			if ( in_array($this->app->db->prefix . 'sessions', $this->app->db->tables) )
 			{
 				$this->app->db->sql('
-					UPDATE `' . $this->app->db->prefix . 'sessions`
+					UPDATE {sessions}
 					SET
-						`contents`    = "' . $this->app->db->escape(serialize($this->contents)) . '",
-						`date_expire` = DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $sessionLifeTime . ' SECOND)
+						`contents`    = :contents,
+						`date_expire` = DATE_ADD(:date, INTERVAL :session_life_time SECOND)
 					WHERE
-						`id` = ' . $this->id . '
+						`id` = :id
 					LIMIT 1
-					;');
+					', array(
+						':contents'          => serialize($this->contents),
+						':date'              => gmdate('Y-m-d H:i:s'),
+						':session_life_time' => ( int ) $sessionLifeTime,
+						':id'                => $this->id
+						)
+					);
 			}
 
-			$secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? TRUE                    : FALSE;
+			$secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? TRUE : FALSE;
 
 			// Using FALSE for hostname, $_SERVER['SERVER_NAME'] doesn't work on WAMP
 			setcookie('sw_session', $this->id . ':' . $this->key, time() + $sessionLifeTime, $this->view->absPath, FALSE, $secure, TRUE);

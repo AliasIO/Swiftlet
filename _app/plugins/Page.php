@@ -24,7 +24,7 @@ class Page_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'pages` (
+				CREATE TABLE {pages} (
 					`id`          INT(10)      UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`node_id`     INT(10)      UNSIGNED NOT NULL,
 					`revision_id` INT(10)      UNSIGNED NOT NULL,
@@ -34,24 +34,24 @@ class Page_Plugin extends Plugin
 					`date_edit`   DATETIME              NOT NULL,
 					INDEX  (`published`),
 					UNIQUE `node_lang` (`node_id`, `lang`),
-					FOREIGN KEY (`node_id`) REFERENCES `' . $this->app->db->prefix . 'nodes` (`id`) ON DELETE CASCADE
+					FOREIGN KEY (`node_id`) REFERENCES {nodes} (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 		if ( !in_array($this->app->db->prefix . 'pages_revisions', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'pages_revisions` (
+				CREATE TABLE {pages_revisions} (
 					`id`        INT(10)    UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`page_id`   INT(10)    UNSIGNED NOT NULL,
 					`title`     VARCHAR(255)        NOT NULL,
 					`body`      TEXT                    NULL,
 					`date`      DATETIME            NOT NULL,
 					INDEX (`page_id`),
-					FOREIGN KEY (`page_id`) REFERENCES `' . $this->app->db->prefix . 'pages` (`id`) ON DELETE CASCADE
+					FOREIGN KEY (`page_id`) REFERENCES {pages} (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 		if ( isset($this->app->permission) )
@@ -70,7 +70,7 @@ class Page_Plugin extends Plugin
 	{
 		if ( in_array($this->app->db->prefix . 'pages_revisions', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'pages_revisions`;');
+			$this->app->db->sql('DROP TABLE {pages_revisions}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'pages', $this->app->db->tables) )
@@ -79,8 +79,8 @@ class Page_Plugin extends Plugin
 			$this->app->db->sql('
 				SELECT
 					`node_id`
-				FROM `' . $this->app->db->prefix . 'pages`
-				;');
+				FROM {pages}
+				');
 
 			if ( $r = $this->app->db->result )
 			{
@@ -91,9 +91,9 @@ class Page_Plugin extends Plugin
 
 			}
 
-			//$this->app->db->sql('ALTER TABLE `' . $this->app->db->prefix . 'pages` DROP FOREIGN KEY `page_id;');
+			//$this->app->db->sql('ALTER TABLE {pages} DROP FOREIGN KEY `page_id');
 
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'pages`;');
+			$this->app->db->sql('DROP TABLE {pages}');
 		}
 
 		if ( isset($this->app->permission) )
@@ -127,14 +127,14 @@ class Page_Plugin extends Plugin
 			$this->app->db->sql('
 				SELECT
 					n.`id`
-				FROM      `' . $this->app->db->prefix . 'pages` AS p
-				LEFT JOIN `' . $this->app->db->prefix . 'nodes` AS n ON p.`node_id` = n.`id`
+				FROM      {pages} AS p
+				LEFT JOIN {nodes} AS n ON p.`node_id` = n.`id`
 				WHERE
 					p.`published` = 1      AND
 					n.`type`      = "page" AND
 					n.`home`      = 1
 				LIMIT 1
-				;');
+				');
 
 			if ( $r = $this->app->db->result )
 			{
@@ -220,15 +220,15 @@ class Page_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				p.*
-			FROM      `' . $this->app->db->prefix . 'nodes`           AS  n
-			LEFT JOIN `' . $this->app->db->prefix . 'pages`           AS  p ON n.`id`          =  p.`node_id`
-			LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
+			FROM      {nodes}           AS  n
+			LEFT JOIN {pages}           AS  p ON n.`id`          =  p.`node_id`
+			LEFT JOIN {pages_revisions} AS pr ON p.`revision_id` = pr.`id`
 			WHERE
 				 n.`type`  = "page"           AND
 				 p.`lang`  = "English US"     AND
 				pr.`title` = "Unit Test Page"
 			LIMIT 1
-			;', FALSE);
+			', FALSE);
 
 		$page = isset($this->app->db->result[0]) ? $this->app->db->result[0] : FALSE;
 
@@ -261,12 +261,14 @@ class Page_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				pr.`body`
-			FROM      `' . $this->app->db->prefix . 'pages`           AS  p
-			LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
+			FROM      {pages}           AS  p
+			LEFT JOIN {pages_revisions} AS pr ON p.`revision_id` = pr.`id`
 			WHERE
-				p.`id` = ' . ( int ) $page['id'] . '
+				p.`id` = :id
 			LIMIT 1
-			;', FALSE);
+			', array(
+				':id' => ( int ) $page['id']
+			), FALSE);
 
 		$body = isset($this->app->db->result[0]) ? $this->app->db->result[0]['body'] : FALSE;
 
@@ -291,12 +293,14 @@ class Page_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				n.`id`
-			FROM      `' . $this->app->db->prefix . 'nodes` AS n
-			LEFT JOIN `' . $this->app->db->prefix . 'pages` AS p ON n.`id` = p.`node_id`
+			FROM      {nodes} AS n
+			LEFT JOIN {pages} AS p ON n.`id` = p.`node_id`
 			WHERE
-				p.`id` = ' . ( int ) $page['id'] . '
+				p.`id` = :id
 			LIMIT 1
-			;', FALSE);
+			', array(
+				':id' => ( int ) $page['id']
+			), FALSE);
 
 		$params[] = array(
 			'test' => 'Deleting a page in <code>/admin/page</code>.',

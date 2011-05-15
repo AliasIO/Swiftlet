@@ -72,7 +72,7 @@ class Upload_Controller extends Controller
 								$title = $this->app->input->POST_valid['title'][$i] ? $this->app->input->POST_html_safe['title'][$i] : $this->view->h(basename($_FILES['file']['name'][$i], $extension));
 
 								$this->app->db->sql('
-									INSERT INTO `' . $this->app->db->prefix . 'uploads` (
+									INSERT INTO {uploads} (
 										`title`,
 										`extension`,
 										`image`,
@@ -96,7 +96,7 @@ class Upload_Controller extends Controller
 										"' . gmdate('Y-m-d H:i:s')                                       . '",
 										"' . gmdate('Y-m-d H:i:s')                                       . '"
 										)
-									;');
+									');
 
 								if ( $this->view->id = $this->app->db->result )
 								{
@@ -164,11 +164,11 @@ class Upload_Controller extends Controller
 						$this->app->db->sql('
 							SELECT
 								`filename`
-							FROM `' . $this->app->db->prefix . 'uploads`
+							FROM {uploads}
 							WHERE
 								`id` = ' . ( int ) $this->id . '
 							LIMIT 1
-							;');
+							');
 
 						if ( $r = $this->app->db->result )
 						{
@@ -186,11 +186,11 @@ class Upload_Controller extends Controller
 
 							$this->app->db->sql('
 								DELETE
-								FROM `' . $this->app->db->prefix . 'uploads`
+								FROM {uploads}
 								WHERE
 									`id` = ' . ( int ) $this->id . '
 								LIMIT 1
-								;');
+								');
 
 							if ( $this->app->db->result )
 							{
@@ -211,9 +211,9 @@ class Upload_Controller extends Controller
 		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->app->db->prefix . 'uploads`
+			FROM {uploads}
 			ORDER BY `date` DESC
-			;');
+			');
 
 		$files = $this->app->db->result;
 

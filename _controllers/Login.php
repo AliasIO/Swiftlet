@@ -59,11 +59,11 @@ class Login_Controller extends Controller
 				$this->app->db->sql('
 					SELECT
 						`date_login_attempt`
-					FROM `' . $this->app->db->prefix . 'users`
+					FROM {users}
 					WHERE
 						`username` = "' . $this->app->input->POST_db_safe['username'] . '"
 					LIMIT 1
-					;');
+					');
 
 				if ( isset($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 				{
@@ -116,12 +116,12 @@ class Login_Controller extends Controller
 			$this->app->db->sql('
 				SELECT
 					`date_login_attempt`
-				FROM `' . $this->app->db->prefix . 'users`
+				FROM {users}
 				WHERE
 					`date_login_attempt` AND
 					`id` = 1
 				LIMIT 1
-				;');
+				');
 
 			if ( empty($this->app->db->result) )
 			{

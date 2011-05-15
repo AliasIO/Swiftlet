@@ -134,14 +134,14 @@ class Installer_Controller extends Controller
 								if ( !in_array($this->app->db->prefix . 'versions', $this->app->db->tables) )
 								{
 									$this->app->db->sql('
-										CREATE TABLE `' . $this->app->db->prefix . 'versions` (
+										CREATE TABLE {versions} (
 											`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 											`plugin`  VARCHAR(255)     NOT NULL,
 											`version` VARCHAR(10)      NOT NULL,
 											PRIMARY KEY (`id`),
 											UNIQUE `plugin` (`plugin`)
 											) ENGINE = INNODB
-										;');
+										');
 								}
 
 								$pluginsInstalled = array();
@@ -169,12 +169,12 @@ class Installer_Controller extends Controller
 										$this->app->{$plugin}->upgrade();
 
 										$this->app->db->sql('
-											UPDATE `' . $this->app->db->prefix . 'versions` SET
+											UPDATE {versions} SET
 												`version` = "' . $this->outdatedPlugins[$plugin]->version . '"
 											WHERE
 												`plugin` = "' . $this->app->db->escape($plugin) . '"
 											LIMIT 1
-											;');
+											');
 
 										$pluginsUpgraded[] = $plugin;
 
@@ -199,11 +199,11 @@ class Installer_Controller extends Controller
 									{
 										$this->app->db->sql('
 											DELETE
-											FROM `' . $this->app->db->prefix . 'versions`
+											FROM {versions}
 											WHERE
 												`plugin` = "' . $this->app->db->escape($plugin) . '"
 											LIMIT 1
-											;');
+											');
 
 										$this->app->{$plugin}->remove();
 
@@ -307,7 +307,7 @@ class Installer_Controller extends Controller
 			$this->app->{$plugin}->install();
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'versions` (
+				INSERT INTO {versions} (
 					`plugin`,
 					`version`
 					)
@@ -315,7 +315,7 @@ class Installer_Controller extends Controller
 					"' . $this->app->db->escape($plugin)           . '",
 					"' . $this->newPlugins[$plugin]->version . '"
 					)
-				;');
+				');
 
 			$pluginsInstalled[] = $plugin;
 

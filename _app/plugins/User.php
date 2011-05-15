@@ -28,7 +28,7 @@ class User_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'users` (
+				CREATE TABLE {users} (
 					`id`                 INT(10)    UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`username`           VARCHAR(255)        NOT NULL UNIQUE,
 					`email`              VARCHAR(255)            NULL,
@@ -38,12 +38,12 @@ class User_Plugin extends Plugin
 					`date_login_attempt` DATETIME NOT            NULL,
 					`pass_hash`          VARCHAR(60)         NOT NULL
 					) ENGINE = INNODB
-				;');
+				');
 
 			$passHash = $this->make_pass_hash('Admin', $this->app->config['sysPassword']);
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'users` (
+				INSERT INTO {users} (
 					`username`,
 					`email`,
 					`owner`,
@@ -53,40 +53,47 @@ class User_Plugin extends Plugin
 					)
 				VALUES (
 					"Admin",
-					"' . $this->app->db->escape($this->app->config['adminEmail']) . '",
+					:email,
 					1,
-					"' . gmdate('Y-m-d H:i:s') . '",
-					"' . gmdate('Y-m-d H:i:s') . '",
-					"' . $passHash . '"
+					:owner,
+					:date,
+					:date_edit,
+					:pass_hash
 					)
-				;');
+				', array(
+					':email'     => $this->app->config['adminEmail'],
+					':date'      => gmdate('Y-m-d H:i:s'),
+					':date_edit' => gmdate('Y-m-d H:i:s'),
+					':pass_hash' => $passHash
+					)
+				);
 		}
 
 		if ( !in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'user_prefs` (
+				CREATE TABLE {user_prefs} (
 					`id`      INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`pref`    VARCHAR(255)     NOT NULL UNIQUE,
 					`type`    VARCHAR(255)     NOT NULL,
 					`match`   VARCHAR(255)     NOT NULL,
 					`options` TEXT                 NULL
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 		if ( !in_array($this->app->db->prefix . 'user_prefs_xref', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'user_prefs_xref` (
+				CREATE TABLE {user_prefs_xref} (
 					`id`      INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`user_id` INT(10) UNSIGNED NOT NULL,
 					`pref_id` INT(10) UNSIGNED NOT NULL,
 					`value`   VARCHAR(255)     NOT NULL,
-					FOREIGN KEY (`user_id`) REFERENCES `' . $this->app->db->prefix . 'users`      (`id`) ON DELETE CASCADE,
-					FOREIGN KEY (`pref_id`) REFERENCES `' . $this->app->db->prefix . 'user_prefs` (`id`) ON DELETE CASCADE
+					FOREIGN KEY (`user_id`) REFERENCES {users}      (`id`) ON DELETE CASCADE,
+					FOREIGN KEY (`pref_id`) REFERENCES {user_prefs} (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 	}
@@ -98,17 +105,17 @@ class User_Plugin extends Plugin
 	{
 		if ( in_array($this->app->db->prefix . 'user_prefs_xref', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'user_prefs_xref`;');
+			$this->app->db->sql('DROP TABLE {user_prefs_xref}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'user_prefs', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'user_prefs`;');
+			$this->app->db->sql('DROP TABLE {user_prefs}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'users', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'users`;');
+			$this->app->db->sql('DROP TABLE {users}');
 		}
 	}
 
@@ -140,7 +147,7 @@ class User_Plugin extends Plugin
 				SELECT
 					*
 				FROM `' . $this->app->db->prefix . 'user_prefs' . '`
-				;');
+				');
 
 			if ( $r = $this->app->db->result )
 			{
@@ -183,23 +190,30 @@ class User_Plugin extends Plugin
 		if ( !$this->app->session->id )
 		{
 			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'users` SET
-					`date_login_attempt` = "' . gmdate('Y-m-d H:i:s') . '"
+				UPDATE {users} SET
+					`date_login_attempt` = :date
 				WHERE
-					`username` = "' . $this->app->db->escape($username) . '"
+					`username` = :username
 				LIMIT 1
-				;');
+				', array(
+					':date'     => gmdate('Y-m-d H:i:s'),
+					':username' => $username
+					)
+				);
 
 			if ( $this->validate_password($username, $password) )
 			{
 				$this->app->db->sql('
 					SELECT
 						*
-					FROM `' . $this->app->db->prefix . 'users`
+					FROM {users}
 					WHERE
-						`username` = "' . $this->app->db->escape($username) . '"
+						`username` = :username
 					LIMIT 1
-					;', FALSE);
+					', array(
+						':username' => $username
+						), FALSE
+					);
 
 				if ( !empty($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 				{
@@ -241,11 +255,14 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`pass_hash`
-			FROM `' . $this->app->db->prefix . 'users`
+			FROM {users}
 			WHERE
-				`username` = "' . $this->app->db->escape($username) . '"
+				`username` = :username
 			LIMIT 1
-			;', FALSE);
+			', array(
+				':username' => $username
+				), FALSE
+			);
 
 		if ( !empty($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 		{
@@ -286,21 +303,27 @@ class User_Plugin extends Plugin
 			), $params);
 
 		$this->app->db->sql('
-			INSERT INTO `' . $this->app->db->prefix . 'user_prefs` (
+			INSERT INTO {user_prefs} (
 				`pref`,
 				`type`,
 				`match`,
 				`options`
 				)
 			VALUES (
-				"' . $this->app->db->escape($params['pref'])               . '",
-				"' . $this->app->db->escape($params['type'])               . '",
-				"' . $this->app->db->escape($params['match'])              . '",
-				"' . $this->app->db->escape(serialize($params['options'])) . '"
+				:pref,
+				:type,
+				:match,
+				:options
 				)
 			ON DUPLICATE KEY UPDATE
-				`options` = "' . $this->app->db->escape(serialize($params['options'])) . '"
-			;');
+				`options` = :options
+			', array(
+				':pref'    => $params['pref'],
+				':type'    => $params['type'],
+				':match'   => $params['match'],
+				':options' => serialize($params['options'])
+				)
+			);
 	}
 
 	/**
@@ -312,11 +335,14 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			DELETE
 				up, upx
-			FROM      `' . $this->app->db->prefix . 'user_prefs`      AS up
-			LEFT JOIN `' . $this->app->db->prefix . 'user_prefs_xref` AS upx ON up.`id` = upx.`pref_id`
+			FROM      {user_prefs}      AS  up
+			LEFT JOIN {user_prefs_xref} AS upx ON up.`id` = upx.`pref_id`
 			WHERE
-				up.`pref` = "' . $this->app->db->escape($pref) . '"
-			;');
+				up.`pref` = :pref
+			', array(
+				':pref' => $pref
+				)
+			);
 	}
 
 	/**
@@ -326,19 +352,24 @@ class User_Plugin extends Plugin
 	function save_pref_value($params)
 	{
 		$this->app->db->sql('
-			INSERT INTO `' . $this->app->db->prefix . 'user_prefs_xref` (
+			INSERT INTO {user_prefs_xref} (
 				`user_id`,
 				`pref_id`,
 				`value`
 				)
 			VALUES (
-				 ' . ( int ) $params['user_id']                  . ',
-				 ' . ( int ) $this->prefs[$params['pref']]['id'] . ',
-				"' . $this->app->db->escape($params['value'])    . '"
+				:user_id,
+				:pref_id,
+				:value
 				)
 			ON DUPLICATE KEY UPDATE
-				`value` = "' . $this->app->db->escape($params['value']) . '"
-			;');
+				`value` = :value
+			', array(
+				':user_id' => ( int ) $params['user_id'],
+				':pref_id' => ( int ) $this->prefs[$params['pref']]['id'],
+				':value'   => $params['value']
+				)
+			);
 
 		if ( $this->app->db->result )
 		{
@@ -363,11 +394,14 @@ class User_Plugin extends Plugin
 				SELECT
 					uo.`pref`,
 					uox.`value`
-				FROM      `' . $this->app->db->prefix . 'user_prefs`      AS uo
-				LEFT JOIN `' . $this->app->db->prefix . 'user_prefs_xref` AS uox ON uo.`id` = uox.`pref_id`
+				FROM      {user_prefs}      AS uo
+				LEFT JOIN {user_prefs_xref} AS uox ON uo.`id` = uox.`pref_id`
 				WHERE
-					uox.`user_id` = ' . ( int ) $userId . '
-				;');
+					uox.`user_id` = :user_id
+				', array(
+					':user_id' => ( int ) $userId
+					)
+				);
 
 			if ( $r = $this->app->db->result )
 			{
@@ -404,11 +438,11 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->app->db->prefix . 'users`
+			FROM {users}
 			WHERE
 				`username` = "Unit_Test"
 			LIMIT 1
-			;', FALSE);
+			', FALSE);
 
 		$user = isset($this->app->db->result[0]) ? $this->app->db->result[0] : FALSE;
 
@@ -437,11 +471,14 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`email`
-			FROM `' . $this->app->db->prefix . 'users`
+			FROM {users}
 			WHERE
-				`id` = ' . ( int ) $user['id'] . '
+				`id` = :id
 			LIMIT 1
-			;', FALSE);
+			', array(
+				':id' => ( int ) $user['id']
+				), FALSE
+			);
 
 		$email = isset($this->app->db->result[0]) ? $this->app->db->result[0]['email'] : FALSE;
 
@@ -470,11 +507,14 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->app->db->prefix . 'users`
+			FROM {users}
 			WHERE
-				`id` = ' . ( int ) $user['id'] . '
+				`id` = :id
 			LIMIT 1
-			;', FALSE);
+			', array(
+				':id' => ( int ) $user['id']
+				), FALSE
+			);
 
 		$params[] = array(
 			'test' => 'Deleting a user account <code>/account</code>.',
@@ -493,11 +533,11 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->app->db->prefix . 'user_prefs`
+			FROM {user_prefs}
 			WHERE
 				`pref` = "Unit Test"
 			LIMIT 1
-			;', FALSE);
+			', FALSE);
 
 		$params[] = array(
 			'test' => 'Creating a user preference.',
@@ -512,11 +552,11 @@ class User_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->app->db->prefix . 'user_prefs`
+			FROM {user_prefs}
 			WHERE
 				`pref` = "Unit Test"
 			LIMIT 1
-			;', FALSE);
+			', FALSE);
 
 		$params[] = array(
 			'test' => 'Deleting a user preference.',

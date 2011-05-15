@@ -4,7 +4,7 @@
 
 		<div id="footer">
 			<!-- You are awesome. Thanks for keeping the link! -->
-			<p class="powered-by">Powered by <a href="http://swiftlet.org/">Swiftlet</a></p>
+			<p class="powered-by"><?php echo $this->t('Powered by %s', '<a href="http://swiftlet.org/">Swiftlet</a>') ?></p>
 		</div>
 
 		<script type="text/javascript">

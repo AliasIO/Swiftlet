@@ -35,7 +35,7 @@ class Db_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'cache_queries` (
+				CREATE TABLE {cache_queries} (
 					`id`          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`hash`        VARCHAR(40)      NOT NULL UNIQUE,
 					`results`     TEXT             NOT NULL,
@@ -43,20 +43,20 @@ class Db_Plugin extends Plugin
 					`date_expire` DATETIME         NOT NULL,
 					INDEX (`date`)
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 		if ( !in_array($this->app->db->prefix . 'cache_tables', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'cache_tables` (
+				CREATE TABLE {cache_tables} (
 					`id`          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`query_id`    INT(10) UNSIGNED NOT NULL,
 					`table`       VARCHAR(255)     NOT NULL,
 					INDEX (`table`),
-					FOREIGN KEY (`query_id`) REFERENCES `' . $this->app->db->prefix . 'cache_queries` (`id`) ON DELETE CASCADE
+					FOREIGN KEY (`query_id`) REFERENCES {cache_queries} (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
-				;');
+				');
 		}
 	}
 
@@ -69,14 +69,14 @@ class Db_Plugin extends Plugin
 		{
 			unset($this->app->db->tables[$this->app->db->prefix . 'cache_tables']);
 
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_tables`;');
+			$this->app->db->sql('DROP TABLE {cache_tables}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'cache_queries', $this->app->db->tables) )
 		{
 			unset($this->app->db->tables[$this->app->db->prefix . 'cache_queries']);
 
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'cache_queries`;');
+			$this->app->db->sql('DROP TABLE {cache_queries}');
 		}
 	}
 
@@ -149,7 +149,7 @@ class Db_Plugin extends Plugin
 				mysql_select_db($name, $this->link)
 					or $this->app->error(mysql_errno(), mysql_error(), __FILE__, __LINE__);
 
-				$this->sql('SHOW TABLES;');
+				$this->sql('SHOW TABLES');
 
 				if ( $r = $this->result )
 				{
@@ -173,8 +173,11 @@ class Db_Plugin extends Plugin
 						FROM      `' . $this->prefix . 'cache_queries` AS cq
 						LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
 						WHERE
-							cq.`date_expire` <= "' . gmdate('Y-m-d H:i:s') . '"
-						;');
+							cq.`date_expire` <= :date
+						', array(
+							':date' => gmdate('Y-m-d H:i:s')
+							)
+						);
 				}
 			}
 		}
@@ -184,8 +187,9 @@ class Db_Plugin extends Plugin
 	 * Perform a MySQL query
 	 * @param string $sql
 	 * @param bool $cache
+	 * @param array $tokens
 	 */
-	function sql($sql, $cache = TRUE)
+	function sql($sql, $tokens = array(), $cache = TRUE)
 	{
 		if ( !$this->link )
 		{
@@ -194,7 +198,27 @@ class Db_Plugin extends Plugin
 
 		$this->result = array();
 
-		$this->sql = trim(preg_replace('/\s+/', ' ', $sql));
+		$this->sql = trim(preg_replace('/\s+/', ' ', $sql)) . ';';
+
+		// Prepend prefix to table names
+		if ( $this->tables )
+		{
+			foreach ( $this->tables as $table )
+			{
+				$this->sql = str_replace('{' . preg_replace('/^' . preg_quote($this->prefix) . '/', '', $table) . '}', '`' . $table . '`', $this->sql);
+			}
+		}
+
+		if ( $tokens )
+		{
+			foreach ( $tokens as $token => $value )
+			{
+				if ( substr($token, 0, 1) == ':' )
+				{
+					$this->sql = str_replace($token, '"' . ( is_array($value) ? implode('", "', $this->escape($value)) : $this->escape($value) ) . '"', $this->sql);
+				}
+			}
+		}
 
 		switch ( TRUE )
 		{
@@ -257,10 +281,13 @@ class Db_Plugin extends Plugin
 				FROM      `' . $this->prefix . 'cache_queries` AS cq
 				LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
 				WHERE
-					cq.`hash` = "' . $this->escape($hash) . '" AND
-					ct.`table` IN ( "' . implode('", "', $tables) . '" )
+					cq.`hash` = :hash AND
+					ct.`table` IN ( :tables )
 				LIMIT 1
-				;', FALSE);
+				', array(
+					':hash'   => $hash,
+					':tables' => $tables
+				), FALSE);
 
 			if ( $this->result && $r = $this->result[0] )
 			{
@@ -279,8 +306,11 @@ class Db_Plugin extends Plugin
 						FROM      `' . $this->prefix . 'cache_queries` AS cq
 						LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
 						WHERE
-							cq.`hash` = "' . $this->escape($hash) . '"
-						;');
+							cq.`hash` = :hash
+						', array(
+							':hash' => $hash
+							)
+						);
 				}
 			}
 
@@ -339,12 +369,18 @@ class Db_Plugin extends Plugin
 						`date_expire`
 						)
 					VALUES (
-						"' . $this->escape($hash)              . '",
-						"' . $this->escape(serialize($result)) . '",
-						"' . gmdate('Y-m-d H:i:s')             . '",
-						DATE_ADD("' . gmdate('Y-m-d H:i:s') . '", INTERVAL ' . ( int ) $this->cacheLifeTime . ' SECOND)
+						:hash,
+						:results,
+						:date,
+						DATE_ADD(:date, INTERVAL :cache_life_time SECOND)
 						)
-					;');
+					', array(
+						':hash'            => $hash,
+						':results'         => serialize($result),
+						':date'            => gmdate('Y-m-d H:i:s'),
+						':cache_life_time' => ( int ) $this->cacheLifeTime
+						)
+					);
 
 				if ( $id = $this->result )
 				{
@@ -356,10 +392,14 @@ class Db_Plugin extends Plugin
 								`table`
 								)
 							VALUES (
-								 ' . ( int ) $id           . ',
-								"' . $this->escape($table) . '"
+								:id,
+								:table
 								)
-							;');
+							', array(
+								':id'    => ( int ) $id,
+								':table' => $table
+								)
+							);
 					}
 				}
 			}
@@ -391,7 +431,7 @@ class Db_Plugin extends Plugin
 				LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
 				WHERE
 					ct.`table` IN ( "' . implode('", "', $tables) . '" )
-				;');
+				');
 
 			$this->sql    = $sql;
 			$this->result = array();
@@ -425,7 +465,7 @@ class Db_Plugin extends Plugin
 			{
 				if ( $match != $this->prefix . 'cache_queries' && $match != $this->prefix . 'cache_tables' )
 				{
-					$tables[] = $this->escape($match);
+					$tables[] = $match;
 				}
 			}
 		}

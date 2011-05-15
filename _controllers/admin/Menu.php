@@ -67,11 +67,11 @@ class Menu_Controller extends Controller
 							$this->app->db->sql('
 								SELECT
 									`id`
-								FROM `' . $this->app->db->prefix . 'nodes`
+								FROM {nodes}
 								WHERE
 									`path` = "' . $this->app->db->escape($path) . '"
 								LIMIT 1
-								;');
+								');
 
 							if ( $r = $this->app->db->result )
 							{
@@ -92,10 +92,10 @@ class Menu_Controller extends Controller
 				}
 
 				$this->app->db->sql('
-					UPDATE `' . $this->app->db->prefix . 'menu` SET
+					UPDATE {menu} SET
 						`items` = "' . $this->app->db->escape(serialize($items)) . '"
 					LIMIT 1
-					;');
+					');
 
 				if ( $this->app->db->result )
 				{
@@ -119,9 +119,9 @@ class Menu_Controller extends Controller
 		$this->app->db->sql('
 			SELECT
 				`items`
-			FROM `' . $this->app->db->prefix . 'menu`
+			FROM {menu}
 			LIMIT 1
-			;');
+			');
 
 		if ( $r = $this->app->db->result )
 		{
@@ -144,11 +144,11 @@ class Menu_Controller extends Controller
 						SELECT
 							`id`,
 							`path`
-						FROM `' . $this->app->db->prefix . 'nodes`
+						FROM {nodes}
 						WHERE
 							`id` IN ( ' . implode(',', $nodeIds) . ' )
 						LIMIT ' . count($nodeIds) . '
-						;');
+						');
 
 					if ( $r = $this->app->db->result )
 					{

@@ -37,11 +37,11 @@ class File_Controller extends Controller
 				`extension`,
 				`filename`,
 				`mime_type`
-			FROM `' . $this->app->db->prefix . 'uploads`
+			FROM {uploads}
 			WHERE
 				id = ' . ( int ) $id . '
 			LIMIT 1
-			;');
+			');
 
 		if ( $this->app->db->result && $r = $this->app->db->result[0] )
 		{

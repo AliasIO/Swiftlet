@@ -24,19 +24,19 @@ class Menu_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'menu', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'menu` (
+				CREATE TABLE {menu} (
 					`items` TEXT NULL
 					) ENGINE = INNODB
-				;');
+				');
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'menu` (
+				INSERT INTO {menu} (
 					`items`
 					)
 				VALUES (
 					""
 					)
-				;');
+				');
 		}
 
 		$this->app->permission->create('Menu', 'admin menu access', 'Manage menu items');
@@ -49,7 +49,7 @@ class Menu_Plugin extends Plugin
 	{
 		if ( in_array($this->app->db->prefix . 'menu', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'menu`;');
+			$this->app->db->sql('DROP TABLE {menu}');
 		}
 
 		$this->app->permission->delete('admin menu access');
@@ -80,9 +80,9 @@ class Menu_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`items`
-			FROM `' . $this->app->db->prefix . 'menu`
+			FROM {menu}
 			LIMIT 1
-			;');
+			');
 
 		if ( $r = $this->app->db->result )
 		{
@@ -108,11 +108,11 @@ class Menu_Plugin extends Plugin
 							`id`,
 							`title`,
 							`path`
-						FROM `' . $this->app->db->prefix . 'nodes`
+						FROM {nodes}
 						WHERE
 							`id` IN (' . implode(', ', $nodeIds) . ')
 						LIMIT ' . count($nodeIds) .'
-						;');
+						');
 
 					if ( $r = $this->app->db->result )
 					{

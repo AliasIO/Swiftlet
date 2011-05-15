@@ -30,9 +30,9 @@ class Page_Controller extends Controller
 				pr.`body`,
 				 p.`published`,
 				 n.`home`
-			FROM      `' . $this->app->db->prefix . 'pages`           AS  p
-			LEFT JOIN `' . $this->app->db->prefix . 'pages_revisions` AS pr ON p.`revision_id` = pr.`id`
-			LEFT JOIN `' . $this->app->db->prefix . 'nodes`           AS  n ON p.`node_id`     = n.`id`
+			FROM      {pages}           AS  p
+			LEFT JOIN {pages_revisions} AS pr ON p.`revision_id` = pr.`id`
+			LEFT JOIN {nodes}           AS  n ON p.`node_id`     = n.`id`
 			WHERE
 				(
 					' . ( !empty($this->app->input->args[0]) ? '
@@ -45,7 +45,7 @@ class Page_Controller extends Controller
 				' : '' ) . '
 				p.`lang`      = "' . $this->app->db->escape($language) . '"
 			LIMIT 1
-			;');
+			');
 
 		if ( $r = $this->app->db->result )
 		{

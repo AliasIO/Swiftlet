@@ -32,7 +32,7 @@ class Node_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'nodes` (
+				CREATE TABLE {nodes} (
 					`id`        INT(10)      UNSIGNED NOT NULL PRIMARY kEY AUTO_INCREMENT,
 					`left_id`   INT(10)      UNSIGNED NOT NULL,
 					`right_id`  INT(10)      UNSIGNED NOT NULL,
@@ -48,10 +48,10 @@ class Node_Plugin extends Plugin
 					INDEX `home`     (`home`),
 					INDEX `path`     (`path`)
 					) ENGINE = INNODB
-				;');
+				');
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'nodes` (
+				INSERT INTO {nodes} (
 					`left_id`,
 					`right_id`,
 					`type`,
@@ -60,14 +60,21 @@ class Node_Plugin extends Plugin
 					`date_edit`
 					)
 				VALUES (
-					0,
-					1,
-					"root",
-					"ROOT",
-					"' . gmdate('Y-m-d H:i:s') . '",
-					"' . gmdate('Y-m-d H:i:s') . '"
+					:left_id,
+					:right_id,
+					:type,
+					:title,
+					:date,
+					:date_edit
+				', array(
+					':left_id'   => 0,
+					':right_id'  => 1,
+					':type'      => 'root',
+					':title'     => 'ROOT',
+					':date'      => gmdate('Y-m-d H:i:s'),
+					':date_edit' => gmdate('Y-m-d H:i:s')
 					)
-				;');
+				);
 		}
 	}
 
@@ -78,7 +85,7 @@ class Node_Plugin extends Plugin
 	{
 		if ( in_array($this->app->db->prefix . 'nodes', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'nodes`;');
+			$this->app->db->sql('DROP TABLE {nodes}');
 		}
 	}
 
@@ -93,13 +100,17 @@ class Node_Plugin extends Plugin
 			$this->app->db->sql('
 				SELECT
 					`type`
-				FROM `' . $this->app->db->prefix . 'nodes`
+				FROM {nodes}
 				WHERE
 					' . ( $this->view->controller == 'Node' && !empty($this->app->input->args[0]) ? '
-					`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
-					`path` = "' . $this->app->db->escape($this->view->request) . '"
+					`id`   = :id   OR' : '' ) . '
+					`path` = :path
 				LIMIT 1
-				');
+				', array(
+					':id'   => !empty($this->app->input->args[0]) ? ( int ) $this->app->input->args[0] : NULL,
+					':path' => $this->view->request
+					)
+				);
 
 			if ( $r = $this->app->db->result )
 			{
@@ -133,34 +144,34 @@ class Node_Plugin extends Plugin
 			SELECT
 				`left_id`,
 				`right_id`
-			FROM `' . $this->app->db->prefix . 'nodes`
+			FROM {nodes}
 			WHERE
 				`id` = ' . ( int ) $parentId . '
 			LIMIT 1
-			;');
+			');
 
 		if ( $this->app->db->result )
 		{
 			$parentNode = $this->app->db->result[0];
 
 			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'nodes` SET
+				UPDATE {nodes} SET
 					`left_id`   = `left_id` + 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`left_id` > ' . ( int ) $parentNode['left_id'] . '
-				;');
+				');
 
 			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'nodes` SET
+				UPDATE {nodes} SET
 					`right_id`  = `right_id` + 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
 					`right_id` > ' . ( int ) $parentNode['left_id'] . '
-				;');
+				');
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'nodes` (
+				INSERT INTO {nodes} (
 					`left_id`,
 					`right_id`,
 					`type`,
@@ -169,14 +180,21 @@ class Node_Plugin extends Plugin
 					`date_edit`
 					)
 				VALUES (
-					 ' . ( ( int ) $parentNode['left_id'] + 1 )         . ',
-					 ' . ( ( int ) $parentNode['left_id'] + 2 )         . ',
-					"' . $this->app->db->escape($type)                  . '",
-					"' . $this->app->db->escape($this->view->h($title)) . '",
-					"' . gmdate('Y-m-d H:i:s')                          . '",
-					"' . gmdate('Y-m-d H:i:s')                          . '"
+					:left_id,
+					:right_id,
+					:type,
+					:title,
+					:date,
+					:date_edit
 					)
-				;');
+				', array(
+					':left_id'   => ( int ) $parentNode['left_id'] + 1,
+					':right_id'  => ( int ) $parentNode['left_id'] + 2,
+					':type'      => $type,
+					':title'     => $this->view->h($title),
+					':date'      => gmdate('Y-m-d H:i:s'),
+					':date_edit' => gmdate('Y-m-d H:i:s')
+					));
 
 			return $this->app->db->result;
 		}
@@ -216,42 +234,60 @@ class Node_Plugin extends Plugin
 
 		// Sync parents
 		$this->app->db->sql('
-			UPDATE `' . $this->app->db->prefix . 'nodes` SET
-				`right_id` = `right_id` - ' . $diff . '
+			UPDATE {nodes} SET
+				`right_id` = `right_id` - :diff
 			WHERE
-				`left_id`  < ' . ( int ) $node[0]['right_id'] . ' AND
-				`right_id` > ' . ( int ) $node[0]['right_id'] . '
-			;');
+				`left_id`  < :right_id AND
+				`right_id` > :right_id
+			', array(
+				':diff'     => ( int ) $diff,
+				':right_id' => ( int ) $node[0]['right_id']
+				)
+			);
 
 		// Sync righthand side of tree
 		$this->app->db->sql('
-			UPDATE `' . $this->app->db->prefix . 'nodes` SET
-				`left_id`  = `left_id`  - ' . ( int ) $diff . ',
-				`right_id` = `right_id` - ' . ( int ) $diff . '
+			UPDATE {nodes} SET
+				`left_id`  = `left_id`  - :diff,
+				`right_id` = `right_id` - :diff
 			WHERE
-				`left_id` > ' . ( int ) $node[0]['right_id'] . '
-			;');
+				`left_id` > :right_id
+			', array(
+				':diff'     => ( int ) $diff,
+				':right_id' => ( int ) $node[0]['right_id']
+				)
+			);
 
 		$parentNode = $this->get($parentId);
 
 		// Sync new parents
 		$this->app->db->sql('
-			UPDATE `' . $this->app->db->prefix . 'nodes` SET
-				`right_id` = `right_id` + ' . $diff . '
+			UPDATE {nodes} SET
+				`right_id` = `right_id` + :diff
 			WHERE
-				' . $parentNode['right_id'] . ' BETWEEN `left_id` AND `right_id` AND
-				`id` NOT IN ( ' . implode(', ', $node['all']) . ' )
-			;');
+				:parent_right_id BETWEEN `left_id` AND `right_id` AND
+				`id` NOT IN ( :all )
+			', array(
+				':diff'            => ( int ) $diff,
+				':parent_right_id' => ( int ) $parentNode['right_id'],
+				':all'             => $node['all']
+				)
+			);
 
 		// Sync righthand side of tree
 		$this->app->db->sql('
-			UPDATE `' . $this->app->db->prefix . 'nodes` SET
-				`left_id`  = `left_id`  + ' . ( int ) $diff . ',
-				`right_id` = `right_id` + ' . ( int ) $diff . '
+			UPDATE {nodes} SET
+				`left_id`  = `left_id`  + :diff,
+				`right_id` = `right_id` + :diff
 			WHERE
-				`left_id` > ' . ( int ) $parentNode['right_id'] . ' AND
-				`id` NOT IN ( ' . implode(', ', $node['all']) . ' )
-			;');
+				`left_id` > :parent_right_id AND
+				`id` NOT IN ( :all )
+			', array(
+				':diff'            => ( int ) $diff,
+				':parent_right_id' => ( int ) $parentNode['right_id'],
+				':all'             => $node['all']
+				)
+			);
 
 		// Sync moved branch
 		$parentNode['right_id'] += $diff;
@@ -266,12 +302,16 @@ class Node_Plugin extends Plugin
 		}
 
 		$this->app->db->sql('
-			UPDATE `' . $this->app->db->prefix . 'nodes` SET
-				`left_id`  = `left_id`  ' . $diff . ',
-				`right_id` = `right_id` ' . $diff . '
+			UPDATE {nodes} SET
+				`left_id`  = `left_id`  :diff,
+				`right_id` = `right_id` :diff
 			WHERE
-				`id` IN ( ' . implode(', ', $node['all']) . ' )
-			;');
+				`id` IN ( :all )
+			', array(
+				':diff' => $diff,
+				':all'  => $node['all']
+				)
+			);
 	}
 
 	/**
@@ -286,11 +326,14 @@ class Node_Plugin extends Plugin
 			SELECT
 				`left_id`,
 				`right_id`
-			FROM `' . $this->app->db->prefix . 'nodes`
+			FROM {nodes}
 			WHERE
-				`id` = ' . ( int ) $id . '
+				`id` = :id
 			LIMIT 1
-			;');
+			', array(
+				':id' => ( int ) $id
+				)
+			);
 
 		if ( $this->app->db->result )
 		{
@@ -298,39 +341,55 @@ class Node_Plugin extends Plugin
 			$rightId = ( int ) $this->app->db->result[0]['right_id'];
 
 			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'nodes` SET
+				UPDATE {nodes} SET
 					`left_id`   = `left_id` - 2,
 					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
 				WHERE
-					`left_id`  > ' . ( int ) $leftId  . ' AND
-					`right_id` > ' . ( int ) $rightId . '
-				;');
+					`left_id`  > :left_id AND
+					`right_id` > :right_id
+				', array(
+					':left_id'  => ( int ) $leftId,
+					':right_id' => ( int ) $rightId
+					)
+				);
 
 			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'nodes` SET
+				UPDATE {nodes} SET
 					`right_id`  = `right_id` - 2,
-					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
+					`date_edit` = :date
 				WHERE
-					`right_id` > ' . ( int ) $rightId . '
-				;');
+					`right_id` > :right_id
+				', array(
+					':date'     => gmdate('Y-m-d H:i:s'),
+					':right_id' => ( int ) $rightId
+					)
+				);
 
 			$this->app->db->sql('
-				UPDATE `' . $this->app->db->prefix . 'nodes` SET
+				UPDATE {nodes} SET
 					`left_id`   = `left_id`  - 1,
 					`right_id`  = `right_id` - 1,
-					`date_edit` = "' . gmdate('Y-m-d H:i:s') . '"
+					`date_edit` = :date
 				WHERE
-					`left_id`  > ' . ( int ) $leftId  . ' AND
-					`right_id` < ' . ( int ) $rightId . '
-				;');
+					`left_id`  > :left_id  AND
+					`right_id` < :right_id
+				', array(
+					':date'     => gmdate('Y-m-d H:i:s'),
+					':left_id'  => ( int ) $leftId,
+					':right_id' => ( int ) $rightId
+					)
+				);
 
 			$this->app->db->sql('
 				DELETE
-				FROM `' . $this->app->db->prefix . 'nodes`
+				FROM {nodes}
 				WHERE
-					`id` = ' . ( int ) $id . '
+					`id` = :id
 				LIMIT 1
-				;');
+				', array(
+					':id' => ( int ) $id
+					)
+				);
 
 			return $this->app->db->result;
 		}
@@ -348,11 +407,14 @@ class Node_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				*
-			FROM `' . $this->app->db->prefix . 'nodes`
+			FROM {nodes}
 			WHERE
-				`id` = ' . ( int ) $id . '
+				`id` = :id
 			LIMIT 1
-			;');
+			', array(
+				':id' => ( int ) $id
+				)
+			);
 
 		if ( isset($this->app->db->result[0]) )
 		{
@@ -378,12 +440,16 @@ class Node_Plugin extends Plugin
 			$this->app->db->sql('
 				SELECT
 					*
-				FROM `' . $this->app->db->prefix . 'nodes`
+				FROM {nodes}
 				WHERE
-					`left_id`  < ' . ( int ) $node['left_id']  . ' AND
-					`right_id` > ' . ( int ) $node['right_id'] . '
+					`left_id`  < :left_id  AND
+					`right_id` > :right_id
 				ORDER BY `left_id` ASC
-				;');
+				', array(
+					':left_id'  => ( int ) $node['left_id'],
+					':right_id' => ( int ) $node['right_id']
+					)
+				);
 
 			if ( $this->app->db->result )
 			{
@@ -411,14 +477,20 @@ class Node_Plugin extends Plugin
 			$this->app->db->sql('
 				SELECT
 					*
-				FROM `' . $this->app->db->prefix . 'nodes`
+				FROM {nodes}
 				WHERE
 					`id` = ' . ( int ) $id . ' OR (
-						`left_id` BETWEEN ' . ( int ) $node['left_id']  . ' AND ' . ( int ) $node['right_id'] . '
-						' . ( $type ? 'AND `type` = "' . $this->app->db->escape($type) . '"' : '' )           . '
+						`left_id` BETWEEN :left_id AND :right_id ' . ( $type ? 'AND
+						`type` = :type' : '' ) . '
 						)
 				ORDER BY `left_id` ASC
-				;');
+				', array(
+					':id'       => ( int ) $id,
+					':left_id'  => ( int ) $node['left_id'],
+					':right_id' => ( int ) $node['right_id'],
+					':type'     => $this->app->db->escape($type)
+					)
+				);
 
 			if ( $this->app->db->result )
 			{

@@ -31,16 +31,16 @@ class Permission_Plugin extends Plugin
 		if ( !in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'perms` (
+				CREATE TABLE {perms} (
 					`id`    INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`name`  VARCHAR(255)     NOT NULL UNIQUE,
 					`desc`  VARCHAR(255)     NOT NULL,
 					`group` VARCHAR(255)     NOT NULL
 					) ENGINE = INNODB
-				;');
+				');
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'perms` (
+				INSERT INTO {perms} (
 					`name`,
 					`desc`,
 					`group`
@@ -49,65 +49,64 @@ class Permission_Plugin extends Plugin
 					"admin permission access",
 					"Manage roles",
 					"Permissions"
-				),
-				(
+				), (
 					"admin permission create",
 					"Create roles",
 					"Permissions"
-				),(
+				), (
 					"admin permission edit",
 					"Edit roles",
 					"Permissions"
-				),(
+				), (
 					"admin permission delete",
 					"Delete roles",
 					"Permissions"
 				)
-				;');
+				');
 		}
 
 		if ( !in_array($this->app->db->prefix . 'perms_roles', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'perms_roles` (
+				CREATE TABLE {perms_roles} (
 					`id`   INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 					`name` VARCHAR(255)     NOT NULL UNIQUE
 					) ENGINE = INNODB
-				;');
+				');
 
 			$this->app->db->sql('
-				INSERT INTO `' . $this->app->db->prefix . 'perms_roles` (
+				INSERT INTO {perms_roles} (
 					`name`
 					)
 				VALUES (
 					"Administrator"
 					)
-				;');
+				');
 		}
 
 		if ( !in_array($this->app->db->prefix . 'perms_roles_xref', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'perms_roles_xref` (
+				CREATE TABLE {perms_roles_xref} (
 					`perm_id` INT(10) UNSIGNED NOT NULL,
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`value`   INT(1)               NULL,
-					FOREIGN KEY (`perm_id`) REFERENCES `' . $this->app->db->prefix . 'perms`       (`id`) ON DELETE CASCADE,
-					FOREIGN KEY (`role_id`) REFERENCES `' . $this->app->db->prefix . 'perms_roles` (`id`) ON DELETE CASCADE
+					FOREIGN KEY (`perm_id`) REFERENCES {perms}       (`id`) ON DELETE CASCADE,
+					FOREIGN KEY (`role_id`) REFERENCES {perms_roles} (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
-				;');
+				');
 		}
 
 		if ( !in_array($this->app->db->prefix . 'perms_roles_users_xref', $this->app->db->tables) )
 		{
 			$this->app->db->sql('
-				CREATE TABLE `' . $this->app->db->prefix . 'perms_roles_users_xref` (
+				CREATE TABLE {perms_roles_users_xref} (
 					`role_id` INT(10) UNSIGNED NOT NULL,
 					`user_id` INT(10) UNSIGNED NOT NULL,
-					FOREIGN KEY (`role_id`) REFERENCES `' . $this->app->db->prefix . 'perms_roles` (`id`) ON DELETE CASCADE,
-					FOREIGN KEY (`user_id`) REFERENCES `' . $this->app->db->prefix . 'users`       (`id`) ON DELETE CASCADE
+					FOREIGN KEY (`role_id`) REFERENCES {perms_roles} (`id`) ON DELETE CASCADE,
+					FOREIGN KEY (`user_id`) REFERENCES {users}       (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
-				;');
+				');
 		}
 	}
 
@@ -118,22 +117,22 @@ class Permission_Plugin extends Plugin
 	{
 		if ( in_array($this->app->db->prefix . 'perms_roles_users_xref', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles_users_xref`;');
+			$this->app->db->sql('DROP TABLE {perms_roles_users_xref}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'perms_roles_xref', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles_xref`;');
+			$this->app->db->sql('DROP TABLE {perms_roles_xref}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'perms_roles', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms_roles`;');
+			$this->app->db->sql('DROP TABLE {perms_roles}');
 		}
 
 		if ( in_array($this->app->db->prefix . 'perms', $this->app->db->tables) )
 		{
-			$this->app->db->sql('DROP TABLE `' . $this->app->db->prefix . 'perms`;');
+			$this->app->db->sql('DROP TABLE {perms}');
 		}
 	}
 
@@ -147,15 +146,18 @@ class Permission_Plugin extends Plugin
 				p.`name`  AS `permission`,
 				pr.`name` AS `role`,
 				prx.`value`
-			FROM      `' . $this->app->db->prefix . 'perms_roles_users_xref` AS prux
-			LEFT JOIN `' . $this->app->db->prefix . 'perms_roles`            AS pr   ON prux.`role_id` = pr.`id`
-			LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref`       AS prx  ON pr.`id`        = prx.`role_id`
-			LEFT JOIN `' . $this->app->db->prefix . 'perms`                  AS p    ON prx.`perm_id`  = p.`id`
+			FROM      {perms_roles_users_xref} AS prux
+			LEFT JOIN {perms_roles}            AS pr   ON prux.`role_id` =  pr.`id`
+			LEFT JOIN {perms_roles_xref}       AS prx  ON   pr.`id`      = prx.`role_id`
+			LEFT JOIN {perms}                  AS p    ON  prx.`perm_id` =   p.`id`
 			WHERE
-				 p.`name` IS NOT NULL AND
-				pr.`name` IS NOT NULL AND
-				prux.`user_id` = ' . ( int ) $this->app->session->get('user id') . '
-			', FALSE);
+				 p.`name` IS NOT NULL     AND
+				pr.`name` IS NOT NULL     AND
+				prux.`user_id` = :user_id
+			', array(
+				':user_id' => ( int ) $this->app->session->get('user id')
+				), FALSE
+			);
 
 		if ( $r = $this->app->db->result )
 		{
@@ -212,17 +214,22 @@ class Permission_Plugin extends Plugin
 	function create($group, $name, $description)
 	{
 		$this->app->db->sql('
-			INSERT IGNORE INTO `' . $this->app->db->prefix . 'perms` (
+			INSERT IGNORE INTO {perms} (
 				`name`,
 				`desc`,
 				`group`
 				)
 			VALUES (
-				"' . $this->app->db->escape($name)        . '",
-				"' . $this->app->db->escape($description) . '",
-				"' . $this->app->db->escape($group)       . '"
+				:name,
+				:desc,
+				:group
 				)
-			;');
+			', array(
+				':name'  => $name,
+				':desc'  => $description,
+				':group' => $group
+				)
+			);
 
 		return ( bool ) $this->app->db->result;
 	}
@@ -237,22 +244,28 @@ class Permission_Plugin extends Plugin
 		$this->app->db->sql('
 			SELECT
 				`id`
-			FROM `' . $this->app->db->prefix . 'perms`
+			FROM {perms}
 			WHERE
-				`name` = "' . $this->app->db->escape($name) . '"
+				`name` = :name
 			LIMIT 1
-			;');
+			', array(
+				':name' => $name
+				)
+			);
 
 		if ( $this->app->db->result && $id = $this->app->db->result[0]['id'] )
 		{
 			$this->app->db->sql('
 				DELETE
 					p, prx
-				FROM      `' . $this->app->db->prefix . 'perms`            AS   p
-				LEFT JOIN `' . $this->app->db->prefix . 'perms_roles_xref` AS prx ON p.`id` = prx.`perm_id`
+				FROM      {perms}            AS   p
+				LEFT JOIN {perms_roles_xref} AS prx ON p.`id` = prx.`perm_id`
 				WHERE
-					p.`id` = ' . ( int ) $id . '
-				;');
+					p.`id` = :id
+				', array(
+					':id' => ( int ) $id
+					)
+				);
 
 			return ( bool ) $this->app->db->result;
 		}

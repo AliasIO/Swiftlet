@@ -1,6 +1,6 @@
 ﻿<%
  '
- ' Copyright (c) 2003-2010, CKSource - Frederico Knabben. All rights reserved.
+ ' Copyright (c) 2003-2011, CKSource - Frederico Knabben. All rights reserved.
  ' For licensing, see LICENSE.html or http://ckeditor.com/license
 
 ' Shared variable for all instances ("static")
@@ -91,9 +91,9 @@ Class CKEditor
 
 
 	Private Sub Class_Initialize()
-		version = "3.5"
-		timeStamp = "ABLC4TW"
-		mTimeStamp = "ABLC4TW"
+		version = "3.6"
+		timeStamp = "B49E5BQ"
+		mTimeStamp = "B49E5BQ"
 
 		Set oInstanceConfig = CreateObject("Scripting.Dictionary")
 		Set oAllInstancesConfig = CreateObject("Scripting.Dictionary")

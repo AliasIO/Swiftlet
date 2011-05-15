@@ -60,11 +60,11 @@ class Account_Controller extends Controller
 			$this->app->db->sql('
 				SELECT
 					*
-				FROM `' . $this->app->db->prefix . 'users`
+				FROM {users}
 				WHERE
 					`id` = ' . ( int ) $this->id . '
 				LIMIT 1
-				;');
+				');
 
 			if ( $r = $this->app->db->result )
 			{
@@ -155,11 +155,11 @@ class Account_Controller extends Controller
 					$this->app->db->sql('
 						SELECT
 							`id`
-						FROM `' . $this->app->db->prefix . 'users`
+						FROM {users}
 						WHERE
 							`username` = "' . $this->app->input->POST_db_safe['username'] . '"
 						LIMIT 1
-						;');
+						');
 
 					if ( $this->app->db->result )
 					{
@@ -197,7 +197,7 @@ class Account_Controller extends Controller
 				{
 					case 'create':
 						$this->app->db->sql('
-							INSERT INTO `' . $this->app->db->prefix . 'users` (
+							INSERT INTO {users} (
 								`username`,
 								`email`,
 								`owner`,
@@ -213,7 +213,7 @@ class Account_Controller extends Controller
 								"' . gmdate('Y-m-d H:i:s')             . '",
 								"' . $passHash                         . '"
 								)
-								;');
+								');
 
 						if ( $newId = $this->app->db->result )
 						{
@@ -234,7 +234,7 @@ class Account_Controller extends Controller
 						break;
 					default:
 						$this->app->db->sql('
-							UPDATE `' . $this->app->db->prefix . 'users` SET
+							UPDATE {users} SET
 								`username`  = "' . $this->app->db->escape($username) . '",
 								`email`     = "' . $email                            . '",
 								`owner`     =  ' . ( int ) $owner                    . ',
@@ -243,7 +243,7 @@ class Account_Controller extends Controller
 							WHERE
 								`id` = ' . ( int ) $user['id'] . '
 							LIMIT 1
-							;');
+							');
 
 						if ( $this->app->db->result )
 						{
@@ -307,20 +307,20 @@ class Account_Controller extends Controller
 							// Delete account
 							$this->app->db->sql('
 								DELETE
-								FROM `' . $this->app->db->prefix . 'users`
+								FROM {users}
 								WHERE
 									`id` = ' . ( int ) $this->id . '
 								LIMIT 1
-								;');
+								');
 
 							if ( $this->app->db->result )
 							{
 								$this->app->db->sql('
 									DELETE
-									FROM `' . $this->app->db->prefix . 'user_prefs_xref`
+									FROM {user_prefs_xref}
 									WHERE
 										`user_id` = ' . ( int ) $this->id . '
-									;');
+									');
 
 								header('Location: ' . $this->view->route($this->path . '?notice=deleted', FALSE));
 
@@ -360,8 +360,8 @@ class Account_Controller extends Controller
 			$this->app->db->sql('
 				SELECT
 					COUNT(`id`) as `count`
-				FROM `' . $this->app->db->prefix . 'users`
-				;');
+				FROM {users}
+				');
 
 			if ( $r = $this->app->db->result )
 			{
@@ -371,10 +371,10 @@ class Account_Controller extends Controller
 					SELECT
 						`id`,
 						`username`
-					FROM `' . $this->app->db->prefix . 'users`
+					FROM {users}
 					ORDER BY `username`
 					LIMIT ' . $usersPagination['from'] . ', 25
-					;');
+					');
 
 				if ( $r = $this->app->db->result )
 				{
