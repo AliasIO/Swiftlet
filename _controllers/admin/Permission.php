@@ -153,9 +153,12 @@ class Permission_Controller extends Controller
 							`name`
 						)
 						VALUES (
-							"' . $this->app->input->POST_db_safe['name'] . '"
+							:name
 						)
-						');
+						', array(
+							':name' => $this->app->input->POST_raw['name']
+							)
+						);
 
 					if ( $this->app->db->result )
 					{
@@ -168,11 +171,15 @@ class Permission_Controller extends Controller
 				{
 					$this->app->db->sql('
 						UPDATE {perms_roles} SET
-							`name` = "' . $this->app->input->POST_db_safe['name'] . '"
+							`name` = :name
 						WHERE
-							`id` = ' . ( int ) $this->id . '
+							`id` = :id
 						LIMIT 1
-						');
+						', array(
+							':name' => $this->app->input->POST_raw['name'],
+							':id'   => ( int ) $this->id
+							)
+						);
 
 					if ( $this->app->db->result )
 					{
@@ -194,10 +201,14 @@ class Permission_Controller extends Controller
 						`user_id`
 						)
 					VALUES (
-						' . ( int ) $this->id                               . ',
-						' . ( int ) $this->app->input->POST_db_safe['user'] . '
+						:role_id,
+						:user_id
 						)
-					');
+					', array(
+						':role_id' => ( int ) $this->id,
+						':user_id' => ( int ) $this->app->input->POST_raw['user']
+						)
+					);
 
 				header('Location: ' . $this->view->route($this->path . '?notice=added', FALSE));
 
@@ -220,13 +231,18 @@ class Permission_Controller extends Controller
 								`value`
 								)
 							VALUES (
-								' . ( int ) $permission['id'] . ',
-								' . ( int ) $role['id']       . ',
-								' . ( int ) $this->app->input->POST_db_safe['value'][$permission['id']][$role['id']] . '
+								:perm_id,
+								:role_id,
+								:value
 								)
 							ON DUPLICATE KEY UPDATE
-								`value` = ' . ( int ) $this->app->input->POST_db_safe['value'][$permission['id']][$role['id']] . '
-							');
+								`value` = :value
+							', array(
+								':perm_id' => ( int ) $permission['id'],
+								':role_id' => ( int ) $role['id'],
+								':value'   => ( int ) $this->app->input->POST_raw['value'][$permission['id']][$role['id']]
+								)
+							);
 					}
 				}
 
@@ -328,9 +344,13 @@ class Permission_Controller extends Controller
 								DELETE
 								FROM {perms_roles_users_xref}
 								WHERE
-									`user_id` = ' . ( int ) $userId   . ' AND
-									`role_id` = ' . ( int ) $this->id . '
-								');
+									`user_id` = :user_id AND
+									`role_id` = :role_id
+								', array(
+									':user_id' = ( int ) $userId,
+									':role_id' = ( int ) $this->id
+									)
+								);
 
 							if ( $this->app->db->result )
 							{
@@ -358,8 +378,11 @@ class Permission_Controller extends Controller
 								LEFT JOIN {perms_roles_xref}       AS  prx ON pr.`id` =  prx.`role_id`
 								LEFT JOIN {perms_roles_users_xref} AS prux ON pr.`id` = prux.`role_id`
 								WHERE
-									pr.`id` = ' . ( int ) $this->id . '
-								');
+									pr.`id` = :id
+								', array(
+									':id' => ( int ) $this->id
+									)
+								);
 
 							if ( $this->app->db->result )
 							{

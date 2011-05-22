@@ -80,13 +80,19 @@ class Page_Controller extends Controller
 						{
 							$this->app->db->sql('
 								UPDATE {nodes} SET
-									`title` = "' . $this->app->input->POST_db_safe['title']['English US'] . '",
-									`home`  =  ' . ( $this->app->input->POST_raw['home'] ? 1 : 0 )        . ',
-									`path`  = "' . $this->app->input->POST_db_safe['path']                . '"
+									`title` = :title,
+									`home`  = :home,
+									`path`  = :path
 								WHERE
-									`id` = ' . $this->id . '
+									`id` = :id
 								LIMIT 1
-								');
+								', array(
+									':title' => $this->app->input->POST_raw['title']['English US'],
+									':home'  => $this->app->input->POST_raw['home'] ? 1 : 0,
+									':path'  => $this->app->input->POST_raw['path'],
+									':id'    => $this->id
+									)
+								);
 
 							// Check in which languages the page is stored
 							$langExist = array();
@@ -97,8 +103,11 @@ class Page_Controller extends Controller
 									`lang`
 								FROM {pages}
 								WHERE
-									`node_id` = ' . $this->id . '
-								');
+									`node_id` = :id
+								', array(
+									':id' => $this->id
+									)
+								);
 
 							if ( $r = $this->app->db->result )
 							{
@@ -118,12 +127,17 @@ class Page_Controller extends Controller
 
 									$this->app->db->sql('
 										UPDATE {pages} SET
-											`published` =  ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
-											`date_edit` = "' . gmdate('y-m-d h:i:s')                                . '"
+											`published` = :published,
+											`date_edit` = :date_edit
 										WHERE
-											`id` =  ' . $pageId . '
+											`id` =  :id
 										LIMIT 1
-										');
+										', array(
+											':published' => $this->app->input->POST_raw['published'] ? 1 : 0,
+											':date_edit' => gmdate('y-m-d h:i:s'),
+											':id'        => $pageId
+											)
+										);
 								}
 								else
 								{
@@ -136,13 +150,20 @@ class Page_Controller extends Controller
 											`date_edit`
 											)
 										VALUES (
-											 ' . $this->id                                            . ',
-											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
-											"' . $this->app->db->escape($language)                    . '",
-											"' . gmdate('Y-m-d H:i:s')                                . '",
-											"' . gmdate('Y-m-d H:i:s')                                . '"
+											:node_id,
+											:published,
+											:lang,
+											:date,
+											:date_edit
 											)
-										');
+										', array(
+											':node_id'   => $this->id,
+											':published' => $this->app->input->POST_raw['published'] ? 1 : 0,
+											':lang'      => $language,
+											':date'      => gmdate('Y-m-d H:i:s'),
+											':date_edit' => gmdate('Y-m-d H:i:s')
+											)
+										);
 
 									$pageId = $this->app->db->result;
 								}
@@ -157,12 +178,18 @@ class Page_Controller extends Controller
 											`date`
 											)
 										VALUES (
-											 ' . $pageId                                             . ',
-											"' . $this->app->input->POST_db_safe['title'][$language] . '",
-											"' . $this->app->input->POST_db_safe['body'][$language]  . '",
-											"' . gmdate('Y-m-d H:i:s')                               . '"
+											:page_id,
+											:title,
+											:body,
+											:date
 											)
-										');
+										', array(
+											':page_id' => $pageId,
+											':title'   => $this->app->input->POST_raw['title'][$language],
+											':body'    => $this->app->input->POST_raw['body'][$language],
+											':date'    => gmdate('Y-m-d H:i:s')
+											)
+										);
 
 									$revisionId = $this->app->db->result;
 
@@ -175,11 +202,15 @@ class Page_Controller extends Controller
 									{
 										$this->app->db->sql('
 											UPDATE {pages} SET
-												`revision_id` =  ' . ( int ) $revisionId . '
+												`revision_id` = :revision_id
 											WHERE
-												`id` =  ' . $pageId . '
+												`id` = :id
 											LIMIT 1
-											');
+											', array(
+												':revision_id' => ( int ) $revisionId,
+												':id'          => $pageId
+												)
+											);
 									}
 								}
 							}
@@ -203,12 +234,17 @@ class Page_Controller extends Controller
 							{
 								$this->app->db->sql('
 									UPDATE {nodes} SET
-										`home` =  ' . ( $this->app->input->POST_raw['home'] ? 1 : 0 ) . ',
-										`path` = "' . $this->app->input->POST_db_safe['path']         . '"
+										`home` = :home,
+										`path` = :path
 									WHERE
-										`id` = ' . ( $nodeId ) . '
+										`id` = :id
 									LIMIT 1
-									');
+									', array(
+										':home' => $this->app->input->POST_raw['home'] ? 1 : 0,
+										':path' => $this->app->input->POST_raw['path'],
+										':id'   => ( int ) $nodeId
+										)
+									);
 
 								$this->app->db->result = FALSE;
 
@@ -223,13 +259,20 @@ class Page_Controller extends Controller
 											`date_edit`
 											)
 										VALUES (
-											 ' . ( int ) $nodeId                                      . ',
-											 ' . ( $this->app->input->POST_raw['published'] ? 1 : 0 ) . ',
-											"' . $this->app->db->escape($language)                    . '",
-											"' . gmdate('Y-m-d H:i:s')                                . '",
-											"' . gmdate('Y-m-d H:i:s')                                . '"
+											:node_id,
+											:published,
+											:lang,
+											:date,
+											:date_edit
 											)
-										');
+										', array(
+											':node_id'   => ( int ) $nodeId,
+											':published' => $this->app->input->POST_raw['published'] ? 1 : 0,
+											':lang'      => $language,
+											':date'      => gmdate('Y-m-d H:i:s'),
+											':date_edit' => gmdate('Y-m-d H:i:s')
+											)
+										);
 
 									if ( $pageId = $this->app->db->result )
 									{
@@ -241,22 +284,32 @@ class Page_Controller extends Controller
 												`date`
 												)
 											VALUES (
-												 ' . $pageId                                             . ',
-												"' . $this->app->input->POST_db_safe['title'][$language] . '",
-												"' . $this->app->input->POST_db_safe['body'][$language]  . '",
-												"' . gmdate('Y-m-d H:i:s')                               . '"
+												:page_id,
+												:title,
+												:body,
+												:date
 												)
-											');
+											', array(
+												':page_id' => ( int ) $pageId,
+												':title'   => $this->app->input->POST_raw['title'][$language],
+												':body'    => $this->app->input->POST_raw['body'][$language],
+												':date'    => gmdate('Y-m-d H:i:s')
+												)
+											);
 
 										if ( $revisionId = $this->app->db->result )
 										{
 											$this->app->db->sql('
 												UPDATE {pages} SET
-													`revision_id` =  ' . ( int ) $revisionId . '
+													`revision_id` = :revision_id
 												WHERE
-													`id` =  ' . $pageId . '
+													`id` = :id
 												LIMIT 1
-												');
+												', array(
+													':revision_id' => ( int ) $revisionId,
+													':id'          => ( int ) $pageId
+													)
+												);
 										}
 									}
 								}
@@ -327,8 +380,11 @@ class Page_Controller extends Controller
 							LEFT JOIN {pages}           AS  p ON n.`id`          = p.`node_id`
 							LEFT JOIN {pages_revisions} AS pr ON p.`revision_id` = pr.`id`
 							WHERE
-								n.`id`= ' . ( int ) $this->id . '
-							');
+								n.`id`= :id
+							', array(
+								':id' => ( int ) $this->id
+								)
+							);
 
 						if ( $r = $this->app->db->result )
 						{
@@ -355,11 +411,15 @@ class Page_Controller extends Controller
 									LENGTH(`title`) + LENGTH(`body`) AS bytes
 								FROM {pages_revisions}
 								WHERE
-									`page_id`  = ' . ( int ) $r[0]['id']          . ' AND
-									`id`      != ' . ( int ) $r[0]['revision_id'] . '
+									`page_id`  = :page_id
+									`id`      != :revision_id
 								ORDER BY `date` DESC
 								LIMIT 10
-								');
+								', array(
+									':page_id'     => ( int ) $r[0]['id'],
+									':revision_id' => ( int ) $r[0]['revision_id']
+									)
+								);
 
 							$revisions = $this->app->db->result;
 						}
@@ -385,8 +445,11 @@ class Page_Controller extends Controller
 								FROM      {pages}           AS  p
 								LEFT JOIN {pages_revisions} AS pr ON p.`id` = pr.`page_id`
 								WHERE
-									`node_id` = ' . ( int ) $this->id . '
-								');
+									`node_id` = :node_id
+								', array(
+									':node_id' => ( int ) $this->id
+									)
+								);
 
 							if ( $this->app->db->result )
 							{

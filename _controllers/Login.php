@@ -61,9 +61,12 @@ class Login_Controller extends Controller
 						`date_login_attempt`
 					FROM {users}
 					WHERE
-						`username` = "' . $this->app->input->POST_db_safe['username'] . '"
+						`username` = :username
 					LIMIT 1
-					');
+					', array(
+						':username' => $this->app->input->POST_raw['username']
+						)
+					);
 
 				if ( isset($this->app->db->result[0]) && $r = $this->app->db->result[0] )
 				{

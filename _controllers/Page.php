@@ -36,16 +36,21 @@ class Page_Controller extends Controller
 			WHERE
 				(
 					' . ( !empty($this->app->input->args[0]) ? '
-					n.`id`   =  ' . ( int ) $this->app->input->args[0] . ' OR' : '' ) . '
-					n.`path` = "' . $this->app->db->escape($this->request)            . '"
+					n.`id`   = :id   OR' : '' ) . '
+					n.`path` = :path
 				) AND
-				n.`type`      = "page"                                      AND
+				n.`type`      = "page" AND
 				' . ( !$this->app->permission->check('admin page edit') ? '
-				p.`published` = 1                                           AND
+				p.`published` = 1      AND
 				' : '' ) . '
-				p.`lang`      = "' . $this->app->db->escape($language) . '"
+				p.`lang`      = :lang
 			LIMIT 1
-			');
+			', array(
+				':id'   => !empty($this->app->input->args[0]) ? ( int ) $this->app->input->args[0] : NULL,
+				':path' => $this->request,
+				':lang' => $language
+				)
+			);
 
 		if ( $r = $this->app->db->result )
 		{

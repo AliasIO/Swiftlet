@@ -62,9 +62,12 @@ class Account_Controller extends Controller
 					*
 				FROM {users}
 				WHERE
-					`id` = ' . ( int ) $this->id . '
+					`id` = :id
 				LIMIT 1
-				');
+				', array(
+					':id' => ( int ) $this->id
+					)
+				);
 
 			if ( $r = $this->app->db->result )
 			{
@@ -157,9 +160,12 @@ class Account_Controller extends Controller
 							`id`
 						FROM {users}
 						WHERE
-							`username` = "' . $this->app->input->POST_db_safe['username'] . '"
+							`username` = :username
 						LIMIT 1
-						');
+						', array(
+							':username' => $this->app->input->POST_raw['username']
+							)
+						);
 
 					if ( $this->app->db->result )
 					{
@@ -206,14 +212,22 @@ class Account_Controller extends Controller
 								`pass_hash`
 								)
 							VALUES (
-								"' . $this->app->db->escape($username) . '",
-								"' . $email                            . '",
-								 ' . ( int ) $owner                    . ',
-								"' . gmdate('Y-m-d H:i:s')             . '",
-								"' . gmdate('Y-m-d H:i:s')             . '",
-								"' . $passHash                         . '"
+								:username,
+								:email,
+								:owner,
+								:date,
+								:date_edit,
+								:pass_hash
 								)
-								');
+							', array(
+								':username'  => $$username,
+								':email'     => $email,
+								':owner'     => ( int ) $owner,
+								':date'      => gmdate('Y-m-d H:i:s'),
+								':date_edit' => gmdate('Y-m-d H:i:s'),
+								':pass_hash' => $passHash
+								)
+							);
 
 						if ( $newId = $this->app->db->result )
 						{
@@ -235,15 +249,23 @@ class Account_Controller extends Controller
 					default:
 						$this->app->db->sql('
 							UPDATE {users} SET
-								`username`  = "' . $this->app->db->escape($username) . '",
-								`email`     = "' . $email                            . '",
-								`owner`     =  ' . ( int ) $owner                    . ',
-								`date_edit` = "' . gmdate('Y-m-d H:i:s')             . '",
-								`pass_hash` = "' . $passHash                         . '"
+								`username`  = :username,
+								`email`     = :email,
+								`owner`     = :owner,
+								`date_edit` = :date_edit,
+								`pass_hash` = :pass_hash
 							WHERE
-								`id` = ' . ( int ) $user['id'] . '
+								`id` = :id
 							LIMIT 1
-							');
+							', array(
+								':username'  => $username,
+								':email'     => $email,
+								':owner'     => ( int ) $owner,
+								':date_edit' => gmdate('Y-m-d H:i:s'),
+								':pass_hash' => $passHash,
+								':id'        => ( int ) $user['id']
+								)
+							);
 
 						if ( $this->app->db->result )
 						{
@@ -309,9 +331,12 @@ class Account_Controller extends Controller
 								DELETE
 								FROM {users}
 								WHERE
-									`id` = ' . ( int ) $this->id . '
+									`id` = :id
 								LIMIT 1
-								');
+								', array(
+									':id' => ( int ) $this->id
+									)
+								);
 
 							if ( $this->app->db->result )
 							{
@@ -319,8 +344,11 @@ class Account_Controller extends Controller
 									DELETE
 									FROM {user_prefs_xref}
 									WHERE
-										`user_id` = ' . ( int ) $this->id . '
-									');
+										`user_id` = :user_id
+									', array(
+										':user_id' => ( int ) $this->id
+										)
+									);
 
 								header('Location: ' . $this->view->route($this->path . '?notice=deleted', FALSE));
 
@@ -373,8 +401,11 @@ class Account_Controller extends Controller
 						`username`
 					FROM {users}
 					ORDER BY `username`
-					LIMIT ' . $usersPagination['from'] . ', 25
-					');
+					LIMIT :from, 25
+					', array(
+						':from' => ( int ) $usersPagination['from']
+						)
+					);
 
 				if ( $r = $this->app->db->result )
 				{

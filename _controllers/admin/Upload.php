@@ -85,18 +85,30 @@ class Upload_Controller extends Controller
 										`date_edit`
 										)
 									VALUES (
-										"' . $this->app->db->escape($title)                              . '",
-										"' . $this->app->db->escape($extension)                          . '",
-										 ' . ( !empty($image) ? 1 : 0 )                                  . ',
-										"' . $this->app->db->escape($filename)                           . '",
-										"' . $this->app->db->escape($_FILES['file']['type'][$i])         . '",
-										 ' . ( int ) $width                                              . ',
-										 ' . ( int ) $height                                             . ',
-										 ' . ( int ) $this->app->db->escape($_FILES['file']['size'][$i]) . ',
-										"' . gmdate('Y-m-d H:i:s')                                       . '",
-										"' . gmdate('Y-m-d H:i:s')                                       . '"
+										:title,
+										:extension,
+										:image,
+										:filename,
+										:mime_type,
+										:width,
+										:height,
+										:size,
+										:date,
+										:date_edit
 										)
-									');
+									', array(
+										':title'     => $title,
+										':extension' => $extension,
+										':image'     => !empty($image) ? 1 : 0,
+										':filename'  => $filename,
+										':mime_type' => $_FILES['file']['type'][$i],
+										':width'     => ( int ) $width,
+										':height'    => ( int ) $height,
+										':size'      => ( int ) $_FILES['file']['size'][$i],
+										':date'      => gmdate('Y-m-d H:i:s'),
+										':date_edit' => gmdate('Y-m-d H:i:s')
+										)
+									);
 
 								if ( $this->view->id = $this->app->db->result )
 								{
@@ -166,9 +178,12 @@ class Upload_Controller extends Controller
 								`filename`
 							FROM {uploads}
 							WHERE
-								`id` = ' . ( int ) $this->id . '
+								`id` = :id
 							LIMIT 1
-							');
+							', array(
+								':id' => ( int ) $this->id
+								)
+							);
 
 						if ( $r = $this->app->db->result )
 						{
@@ -188,9 +203,12 @@ class Upload_Controller extends Controller
 								DELETE
 								FROM {uploads}
 								WHERE
-									`id` = ' . ( int ) $this->id . '
+									`id` = :id
 								LIMIT 1
-								');
+								', array(
+									':id' => ( int ) $this->id
+									)
+								);
 
 							if ( $this->app->db->result )
 							{

@@ -39,9 +39,12 @@ class File_Controller extends Controller
 				`mime_type`
 			FROM {uploads}
 			WHERE
-				id = ' . ( int ) $id . '
+				id = :id
 			LIMIT 1
-			');
+			', array(
+				':id' => ( int ) $id
+				)
+			);
 
 		if ( $this->app->db->result && $r = $this->app->db->result[0] )
 		{

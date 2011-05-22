@@ -170,11 +170,15 @@ class Installer_Controller extends Controller
 
 										$this->app->db->sql('
 											UPDATE {versions} SET
-												`version` = "' . $this->outdatedPlugins[$plugin]->version . '"
+												`version` = :version
 											WHERE
-												`plugin` = "' . $this->app->db->escape($plugin) . '"
+												`plugin` = :plugin
 											LIMIT 1
-											');
+											', array(
+												':version' => $this->outdatedPlugins[$plugin]->version
+												':plugin'  => $plugin
+												)
+											);
 
 										$pluginsUpgraded[] = $plugin;
 
@@ -201,9 +205,12 @@ class Installer_Controller extends Controller
 											DELETE
 											FROM {versions}
 											WHERE
-												`plugin` = "' . $this->app->db->escape($plugin) . '"
+												`plugin` = :plugin
 											LIMIT 1
-											');
+											', array(
+												':plugin' => $plugin
+												)
+											);
 
 										$this->app->{$plugin}->remove();
 
@@ -312,10 +319,14 @@ class Installer_Controller extends Controller
 					`version`
 					)
 				VALUES (
-					"' . $this->app->db->escape($plugin)           . '",
-					"' . $this->newPlugins[$plugin]->version . '"
+					:plugin,
+					:version
 					)
-				');
+				', array(
+					':plugin'  => $plugin,
+					':version' => $this->newPlugins[$plugin]->version
+					)
+				);
 
 			$pluginsInstalled[] = $plugin;
 
