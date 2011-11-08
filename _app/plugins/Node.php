@@ -66,6 +66,7 @@ class Node_Plugin extends Plugin
 					:title,
 					:date,
 					:date_edit
+					)
 				', array(
 					':left_id'   => 0,
 					':right_id'  => 1,

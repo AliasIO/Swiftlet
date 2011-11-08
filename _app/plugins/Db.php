@@ -155,7 +155,7 @@ class Db_Plugin extends Plugin
 				{
 					foreach ( $r as $d )
 					{
-						$this->tables[$d[0]] = $d[0];
+						$this->tables['{' . preg_replace('/^' . preg_quote($this->prefix, '/') . '/', '', $d[0]) . '}'] = $d[0];
 					}
 				}
 
@@ -226,12 +226,15 @@ class Db_Plugin extends Plugin
 		if ( $tokens )
 		{
 			// TODO Longest values should go first
+			$tokenKeys = array_keys($tokens);
 
-			foreach ( $tokens as $token => $value )
+			usort($tokenKeys, array($this, 'token_sort'));
+
+			foreach ( $tokenKeys as $token )
 			{
 				if ( substr($token, 0, 1) == ':' )
 				{
-					$this->sql = str_replace($token, '"' . ( is_array($value) ? implode('", "', $this->escape($value)) : $this->escape($value) ) . '"', $this->sql);
+					$this->sql = str_replace($token, '"' . ( is_array($tokens[$token]) ? implode('", "', $this->escape($tokens[$token])) : $this->escape($tokens[$token]) ) . '"', $this->sql);
 				}
 			}
 		}
@@ -534,5 +537,16 @@ class Db_Plugin extends Plugin
 		{
 			return $this->escape($this->view->h($v));
 		}
+	}
+
+	/**
+	 * Sort tokens by value length
+	 * @params string $a
+	 * @params string $b
+	 * @return int
+	 */
+	function token_sort($a, $b)
+	{
+		return strlen($b) - strlen($a);
 	}
 }
