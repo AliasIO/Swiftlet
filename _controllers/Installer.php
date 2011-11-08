@@ -134,7 +134,7 @@ class Installer_Controller extends Controller
 								if ( !in_array($this->app->db->prefix . 'versions', $this->app->db->tables) )
 								{
 									$this->app->db->sql('
-										CREATE TABLE {versions} (
+										CREATE TABLE `{versions}` (
 											`id`      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 											`plugin`  VARCHAR(255)     NOT NULL,
 											`version` VARCHAR(10)      NOT NULL,
@@ -175,7 +175,7 @@ class Installer_Controller extends Controller
 												`plugin` = :plugin
 											LIMIT 1
 											', array(
-												':version' => $this->outdatedPlugins[$plugin]->version
+												':version' => $this->outdatedPlugins[$plugin]->version,
 												':plugin'  => $plugin
 												)
 											);

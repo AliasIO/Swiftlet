@@ -50,9 +50,9 @@ class Db_Plugin extends Plugin
 		{
 			$this->app->db->sql('
 				CREATE TABLE {cache_tables} (
-					`id`          INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-					`query_id`    INT(10) UNSIGNED NOT NULL,
-					`table`       VARCHAR(255)     NOT NULL,
+					`id`       INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+					`query_id` INT(10) UNSIGNED NOT NULL,
+					`table`    VARCHAR(255)     NOT NULL,
 					INDEX (`table`),
 					FOREIGN KEY (`query_id`) REFERENCES {cache_queries} (`id`) ON DELETE CASCADE
 					) ENGINE = INNODB
@@ -170,8 +170,8 @@ class Db_Plugin extends Plugin
 					$this->sql('
 						DELETE
 							cq, ct
-						FROM      `' . $this->prefix . 'cache_queries` AS cq
-						LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
+						FROM      `{cache_queries}` AS cq
+						LEFT JOIN `{cache_tables}`  AS ct ON cq.`id` = ct.`query_id`
 						WHERE
 							cq.`date_expire` <= :date
 						', array(
@@ -200,17 +200,33 @@ class Db_Plugin extends Plugin
 
 		$this->sql = trim(preg_replace('/\s+/', ' ', $sql)) . ';';
 
+		if ( preg_match('/^CREATE TABLE/i', $this->sql) )
+		{
+			$tables = $this->get_tables();
+
+			foreach ( $tables as $table ) {
+				$this->tables[$table] = $table;
+			}
+		}
+
 		// Prepend prefix to table names
 		if ( $this->tables )
 		{
-			foreach ( $this->tables as $table )
+			foreach ( $this->tables as $tableRaw => $table )
 			{
-				$this->sql = str_replace('{' . preg_replace('/^' . preg_quote($this->prefix) . '/', '', $table) . '}', '`' . $table . '`', $this->sql);
+				if ( preg_match('/^\{[^}]+\}$/', $tableRaw) )
+				{
+					$this->tables[$tableRaw] = $this->prefix . rtrim(ltrim(trim($tableRaw, '`'), '{'), '}');
+
+					$this->sql = preg_replace('/`?' . preg_quote($tableRaw, '/') . '`?/', '`' . $this->tables[$tableRaw] . '`', $this->sql);
+				}
 			}
 		}
 
 		if ( $tokens )
 		{
+			// TODO Longest values should go first
+
 			foreach ( $tokens as $token => $value )
 			{
 				if ( substr($token, 0, 1) == ':' )
@@ -278,8 +294,8 @@ class Db_Plugin extends Plugin
 			$this->sql('
 				SELECT
 					`results`
-				FROM      `' . $this->prefix . 'cache_queries` AS cq
-				LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
+				FROM      `{cache_queries}` AS cq
+				LEFT JOIN `{cache_tables}`  AS ct ON cq.`id` = ct.`query_id`
 				WHERE
 					cq.`hash` = :hash AND
 					ct.`table` IN ( :tables )
@@ -303,8 +319,8 @@ class Db_Plugin extends Plugin
 					$this->sql('
 						DELETE
 							cq, ct
-						FROM      `' . $this->prefix . 'cache_queries` AS cq
-						LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
+						FROM      `{cache_queries}` AS cq
+						LEFT JOIN `{cache_tables}`  AS ct ON cq.`id` = ct.`query_id`
 						WHERE
 							cq.`hash` = :hash
 						', array(
@@ -387,7 +403,7 @@ class Db_Plugin extends Plugin
 					foreach ( $tables as $table )
 					{
 						$this->sql('
-							INSERT INTO `' . $this->prefix . 'cache_tables` (
+							INSERT INTO `{cache_tables}` (
 								`query_id`,
 								`table`
 								)
@@ -427,8 +443,8 @@ class Db_Plugin extends Plugin
 			$this->sql('
 				DELETE
 					cq, ct
-				FROM      `' . $this->prefix . 'cache_queries` AS cq
-				LEFT JOIN `' . $this->prefix . 'cache_tables`  AS ct ON cq.`id` = ct.`query_id`
+				FROM      `{cache_queries}` AS cq
+				LEFT JOIN `{cache_tables}`  AS ct ON cq.`id` = ct.`query_id`
 				WHERE
 					ct.`table` IN ( "' . implode('", "', $tables) . '" )
 				');
@@ -457,16 +473,13 @@ class Db_Plugin extends Plugin
 	{
 		$tables = array();
 
-		preg_match_all('/(FROM|JOIN|UPDATE|INTO|TRUNCATE|DROP TABLE) (`?(' . preg_quote($this->prefix, '/') . '[a-z0-9_]+)`?\s?,?)+/i', $this->sql, $m);
+		preg_match_all('/(FROM|JOIN|UPDATE|INTO|TRUNCATE|REFERENCES|(DROP|CREATE) TABLE) (`?(\{?[a-z0-9_]+\}?)`?\s?,?)+/i', $this->sql, $m);
 
-		if ( isset($m[3]) )
+		if ( isset($m[4]) )
 		{
-			foreach ( $m[3] as $match )
+			foreach ( $m[4] as $match )
 			{
-				if ( $match != $this->prefix . 'cache_queries' && $match != $this->prefix . 'cache_tables' )
-				{
-					$tables[] = $match;
-				}
+				$tables[] = $match;
 			}
 		}
 

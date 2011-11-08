@@ -55,7 +55,7 @@ class User_Plugin extends Plugin
 					"Admin",
 					:email,
 					1,
-					:owner,
+					1,
 					:date,
 					:date_edit,
 					:pass_hash
