@@ -81,7 +81,7 @@ Notice how we can access the page at `/foo` by simply creating a controller
 named `FooController`. The application (Swiftlet) automatically maps URLs
 to controllers, actions and arguments.
 
-Consider the following URL: `/foo/bar/baz/qux`
+Consider this URL: `/foo/bar/baz/qux`
 
 In this case `foo` is the controller, `bar` is the action and `baz` and `qux`
 are arguments. If the controller or action is missing they will default to 
@@ -97,12 +97,12 @@ Actions are methods of the controller. A common example might be `edit` or
 `/blog/edit/1`
 
 This will call the function `editAction()` on `BlogController` and pass the
-argument `1` (i.e. the id of the blog post we're editing).
+argument `1` (i.e. the id of the blog post to edit).
 
 If the action doesn't exist `notImplementedAction()` will be called instead.
 This will throw an exception by default but can be overridden.
 
-The action name and arguments can be accessed by calling
+The action name and arguments can be accessed through
 `$this->_app->getAction()` and `$this->_app->getArgs()` respectively.
 
 
@@ -157,5 +157,31 @@ when called multiple times.
 
 TODO: Plugins and hooks
 -----------------------
+
+Plugins implement hooks. Swiftlet has a few core hooks but they can be
+registered pretty much anywhere using `$this->_app->registerHook()`.
+
+**Plugin `plugins/FooPlugin.php`**
+
+```php
+<?php
+
+class FooPlugin extends SwiftletPlugin
+{
+	public function actionAfterHook() {
+		if ( $this->_app->getController()->getName() === 'FooController' ) {
+			$this->_app->getView()->set('hello world', 'Hi world!');
+		}
+	}
+}
+```
+
+This plugin implements the core `actionAfter` hook and changes the view 
+variable `hello world` from our previous example to `Hi world!`.
+
+The core hooks are:
+
+* `actionBefore`
+* `actionAfter`
 
 --------------------------------------------------------------------------------
