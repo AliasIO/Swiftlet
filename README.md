@@ -3,7 +3,7 @@ Swiftlet
 
 Swiftlet is quite possibly the smallest 
 [MVC](http://en.wikipedia.org/wiki/Model-view-controller) framework you'll ever 
-use. It's also swift.
+use. And it's swift.
 
 
 Buzzword compliance
@@ -44,19 +44,19 @@ views should be limited to simple UI logic (loops and switches).
 class FooController extends SwiftletController
 {
 	protected
-		$_title = 'Foo'
+		$_title = 'Foo' // Optional but recommended
 		;
 
 	public function indexAction()
 	{
+		// Pass a variable to the view
 		$this->_app->getView()->set('hello world', 'Hello world!');
 	}
 }
 ```
 
 Class names are written in [CamelCase](http://en.wikipedia.org/wiki/CamelCase)
-and match their filename. This is not just a convention; it's actually
-required.
+and match their filename. This is not just a convention; it's required.
 
 **View `views/foo.html.php`**
 
@@ -69,7 +69,7 @@ required.
 ```
 
 Variables can be passed from controller to view using the view's `set` and `get`
-methods.
+methods. Values are automatically made safe for use in HTML.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web browser!
 
@@ -146,13 +146,13 @@ class FooController extends SwiftletController
 }
 ```
 
-Controllers get their data from models. Code for querying databases, reading
-files and parsing data all belongs in a model. You can create as many models as 
-you like; they aren't tied to specific controllers.
+Controllers get their data from models. Code for querying a database,
+reading/writing files and parsing data all belongs in a model. You can create as
+many models as you like; they aren't tied to specific controllers.
 
-A new instance of a model can be created by calling `$this->_app->getModel()`. 
-To allow re-use, use `$this->_app->getSingleton()` instead as this will only 
-create a single instance when called multiple times.
+A model can instantiated using `$this->_app->getModel()`.  To allow re-use, use 
+`$this->_app->getSingleton()` instead as this will only create a single instance
+when called multiple times.
 
 
 TODO: Plugins and hooks
