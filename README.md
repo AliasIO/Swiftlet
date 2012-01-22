@@ -33,8 +33,8 @@ Getting started
 Let's create a page. Each page consists of a controller and at least one view.
 
 Controllers house the 
-*[business logic](http://en.wikipedia.org/wiki/Business_logic)* while views 
-should be limited to UI logic (simple loops and switches).
+[business logic](http://en.wikipedia.org/wiki/Business_logic) of the page while 
+views should be limited to simple UI logic (loops and switches).
 
 **Controller `controllers/FooController.php`**
 
@@ -47,9 +47,6 @@ class FooController extends SwiftletController
 		$_title = 'Foo'
 		;
 
-	/**
-	 *
-	 */
 	public function indexAction()
 	{
 		$this->_app->getView()->set('hello world', 'Hello world!');
@@ -59,9 +56,6 @@ class FooController extends SwiftletController
 
 **View `views/foo.html.php`**
 
-You can now view the page by navigating to `/foo` in your web browser.
-
-
 ```php
 <h1><?php echo $this->getTitle() ?></h1>
 
@@ -70,5 +64,16 @@ You can now view the page by navigating to `/foo` in your web browser.
 </p>
 ```
 
-Coming soon: more examples and documentation 
---------------------------------------------
+You can now view the page by navigating to `/foo` in your web browser!
+
+TODO: Routing
+-------------
+
+TODO: Models
+------------
+
+TODO: Plugins
+-------------
+
+TODO: More examples and documentation 
+-------------------------------------
