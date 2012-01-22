@@ -107,7 +107,7 @@ The action name and arguments can be accessed through
 
 
 Models
-------------
+------
 
 Let's throw a model into the mix and update the controller.
 
@@ -150,16 +150,17 @@ Controllers get their data from models. Code for querying a database,
 reading/writing files and parsing data all belongs in a model. You can create as
 many models as you like; they aren't tied to specific controllers.
 
-A model can instantiated using `$this->_app->getModel()`.  To allow re-use, use 
-`$this->_app->getSingleton()` instead as this will only create a single instance
-when called multiple times.
+A model can instantiated using `$this->_app->getModel($modelName)`.  To allow 
+re-use, use `$this->_app->getSingleton($modelName)` instead as this will only 
+create a single instance when called multiple times.
 
 
-TODO: Plugins and hooks
------------------------
+Plugins and hooks
+-----------------
 
-Plugins implement hooks. Swiftlet has a few core hooks but they can be
-registered pretty much anywhere using `$this->_app->registerHook()`.
+Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Swiftlet has a
+few core hooks but they can be registered pretty much anywhere using
+`$this->_app->registerHook($hookName)`.  
 
 **Plugin `plugins/FooPlugin.php`**
 
@@ -179,9 +180,11 @@ class FooPlugin extends SwiftletPlugin
 This plugin implements the core `actionAfter` hook and changes the view 
 variable `hello world` from our previous example to `Hi world!`.
 
+Plugins don't need to be installed or activated, all files in the `/plugins`
+directory are automatically included and their classes instantiated. They
+are hooked in alphabetical order. There is currently no dependency support.
+
 The core hooks are:
 
-* `actionBefore`
-* `actionAfter`
-
---------------------------------------------------------------------------------
+* `actionBefore` Called before each action
+* `actionAfter` Called after each action

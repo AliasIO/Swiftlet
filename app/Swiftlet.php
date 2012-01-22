@@ -76,6 +76,8 @@ class Swiftlet
 				}
 			}
 
+			ksort($this->_plugins);
+
 			closedir($handle);
 		}
 
