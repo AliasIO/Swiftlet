@@ -14,8 +14,6 @@ Buzzword compliance
 ✔ PHP5  
 
 ✘ ORM  
-✘ i18n  
-✘ REST  
 
 
 Installation in three easy steps
