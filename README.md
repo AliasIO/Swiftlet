@@ -1,7 +1,7 @@
 Swiftlet
 ========
 
-Swiftlet is quite possibly the smallest MVC framework you'll encounter. It's also swift.
+Swiftlet is quite possibly the smallest MVC framework you have ever encountered. It's also swift.
 
 
 Buzzword compliance
