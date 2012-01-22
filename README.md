@@ -22,3 +22,7 @@ Installation in three easy steps
 * Step 1: Clone (or download and extract) Swiftlet into a directory on your PHP supported web server.
 * Step 2: Congratulations, Swiftlet is now up and running.
 * Step 3: There is no step 3.
+
+
+Coming soon: documentation
+--------------------------
