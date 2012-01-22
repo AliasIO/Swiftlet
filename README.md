@@ -1,8 +1,9 @@
 Swiftlet
 ========
 
-Swiftlet is quite possibly the smallest MVC framework you'll ever use. It's also
-swift.
+Swiftlet is quite possibly the smallest 
+[http://en.wikipedia.org/wiki/Model-view-controller](MVC) framework you'll ever 
+use. It's also swift.
 
 
 Buzzword compliance
@@ -31,9 +32,15 @@ Getting started
 
 Let's create a page. Each page consists of a controller and at least one view.
 
-**Controller: `controllers/FooController.php`**
+Controllers house the 
+*[business logic](http://en.wikipedia.org/wiki/Business_logic)* while views 
+should be limited to UI logic (simple loops and switches).
+
+**Controller `controllers/FooController.php`**
 
 ```php
+<?php
+
 class FooController extends SwiftletController
 {
 	protected
@@ -50,7 +57,7 @@ class FooController extends SwiftletController
 }
 ```
 
-**View: `views/foo.html.php`**
+**View `views/foo.html.php`**
 
 You can now view the page by navigating to `/foo` in your web browser.
 
