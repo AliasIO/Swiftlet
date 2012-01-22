@@ -198,28 +198,28 @@ Public abstract methods
 
 **Application `Swiftlet`**
 
-* `string getAction()`
+* `string getAction()`  
 Name of the action
 
-* `array getArgs()`
+* `array getArgs()`  
 List of arguments passed in the URL
 
-* `object getModel(string $modelName)`
+* `object getModel(string $modelName)`  
 Instantiate a model
 
-* `object getSingleton(string $modelName)`
+* `object getSingleton(string $modelName)`  
 Instantiate a model or return an existing instance
 
-* `object getController()`
+* `object getController()`  
 Reference to the controller instance
 
-* `object getView()`
+* `object getView()`  
 Reference to the view instance
 
-* `string getRootPath()`
+* `string getRootPath()`  
 Absolute client-side path to website root
 
-* `registerHook(string $hookName, array $params)`
+* `registerHook(string $hookName, array $params)`  
 Register a hook
 
 
