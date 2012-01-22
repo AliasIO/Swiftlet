@@ -66,7 +66,27 @@ class FooController extends SwiftletController
 
 You can now view the page by navigating to `/foo` in your web browser!
 
-TODO: Routing
+Routing
+-------
+
+Notice how we can access the page at `/foo` by simply creating a controller 
+named `FooController`. The application (Swiftlet) automatically maps URLs
+to controllers, actions and arguments.
+
+Consider the following URL:
+
+```
+	/foo/bar/baz/qux
+```
+
+In this case `foo` is the controller, `bar` is the action and `baz` and `qux`
+are arguments.
+
+TODO
+
+--------------------------------------------------------------------------------
+
+TODO: Actions
 -------------
 
 TODO: Models
