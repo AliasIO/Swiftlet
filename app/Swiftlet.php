@@ -10,6 +10,7 @@ class Swiftlet
 		$_action     = 'indexAction',
 		$_args       = array(),
 		$_controller,
+		$_plugins    = array(),
 		$_rootPath   = '/',
 		$_singletons = array(),
 		$_view
@@ -63,7 +64,26 @@ class Swiftlet
 			$this->_action = 'notImplementedAction';
 		}
 
+		// Load plugins
+		if ( $handle = opendir('plugins') ) {
+			while ( ( $file = readdir($handle) ) !== FALSE ) {
+				if ( is_file('plugins/' . $file) && preg_match('/^(.+Plugin)\.php$/', $file, $match) ) {
+					$pluginName = $match[1];
+
+					require('plugins/' . $file);
+
+					$this->_plugins[] = new $pluginName($this, $pluginName);
+				}
+			}
+
+			closedir($handle);
+		}
+
+		$this->registerHook('actionBefore');
+
 		$this->_controller->{$this->_action}();
+
+		$this->registerHook('actionAfter');
 
 		// Render the view
 		$this->_view->render();
@@ -140,6 +160,20 @@ class Swiftlet
 	public function getRootPath()
 	{
 		return $this->_rootPath;
+	}
+
+	/**
+	 * @param string $hookName
+	 * @param array $params
+	 */
+	public function registerHook($hookName, $params = array()) {
+		$hookName .= 'Hook';
+
+		foreach ( $this->_plugins as $plugin ) {
+			if ( method_exists($plugin, $hookName) ) {
+				$plugin->{$hookName}($params);
+			}
+		}
 	}
 
 	/**
