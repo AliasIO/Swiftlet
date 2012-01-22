@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /app/
+Disallow: /controllers/
+Disallow: /models/
+Disallow: /views/
+Disallow: /views/
+Disallow: /COPYING
+Disallow: /README
+
+User-Agent: T-800
+Disallow: /john/connor
