@@ -9,6 +9,7 @@ class SwiftletView
 		;
 
 	/**
+	 * Initialize the view
 	 * @param object $app
 	 * @param string $name
 	 */
@@ -19,6 +20,7 @@ class SwiftletView
 	}
 
 	/**
+	 * Get the view name
 	 * @return string
 	 */
 	public function getName()
@@ -72,6 +74,7 @@ class SwiftletView
 	}
 
 	/**
+	 * Make a string safe for HTML
 	 * @param string $string
 	 * @return string
 	 */

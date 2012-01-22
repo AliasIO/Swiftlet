@@ -6,8 +6,11 @@ class Error404Controller extends SwiftletController
 		$_title = 'Error 404'
 		;
 
+	/**
+	 *
+	 */
 	public function indexAction()
 	{
-		header("Status: 404 Not Found");
+		header('Status: 404 Not Found');
 	}
 }

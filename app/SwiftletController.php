@@ -9,6 +9,7 @@ abstract class SwiftletController
 		;
 
 	/**
+	 * Initialize the controller
 	 * @param object $app
 	 * @param string $name
 	 */
@@ -19,6 +20,7 @@ abstract class SwiftletController
 	}
 
 	/**
+	 * Get the controller name
 	 * @return string
 	 */
 	public function getName()
@@ -27,6 +29,7 @@ abstract class SwiftletController
 	}
 
 	/**
+	 * Get the page title
 	 * @return string
 	 */
 	public function getTitle()
@@ -35,13 +38,14 @@ abstract class SwiftletController
 	}
 
 	/**
-	 *
+	 * Default action
 	 */
 	public function indexAction()
    	{
 	}
 
 	/**
+	 * Fallback in case action doesn't exist
 	 * @return string
 	 */
 	public function notImplementedAction()
