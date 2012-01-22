@@ -216,16 +216,16 @@ Name of the view
 * `getTitle()`  
 Title of the page
 
-* `get()`  
+* `get(*string* $variable)`  
 Get a view variable
 
-* `set()`  
+* `set(*string* $variable [, *string* $value ])`  
 Set a view variable
 
 * `render()`   
-Include the view files
+Include (execute) the view files
 
-* `htmlEncode()` 
+* `htmlEncode(*string* $string)` 
 
 
 **Models `SwiftletModel`**
