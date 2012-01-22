@@ -24,10 +24,12 @@ class Swiftlet
 		set_error_handler(array($this, 'error'), E_ALL);
 
 		// Determine the root path
-		if ( !empty($_SERVER['SERVER_NAME']) && !empty($_SERVER['REQUEST_URI']) ) {
-			$requestUri = preg_replace('/\?.*$/', '', $_SERVER['REQUEST_URI']);
+		$path = dirname(dirname(__FILE__));
 
-			$this->_rootPath = preg_replace('/^' . preg_quote($_SERVER['SERVER_NAME'], '/') . '/', '', $requestUri);
+		if ( !empty($_SERVER['DOCUMENT_ROOT']) && preg_match('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', $path) ) {
+			$path = preg_replace('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', '', $path);
+
+			$this->_rootPath = rtrim($path, '/') . '/';
 		}
 
 		// Extract controller name, view name, action name and arguments from URL

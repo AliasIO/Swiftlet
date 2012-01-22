@@ -56,7 +56,8 @@ class FooController extends SwiftletController
 ```
 
 Class names are written in [CamelCase](http://en.wikipedia.org/wiki/CamelCase)
-and match their filename. This is not just a convention; it's required.
+and match their filename. This is not just a convention, it's required!
+
 
 **View `views/foo.html.php`**
 
@@ -73,7 +74,6 @@ methods. Values are automatically made safe for use in HTML.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web browser!
 
-
 Routing
 -------
 
@@ -85,7 +85,7 @@ Consider this URL: `/foo/bar/baz/qux`
 
 In this case `foo` is the controller, `bar` is the action and `baz` and `qux`
 are arguments. If the controller or action is missing they will default to 
-`index`.
+`index` (`/` will call `indexAction()` on `indexController`).
 
 
 Actions and arguments
@@ -96,8 +96,8 @@ Actions are methods of the controller. A common example might be `edit` or
 
 `/blog/edit/1`
 
-This will call the function `editAction()` on `BlogController` and pass the
-argument `1` (i.e. the id of the blog post to edit).
+This will call the function `editAction()` on `BlogController` with `1` as the 
+argument (the id of the blog post to edit).
 
 If the action doesn't exist `notImplementedAction()` will be called instead.
 This will throw an exception by default but can be overridden.
@@ -188,3 +188,31 @@ The core hooks are:
 
 * `actionBefore` Called before each action
 * `actionAfter` Called after each action
+
+
+Public abstract methods
+-----------------------
+
+**Controllers (`SwiftletController`)**
+
+* `getName()` Name of the controller
+* `getTitle()` Title of the page
+* `indexAction()` Default action
+* `notImplementedAction()` Fallback action if action doesn't exist
+
+**Views (`SwiftletView`)**
+
+* `getName()` Name of the view
+* `getTitle()` Title of the page
+* `get()` Get a view variable
+* `set()` Set a view variable
+* `render()` Include the view files
+* `htmlEncode()` 
+
+**Models (`SwiftletModel`)**
+
+* `getName()` Name of the model
+
+**Plugins (`SwiftletPlugin`)**
+
+* `getName()` Name of the plugin

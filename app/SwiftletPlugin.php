@@ -16,4 +16,12 @@ abstract class SwiftletPlugin
 		$this->_app  = $app;
 		$this->_name = $name;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->_name;
+	}
 }

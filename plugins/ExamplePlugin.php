@@ -3,9 +3,10 @@
 class ExamplePlugin extends SwiftletPlugin
 {
 	/**
-	 *
+	 * Implementation of the actionAfter hook
 	 */
-	public function actionAfterHook() {
+	public function actionAfterHook()
+   	{
 		if ( $this->_app->getController()->getName() === 'IndexController' ) {
 			$helloWorld = $this->_app->getView()->get('hello world');
 

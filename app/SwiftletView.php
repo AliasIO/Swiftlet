@@ -19,6 +19,14 @@ class SwiftletView
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->_name;
+	}
+
+	/**
 	 * Get the page title
 	 * @return string
 	 */
@@ -55,7 +63,7 @@ class SwiftletView
 	public function render()
 	{
 		if ( is_file($file = 'views/' . $this->_name . '.html.php') ) {
-			header('X-Generator: Swiflet ' . Swiftlet::version);
+			header('X-Generator: Swiftlet ' . Swiftlet::version);
 
 			require($file);
 		} else {
