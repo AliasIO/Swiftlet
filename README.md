@@ -54,6 +54,9 @@ class FooController extends SwiftletController
 }
 ```
 
+Class names are written in [CamelCase](http://en.wikipedia.org/wiki/CamelCase)
+and match their filename.
+
 **View `views/foo.html.php`**
 
 ```php
@@ -63,6 +66,9 @@ class FooController extends SwiftletController
 	<?php echo $this->get('hello world') ?>
 </p>
 ```
+
+Variables can be passed from controller to view using the view's `set` and `get`
+methods.
 
 You can now view the page by navigating to `/foo` in your web browser!
 
@@ -141,10 +147,7 @@ class FooController extends SwiftletController
 
 TODO
 
-TODO: Plugins
--------------
-
-TODO: More examples and documentation 
--------------------------------------
+TODO: Plugins and hooks
+-----------------------
 
 --------------------------------------------------------------------------------
