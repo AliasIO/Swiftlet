@@ -99,6 +99,15 @@ class Swiftlet
 	}
 
 	/**
+	 * Get the arguments
+	 * @return array
+	 */
+	public function getArgs()
+   	{
+		return $this->_args();
+	}
+
+	/**
 	 * Get a model
 	 * @param string $modelName
 	 * @return object

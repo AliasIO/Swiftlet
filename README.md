@@ -27,8 +27,8 @@ Installation in three easy steps
 * Step 3: There is no step 3.
 
 
-Getting started
----------------
+Getting started: controllers and views
+--------------------------------------
 
 Let's create a page. Each page consists of a controller and at least one view.
 
@@ -66,6 +66,7 @@ class FooController extends SwiftletController
 
 You can now view the page by navigating to `/foo` in your web browser!
 
+
 Routing
 -------
 
@@ -73,27 +74,76 @@ Notice how we can access the page at `/foo` by simply creating a controller
 named `FooController`. The application (Swiftlet) automatically maps URLs
 to controllers, actions and arguments.
 
-Consider the following URL:
-
-```
-	/foo/bar/baz/qux
-```
+Consider the following URL: `/foo/bar/baz/qux`
 
 In this case `foo` is the controller, `bar` is the action and `baz` and `qux`
-are arguments.
+are arguments. If the controller or action is missing they will default to 
+`index`.
+
+
+Actions
+-------
+
+Actions are methods of the controller. A common example might be `edit` or
+`delete`:
+
+`/blog/edit/1`
+
+This will call the function `editAction()` on `BlogController` and pass the
+argument `1` (i.e. the id of the blog post we're editing).
+
+If the action doesn't exist `notImplementedAction()` will be called instead.
+This will throw an exception by default.
+
+The action name and arguments can be accessed by calling
+`$this->_app->getAction()` and `$this->_app->getArgs()` respectively.
+
+
+Models
+------------
+
+Let's throw a model into the mix and update the controller.
+
+**Model `model/FooModel.php`**
+
+<?php
+
+class FooModel extends SwiftletModel
+{
+	public function getHelloWorld() {
+		return 'Hello world!';
+	}
+}
+```
+
+**Controller `controllers/FooController.php`**
+
+```php
+<?php
+
+class FooController extends SwiftletController
+{
+	protected
+		$_title = 'Foo'
+		;
+
+	public function indexAction()
+	{
+		$exampleModel = $this->_app->getModel('example');
+
+		$helloWorld = $exampleModel->getHelloWorld();
+
+		$this->_app->getView()->set('hello world', $helloWorld);
+	}
+}
+```
 
 TODO
-
---------------------------------------------------------------------------------
-
-TODO: Actions
--------------
-
-TODO: Models
-------------
 
 TODO: Plugins
 -------------
 
 TODO: More examples and documentation 
 -------------------------------------
+
+--------------------------------------------------------------------------------
