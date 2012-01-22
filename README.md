@@ -2,7 +2,7 @@ Swiftlet
 ========
 
 Swiftlet is quite possibly the smallest 
-[http://en.wikipedia.org/wiki/Model-view-controller](MVC) framework you'll ever 
+[MVC](http://en.wikipedia.org/wiki/Model-view-controller) framework you'll ever 
 use. It's also swift.
 
 
@@ -106,6 +106,7 @@ Let's throw a model into the mix and update the controller.
 
 **Model `model/FooModel.php`**
 
+```php
 <?php
 
 class FooModel extends SwiftletModel
