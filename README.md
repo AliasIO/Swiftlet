@@ -72,20 +72,21 @@ and match their filename. This is not just a convention, it's required!
 Variables can be passed from controller to view using the view's `set` and `get`
 methods. Values are automatically made safe for use in HTML.
 
-You can now view the page by navigating to `http://<swiftlet>/foo` in your web browser!
+You can now view the page by navigating to `http://<swiftlet>/foo` in your web
+browser!
 
 Routing
 -------
 
 Notice how we can access the page at `/foo` by simply creating a controller 
-named `FooController`. The application (Swiftlet) automatically maps URLs
-to controllers, actions and arguments.
+named `FooController`. The application (Swiftlet) maps URLs to controllers, 
+actions and arguments.
 
 Consider this URL: `/foo/bar/baz/qux`
 
 In this case `foo` is the controller, `bar` is the action and `baz` and `qux`
-are arguments. If the controller or action is missing they will default to 
-`index` (`/` will call `indexAction()` on `indexController`).
+are arguments. If the controller or action is missing from the URL they will
+default to `index` (`/` will call `indexAction()` on `indexController`).
 
 
 Actions and arguments
@@ -192,6 +193,8 @@ Called before each action
 * `actionAfter` 
 Called after each action
 
+--------------------------------------------------------------------------------
+
 
 Public abstract methods
 -----------------------
@@ -205,16 +208,16 @@ Name of the action
 List of arguments passed in the URL
 
 * `object getModel(string $modelName)`  
-Instantiate a model
+Create a new model instance
 
 * `object getSingleton(string $modelName)`  
-Instantiate a model or return an existing instance
+Create or return an existing model instance
 
 * `object getController()`  
-Reference to the controller instance
+Reference to the controller object 
 
 * `object getView()`  
-Reference to the view instance
+Reference to the view object 
 
 * `string getRootPath()`  
 Absolute client-side path to website root
@@ -223,7 +226,7 @@ Absolute client-side path to website root
 Register a hook
 
 
-**Controllers `SwiftletController`**
+**Controller `SwiftletController`**
 
 * `string getName()`  
 Name of the controller
@@ -238,7 +241,7 @@ Default action
 Fallback action if action doesn't exist
 
 
-**Views `SwiftletView`**
+**View `SwiftletView`**
 
 * `string getName()`  
 Name of the view
@@ -255,16 +258,17 @@ Set a view variable
 * `render()`   
 Include (execute) the view files
 
-* `htmlEncode(*string* $string)` 
+* `htmlEncode(string $string)` 
+Make a value safe for HTML
 
 
-**Models `SwiftletModel`**
+**Model `SwiftletModel`**
 
 * `string getName()`  
 Name of the model
 
 
-**Plugins `SwiftletPlugin`**
+**Plugin `SwiftletPlugin`**
 
 * `string getName()`  
 Name of the plugin
