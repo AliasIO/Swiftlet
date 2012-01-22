@@ -193,14 +193,15 @@ The core hooks are:
 Public abstract methods
 -----------------------
 
-**Controllers (`SwiftletController`)**
+**Controllers `SwiftletController`**
 
-* `getName()` Name of the controller
+* `getName()` 
+Name of the controller
 * `getTitle()` Title of the page
 * `indexAction()` Default action
 * `notImplementedAction()` Fallback action if action doesn't exist
 
-**Views (`SwiftletView`)**
+**Views `SwiftletView`**
 
 * `getName()` Name of the view
 * `getTitle()` Title of the page
@@ -209,10 +210,10 @@ Public abstract methods
 * `render()` Include the view files
 * `htmlEncode()` 
 
-**Models (`SwiftletModel`)**
+**Models `SwiftletModel`**
 
 * `getName()` Name of the model
 
-**Plugins (`SwiftletPlugin`)**
+**Plugins `SwiftletPlugin`**
 
 * `getName()` Name of the plugin
