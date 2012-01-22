@@ -195,7 +195,7 @@ Public abstract methods
 
 **Controllers `SwiftletController`**
 
-* `getName()` 
+* `getName()`  
 Name of the controller
 * `getTitle()` Title of the page
 * `indexAction()` Default action
