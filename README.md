@@ -195,25 +195,46 @@ Public abstract methods
 
 **Controllers `SwiftletController`**
 
-* `getName()`  
+`getName()`
 Name of the controller
-* `getTitle()` Title of the page
-* `indexAction()` Default action
-* `notImplementedAction()` Fallback action if action doesn't exist
+
+`getTitle()` 
+Title of the page
+
+`indexAction()`
+Default action
+
+`notImplementedAction()`
+Fallback action if action doesn't exist
+
 
 **Views `SwiftletView`**
 
-* `getName()` Name of the view
-* `getTitle()` Title of the page
-* `get()` Get a view variable
-* `set()` Set a view variable
-* `render()` Include the view files
-* `htmlEncode()` 
+`getName()`
+Name of the view
+
+`getTitle()`
+Title of the page
+
+`get()`
+Get a view variable
+
+`set()`
+Set a view variable
+
+`render()`
+Include the view files
+
+`htmlEncode()` 
+
 
 **Models `SwiftletModel`**
 
-* `getName()` Name of the model
+`getName()`
+Name of the model
+
 
 **Plugins `SwiftletPlugin`**
 
-* `getName()` Name of the plugin
+`getName()`
+Name of the plugin
