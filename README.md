@@ -186,8 +186,11 @@ are hooked in alphabetical order. There is currently no dependency support.
 
 The core hooks are:
 
-* `actionBefore` Called before each action
-* `actionAfter` Called after each action
+* `actionBefore`  
+Called before each action
+
+* `actionAfter` 
+Called after each action
 
 
 Public abstract methods
@@ -195,10 +198,10 @@ Public abstract methods
 
 **Controllers `SwiftletController`**
 
-* `getName()`  
+* `string getName()`  
 Name of the controller
 
-* `getTitle()`  
+* `string getTitle()`  
 Title of the page
 
 * `indexAction()`  
@@ -210,16 +213,16 @@ Fallback action if action doesn't exist
 
 **Views `SwiftletView`**
 
-* `getName()`  
+* `string getName()`  
 Name of the view
 
-* `getTitle()`  
+* `string getTitle()`  
 Title of the page
 
-* `get(*string* $variable)`  
+* `string get(string $variable)`  
 Get a view variable
 
-* `set(*string* $variable [, *string* $value ])`  
+* `set(string $variable [, string $value ])`  
 Set a view variable
 
 * `render()`   
@@ -230,11 +233,11 @@ Include (execute) the view files
 
 **Models `SwiftletModel`**
 
-* `getName()`  
+* `string getName()`  
 Name of the model
 
 
 **Plugins `SwiftletPlugin`**
 
-* `getName()`  
+* `string getName()`  
 Name of the plugin
