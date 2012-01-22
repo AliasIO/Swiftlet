@@ -55,7 +55,8 @@ class FooController extends SwiftletController
 ```
 
 Class names are written in [CamelCase](http://en.wikipedia.org/wiki/CamelCase)
-and match their filename.
+and match their filename. This is not just a convention; it's actually
+required.
 
 **View `views/foo.html.php`**
 
@@ -70,7 +71,7 @@ and match their filename.
 Variables can be passed from controller to view using the view's `set` and `get`
 methods.
 
-You can now view the page by navigating to `/foo` in your web browser!
+You can now view the page by navigating to `http://<swiftlet>/foo` in your web browser!
 
 
 Routing
@@ -87,8 +88,8 @@ are arguments. If the controller or action is missing they will default to
 `index`.
 
 
-Actions
--------
+Actions and arguments
+---------------------
 
 Actions are methods of the controller. A common example might be `edit` or
 `delete`:
@@ -99,7 +100,7 @@ This will call the function `editAction()` on `BlogController` and pass the
 argument `1` (i.e. the id of the blog post we're editing).
 
 If the action doesn't exist `notImplementedAction()` will be called instead.
-This will throw an exception by default.
+This will throw an exception by default but can be overridden.
 
 The action name and arguments can be accessed by calling
 `$this->_app->getAction()` and `$this->_app->getArgs()` respectively.
@@ -145,7 +146,14 @@ class FooController extends SwiftletController
 }
 ```
 
-TODO
+Controllers get their data from models. Code for querying databases, reading
+files and parsing data all belongs in a model. You can create as many models as 
+you like; they aren't tied to specific controllers.
+
+A new instance of a model can be created by calling `$this->_app->getModel()`. 
+To allow re-use, use `$this->_app->getSingleton()` instead as this will only 
+create a single instance when called multiple times.
+
 
 TODO: Plugins and hooks
 -----------------------
