@@ -35,7 +35,7 @@ abstract class SwiftletController
 	}
 
 	/**
-	 *
+	 * Default action
 	 */
 	public function indexAction()
    	{

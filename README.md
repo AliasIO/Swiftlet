@@ -6,6 +6,9 @@ Swiftlet is quite possibly the smallest
 use. And it's swift.
 
 
+*Licensed under the [GNU Public License](http://www.gnu.org/licenses/gpl-3.0.txt).*
+
+
 Buzzword compliance
 -------------------
 

@@ -63,7 +63,7 @@ class SwiftletView
 	public function render()
 	{
 		if ( is_file($file = 'views/' . $this->_name . '.html.php') ) {
-			header('X-Generator: Swiftlet ' . Swiftlet::version);
+			header('X-Generator: Swiftlet ' . Swiftlet::VERSION);
 
 			require($file);
 		} else {

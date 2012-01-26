@@ -3,7 +3,7 @@
 class Swiftlet
 {
 	const
-		version = '3.0'
+		VERSION = '3.0'
 		;
 
 	protected
