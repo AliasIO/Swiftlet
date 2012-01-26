@@ -46,7 +46,6 @@ abstract class SwiftletController
 
 	/**
 	 * Fallback in case action doesn't exist
-	 * @return string
 	 */
 	public function notImplementedAction()
    	{

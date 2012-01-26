@@ -45,7 +45,9 @@ class Swiftlet
 				$controllerName = ucfirst($viewName) . 'Controller';
 			}
 
-			if ( $this->_args ) $this->_action = array_shift($this->_args) . 'Action';
+			if ( $action = $this->_args ? array_shift($this->_args) : '' ) {
+				$this->_action = $action . 'Action';
+			}
 		}
 
 		if ( !is_file('controllers/' . $controllerName . '.php') ) {

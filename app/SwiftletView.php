@@ -82,4 +82,14 @@ class SwiftletView
    	{
 		return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
+
+	/**
+	 * Decode an HTML encoded string
+	 * @param string $string
+	 * @return string
+	 */
+	protected function htmlDecode($string)
+   	{
+		return html_entity_decode($string, ENT_QUOTES, 'UTF-8');
+	}
 }
