@@ -17,13 +17,13 @@ class Swiftlet
 		;
 
 	/**
-	 *
+	 * Initialize the application
 	 */
 	public function __construct()
 	{
 		set_error_handler(array($this, 'error'), E_ALL);
 
-		// Determine the root path
+		// Determine the client-side path to root
 		$path = dirname(dirname(__FILE__));
 
 		if ( !empty($_SERVER['DOCUMENT_ROOT']) && preg_match('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', $path) ) {
@@ -45,7 +45,7 @@ class Swiftlet
 				$controllerName = ucfirst($viewName) . 'Controller';
 			}
 
-			if ( $this->_args ) $this->_action = array_shift($this->_args)  . 'Action';
+			if ( $this->_args ) $this->_action = array_shift($this->_args) . 'Action';
 		}
 
 		if ( !is_file('controllers/' . $controllerName . '.php') ) {
@@ -60,11 +60,6 @@ class Swiftlet
 		require('controllers/' . $controllerName . '.php');
 
 		$this->_controller = new $controllerName($this, $controllerName);
-
-		// Call the controller action
-		if ( !method_exists($this->_controller, $this->_action) ) {
-			$this->_action = 'notImplementedAction';
-		}
 
 		// Load plugins
 		if ( $handle = opendir('plugins') ) {
@@ -81,6 +76,11 @@ class Swiftlet
 			ksort($this->_plugins);
 
 			closedir($handle);
+		}
+
+		// Call the controller action
+		if ( !method_exists($this->_controller, $this->_action) ) {
+			$this->_action = 'notImplementedAction';
 		}
 
 		$this->registerHook('actionBefore');
@@ -167,8 +167,8 @@ class Swiftlet
 	}
 
 	/**
-	 * Get the client-side absolute path to root
-	 * @return object
+	 * Get the client-side path to root
+	 * @return string
 	 */
 	public function getRootPath()
 	{
@@ -176,6 +176,7 @@ class Swiftlet
 	}
 
 	/**
+	 * Register a new hook for plugins to implement
 	 * @param string $hookName
 	 * @param array $params
 	 */

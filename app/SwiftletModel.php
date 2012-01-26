@@ -8,6 +8,7 @@ abstract class SwiftletModel
 		;
 
 	/**
+	 * Initialize the model
 	 * @param object $app
 	 * @param string $name
 	 */
@@ -18,6 +19,7 @@ abstract class SwiftletModel
 	}
 
 	/**
+	 * Get the model name
 	 * @return string
 	 */
 	public function getName()

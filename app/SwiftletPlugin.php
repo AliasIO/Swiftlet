@@ -8,6 +8,7 @@ abstract class SwiftletPlugin
 		;
 
 	/**
+	 * Initialize the plugin
 	 * @param object $app
 	 * @param string $name
 	 */
@@ -18,6 +19,7 @@ abstract class SwiftletPlugin
 	}
 
 	/**
+	 * Get the plugin name
 	 * @return string
 	 */
 	public function getName()
