@@ -27,6 +27,6 @@ abstract class SwiftletController
 	 */
 	public function notImplementedAction()
    	{
-		throw new Exception('Action not implemented in ' . $this->_name);
+		throw new Exception('Action not implemented in ' . __CLASS__);
 	}
 }
