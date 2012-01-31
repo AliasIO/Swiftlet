@@ -1,40 +1,18 @@
 <?php
 
-class SwiftletView
+final class SwiftletView
 {
-	protected
-		$_app,
-		$_name,
+	protected static
 		$_variables = array()
 		;
-
-	/**
-	 * Initialize the view
-	 * @param object $app
-	 * @param string $name
-	 */
-	public function __construct($app, $name)
-	{
-		$this->_app  = $app;
-		$this->_name = $name;
-	}
-
-	/**
-	 * Get the view name
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->_name;
-	}
 
 	/**
 	 * Get the page title
 	 * @return string
 	 */
-	public function getTitle()
+	public static function getTitle()
 	{
-		return $this->htmlEncode($this->_app->getController()->getTitle());
+		return self::htmlEncode(Swiftlet::getController()->getTitle());
 	}
 
 	/**
@@ -42,10 +20,10 @@ class SwiftletView
 	 * @params string $variable
 	 * @return string
 	 */
-	public function get($variable)
+	public static function get($variable)
    	{
-		if ( isset($this->_variables[$variable]) ) {
-			return $this->htmlEncode($this->_variables[$variable]);
+		if ( isset(self::$_variables[$variable]) ) {
+			return self::htmlEncode(self::$_variables[$variable]);
 		}
 	}
 
@@ -54,17 +32,17 @@ class SwiftletView
 	 * @param string $variable
 	 * @param mixed $value
 	 */
-	public function set($variable, $value = null)
+	public static function set($variable, $value = null)
 	{
-		$this->_variables[$variable] = $value;
+		self::$_variables[$variable] = $value;
 	}
 
 	/**
 	 * Render the view
 	 */
-	public function render()
+	public static function render()
 	{
-		if ( is_file($file = 'views/' . $this->_name . '.html.php') ) {
+		if ( is_file($file = 'views/' . Swiftlet::getView() . '.html.php') ) {
 			header('X-Generator: Swiftlet ' . Swiftlet::VERSION);
 
 			require($file);
@@ -78,7 +56,7 @@ class SwiftletView
 	 * @param string $string
 	 * @return string
 	 */
-	protected function htmlEncode($string)
+	protected static function htmlEncode($string)
    	{
 		return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
@@ -88,7 +66,7 @@ class SwiftletView
 	 * @param string $string
 	 * @return string
 	 */
-	protected function htmlDecode($string)
+	protected static function htmlDecode($string)
    	{
 		return html_entity_decode($string, ENT_QUOTES, 'UTF-8');
 	}

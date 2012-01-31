@@ -11,10 +11,10 @@ class IndexController extends SwiftletController
 	 */
 	public function indexAction()
 	{
-		$exampleModel = $this->_app->getModel('example');
+		$exampleModel = Swiftlet::getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
 
-		$this->_app->getView()->set('hello world', $helloWorld);
+		SwiftletView::set('hello world', $helloWorld);
 	}
 }

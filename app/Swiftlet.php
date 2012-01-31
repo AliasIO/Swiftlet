@@ -1,67 +1,61 @@
 <?php
 
-class Swiftlet
+final class Swiftlet
 {
 	const
 		VERSION = '3.0'
 		;
 
-	protected
+	protected static
 		$_action     = 'indexAction',
 		$_args       = array(),
 		$_controller,
 		$_plugins    = array(),
 		$_rootPath   = '/',
 		$_singletons = array(),
-		$_view
+		$_view       = 'index'
 		;
 
 	/**
 	 * Initialize the application
 	 */
-	public function __construct()
+	public static function run()
 	{
-		set_error_handler(array($this, 'error'), E_ALL);
-
 		// Determine the client-side path to root
 		$path = dirname(dirname(__FILE__));
 
 		if ( !empty($_SERVER['DOCUMENT_ROOT']) && preg_match('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', $path) ) {
 			$path = preg_replace('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', '', $path);
 
-			$this->_rootPath = rtrim($path, '/') . '/';
+			self::$_rootPath = rtrim($path, '/') . '/';
 		}
 
 		// Extract controller name, view name, action name and arguments from URL
 		$controllerName = 'IndexController';
-		$viewName       = 'index';
 
 		if ( !empty($_GET['q']) ) {
-			$this->_args = explode('/', $_GET['q']);
+			self::$_args = explode('/', $_GET['q']);
 
-			if ( $this->_args ) {
-				$viewName = array_shift($this->_args);
+			if ( self::$_args ) {
+				self::$_view = array_shift(self::$_args);
 
-				$controllerName = ucfirst($viewName) . 'Controller';
+				$controllerName = ucfirst(self::$_view) . 'Controller';
 			}
 
-			if ( $action = $this->_args ? array_shift($this->_args) : '' ) {
-				$this->_action = $action . 'Action';
+			if ( $action = self::$_args ? array_shift(self::$_args) : '' ) {
+				self::$_action = $action . 'Action';
 			}
 		}
 
 		if ( !is_file('controllers/' . $controllerName . '.php') ) {
 			$controllerName = 'Error404Controller';
-			$viewName       = 'error404';
+			self::$_view    = 'error404';
 		}
-
-		// Instantiate the view
-		$this->_view = new SwiftletView($this, $viewName);
 
 		// Instantiate the controller
 		require('controllers/' . $controllerName . '.php');
 
-		$this->_controller = new $controllerName($this, $controllerName);
+		self::$_controller = new $controllerName();
 
 		// Load plugins
 		if ( $handle = opendir('plugins') ) {
@@ -71,46 +65,46 @@ class Swiftlet
 
 					require('plugins/' . $file);
 
-					$this->_plugins[] = new $pluginName($this, $pluginName);
+					self::$_plugins[] = new $pluginName();
 				}
 			}
 
-			ksort($this->_plugins);
+			ksort(self::$_plugins);
 
 			closedir($handle);
 		}
 
 		// Call the controller action
-		if ( !method_exists($this->_controller, $this->_action) ) {
-			$this->_action = 'notImplementedAction';
+		if ( !method_exists(self::$_controller, self::$_action) ) {
+			self::$_action = 'notImplementedAction';
 		}
 
-		$this->registerHook('actionBefore');
+		self::registerHook('actionBefore');
 
-		$this->_controller->{$this->_action}();
+		self::$_controller->{self::$_action}();
 
-		$this->registerHook('actionAfter');
+		self::registerHook('actionAfter');
 
 		// Render the view
-		$this->_view->render();
+		SwiftletView::render();
 	}
 
 	/**
 	 * Get the action name
 	 * @return string
 	 */
-	public function getAction()
+	public static function getAction()
    	{
-		return $this->_action();
+		return self::$_action();
 	}
 
 	/**
 	 * Get the arguments
 	 * @return array
 	 */
-	public function getArgs()
+	public static function getArgs()
    	{
-		return $this->_args();
+		return self::$_args();
 	}
 
 	/**
@@ -118,15 +112,15 @@ class Swiftlet
 	 * @param string $modelName
 	 * @return object
 	 */
-	public function getModel($modelName)
+	public static function getModel($modelName)
    	{
 		$modelName = ucfirst($modelName) . 'Model';
 
 		if ( is_file($file = 'models/' . $modelName . '.php') ) {
 			// Instantiate the model
-			require($file);
+			if ( !class_exists($modelName) ) require($file);
 
-			return new $modelName($this, $modelName);
+			return new $modelName();
 		} else {
 			throw new Exception($modelName . ' not found');
 		}
@@ -137,44 +131,44 @@ class Swiftlet
 	 * @param string $modelName
 	 * @return object
 	 */
-	public function getSingleton($modelName)
+	public static function getSingleton($modelName)
 	{
-		if ( isset($this->_singletons[$modelName]) ) {
-			return $this->_singletons[$modelName];
+		if ( isset(self::$_singletons[$modelName]) ) {
+			return self::$_singletons[$modelName];
 		}
 
-		$model = $this->getModel($modelName);
+		$model = Swiftlet::getModel($modelName);
 
-		$this->_singletons[$modelName] = $model;
+		self::$_singletons[$modelName] = $model;
 
 		return $model;
+	}
+
+	/**
+	 * Get the view name
+	 * @return string
+	 */
+	public static function getView()
+   	{
+		return self::$_view;
 	}
 
 	/**
 	 * Get the controller instance
 	 * @return object
 	 */
-	public function getController()
+	public static function getController()
    	{
-		return $this->_controller;
-	}
-
-	/**
-	 * Get the view instance
-	 * @return object
-	 */
-	public function getView()
-   	{
-		return $this->_view;
+		return self::$_controller;
 	}
 
 	/**
 	 * Get the client-side path to root
 	 * @return string
 	 */
-	public function getRootPath()
+	public static function getRootPath()
 	{
-		return $this->_rootPath;
+		return self::$_rootPath;
 	}
 
 	/**
@@ -182,10 +176,10 @@ class Swiftlet
 	 * @param string $hookName
 	 * @param array $params
 	 */
-	public function registerHook($hookName, $params = array()) {
+	public static function registerHook($hookName, $params = array()) {
 		$hookName .= 'Hook';
 
-		foreach ( $this->_plugins as $plugin ) {
+		foreach ( self::$_plugins as $plugin ) {
 			if ( method_exists($plugin, $hookName) ) {
 				$plugin->{$hookName}($params);
 			}
@@ -199,7 +193,7 @@ class Swiftlet
 	 * @param string $file
 	 * @param int $line
 	 */
-	public function error($number, $string, $file, $line)
+	public static function error($number, $string, $file, $line)
 	{
 		throw new Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
 	}

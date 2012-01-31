@@ -46,14 +46,12 @@ views should be limited to simple UI logic (loops and switches).
 
 class FooController extends SwiftletController
 {
-	protected
-		$_title = 'Foo' // Optional but recommended
-		;
+	protected $_title = 'Foo'; // Optional but recommended
 
 	public function indexAction()
 	{
 		// Pass a variable to the view
-		$this->_app->getView()->set('hello world', 'Hello world!');
+		SwiftletView::set('hello world', 'Hello world!');
 	}
 }
 ```
@@ -65,10 +63,10 @@ and match their filename. This is not just a convention, it's required!
 **View `views/foo.html.php`**
 
 ```php
-<h1><?php echo $this->getTitle() ?></h1>
+<h1><?php echo SwiftletView::getTitle() ?></h1>
 
 <p>
-	<?php echo $this->get('hello world') ?>
+	<?php echo SwiftletView::get('hello world') ?>
 </p>
 ```
 
@@ -77,6 +75,7 @@ methods. Values are automatically made safe for use in HTML.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
+
 
 Routing
 -------
@@ -107,7 +106,7 @@ If the action doesn't exist `notImplementedAction()` will be called instead.
 This will throw an exception by default but can be overridden.
 
 The action name and arguments can be accessed through
-`$this->_app->getAction()` and `$this->_app->getArgs()` respectively.
+`Swiftlet::getAction()` and `Swiftlet::getArgs()` respectively.
 
 
 Models
@@ -136,18 +135,16 @@ class FooModel extends SwiftletModel
 
 class FooController extends SwiftletController
 {
-	protected
-		$_title = 'Foo'
-		;
+	protected $_title = 'Foo';
 
 	public function indexAction()
 	{
 		// Get an instance of the ExampleModel class (models/ExampleModel.php)
-		$exampleModel = $this->_app->getModel('example');
+		$exampleModel = Swiftlet::getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
 
-		$this->_app->getView()->set('hello world', $helloWorld);
+		SwiftletView::set('hello world', $helloWorld);
 	}
 }
 ```
@@ -156,8 +153,8 @@ Controllers get their data from models. Code for querying a database,
 reading/writing files and parsing data all belongs in a model. You can create as
 many models as you like; they aren't tied to specific controllers.
 
-A model can instantiated using `$this->_app->getModel($modelName)`. To allow 
-re-use, use `$this->_app->getSingleton($modelName)` instead as this will only 
+A model can instantiated using `Swiftlet::getModel($modelName)`. To allow 
+re-use, use `Swiftlet::getSingleton($modelName)` instead as this will only 
 create a single instance when called multiple times.
 
 
@@ -166,7 +163,7 @@ Plugins and hooks
 
 Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Swiftlet has a
 few core hooks but they can be registered pretty much anywhere using
-`$this->_app->registerHook($hookName)`.  
+`Swiftlet::registerHook($hookName)`.  
 
 **Plugin `plugins/FooPlugin.php`**
 
@@ -177,8 +174,8 @@ class FooPlugin extends SwiftletPlugin
 {
 	public function actionAfterHook()
 	{
-		if ( $this->_app->getController()->getName() === 'FooController' ) {
-			$this->_app->getView()->set('hello world', 'Hi world!');
+		if ( get_class(Swiftlet::getController()) === 'FooController' ) {
+			SwiftletView::set('hello world', 'Hi world!');
 		}
 	}
 }
@@ -223,7 +220,7 @@ Create or return an existing model instance
 Reference to the controller object 
 
 * `object getView()`  
-Reference to the view object 
+Name of the view
 
 * `string getRootPath()`  
 Absolute client-side path to website root
@@ -232,25 +229,7 @@ Absolute client-side path to website root
 Register a hook
 
 
-**Controller `SwiftletController`**
-
-* `string getName()`  
-Name of the controller
-
-* `string getTitle()`  
-Title of the page
-
-* `indexAction()`  
-Default action
-
-* `notImplementedAction()`  
-Fallback action if action doesn't exist
-
-
 **View `SwiftletView`**
-
-* `string getName()`  
-Name of the view
 
 * `string getTitle()`  
 Title of the page
@@ -268,13 +247,13 @@ Include (execute) the view files
 Make a value safe for HTML
 
 
-**Model `SwiftletModel`**
+**Controller `SwiftletController`**
 
-* `string getName()`  
-Name of the model
+* `string getTitle()`  
+Title of the page
 
+* `indexAction()`  
+Default action
 
-**Plugin `SwiftletPlugin`**
-
-* `string getName()`  
-Name of the plugin
+* `notImplementedAction()`  
+Fallback action if action doesn't exist

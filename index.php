@@ -7,7 +7,7 @@ try {
 	require('app/SwiftletView.php');
 	require('app/SwiftletPlugin.php');
 
-	new Swiftlet;
+	Swiftlet::run();
 } catch ( Exception $e ) {
 	header('HTTP/1.1 503 Service Temporarily Unavailable');
 
