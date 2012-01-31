@@ -38,25 +38,11 @@ final class SwiftletView
 	}
 
 	/**
-	 * Render the view
-	 */
-	public static function render()
-	{
-		if ( is_file($file = 'views/' . Swiftlet::getView() . '.html.php') ) {
-			header('X-Generator: Swiftlet ' . Swiftlet::VERSION);
-
-			require($file);
-		} else {
-			throw new Exception('View not found');
-		}
-	}
-
-	/**
 	 * Make a string safe for HTML
 	 * @param string $string
 	 * @return string
 	 */
-	protected static function htmlEncode($string)
+	public static function htmlEncode($string)
    	{
 		return htmlentities($string, ENT_QUOTES, 'UTF-8');
 	}
@@ -66,7 +52,7 @@ final class SwiftletView
 	 * @param string $string
 	 * @return string
 	 */
-	protected static function htmlDecode($string)
+	public static function htmlDecode($string)
    	{
 		return html_entity_decode($string, ENT_QUOTES, 'UTF-8');
 	}

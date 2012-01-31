@@ -56,8 +56,8 @@ class FooController extends SwiftletController
 }
 ```
 
-Class names are written in [CamelCase](http://en.wikipedia.org/wiki/CamelCase)
-and match their filename. This is not just a convention, it's required!
+Important: class names are written in 
+[CamelCase](http://en.wikipedia.org/wiki/CamelCase) and match their filename.
 
 
 **View `views/foo.html.php`**
@@ -70,8 +70,8 @@ and match their filename. This is not just a convention, it's required!
 </p>
 ```
 
-Variables can be passed from controller to view using the view's `set` and `get`
-methods. Values are automatically made safe for use in HTML.
+Variables can be passed from controller to view using `SwiftletView::set()` and 
+`SwiftletView::get()`. Values are automatically made safe for use in HTML.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
@@ -161,8 +161,9 @@ create a single instance when called multiple times.
 Plugins and hooks
 -----------------
 
-Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Swiftlet has a
-few core hooks but they can be registered pretty much anywhere using
+Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Hooks are entry
+points for code that extends the application. Swiftlet has a few core hooks but 
+they can be registered pretty much anywhere using
 `Swiftlet::registerHook($hookName)`.  
 
 **Plugin `plugins/FooPlugin.php`**
@@ -174,6 +175,7 @@ class FooPlugin extends SwiftletPlugin
 {
 	public function actionAfterHook()
 	{
+		// Overwrite our previously set "hello world" variable
 		if ( get_class(Swiftlet::getController()) === 'FooController' ) {
 			SwiftletView::set('hello world', 'Hi world!');
 		}
@@ -201,6 +203,10 @@ Called after each action
 
 Public abstract methods
 -----------------------
+
+All applicaion and view methods can be called statically, e.g.
+`Swiftlet::getAction()` and `SwiftletView::getTitle()`.
+
 
 **Application `Swiftlet`**
 
@@ -240,11 +246,11 @@ Get a view variable
 * `set(string $variable [, string $value ])`  
 Set a view variable
 
-* `render()`   
-Include (execute) the view files
-
 * `htmlEncode(string $string)` 
 Make a value safe for HTML
+
+* `htmlDecode(string $string)` 
+Decode a previously encoded value to be rendered as HTML
 
 
 **Controller `SwiftletController`**

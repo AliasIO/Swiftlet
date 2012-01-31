@@ -86,7 +86,13 @@ final class Swiftlet
 		self::registerHook('actionAfter');
 
 		// Render the view
-		SwiftletView::render();
+		if ( is_file($file = 'views/' . self::$_view . '.html.php') ) {
+			header('X-Generator: Swiftlet ' . self::VERSION);
+
+			require($file);
+		} else {
+			throw new Exception('View not found');
+		}
 	}
 
 	/**
