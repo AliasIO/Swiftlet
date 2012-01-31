@@ -71,7 +71,7 @@ final class Swiftlet
 				}
 			}
 
-			ksort(self::$_plugins);
+			sort(self::$_plugins);
 
 			closedir($handle);
 		}
