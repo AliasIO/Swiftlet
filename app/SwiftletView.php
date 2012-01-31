@@ -2,7 +2,7 @@
 
 final class SwiftletView
 {
-	protected static
+	private static
 		$_variables = array()
 		;
 

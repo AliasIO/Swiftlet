@@ -6,7 +6,7 @@ final class Swiftlet
 		VERSION = '3.0'
 		;
 
-	protected static
+	private static
 		$_action     = 'indexAction',
 		$_args       = array(),
 		$_controller,
@@ -21,6 +21,8 @@ final class Swiftlet
 	 */
 	public static function run()
 	{
+		set_error_handler(array('Swiftlet', 'error'), E_ALL);
+
 		// Determine the client-side path to root
 		$path = dirname(dirname(__FILE__));
 
@@ -199,7 +201,7 @@ final class Swiftlet
 	 * @param string $file
 	 * @param int $line
 	 */
-	public static function error($number, $string, $file, $line)
+	private static function error($number, $string, $file, $line)
 	{
 		throw new Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
 	}
