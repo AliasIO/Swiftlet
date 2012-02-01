@@ -44,7 +44,6 @@ views should be limited to simple UI logic (loops and switches).
 
 ```php
 <?php
-
 namespace Swiftlet;
 
 class FooController extends Controller
@@ -123,7 +122,6 @@ Let's throw a model into the mix and update the controller.
 
 ```php
 <?php
-
 namespace Swiftlet;
 
 class FooModel extends Model
@@ -139,7 +137,6 @@ class FooModel extends Model
 
 ```php
 <?php
-
 namespace Swiftlet;
 
 class FooController extends Controller
@@ -179,7 +176,6 @@ they can be registered pretty much anywhere using
 
 ```php
 <?php
-
 namespace Swiftlet;
 
 class FooPlugin extends Plugin
