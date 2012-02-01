@@ -1,6 +1,8 @@
 <?php
 
-class Error404Controller extends SwiftletController
+namespace Swiftlet;
+
+class Error404Controller extends Controller
 {
 	protected
 		$_title = 'Error 404'

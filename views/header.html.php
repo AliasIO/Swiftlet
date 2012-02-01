@@ -2,8 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
 	<head>
-		<title><?php echo SwiftletView::getTitle() ?></title>
+		<title><?php echo Swiftlet\View::getTitle() ?></title>
 
-		<link type="text/css" rel="stylesheet" href="<?php echo Swiftlet::getRootPath() ?>views/css/layout.css"/>
+		<link type="text/css" rel="stylesheet" href="<?php echo Swiftlet\App::getRootPath() ?>views/css/layout.css"/>
 	</head>
 	<body>

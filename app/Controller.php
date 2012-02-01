@@ -1,6 +1,8 @@
 <?php
 
-abstract class SwiftletController
+namespace Swiftlet;
+
+abstract class Controller
 {
 	protected
 		$_title
@@ -27,6 +29,6 @@ abstract class SwiftletController
 	 */
 	public function notImplementedAction()
    	{
-		throw new Exception('Action not implemented in ' . __CLASS__);
+		throw new \Exception('Action not implemented in ' . __CLASS__);
 	}
 }

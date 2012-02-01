@@ -1,6 +1,8 @@
 <?php
 
-final class Swiftlet
+namespace Swiftlet;
+
+final class App
 {
 	const
 		VERSION = '3.0'
@@ -21,7 +23,7 @@ final class Swiftlet
 	 */
 	public static function run()
 	{
-		set_error_handler(array('Swiftlet', 'error'), E_ALL);
+		set_error_handler(array('Swiftlet\App', 'error'), E_ALL);
 
 		// Determine the client-side path to root
 		$path = dirname(dirname(__FILE__));
@@ -57,13 +59,15 @@ final class Swiftlet
 		// Instantiate the controller
 		require('controllers/' . $controllerName . '.php');
 
+		$controllerName = 'Swiftlet\\' . $controllerName;
+
 		self::$_controller = new $controllerName();
 
 		// Load plugins
 		if ( $handle = opendir('plugins') ) {
 			while ( ( $file = readdir($handle) ) !== FALSE ) {
 				if ( is_file('plugins/' . $file) && preg_match('/^(.+Plugin)\.php$/', $file, $match) ) {
-					$pluginName = $match[1];
+					$pluginName = 'Swiftlet\\' . $match[1];
 
 					require('plugins/' . $file);
 
@@ -127,6 +131,8 @@ final class Swiftlet
 		if ( is_file($file = 'models/' . $modelName . '.php') ) {
 			// Instantiate the model
 			if ( !class_exists($modelName) ) require($file);
+
+			$modelName = 'Swiftlet\\' . $modelName;
 
 			return new $modelName();
 		} else {
@@ -203,6 +209,6 @@ final class Swiftlet
 	 */
 	private static function error($number, $string, $file, $line)
 	{
-		throw new Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
+		throw new \Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
 	}
 }

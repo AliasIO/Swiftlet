@@ -1,6 +1,8 @@
 <?php
 
-class IndexController extends SwiftletController
+namespace Swiftlet;
+
+class IndexController extends Controller
 {
 	protected
 		$_title = 'Home'
@@ -11,10 +13,10 @@ class IndexController extends SwiftletController
 	 */
 	public function indexAction()
 	{
-		$exampleModel = Swiftlet::getModel('example');
+		$exampleModel = App::getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
 
-		SwiftletView::set('hello world', $helloWorld);
+		View::set('hello world', $helloWorld);
 	}
 }

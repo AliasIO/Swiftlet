@@ -17,6 +17,7 @@ Buzzword compliance
 ✔ MVC  
 ✔ OOP  
 ✔ PHP5  
+✔ Namespaced
 
 ✘ ORM  
 
@@ -44,14 +45,16 @@ views should be limited to simple UI logic (loops and switches).
 ```php
 <?php
 
-class FooController extends SwiftletController
+namespace Swiftlet;
+
+class FooController extends Controller
 {
 	protected $_title = 'Foo'; // Optional but recommended
 
 	public function indexAction()
 	{
 		// Pass a variable to the view
-		SwiftletView::set('hello world', 'Hello world!');
+		View::set('hello world', 'Hello world!');
 	}
 }
 ```
@@ -63,15 +66,17 @@ Important: class names are written in
 **View `views/foo.html.php`**
 
 ```php
-<h1><?php echo SwiftletView::getTitle() ?></h1>
+<?php namespace Swiftlet ?>
+
+<h1><?php echo View::getTitle() ?></h1>
 
 <p>
-	<?php echo SwiftletView::get('hello world') ?>
+	<?php echo View::get('hello world') ?>
 </p>
 ```
 
-Variables can be passed from controller to view using `SwiftletView::set()` and 
-`SwiftletView::get()`. Values are automatically made safe for use in HTML.
+Variables can be passed from controller to view using `View::set()` and 
+`View::get()`. Values are automatically made safe for use in HTML.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
@@ -105,8 +110,8 @@ argument (the id of the blog post to edit).
 If the action doesn't exist `notImplementedAction()` will be called instead.
 This will throw an exception by default but can be overridden.
 
-The action name and arguments can be accessed through
-`Swiftlet::getAction()` and `Swiftlet::getArgs()` respectively.
+The action name and arguments can be accessed through `App::getAction()` and 
+`App::getArgs()` respectively.
 
 
 Models
@@ -119,7 +124,9 @@ Let's throw a model into the mix and update the controller.
 ```php
 <?php
 
-class FooModel extends SwiftletModel
+namespace Swiftlet;
+
+class FooModel extends Model
 {
 	public function getHelloWorld()
 	{
@@ -133,18 +140,20 @@ class FooModel extends SwiftletModel
 ```php
 <?php
 
-class FooController extends SwiftletController
+namespace Swiftlet;
+
+class FooController extends Controller
 {
 	protected $_title = 'Foo';
 
 	public function indexAction()
 	{
 		// Get an instance of the ExampleModel class (models/ExampleModel.php)
-		$exampleModel = Swiftlet::getModel('example');
+		$exampleModel = App::getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
 
-		SwiftletView::set('hello world', $helloWorld);
+		View::set('hello world', $helloWorld);
 	}
 }
 ```
@@ -153,9 +162,9 @@ Controllers get their data from models. Code for querying a database,
 reading/writing files and parsing data all belongs in a model. You can create as
 many models as you like; they aren't tied to specific controllers.
 
-A model can instantiated using `Swiftlet::getModel($modelName)`. To allow 
-re-use, use `Swiftlet::getSingleton($modelName)` instead as this will only 
-create a single instance when called multiple times.
+A model can instantiated using `App::getModel($modelName)`. To allow re-use, use 
+`App::getSingleton($modelName)` instead as this will only create a single 
+instance when called multiple times.
 
 
 Plugins and hooks
@@ -164,20 +173,22 @@ Plugins and hooks
 Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Hooks are entry
 points for code that extends the application. Swiftlet has a few core hooks but 
 they can be registered pretty much anywhere using
-`Swiftlet::registerHook($hookName)`.  
+`App::registerHook($hookName)`.  
 
 **Plugin `plugins/FooPlugin.php`**
 
 ```php
 <?php
 
-class FooPlugin extends SwiftletPlugin
+namespace Swiftlet;
+
+class FooPlugin extends Plugin
 {
 	public function actionAfterHook()
 	{
 		// Overwrite our previously set "hello world" variable
-		if ( get_class(Swiftlet::getController()) === 'FooController' ) {
-			SwiftletView::set('hello world', 'Hi world!');
+		if ( get_class(App::getController()) === 'FooController' ) {
+			View::set('hello world', 'Hi world!');
 		}
 	}
 }
@@ -205,10 +216,10 @@ Public abstract methods
 -----------------------
 
 All applicaion and view methods can be called statically, e.g.
-`Swiftlet::getAction()` and `SwiftletView::getTitle()`.
+`App::getAction()` and `View::getTitle()`.
 
 
-**Application `Swiftlet`**
+**Application `Swiftlet\App`**
 
 * `string getAction()`  
 Name of the action
@@ -235,7 +246,7 @@ Absolute client-side path to website root
 Register a hook
 
 
-**View `SwiftletView`**
+**View `Swiftlet\View`**
 
 * `string getTitle()`  
 Title of the page
@@ -253,7 +264,7 @@ Make a value safe for HTML
 Decode a previously encoded value to be rendered as HTML
 
 
-**Controller `SwiftletController`**
+**Controller `Swiftlet\Controller`**
 
 * `string getTitle()`  
 Title of the page

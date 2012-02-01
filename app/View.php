@@ -1,6 +1,8 @@
 <?php
 
-final class SwiftletView
+namespace Swiftlet;
+
+final class View
 {
 	private static
 		$_variables = array()
@@ -12,7 +14,7 @@ final class SwiftletView
 	 */
 	public static function getTitle()
 	{
-		return self::htmlEncode(Swiftlet::getController()->getTitle());
+		return self::htmlEncode(App::getController()->getTitle());
 	}
 
 	/**
