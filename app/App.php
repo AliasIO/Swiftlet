@@ -207,7 +207,7 @@ final class App
 	 * @param string $file
 	 * @param int $line
 	 */
-	private static function error($number, $string, $file, $line)
+	public static function error($number, $string, $file, $line)
 	{
 		throw new \Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
 	}
