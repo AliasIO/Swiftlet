@@ -107,7 +107,7 @@ final class App
 	 */
 	public static function getAction()
    	{
-		return self::$_action();
+		return self::$_action;
 	}
 
 	/**
@@ -116,7 +116,7 @@ final class App
 	 */
 	public static function getArgs()
    	{
-		return self::$_args();
+		return self::$_args;
 	}
 
 	/**
