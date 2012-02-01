@@ -183,7 +183,7 @@ class FooPlugin extends Plugin
 	public function actionAfterHook()
 	{
 		// Overwrite our previously set "hello world" variable
-		if ( get_class(App::getController()) === 'FooController' ) {
+		if ( get_class(App::getController()) === 'Swiftlet\FooController' ) {
 			View::set('hello world', 'Hi world!');
 		}
 	}

@@ -9,7 +9,7 @@ class ExamplePlugin extends Plugin
 	 */
 	public function actionAfterHook()
    	{
-		if ( get_class(App::getController()) === 'IndexController' ) {
+		if ( get_class(App::getController()) === 'Swiftlet\IndexController' ) {
 			$helloWorld = View::get('hello world');
 
 			View::set('hello world', $helloWorld . ' This string was altered by ' . __CLASS__ . '.');
