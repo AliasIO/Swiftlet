@@ -118,7 +118,7 @@ Models
 
 Let's throw a model into the mix and update the controller.
 
-**Model `model/FooModel.php`**
+**Model `models/FooModel.php`**
 
 ```php
 <?php
