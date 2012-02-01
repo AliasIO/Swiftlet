@@ -26,12 +26,12 @@ final class App
 		set_error_handler(array('Swiftlet\App', 'error'), E_ALL);
 
 		// Determine the client-side path to root
-		$path = dirname(dirname(__FILE__));
+		if ( !empty($_SERVER['REQUEST_URI']) ) {
+			self::$_rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
 
-		if ( !empty($_SERVER['DOCUMENT_ROOT']) && preg_match('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', $path) ) {
-			$path = preg_replace('/^' . preg_quote($_SERVER['DOCUMENT_ROOT'], '/') . '/', '', $path);
-
-			self::$_rootPath = rtrim($path, '/') . '/';
+			if ( !empty($_GET['q']) ) {
+				self::$_rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', self::$_rootPath);
+			}
 		}
 
 		// Extract controller name, view name, action name and arguments from URL
