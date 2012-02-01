@@ -2,6 +2,8 @@
 
 namespace Swiftlet;
 
+require_once(dirname(__FILE__) . '/../../app/App.php');
+
 class AppTest extends \PHPUnit_Framework_TestCase
 {
 	/**
@@ -18,14 +20,12 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @covers Swiftlet\App::getAction
-	 * @todo   Implement testGetAction().
 	 */
 	public function testGetAction()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$action = App::getAction();
+
+		$this->assertEquals($action, 'indexAction');
 	}
 
 	/**
