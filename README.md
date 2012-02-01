@@ -75,7 +75,7 @@ Important: class names are written in
 ```
 
 Variables can be passed from controller to view using `View::set()` and 
-`View::get()`. Values are automatically made safe for use in HTML.
+`View::get()`. By default values are automatically made safe for use in HTML.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
@@ -247,17 +247,17 @@ Register a hook
 * `string getTitle()`  
 Title of the page
 
-* `string get(string $variable)`  
-Get a view variable
+* `mixed get(string $variable [, bool $htmlEncode = true ])`  
+Get a view variable, encoded for safe use in HTML by default
 
-* `set(string $variable [, string $value ])`  
+* `set(string $variable [, mixed $value ])`  
 Set a view variable
 
-* `htmlEncode(string $string)` 
-Make a value safe for HTML
+* `htmlEncode(mixed $value)` 
+Recursively make a value safe for HTML
 
-* `htmlDecode(string $string)` 
-Decode a previously encoded value to be rendered as HTML
+* `htmlDecode(mixed $value)` 
+Recursively decode a previously encoded value to be rendered as HTML
 
 
 **Controller `Swiftlet\Controller`**
