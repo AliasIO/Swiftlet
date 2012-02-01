@@ -22,10 +22,14 @@ final class View
 	 * @params string $variable
 	 * @return string
 	 */
-	public static function get($variable)
+	public static function get($variable, $htmlEncode = true)
    	{
 		if ( isset(self::$_variables[$variable]) ) {
-			return self::htmlEncode(self::$_variables[$variable]);
+			if ( $htmlEncode ) {
+				return self::htmlEncode(self::$_variables[$variable]);
+			} else {
+				return self::$_variables[$variable];
+			}
 		}
 	}
 
@@ -40,22 +44,56 @@ final class View
 	}
 
 	/**
-	 * Make a string safe for HTML
-	 * @param string $string
-	 * @return string
+	 * Recursively make a value safe for HTML
+	 * @param mixed $value
+	 * @return mixed
 	 */
-	public static function htmlEncode($string)
+	public static function htmlEncode($value)
    	{
-		return htmlentities($string, ENT_QUOTES, 'UTF-8');
+		switch ( gettype($value) ) {
+			case 'array':
+				foreach ( $value as $k => $v ) {
+					$value[$k] = self::htmlEncode($v);
+				}
+
+				break;
+			case 'object':
+				foreach ( $value as $k => $v ) {
+					$value->$k = self::htmlEncode($v);
+				}
+
+				break;
+			default:
+				$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+		}
+
+		return $value;
 	}
 
 	/**
-	 * Decode an HTML encoded string
-	 * @param string $string
-	 * @return string
+	 * Recursively decode an HTML encoded value
+	 * @param mixed $value
+	 * @return mixed
 	 */
-	public static function htmlDecode($string)
+	public static function htmlDecode($value)
    	{
-		return html_entity_decode($string, ENT_QUOTES, 'UTF-8');
+		switch ( gettype($value) ) {
+			case 'array':
+				foreach ( $value as $k => $v ) {
+					$value[$k] = self::htmlDecode($v);
+				}
+
+				break;
+			case 'object':
+				foreach ( $value as $k => $v ) {
+					$value->$k = self::htmlDecode($v);
+				}
+
+				break;
+			default:
+				$value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+		}
+
+		return $value;
 	}
 }
