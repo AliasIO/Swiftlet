@@ -42,9 +42,9 @@ final class App
 			self::$_args = explode('/', $_GET['q']);
 
 			if ( self::$_args ) {
-				self::$_view = strtolower(array_shift(self::$_args));
+				self::$_view = str_replace('_', '/', strtolower(array_shift(self::$_args)));
 
-				$controllerName = ucfirst(self::$_view) . 'Controller';
+				$controllerName = str_replace(' ', '/', ucwords(str_replace('/', ' ', self::$_view))) . 'Controller';
 			}
 
 			if ( $action = self::$_args ? array_shift(self::$_args) : '' ) {
@@ -60,7 +60,7 @@ final class App
 		// Instantiate the controller
 		require('controllers/' . $controllerName . '.php');
 
-		$controllerName = 'Swiftlet\\' . $controllerName;
+		$controllerName = 'Swiftlet\\' . preg_replace('/^.+\/([^\/]+)$/', '$1', $controllerName);
 
 		self::$_controller = new $controllerName();
 
