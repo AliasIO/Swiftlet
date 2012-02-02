@@ -12,6 +12,7 @@ final class App
 		$_action     = 'indexAction',
 		$_args       = array(),
 		$_controller,
+		$_hooks      = array(),
 		$_plugins    = array(),
 		$_rootPath   = '/',
 		$_singletons = array(),
@@ -129,11 +130,11 @@ final class App
 		$modelName = ucfirst($modelName) . 'Model';
 
 		if ( is_file($file = 'models/' . $modelName . '.php') ) {
-			// Instantiate the model
-			if ( !class_exists($modelName) ) require($file);
-
 			$modelName = 'Swiftlet\\' . $modelName;
 
+			if ( !class_exists($modelName) ) require($file);
+
+			// Instantiate the model
 			return new $modelName();
 		} else {
 			throw new Exception($modelName . ' not found');
@@ -151,7 +152,7 @@ final class App
 			return self::$_singletons[$modelName];
 		}
 
-		$model = Swiftlet::getModel($modelName);
+		$model = self::getModel($modelName);
 
 		self::$_singletons[$modelName] = $model;
 
@@ -177,6 +178,24 @@ final class App
 	}
 
 	/**
+	 * Get all plugin instances
+	 * @return array
+	 */
+	public static function getPlugins()
+   	{
+		return self::$_plugins;
+	}
+
+	/**
+	 * Get all registered hooks
+	 * @return array
+	 */
+	public static function getHooks()
+   	{
+		return self::$_hooks;
+	}
+
+	/**
 	 * Get the client-side path to root
 	 * @return string
 	 */
@@ -191,6 +210,8 @@ final class App
 	 * @param array $params
 	 */
 	public static function registerHook($hookName, $params = array()) {
+		self::$_hooks[] = $hookName;
+
 		$hookName .= 'Hook';
 
 		foreach ( self::$_plugins as $plugin ) {

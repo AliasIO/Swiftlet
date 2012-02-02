@@ -229,11 +229,17 @@ Create a new model instance
 * `object getSingleton(string $modelName)`  
 Create or return an existing model instance
 
+* `object getView()`  
+Name of the view
+
 * `object getController()`  
 Reference to the controller object 
 
-* `object getView()`  
-Name of the view
+* `array getPlugins()`  
+All plugin instances
+
+* `array getHooks()`  
+All registered hooks
 
 * `string getRootPath()`  
 Absolute client-side path to website root
