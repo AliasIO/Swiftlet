@@ -42,7 +42,7 @@ final class App
 			self::$_args = explode('/', $_GET['q']);
 
 			if ( self::$_args ) {
-				self::$_view = array_shift(self::$_args);
+				self::$_view = strtolower(array_shift(self::$_args));
 
 				$controllerName = ucfirst(self::$_view) . 'Controller';
 			}
