@@ -60,7 +60,7 @@ final class App
 		// Instantiate the controller
 		require('controllers/' . $controllerName . '.php');
 
-		$controllerName = 'Swiftlet\\' . preg_replace('/^.+\/([^\/]+)$/', '$1', $controllerName);
+		$controllerName = 'Swiftlet\\' . basename($controllerName);
 
 		self::$_controller = new $controllerName();
 
