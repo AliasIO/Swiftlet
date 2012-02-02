@@ -98,7 +98,7 @@ final class App
 
 			require($file);
 		} else {
-			throw new Exception('View not found');
+			throw new \Exception('View not found');
 		}
 	}
 
@@ -137,7 +137,7 @@ final class App
 			// Instantiate the model
 			return new $modelName();
 		} else {
-			throw new Exception($modelName . ' not found');
+			throw new \Exception($modelName . ' not found');
 		}
 	}
 

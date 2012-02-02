@@ -8,7 +8,7 @@ try {
 	require('app/Plugin.php');
 
 	Swiftlet\App::run();
-} catch ( Exception $e ) {
+} catch ( \Exception $e ) {
 	header('HTTP/1.1 503 Service Temporarily Unavailable');
 
 	exit('Swiftlet Exception: ' . $e->getMessage());
