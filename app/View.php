@@ -20,6 +20,7 @@ final class View
 	/**
 	 * Get a view variable
 	 * @params string $variable
+	 * @params bool $htmlEncode
 	 * @return string
 	 */
 	public static function get($variable, $htmlEncode = true)

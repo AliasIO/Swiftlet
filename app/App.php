@@ -58,7 +58,7 @@ final class App
 		}
 
 		// Instantiate the controller
-		require('controllers/' . $controllerName . '.php');
+		require 'controllers/' . $controllerName . '.php';
 
 		$controllerName = 'Swiftlet\\' . basename($controllerName);
 
@@ -70,7 +70,7 @@ final class App
 				if ( is_file('plugins/' . $file) && preg_match('/^(.+Plugin)\.php$/', $file, $match) ) {
 					$pluginName = 'Swiftlet\\' . $match[1];
 
-					require('plugins/' . $file);
+					require 'plugins/' . $file;
 
 					self::$_plugins[] = new $pluginName();
 				}
@@ -96,7 +96,7 @@ final class App
 		if ( is_file($file = 'views/' . self::$_view . '.html.php') ) {
 			header('X-Generator: Swiftlet ' . self::VERSION);
 
-			require($file);
+			require $file;
 		} else {
 			throw new \Exception('View not found');
 		}
@@ -132,7 +132,7 @@ final class App
 		if ( is_file($file = 'models/' . $modelName . '.php') ) {
 			$modelName = 'Swiftlet\\' . $modelName;
 
-			if ( !class_exists($modelName) ) require($file);
+			if ( !class_exists($modelName) ) require $file;
 
 			// Instantiate the model
 			return new $modelName();

@@ -205,6 +205,13 @@ Called before each action
 * `actionAfter` 
 Called after each action
 
+
+Configuration
+-------------
+
+TODO
+
+
 --------------------------------------------------------------------------------
 
 
@@ -276,3 +283,12 @@ Default action
 
 * `notImplementedAction()`  
 Fallback action if action doesn't exist
+
+
+**Config `Swiftlet\Config`**
+
+* `mixed get(string $variable)`  
+Get a config variable, encoded for safe use in HTML by default
+
+* `set(string $variable [, mixed $value ])`  
+Set a config variable
