@@ -209,7 +209,19 @@ Called after each action
 Configuration
 -------------
 
-TODO
+No configuration is needed to run Swiftlet. If you're writing a model that
+does require configuration, e.g. credentials to establish a database connection,
+you can use the Config class:
+
+```php
+<?php
+
+Config::set('variable', 'value');
+
+$value = Config::get('variable');
+```
+
+Values can be set in `config.php` or a custom file.
 
 
 --------------------------------------------------------------------------------
@@ -236,8 +248,11 @@ Create a new model instance
 * `object getSingleton(string $modelName)`  
 Create or return an existing model instance
 
-* `object getView()`  
+* `string getView()`  
 Name of the view
+
+* `setView(string $view)`  
+Change the view (use a different HTML file)
 
 * `object getController()`  
 Reference to the controller object 
