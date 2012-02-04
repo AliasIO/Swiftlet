@@ -92,6 +92,14 @@ final class App
 
 		self::registerHook('actionAfter');
 
+		return true;
+	}
+
+	/**
+	 * Serve the page
+	 */
+	public static function serve()
+	{
 		// Render the view
 		if ( is_file($file = 'views/' . self::$_view . '.html.php') ) {
 			header('X-Generator: Swiftlet ' . self::VERSION);

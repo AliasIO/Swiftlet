@@ -9,6 +9,7 @@ require_once($path . 'app/Model.php');
 require_once($path . 'app/View.php');
 require_once($path . 'app/Controller.php');
 require_once($path . 'app/Plugin.php');
+require_once($path . 'app/Config.php');
 
 class AppTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,15 +18,9 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRun()
 	{
-		ob_start();
+		$running = App::run();
 
-		App::run();
-
-		$length = ob_get_length();
-
-		ob_end_clean();
-
-		$this->assertGreaterThan(0, $length);
+		$this->assertTrue($running);
 	}
 
 	/**

@@ -6,61 +6,53 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @covers Swiftlet\View::getTitle
-	 * @todo   Implement testGetTitle().
 	 */
 	public function testGetTitle()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$title = View::getTitle();
+
+		$this->assertEquals('Home', $title);
 	}
 
 	/**
 	 * @covers Swiftlet\View::get
-	 * @todo   Implement testGet().
 	 */
 	public function testGet()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$test = View::get('test');
+
+		$this->assertEmpty($test);
 	}
 
 	/**
 	 * @covers Swiftlet\View::set
-	 * @todo   Implement testSet().
 	 */
 	public function testSet()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		View::set('test', 'test');
+
+		$test = View::get('test');
+
+		$this->assertEquals('test', $test);
 	}
 
 	/**
 	 * @covers Swiftlet\View::htmlEncode
-	 * @todo   Implement testHtmlEncode().
 	 */
 	public function testHtmlEncode()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$value = View::htmlEncode('&');
+
+		$this->assertEquals('&amp;', $value);
 	}
 
 	/**
 	 * @covers Swiftlet\View::htmlDecode
-	 * @todo   Implement testHtmlDecode().
 	 */
 	public function testHtmlDecode()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$value = View::htmlDecode('&amp;');
+
+		$this->assertEquals('&', $value);
 	}
 }

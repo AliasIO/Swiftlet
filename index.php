@@ -11,6 +11,7 @@ try {
 	require 'config.php';
 
 	Swiftlet\App::run();
+	Swiftlet\App::serve();
 } catch ( \Exception $e ) {
 	header('HTTP/1.1 503 Service Temporarily Unavailable');
 
