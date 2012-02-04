@@ -96,7 +96,7 @@ are arguments. If the controller or action is missing from the URL they will
 default to `index` (`/` will call `indexAction()` on `indexController`).
 
 Underscores are translated to directory separators, so `/foo_bar` will point
-to `foo/BarController.php`.
+to `Foo/BarController.php`.
 
 
 Actions and arguments
