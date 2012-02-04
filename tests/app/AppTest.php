@@ -87,7 +87,19 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	{
 		$view = App::getView();
 
-		$this->assertEquals($view, 'index');
+		$this->assertEquals('index', $view);
+	}
+
+	/**
+	 * @covers Swiftlet\App::setView
+	 */
+	public function testSetView()
+	{
+		App::setView('test');
+
+		$view = App::getView();
+
+		$this->assertEquals('test', $view);
 	}
 
 	/**

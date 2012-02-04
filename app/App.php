@@ -177,6 +177,15 @@ final class App
 	}
 
 	/**
+	 * Change the view
+	 * @param string $view
+	 */
+	public static function setView($view)
+   	{
+		self::$_view = $view;
+	}
+
+	/**
 	 * Get the controller instance
 	 * @return object
 	 */
