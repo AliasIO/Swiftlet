@@ -13,8 +13,8 @@ Buzzword compliance
 -------------------
 
 ✔ Micro-Framework  
-✔ Unit tested
-✔ Namespaced
+✔ Unit tested  
+✔ Namespaced  
 ✔ Pluggable  
 ✔ PHP5  
 ✔ MVC  
