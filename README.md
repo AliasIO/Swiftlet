@@ -13,11 +13,12 @@ Buzzword compliance
 -------------------
 
 ✔ Micro-Framework  
+✔ Unit tested
+✔ Namespaced
 ✔ Pluggable  
+✔ PHP5  
 ✔ MVC  
 ✔ OOP  
-✔ PHP5  
-✔ Namespaced
 
 ✘ ORM  
 
@@ -215,7 +216,6 @@ you can use the Config class:
 
 ```php
 <?php
-
 Config::set('variable', 'value');
 
 $value = Config::get('variable');
