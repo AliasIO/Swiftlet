@@ -91,9 +91,10 @@ actions and arguments.
 
 Consider this URL: `/foo/bar/baz/qux`
 
-In this case `foo` is the controller, `bar` is the action and `baz` and `qux`
-are arguments. If the controller or action is missing from the URL they will
-default to `index` (`/` will call `indexAction()` on `indexController`).
+In this case `foo` defines the controller and view, `bar` the action and `baz` 
+and `qux` are arguments. If the controller or action is missing from the URL 
+they will default to `index` (`/` will call `indexAction()` on 
+indexController`).
 
 Underscores are translated to directory separators, so `/foo_bar` will point
 to `Foo/BarController.php`.
@@ -115,6 +116,9 @@ This will throw an exception by default but can be overridden.
 
 The action name and arguments can be accessed through `App::getAction()` and 
 `App::getArgs()` respectively.
+
+Note: if you want to use different HTML files for each action, you can change 
+the view with `App::setView($viewName)`.
 
 
 Models
