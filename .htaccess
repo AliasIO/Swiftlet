@@ -1,5 +1,9 @@
 Options All -Indexes
 
+<FilesMatch "(config|.+\.html)\.php">
+	deny from all
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
 	RewriteEngine on
 

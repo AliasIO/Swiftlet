@@ -2,8 +2,10 @@ User-agent: *
 Disallow: /app/
 Disallow: /controllers/
 Disallow: /models/
+Disallow: /plugins/
+Disallow: /tests/
 Disallow: /views/
-Disallow: /views/
+Disallow: /config.php
 Disallow: /COPYING
 Disallow: /README
 

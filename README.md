@@ -96,8 +96,8 @@ and `qux` are arguments. If the controller or action is missing from the URL
 they will default to `index` (`/` will call `indexAction()` on 
 indexController`).
 
-Underscores are translated to directory separators, so `/foo_bar` will point
-to `Foo/BarController.php`.
+Underscores in the controller name are translated to directory separators, so
+`/foo_bar` will point to `Foo/BarController.php`.
 
 
 Actions and arguments
@@ -117,7 +117,7 @@ This will throw an exception by default but can be overridden.
 The action name and arguments can be accessed through `App::getAction()` and 
 `App::getArgs()` respectively.
 
-Note: if you want to use different HTML files for each action, you can change 
+Note: if you want to use different HTML files for each action you can change 
 the view with `App::setView($viewName)`.
 
 
