@@ -130,7 +130,7 @@ Models
 
 Let's throw a model into the mix and update the controller.
 
-**Model `models/FooModel.php`**
+**Model `models/Foo.php`**
 
 ```php
 <?php
@@ -151,10 +151,7 @@ class Foo extends \Swiftlet\Model
 <?php
 namespace Swiftlet\Controllers;
 
-use
-	Swiftlet\App,
-	Swiftlet\View
-	;
+use Swiftlet\App, Swiftlet\View;
 
 class Foo extends \Swiftlet\Controller
 {
@@ -195,10 +192,7 @@ they can be registered pretty much anywhere using
 <?php
 namespace Swiftlet\Plugins;
 
-use
-	Swiftlet\App,
-	Swiftlet\View
-	;
+use Swiftlet\App, Swiftlet\View;
 
 class Foo extends \Swiftlet\Plugin
 {
