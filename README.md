@@ -47,10 +47,7 @@ views should be limited to simple UI logic (loops and switches).
 <?php
 namespace Swiftlet\Controllers;
 
-use
-	Swiftlet\App,
-	Swiftlet\View
-	;
+use Swiftlet\App, Swiftlet\View;
 
 class Foo extends \Swiftlet\Controller
 {
