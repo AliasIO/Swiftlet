@@ -1,8 +1,13 @@
 <?php
 
-namespace Swiftlet;
+namespace Swiftlet\Controllers;
 
-class IndexController extends Controller
+use
+	Swiftlet\App,
+	Swiftlet\View
+	;
+
+class Index extends \Swiftlet\Controller
 {
 	protected
 		$_title = 'Home'
@@ -11,7 +16,7 @@ class IndexController extends Controller
 	/**
 	 * Default action
 	 */
-	public function indexAction()
+	public function index()
 	{
 		// Some example code to get you started
 

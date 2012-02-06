@@ -20,14 +20,14 @@ abstract class Controller
 	/**
 	 * Default action
 	 */
-	public function indexAction()
+	public function index()
    	{
 	}
 
 	/**
 	 * Fallback in case action doesn't exist
 	 */
-	public function notImplementedAction()
+	public function notImplemented()
    	{
 		throw new \Exception('Action not implemented in ' . __CLASS__);
 	}

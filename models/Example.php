@@ -1,8 +1,12 @@
 <?php
 
-namespace Swiftlet;
+namespace Swiftlet\Models;
 
-class ExampleModel extends Model
+use
+	Swiftlet\App
+	;
+
+class Example extends \Swiftlet\Model
 {
 	/**
 	 * Example method. This could be anything, really...

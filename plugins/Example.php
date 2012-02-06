@@ -1,15 +1,20 @@
 <?php
 
-namespace Swiftlet;
+namespace Swiftlet\Plugins;
 
-class ExamplePlugin extends Plugin
+use
+	Swiftlet\App,
+	Swiftlet\View
+	;
+
+class Example extends \Swiftlet\Plugin
 {
 	/**
 	 * Implementation of the actionAfter hook
 	 */
 	public function actionAfterHook()
    	{
-		if ( get_class(App::getController()) === 'Swiftlet\IndexController' ) {
+		if ( get_class(App::getController()) === 'Swiftlet\Controllers\Index' ) {
 			$helloWorld = View::get('hello world');
 
 			View::set('hello world', $helloWorld . ' This string was altered by ' . __CLASS__ . '.');

@@ -41,17 +41,22 @@ Controllers house the
 [business logic](http://en.wikipedia.org/wiki/Business_logic) of the page while 
 views should be limited to simple UI logic (loops and switches).
 
-**Controller `controllers/FooController.php`**
+**Controller `controllers/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet;
+namespace Swiftlet\Controllers;
 
-class FooController extends Controller
+use
+	Swiftlet\App,
+	Swiftlet\View
+	;
+
+class Foo extends \Swiftlet\Controller
 {
 	protected $_title = 'Foo'; // Optional but recommended
 
-	public function indexAction()
+	public function index()
 	{
 		// Pass a variable to the view
 		View::set('hello world', 'Hello world!');
@@ -86,18 +91,17 @@ Routing
 -------
 
 Notice how we can access the page at `/foo` by simply creating a controller 
-named `FooController`. The application (Swiftlet) maps URLs to controllers, 
-actions and arguments.
+named `Foo`. The application (Swiftlet) maps URLs to controllers, actions and
+arguments.
 
 Consider this URL: `/foo/bar/baz/qux`
 
 In this case `foo` defines the controller and view, `bar` the action and `baz` 
 and `qux` are arguments. If the controller or action is missing from the URL 
-they will default to `index` (`/` will call `indexAction()` on 
-indexController`).
+they will default to `index` (`/` will call `index()` on `Index`).
 
 Underscores in the controller name are translated to directory separators, so
-`/foo_bar` will point to `Foo/BarController.php`.
+`/foo_bar` will point to `controllers/Foo/Bar.php`.
 
 
 Actions and arguments
@@ -108,11 +112,11 @@ Actions are methods of the controller. A common example might be `edit` or
 
 `/blog/edit/1`
 
-This will call the function `editAction()` on `BlogController` with `1` as the 
-argument (the id of the blog post to edit).
+This will call the function `edit()` on `Blog` with `1` as the argument (the 
+id of the blog post to edit).
 
-If the action doesn't exist `notImplementedAction()` will be called instead.
-This will throw an exception by default but can be overridden.
+If the action doesn't exist `notImplemented()` will be called instead.  This 
+will throw an exception by default but can be overridden.
 
 The action name and arguments can be accessed through `App::getAction()` and 
 `App::getArgs()` respectively.
@@ -130,9 +134,9 @@ Let's throw a model into the mix and update the controller.
 
 ```php
 <?php
-namespace Swiftlet;
+namespace Swiftlet\Models;
 
-class FooModel extends Model
+class Foo extends \Swiftlet\Model
 {
 	public function getHelloWorld()
 	{
@@ -141,19 +145,24 @@ class FooModel extends Model
 }
 ```
 
-**Controller `controllers/FooController.php`**
+**Controller `controllers/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet;
+namespace Swiftlet\Controllers;
 
-class FooController extends Controller
+use
+	Swiftlet\App,
+	Swiftlet\View
+	;
+
+class Foo extends \Swiftlet\Controller
 {
 	protected $_title = 'Foo';
 
-	public function indexAction()
+	public function index()
 	{
-		// Get an instance of the ExampleModel class (models/ExampleModel.php)
+		// Get an instance of the Example class (models/Example.php)
 		$exampleModel = App::getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
@@ -180,18 +189,23 @@ points for code that extends the application. Swiftlet has a few core hooks but
 they can be registered pretty much anywhere using
 `App::registerHook($hookName)`.  
 
-**Plugin `plugins/FooPlugin.php`**
+**Plugin `plugins/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet;
+namespace Swiftlet\Plugins;
 
-class FooPlugin extends Plugin
+use
+	Swiftlet\App,
+	Swiftlet\View
+	;
+
+class Foo extends \Swiftlet\Plugin
 {
 	public function actionAfterHook()
 	{
 		// Overwrite our previously set "hello world" variable
-		if ( get_class(App::getController()) === 'Swiftlet\FooController' ) {
+		if ( get_class(App::getController()) === 'Swiftlet\Controllers\Foo' ) {
 			View::set('hello world', 'Hi world!');
 		}
 	}
@@ -300,10 +314,10 @@ Recursively decode a previously encoded value to be rendered as HTML
 * `string getTitle()`  
 Title of the page
 
-* `indexAction()`  
+* `index()`  
 Default action
 
-* `notImplementedAction()`  
+* `notImplemented()`  
 Fallback action if action doesn't exist
 
 

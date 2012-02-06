@@ -30,7 +30,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	{
 		$action = App::getAction();
 
-		$this->assertEquals($action, 'indexAction');
+		$this->assertEquals($action, 'index');
 	}
 
 	/**
@@ -54,10 +54,10 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInternalType('object', $model);
 
-		$this->assertInstanceOf('Swiftlet\Model',        $model);
-		$this->assertInstanceOf('Swiftlet\ExampleModel', $model);
+		$this->assertInstanceOf('Swiftlet\Model',          $model);
+		$this->assertInstanceOf('Swiftlet\Models\Example', $model);
 
-		$this->assertEquals(get_class($model), 'Swiftlet\ExampleModel');
+		$this->assertEquals(get_class($model), 'Swiftlet\Models\Example');
 	}
 
 	/**
@@ -70,10 +70,10 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInternalType('object', $model);
 
-		$this->assertInstanceOf('Swiftlet\Model',        $model);
-		$this->assertInstanceOf('Swiftlet\ExampleModel', $model);
+		$this->assertInstanceOf('Swiftlet\Model',          $model);
+		$this->assertInstanceOf('Swiftlet\Models\Example', $model);
 
-		$this->assertEquals(get_class($model), 'Swiftlet\ExampleModel');
+		$this->assertEquals(get_class($model), 'Swiftlet\Models\Example');
 
 		$model->test = 'test';
 
@@ -111,10 +111,10 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertInternalType('object', $controller);
 
-		$this->assertInstanceOf('Swiftlet\Controller',      $controller);
-		$this->assertInstanceOf('Swiftlet\IndexController', $controller);
+		$this->assertInstanceOf('Swiftlet\Controller',        $controller);
+		$this->assertInstanceOf('Swiftlet\Controllers\Index', $controller);
 
-		$this->assertEquals(get_class($controller), 'Swiftlet\IndexController');
+		$this->assertEquals(get_class($controller), 'Swiftlet\Controllers\Index');
 
 		$title = $controller->getTitle();
 
