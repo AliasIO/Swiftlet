@@ -12,7 +12,7 @@ abstract class Controller
 	 * Get the page title
 	 * @return string
 	 */
-	public function getTitle()
+	final public function getTitle()
    	{
 		return $this->_title;
 	}

@@ -81,7 +81,9 @@ final class App
 		}
 
 		// Call the controller action
-		if ( !is_callable(array(self::$_controller, self::$_action)) ) {
+		$method = new \ReflectionMethod(self::$_controller, self::$_action);
+
+		if ( !$method->isPublic() || $method->isFinal() ) {
 			self::$_action = 'notImplemented';
 		}
 
