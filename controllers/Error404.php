@@ -5,7 +5,7 @@ namespace Swiftlet\Controllers;
 class Error404 extends \Swiftlet\Controller
 {
 	protected
-		$_title = 'Error 404'
+		$title = 'Error 404'
 		;
 
 	/**
