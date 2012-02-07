@@ -82,13 +82,13 @@ final class App
 		}
 
 		// Call the controller action
-		if ( !method_exists(self::$_controller, self::$_action) ) {
-			self::$_action = 'notImplementedAction';
-		}
-
 		self::registerHook('actionBefore');
 
-		self::$_controller->{self::$_action}();
+		if ( method_exists(self::$_controller, self::$_action) ) {
+			self::$_controller->{self::$_action}();
+		} else {
+			self::$_controller->notImplemented();
+		}
 
 		self::registerHook('actionAfter');
 

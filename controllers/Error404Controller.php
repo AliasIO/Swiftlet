@@ -1,7 +1,5 @@
 <?php
 
-namespace Swiftlet;
-
 class Error404Controller extends Controller
 {
 	protected

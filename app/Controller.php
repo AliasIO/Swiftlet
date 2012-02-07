@@ -29,6 +29,6 @@ abstract class Controller
 	 */
 	public function notImplementedAction()
    	{
-		throw new \Exception('Action not implemented in ' . __CLASS__);
+		throw new \Exception('Action not implemented in ' . get_class(App::getController()));
 	}
 }
