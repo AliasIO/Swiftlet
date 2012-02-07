@@ -231,7 +231,7 @@ final class App
 	 * @param string $hookName
 	 * @param array $params
 	 */
-	public static function registerHook($hookName, $params = array()) {
+	public static function registerHook($hookName, array $params = array()) {
 		self::$_hooks[] = $hookName;
 
 		foreach ( self::$_plugins as $plugin ) {
