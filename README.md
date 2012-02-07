@@ -5,8 +5,7 @@ Swiftlet is quite possibly the smallest
 [MVC](http://en.wikipedia.org/wiki/Model-view-controller) framework you'll ever 
 use. And it's swift.
 
-
-*Licensed under the [GNU Public License](http://www.gnu.org/licenses/gpl-3.0.txt).*
+*Licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php).*
 
 
 Buzzword compliance
@@ -193,7 +192,7 @@ use Swiftlet\App, Swiftlet\View;
 
 class Foo extends \Swiftlet\Plugin
 {
-	public function actionAfterHook()
+	public function actionAfter()
 	{
 		// Overwrite our previously set "hello world" variable
 		if ( get_class(App::getController()) === 'Swiftlet\Controllers\Foo' ) {

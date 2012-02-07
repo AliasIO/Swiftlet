@@ -12,7 +12,7 @@ class Example extends \Swiftlet\Plugin
 	/**
 	 * Implementation of the actionAfter hook
 	 */
-	public function actionAfterHook()
+	public function actionAfter()
    	{
 		if ( get_class(App::getController()) === 'Swiftlet\Controllers\Index' ) {
 			$helloWorld = View::get('hello world');

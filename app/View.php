@@ -21,7 +21,7 @@ final class View
 	 * Get a view variable
 	 * @params string $variable
 	 * @params bool $htmlEncode
-	 * @return string
+	 * @return mixed
 	 */
 	public static function get($variable, $htmlEncode = true)
    	{
@@ -31,6 +31,8 @@ final class View
 			} else {
 				return self::$_variables[$variable];
 			}
+		} else {
+			return null;
 		}
 	}
 

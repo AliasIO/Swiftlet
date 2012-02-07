@@ -81,15 +81,19 @@ final class App
 		}
 
 		// Call the controller action
-		$method = new \ReflectionMethod(self::$_controller, self::$_action);
-
-		if ( !$method->isPublic() || $method->isFinal() ) {
-			self::$_action = 'notImplemented';
-		}
-
 		self::registerHook('actionBefore');
 
-		self::$_controller->{self::$_action}();
+		if ( method_exists(self::$_controller, self::$_action) ) {
+			$method = new \ReflectionMethod(self::$_controller, self::$_action);
+
+			if ( $method->isPublic() && !$method->isFinal() ) {
+				self::$_controller->{self::$_action}();
+			} else {
+				self::$_controller->notImplemented();
+			}
+		} else {
+			self::$_controller->notImplemented();
+		}
 
 		self::registerHook('actionAfter');
 
@@ -227,14 +231,16 @@ final class App
 	 * @param string $hookName
 	 * @param array $params
 	 */
-	public static function registerHook($hookName, $params = array()) {
+	public static function registerHook($hookName, array $params = array()) {
 		self::$_hooks[] = $hookName;
-
-		$hookName .= 'Hook';
 
 		foreach ( self::$_plugins as $plugin ) {
 			if ( method_exists($plugin, $hookName) ) {
-				$plugin->{$hookName}($params);
+				$method = new \ReflectionMethod(get_class($plugin), $hookName);
+
+				if ( $method->isPublic() && !$method->isFinal() ) {
+					$plugin->{$hookName}($params);
+				}
 			}
 		}
 	}
