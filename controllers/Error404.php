@@ -1,6 +1,8 @@
 <?php
 
-class Error404Controller extends Controller
+namespace Swiftlet\Controllers;
+
+class Error404 extends \Swiftlet\Controller
 {
 	protected
 		$_title = 'Error 404'
@@ -9,7 +11,7 @@ class Error404Controller extends Controller
 	/**
 	 * Default action
 	 */
-	public function indexAction()
+	public function index()
 	{
 		header('Status: 404 Not Found');
 	}
@@ -17,7 +19,7 @@ class Error404Controller extends Controller
 	/**
 	 * Not implemented action
 	 */
-	public function notImplementedAction()
+	public function notImplemented()
    	{
 		$this->indexAction();
 	}

@@ -9,14 +9,14 @@ final class App
 		;
 
 	private static
-		$_action     = 'indexAction',
+		$_action     = 'index',
 		$_args       = array(),
 		$_controller,
 		$_hooks      = array(),
 		$_plugins    = array(),
 		$_rootPath   = '/',
 		$_singletons = array(),
-		$_view       = 'index'
+		$_view
 		;
 
 	/**
@@ -36,39 +36,38 @@ final class App
 		}
 
 		// Extract controller name, view name, action name and arguments from URL
-		$controllerName = 'IndexController';
+		$controllerName = 'Index';
 
 		if ( !empty($_GET['q']) ) {
 			self::$_args = explode('/', $_GET['q']);
 
 			if ( self::$_args ) {
-				self::$_view = str_replace('_', '/', strtolower(array_shift(self::$_args)));
-
-				$controllerName = str_replace(' ', '/', ucwords(str_replace('/', ' ', self::$_view))) . 'Controller';
+				$controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', array_shift(self::$_args))));
 			}
 
 			if ( $action = self::$_args ? array_shift(self::$_args) : '' ) {
-				self::$_action = $action . 'Action';
+				self::$_action = $action;
 			}
 		}
 
 		if ( !is_file('controllers/' . $controllerName . '.php') ) {
-			$controllerName = 'Error404Controller';
-			self::$_view    = 'error404';
+			$controllerName = 'Error404';
 		}
+
+		self::$_view = strtolower($controllerName);
 
 		// Instantiate the controller
 		require 'controllers/' . $controllerName . '.php';
 
-		$controllerName = 'Swiftlet\\' . basename($controllerName);
+		$controllerName = 'Swiftlet\Controllers\\' . basename($controllerName);
 
 		self::$_controller = new $controllerName();
 
 		// Load plugins
 		if ( $handle = opendir('plugins') ) {
 			while ( ( $file = readdir($handle) ) !== FALSE ) {
-				if ( is_file('plugins/' . $file) && preg_match('/^(.+Plugin)\.php$/', $file, $match) ) {
-					$pluginName = 'Swiftlet\\' . $match[1];
+				if ( is_file('plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
+					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
 
 					require 'plugins/' . $file;
 
@@ -85,7 +84,13 @@ final class App
 		self::registerHook('actionBefore');
 
 		if ( method_exists(self::$_controller, self::$_action) ) {
-			self::$_controller->{self::$_action}();
+			$method = new \ReflectionMethod(self::$_controller, self::$_action);
+
+			if ( $method->isPublic() && !$method->isFinal() ) {
+				self::$_controller->{self::$_action}();
+			} else {
+				self::$_controller->notImplemented();
+			}
 		} else {
 			self::$_controller->notImplemented();
 		}
@@ -135,10 +140,10 @@ final class App
 	 */
 	public static function getModel($modelName)
    	{
-		$modelName = ucfirst($modelName) . 'Model';
+		$modelName = ucfirst($modelName);
 
 		if ( is_file($file = 'models/' . $modelName . '.php') ) {
-			$modelName = 'Swiftlet\\' . $modelName;
+			$modelName = 'Swiftlet\Models\\' . $modelName;
 
 			if ( !class_exists($modelName) ) require $file;
 
@@ -229,11 +234,13 @@ final class App
 	public static function registerHook($hookName, $params = array()) {
 		self::$_hooks[] = $hookName;
 
-		$hookName .= 'Hook';
-
 		foreach ( self::$_plugins as $plugin ) {
 			if ( method_exists($plugin, $hookName) ) {
-				$plugin->{$hookName}($params);
+				$method = new \ReflectionMethod(get_class($plugin), $hookName);
+
+				if ( $method->isPublic() && !$method->isFinal() ) {
+					$plugin->{$hookName}($params);
+				}
 			}
 		}
 	}

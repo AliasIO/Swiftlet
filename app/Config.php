@@ -9,19 +9,17 @@ final class Config
 		;
 
 	/**
-	 * Get a config variable
+	 * Get a configuration variable
 	 * @params string $variable
-	 * @return string
+	 * @return mixed
 	 */
 	public static function get($variable)
    	{
-		if ( isset(self::$_variables[$variable]) ) {
-			return self::$_variables[$variable];
-		}
+		return isset(self::$_variables[$variable]) ? self::$_variables[$variable] : null;
 	}
 
 	/**
-	 * Set a config variable
+	 * Set a configuration variable
 	 * @param string $variable
 	 * @param mixed $value
 	 */
