@@ -2,14 +2,9 @@
 
 namespace Swiftlet;
 
-$path = dirname(__FILE__) . '/../../';
+require_once(dirname(__FILE__) . '/../../../lib/Swiftlet/App.php');
 
-require_once($path . 'app/App.php');
-require_once($path . 'app/Model.php');
-require_once($path . 'app/View.php');
-require_once($path . 'app/Controller.php');
-require_once($path . 'app/Plugin.php');
-require_once($path . 'app/Config.php');
+spl_autoload_register(array('Swiftlet\App', 'autoload'));
 
 class AppTest extends \PHPUnit_Framework_TestCase
 {

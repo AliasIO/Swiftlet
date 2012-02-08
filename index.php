@@ -1,12 +1,9 @@
 <?php
 
 try {
-	require 'app/App.php';
-	require 'app/Model.php';
-	require 'app/View.php';
-	require 'app/Controller.php';
-	require 'app/Plugin.php';
-	require 'app/Config.php';
+	require 'lib/Swiftlet/App.php';
+
+	spl_autoload_register(array('Swiftlet\App', 'autoload'));
 
 	require 'config.php';
 

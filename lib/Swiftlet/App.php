@@ -50,26 +50,22 @@ final class App
 			}
 		}
 
-		if ( !is_file('controllers/' . $controllerName . '.php') ) {
+		if ( !is_file('lib/Swiftlet/Controllers/' . $controllerName . '.php') ) {
 			$controllerName = 'Error404';
 		}
 
 		self::$_view = strtolower($controllerName);
 
 		// Instantiate the controller
-		require 'controllers/' . $controllerName . '.php';
-
 		$controllerName = 'Swiftlet\Controllers\\' . basename($controllerName);
 
 		self::$_controller = new $controllerName();
 
 		// Load plugins
-		if ( $handle = opendir('plugins') ) {
+		if ( $handle = opendir('lib/Swiftlet/Plugins') ) {
 			while ( ( $file = readdir($handle) ) !== FALSE ) {
-				if ( is_file('plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
+				if ( is_file('lib/Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
 					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
-
-					require 'plugins/' . $file;
 
 					self::$_plugins[] = new $pluginName();
 				}
@@ -140,18 +136,12 @@ final class App
 	 */
 	public static function getModel($modelName)
    	{
-		$modelName = ucfirst($modelName);
+		$modelName = 'Swiftlet\Models\\' . ucfirst($modelName);
 
-		if ( is_file($file = 'models/' . $modelName . '.php') ) {
-			$modelName = 'Swiftlet\Models\\' . $modelName;
+		if ( !class_exists($modelName) ) require $file;
 
-			if ( !class_exists($modelName) ) require $file;
-
-			// Instantiate the model
-			return new $modelName();
-		} else {
-			throw new \Exception($modelName . ' not found');
-		}
+		// Instantiate the model
+		return new $modelName();
 	}
 
 	/**
@@ -243,6 +233,19 @@ final class App
 				}
 			}
 		}
+	}
+
+	/**
+	 * Class autoloader
+	 * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
+	 */
+	public static function autoload($className)
+	{
+		preg_match('/(^.+\\\)?([^\\\]+)$/', ltrim($className, '\\'), $match);
+
+		$class = 'lib/' . str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
+
+		require $class;
 	}
 
 	/**
