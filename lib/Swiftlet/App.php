@@ -24,7 +24,7 @@ final class App
 	 */
 	public static function run()
 	{
-		set_error_handler(array('Swiftlet\App', 'error'), E_ALL);
+		set_error_handler(array('Swiftlet\App', 'error'), E_ALL | E_STRICT);
 
 		// Determine the client-side path to root
 		if ( !empty($_SERVER['REQUEST_URI']) ) {

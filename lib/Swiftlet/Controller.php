@@ -5,7 +5,7 @@ namespace Swiftlet;
 abstract class Controller
 {
 	protected
-		$_title
+		$title
 		;
 
 	/**
@@ -14,7 +14,7 @@ abstract class Controller
 	 */
 	final public function getTitle()
    	{
-		return $this->_title;
+		return $this->title;
 	}
 
 	/**

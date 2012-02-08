@@ -10,7 +10,7 @@ use
 class Index extends \Swiftlet\Controller
 {
 	protected
-		$_title = 'Home'
+		$title = 'Home'
 		;
 
 	/**
