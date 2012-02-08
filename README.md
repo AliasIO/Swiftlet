@@ -54,7 +54,7 @@ use
 
 class Foo extends \Swiftlet\Controller
 {
-	protected $_title = 'Foo'; // Optional but usually desired 
+	protected $title = 'Foo'; // Optional but usually desired 
 
 	public function index()
 	{
