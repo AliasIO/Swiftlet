@@ -47,11 +47,14 @@ views should be limited to simple UI logic (loops and switches).
 <?php
 namespace Swiftlet\Controllers;
 
-use Swiftlet\App, Swiftlet\View;
+use 
+	Swiftlet\App,
+	Swiftlet\View
+	;
 
 class Foo extends \Swiftlet\Controller
 {
-	protected $_title = 'Foo'; // Optional but recommended
+	protected $_title = 'Foo'; // Optional but usually desired 
 
 	public function index()
 	{
@@ -78,7 +81,8 @@ Important: class names are written in
 ```
 
 Variables can be passed from controller to view using `View::set()` and 
-`View::get()`. By default values are automatically made safe for use in HTML.
+`View::get()`. Values are automatically made safe for use in HTML, use
+`View::htmlDecode()` on values that should be treated as code.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
@@ -93,9 +97,10 @@ arguments.
 
 Consider this URL: `/foo/bar/baz/qux`
 
-In this case `foo` defines the controller and view, `bar` the action and `baz` 
-and `qux` are arguments. If the controller or action is missing from the URL 
-they will default to `index` (`/` will call `index()` on `Index`).
+In this case `foo` is the name of the controller and view, `bar` the name of 
+the action and `baz` and `qux` are arguments. If the controller or action is 
+missing from the URL they will default to `index` (`/` will call `index()` on 
+`Swiftlet\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
 `/foo_bar` will point to `lib/Swiftlet/Controllers/Foo/Bar.php`.
@@ -148,7 +153,10 @@ class Foo extends \Swiftlet\Model
 <?php
 namespace Swiftlet\Controllers;
 
-use Swiftlet\App, Swiftlet\View;
+use 
+	Swiftlet\App, 
+	Swiftlet\View
+	;
 
 class Foo extends \Swiftlet\Controller
 {
@@ -172,7 +180,8 @@ many models as you like; they aren't tied to specific controllers.
 
 A model can instantiated using `App::getModel($modelName)`. To allow re-use, use 
 `App::getSingleton($modelName)` instead as this will only create a single 
-instance when called multiple times.
+instance when called multiple times (useful for database connections and session
+management).
 
 
 Plugins and hooks
@@ -189,7 +198,10 @@ they can be registered pretty much anywhere using
 <?php
 namespace Swiftlet\Plugins;
 
-use Swiftlet\App, Swiftlet\View;
+use 
+	Swiftlet\App,
+	Swiftlet\View
+	;
 
 class Foo extends \Swiftlet\Plugin
 {
@@ -208,8 +220,7 @@ variable `hello world` from our previous example to `Hi world!`.
 
 Plugins don't need to be installed or activated, all files in the
 `/lib/Swiftlet/Plugins/` directory are automatically included and their classes 
-instantiated. They are hooked in alphabetical order. There is currently no 
-dependency support.
+instantiated. They are hooked in alphabetical order.
 
 The core hooks are:
 
@@ -225,7 +236,7 @@ Configuration
 
 No configuration is needed to run Swiftlet. If you're writing a model that
 does require configuration, e.g. credentials to establish a database connection,
-you can use the Config class:
+you may use the Config class:
 
 ```php
 <?php
