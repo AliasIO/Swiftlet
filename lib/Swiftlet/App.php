@@ -67,11 +67,21 @@ final class App
 				if ( is_file('lib/Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
 					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
 
-					self::$_plugins[] = new $pluginName();
+					self::$_plugins[$pluginName] = array(
+						'hooks' => array()
+						);
+
+					foreach ( get_class_methods($pluginName) as $methodName ) {
+						$method = new \ReflectionMethod($pluginName, $methodName);
+
+						if ( $method->isPublic() && !$method->isFinal() ) {
+							self::$_plugins[$pluginName]['hooks'][] = $methodName;
+						}
+					}
 				}
 			}
 
-			sort(self::$_plugins);
+			ksort(self::$_plugins);
 
 			closedir($handle);
 		}
@@ -224,13 +234,14 @@ final class App
 	public static function registerHook($hookName, array $params = array()) {
 		self::$_hooks[] = $hookName;
 
-		foreach ( self::$_plugins as $plugin ) {
-			if ( method_exists($plugin, $hookName) ) {
-				$method = new \ReflectionMethod(get_class($plugin), $hookName);
-
-				if ( $method->isPublic() && !$method->isFinal() ) {
-					$plugin->{$hookName}($params);
+		foreach ( self::$_plugins as $pluginName => $plugin ) {
+			if ( in_array($hookName, $plugin['hooks']) ) {
+				if ( !isset($plugin['instance']) ) {
+					// Instantiate the plugin
+					self::$_plugins[$pluginName]['instance'] = $plugin['instance'] = new $pluginName;
 				}
+
+				$plugin['instance']->{$hookName}($params);
 			}
 		}
 	}
