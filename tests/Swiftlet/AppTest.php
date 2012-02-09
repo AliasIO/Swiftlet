@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-require_once(dirname(__FILE__) . '/../../../lib/Swiftlet/App.php');
+require_once(dirname(__FILE__) . '/../../Swiftlet/App.php');
 
 spl_autoload_register(array('Swiftlet\App', 'autoload'));
 
@@ -127,7 +127,13 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertCount(1, $plugins);
 
-		$this->assertInternalType('object', $plugins[0]);
+		$this->assertArrayHasKey('Swiftlet\Plugins\Example', $plugins);
+
+		$this->assertArrayHasKey('hooks',    $plugins['Swiftlet\Plugins\Example']);
+		$this->assertArrayHasKey('instance', $plugins['Swiftlet\Plugins\Example']);
+
+		$this->assertInternalType('array',  $plugins['Swiftlet\Plugins\Example']['hooks']);
+		$this->assertInternalType('object', $plugins['Swiftlet\Plugins\Example']['instance']);
 	}
 
 	/**

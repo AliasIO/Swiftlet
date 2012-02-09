@@ -15,7 +15,9 @@ final class Config
 	 */
 	public static function get($variable)
    	{
-		return isset(self::$_variables[$variable]) ? self::$_variables[$variable] : null;
+		if ( isset(self::$_variables[$variable]) ) {
+			return self::$_variables[$variable];
+		}
 	}
 
 	/**

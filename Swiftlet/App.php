@@ -50,7 +50,7 @@ final class App
 			}
 		}
 
-		if ( !is_file('lib/Swiftlet/Controllers/' . $controllerName . '.php') ) {
+		if ( !is_file('Swiftlet/Controllers/' . $controllerName . '.php') ) {
 			$controllerName = 'Error404';
 		}
 
@@ -62,9 +62,9 @@ final class App
 		self::$_controller = new $controllerName();
 
 		// Load plugins
-		if ( $handle = opendir('lib/Swiftlet/Plugins') ) {
+		if ( $handle = opendir('Swiftlet/Plugins') ) {
 			while ( ( $file = readdir($handle) ) !== FALSE ) {
-				if ( is_file('lib/Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
+				if ( is_file('Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
 					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
 
 					self::$_plugins[$pluginName] = array(
@@ -147,8 +147,6 @@ final class App
 	public static function getModel($modelName)
    	{
 		$modelName = 'Swiftlet\Models\\' . ucfirst($modelName);
-
-		if ( !class_exists($modelName) ) require $file;
 
 		// Instantiate the model
 		return new $modelName();
@@ -254,9 +252,9 @@ final class App
 	{
 		preg_match('/(^.+\\\)?([^\\\]+)$/', ltrim($className, '\\'), $match);
 
-		$class = 'lib/' . str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
+		$file = str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
 
-		require $class;
+		require $file;
 	}
 
 	/**

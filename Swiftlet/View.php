@@ -31,8 +31,6 @@ final class View
 			} else {
 				return self::$_variables[$variable];
 			}
-		} else {
-			return null;
 		}
 	}
 
