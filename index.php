@@ -3,7 +3,7 @@
 try {
 	require 'lib/Swiftlet/App.php';
 
-	spl_autoload_register(array('Swiftlet\App', 'autoload'));
+	spl_autoload_register('Swiftlet\App::autoload');
 
 	require 'config.php';
 
