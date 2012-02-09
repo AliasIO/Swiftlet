@@ -24,15 +24,6 @@ abstract class Controller
 	}
 
 	/**
-	 * Get the page title
-	 * @return string
-	 */
-	final public function getTitle()
-   	{
-		return $this->title;
-	}
-
-	/**
 	 * Default action
 	 */
 	public function index()
@@ -44,6 +35,6 @@ abstract class Controller
 	 */
 	public function notImplemented()
    	{
-		throw new \Exception('Action ' . View::htmlEncode($this->app->getAction()) . ' not implemented in ' . get_class($this->app->getController()));
+		throw new \Exception('Action ' . $this->view->htmlEncode($this->app->getAction()) . ' not implemented in ' . get_class($this->app->getController()));
 	}
 }
