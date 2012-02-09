@@ -47,11 +47,6 @@ views should be limited to simple UI logic (loops and switches).
 <?php
 namespace Swiftlet\Controllers;
 
-use 
-	Swiftlet\App,
-	Swiftlet\View
-	;
-
 class Foo extends \Swiftlet\Controller
 {
 	protected $title = 'Foo'; // Optional but usually desired 
@@ -59,7 +54,7 @@ class Foo extends \Swiftlet\Controller
 	public function index()
 	{
 		// Pass a variable to the view
-		View::set('hello world', 'Hello world!');
+		$this->view->set('helloWorld', 'Hello world!');
 	}
 }
 ```
@@ -73,16 +68,16 @@ Important: class names are written in
 ```php
 <?php namespace Swiftlet ?>
 
-<h1><?php echo View::getTitle() ?></h1>
+<h1><?php echo self::get('pageTitle') ?></h1>
 
 <p>
-	<?php echo View::get('hello world') ?>
+	<?php echo self::get('helloWorld') ?>
 </p>
 ```
 
-Variables can be passed from controller to view using `View::set()` and 
-`View::get()`. Values are automatically made safe for use in HTML, use
-`View::htmlDecode()` on values that should be treated as code.
+Variables can be passed from controller to view using `$this->view->set()` and 
+`self::get()`. Values are automatically made safe for use in HTML, use
+`self::htmlDecode()` on values that should be treated as code.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
@@ -120,11 +115,11 @@ id of the blog post to edit).
 If the action doesn't exist `notImplemented()` will be called instead.  This 
 will throw an exception by default but can be overridden.
 
-The action name and arguments can be accessed through `App::getAction()` and 
-`App::getArgs()` respectively.
+The action name and arguments can be accessed through 
+`$this->app->getAction()` and `$this->app->getArgs()` respectively.
 
 Note: if you want to use different HTML files for each action you can change 
-the view with `App::setView($viewName)`.
+the view with `$this->view->setName($viewName)`.
 
 
 Models
@@ -153,23 +148,18 @@ class Foo extends \Swiftlet\Model
 <?php
 namespace Swiftlet\Controllers;
 
-use 
-	Swiftlet\App, 
-	Swiftlet\View
-	;
-
 class Foo extends \Swiftlet\Controller
 {
-	protected $_title = 'Foo';
+	protected $title = 'Foo';
 
 	public function index()
 	{
 		// Get an instance of the Example class (lib/Swiftlet/Models/Example.php)
-		$exampleModel = App::getModel('example');
+		$exampleModel = $this->app->getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
 
-		View::set('hello world', $helloWorld);
+		$this->view->set('helloWorld', $helloWorld);
 	}
 }
 ```
@@ -178,10 +168,10 @@ Controllers get their data from models. Code for querying a database,
 reading/writing files and parsing data all belongs in a model. You can create as
 many models as you like; they aren't tied to specific controllers.
 
-A model can instantiated using `App::getModel($modelName)`. To allow re-use, use 
-`App::getSingleton($modelName)` instead as this will only create a single 
-instance when called multiple times (useful for database connections and session
-management).
+A model can instantiated using `$this->app->getModel($modelName)`. To allow 
+re-use, use `$this->app->getSingleton($modelName)` instead as this will only
+create a single instance when called multiple times (useful for database 
+connections and session management).
 
 
 Plugins and hooks
@@ -198,18 +188,13 @@ they can be registered pretty much anywhere using
 <?php
 namespace Swiftlet\Plugins;
 
-use 
-	Swiftlet\App,
-	Swiftlet\View
-	;
-
 class Foo extends \Swiftlet\Plugin
 {
 	public function actionAfter()
 	{
 		// Overwrite our previously set "hello world" variable
-		if ( get_class(App::getController()) === 'Swiftlet\Controllers\Foo' ) {
-			View::set('hello world', 'Hi world!');
+		if ( get_class($this->controller) === 'Swiftlet\Controllers\Foo' ) {
+			$this->view->set('helloWorld', 'Hi world!');
 		}
 	}
 }
@@ -272,15 +257,6 @@ Create a new model instance
 * `object getSingleton(string $modelName)`  
 Create or return an existing model instance
 
-* `string getView()`  
-Name of the view
-
-* `setView(string $view)`  
-Change the view (use a different HTML file)
-
-* `object getController()`  
-Reference to the controller object 
-
 * `array getPlugins()`  
 All plugin instances
 
@@ -296,8 +272,11 @@ Register a hook
 
 **View `Swiftlet\View`**
 
-* `string getTitle()`  
-Title of the page
+* `string getName()`  
+Get the name of the view
+
+* `string setName()`  
+Change the view
 
 * `mixed get(string $variable [, bool $htmlEncode = true ])`  
 Get a view variable, encoded for safe use in HTML by default
@@ -313,9 +292,6 @@ Recursively decode a previously encoded value to be rendered as HTML
 
 
 **Controller `Swiftlet\Controller`**
-
-* `string getTitle()`  
-Title of the page
 
 * `index()`  
 Default action
