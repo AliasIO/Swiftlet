@@ -10,6 +10,7 @@ final class App
 
 	private static
 		$_action     = 'index',
+		$_app,
 		$_args       = array(),
 		$_controller,
 		$_hooks      = array(),
@@ -25,6 +26,8 @@ final class App
 	public static function run()
 	{
 		set_error_handler(array('Swiftlet\App', 'error'), E_ALL | E_STRICT);
+
+		self::$_app = new self;
 
 		// Determine the client-side path to root
 		if ( !empty($_SERVER['REQUEST_URI']) ) {
@@ -54,12 +57,14 @@ final class App
 			$controllerName = 'Error404';
 		}
 
-		self::$_view = strtolower($controllerName);
+		$viewName = strtolower($controllerName);
+
+		self::$_view = new View(self::$_app, $viewName);
 
 		// Instantiate the controller
 		$controllerName = 'Swiftlet\Controllers\\' . basename($controllerName);
 
-		self::$_controller = new $controllerName();
+		self::$_controller = new $controllerName(self::$_app, self::$_view);
 
 		// Load plugins
 		if ( $handle = opendir('Swiftlet/Plugins') ) {
@@ -67,15 +72,13 @@ final class App
 				if ( is_file('Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
 					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
 
-					self::$_plugins[$pluginName] = array(
-						'hooks' => array()
-						);
+					self::$_plugins[$pluginName] = array();
 
 					foreach ( get_class_methods($pluginName) as $methodName ) {
 						$method = new \ReflectionMethod($pluginName, $methodName);
 
 						if ( $method->isPublic() && !$method->isFinal() ) {
-							self::$_plugins[$pluginName]['hooks'][] = $methodName;
+							self::$_plugins[$pluginName][] = $methodName;
 						}
 					}
 				}
@@ -111,14 +114,7 @@ final class App
 	 */
 	public static function serve()
 	{
-		// Render the view
-		if ( is_file($file = 'views/' . self::$_view . '.html.php') ) {
-			header('X-Generator: Swiftlet ' . self::VERSION);
-
-			require $file;
-		} else {
-			throw new \Exception('View not found');
-		}
+		self::$_view->render();
 	}
 
 	/**
@@ -171,33 +167,6 @@ final class App
 	}
 
 	/**
-	 * Get the view name
-	 * @return string
-	 */
-	public static function getView()
-   	{
-		return self::$_view;
-	}
-
-	/**
-	 * Change the view
-	 * @param string $view
-	 */
-	public static function setView($view)
-   	{
-		self::$_view = $view;
-	}
-
-	/**
-	 * Get the controller instance
-	 * @return object
-	 */
-	public static function getController()
-   	{
-		return self::$_controller;
-	}
-
-	/**
 	 * Get all plugin instances
 	 * @return array
 	 */
@@ -232,14 +201,13 @@ final class App
 	public static function registerHook($hookName, array $params = array()) {
 		self::$_hooks[] = $hookName;
 
-		foreach ( self::$_plugins as $pluginName => $plugin ) {
-			if ( in_array($hookName, $plugin['hooks']) ) {
-				if ( !isset($plugin['instance']) ) {
-					// Instantiate the plugin
-					self::$_plugins[$pluginName]['instance'] = $plugin['instance'] = new $pluginName;
-				}
+		foreach ( self::$_plugins as $pluginName => $hooks ) {
+			if ( in_array($hookName, $hooks) ) {
+				$plugin = new $pluginName(self::$_app, self::$_view, self::$_controller);
 
-				$plugin['instance']->{$hookName}($params);
+				$plugin->{$hookName}($params);
+
+				unset($plugin);
 			}
 		}
 	}

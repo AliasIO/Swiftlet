@@ -5,8 +5,23 @@ namespace Swiftlet;
 abstract class Controller
 {
 	protected
+		$app,
+		$view,
 		$title
 		;
+
+	/**
+	 * Constructor
+	 * @param object $app
+	 * @param object $view
+	 */
+	public function __construct(App $app, View $view)
+   	{
+		$this->app  = $app;
+		$this->view = $view;
+
+		$this->view->set('pageTitle', $this->title);
+	}
 
 	/**
 	 * Get the page title
@@ -29,6 +44,6 @@ abstract class Controller
 	 */
 	public function notImplemented()
    	{
-		throw new \Exception('Action ' . View::htmlEncode(App::getAction()) . ' not implemented in ' . get_class(App::getController()));
+		throw new \Exception('Action ' . View::htmlEncode($this->app->getAction()) . ' not implemented in ' . get_class($this->app->getController()));
 	}
 }

@@ -5,16 +5,38 @@ namespace Swiftlet;
 final class View
 {
 	private static
+		$_app,
+		$_name,
 		$_variables = array()
 		;
 
 	/**
-	 * Get the page title
+	 * Constructor
+	 * @param object $app
+	 * @param object $view
+	 */
+	public function __construct(App $app, $name)
+   	{
+		self::$_app  = $app;
+		self::$_name = $name;
+	}
+
+	/**
+	 * Get the view name
 	 * @return string
 	 */
-	public static function getTitle()
+	public static function getName()
 	{
-		return self::htmlEncode(App::getController()->getTitle());
+		return self::$_name;
+	}
+
+	/**
+	 * Set the view name
+	 * @paran string $view
+	 */
+	public static function setName($name)
+	{
+		self::$_name = $name;
 	}
 
 	/**
@@ -96,5 +118,21 @@ final class View
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Render the view
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public static function render()
+   	{
+		if ( is_file($file = 'views/' . self::$_name . '.html.php') ) {
+			header('X-Generator: Swiftlet');
+
+			require $file;
+		} else {
+			throw new \Exception('View not found');
+		}
 	}
 }

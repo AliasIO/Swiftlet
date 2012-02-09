@@ -129,11 +129,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertArrayHasKey('Swiftlet\Plugins\Example', $plugins);
 
-		$this->assertArrayHasKey('hooks',    $plugins['Swiftlet\Plugins\Example']);
-		$this->assertArrayHasKey('instance', $plugins['Swiftlet\Plugins\Example']);
-
-		$this->assertInternalType('array',  $plugins['Swiftlet\Plugins\Example']['hooks']);
-		$this->assertInternalType('object', $plugins['Swiftlet\Plugins\Example']['instance']);
+		$this->assertInternalType('array', $plugins['Swiftlet\Plugins\Example']);
 	}
 
 	/**

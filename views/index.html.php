@@ -1,11 +1,9 @@
-<?php namespace Swiftlet ?>
-
 <?php require 'views/header.html.php' ?>
 
-<h1><?php echo View::getTitle() ?></h1>
+<h1><?php echo self::get('pageTitle') ?></h1>
 
 <p>
-	<?php echo View::get('hello world') ?>
+	<?php echo self::get('helloWorld') ?>
 </p>
 
 <?php require 'views/footer.html.php' ?>
