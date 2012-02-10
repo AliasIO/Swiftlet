@@ -2,20 +2,18 @@
 
 namespace Swiftlet;
 
-require_once(dirname(__FILE__) . '/../../Swiftlet/App.php');
-
-spl_autoload_register(array('Swiftlet\App', 'autoload'));
+require dirname(__FILE__) . '/../../Swiftlet/Interfaces/App.php';
+require dirname(__FILE__) . '/../../Swiftlet/App.php';
 
 class AppTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @covers Swiftlet\App::run
-	 */
-	public function testRun()
-	{
-		$running = App::run();
+	protected
+		$app
+		;
 
-		$this->assertTrue($running);
+	public function setUp()
+	{
+		$this->app = new App;
 	}
 
 	/**
@@ -23,9 +21,22 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetAction()
 	{
-		$action = App::getAction();
+		$action = $this->app->getAction();
 
 		$this->assertEquals($action, 'index');
+	}
+
+	/**
+	 * @covers Swiftlet\App::setConfig
+	 * @covers Swiftlet\App::getConfig
+	 */
+	public function testConfig()
+	{
+		$this->app->setConfig('test', 'test');
+
+		$test = $this->app->getConfig('test');
+
+		$this->assertEquals('test', $test);
 	}
 
 	/**
@@ -33,7 +44,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetArgs()
 	{
-		$args = App::getArgs();
+		$args = $this->app->getArgs();
 
 		$this->assertInternalType('array', $args);
 
@@ -45,7 +56,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetModel()
 	{
-		$model = App::getModel('example');
+		$model = $this->app->getModel('example');
 
 		$this->assertInternalType('object', $model);
 
@@ -60,8 +71,8 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetSingleton()
 	{
-		$model  = App::getSingleton('example');
-		$model2 = App::getSingleton('example');
+		$model  = $this->app->getSingleton('example');
+		$model2 = $this->app->getSingleton('example');
 
 		$this->assertInternalType('object', $model);
 
@@ -76,52 +87,11 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Swiftlet\App::getView
-	 */
-	public function testGetView()
-	{
-		$view = App::getView();
-
-		$this->assertEquals('index', $view);
-	}
-
-	/**
-	 * @covers Swiftlet\App::setView
-	 */
-	public function testSetView()
-	{
-		App::setView('test');
-
-		$view = App::getView();
-
-		$this->assertEquals('test', $view);
-	}
-
-	/**
-	 * @covers Swiftlet\App::getController
-	 */
-	public function testGetController()
-	{
-		$controller = App::getController();
-
-		$this->assertInternalType('object', $controller);
-
-		$this->assertInstanceOf('Swiftlet\Controller',        $controller);
-		$this->assertInstanceOf('Swiftlet\Controllers\Index', $controller);
-
-		$this->assertEquals(get_class($controller), 'Swiftlet\Controllers\Index');
-
-		$title = $controller->getTitle();
-
-		$this->assertEquals('Home', $title);
-	}
-
-	/**
 	 * @covers Swiftlet\App::getRootPath
 	 */
 	public function testGetRootPath()
 	{
-		$rootPath = App::getRootPath();
+		$rootPath = $this->app->getRootPath();
 
 		$this->assertEquals('/', $rootPath);
 	}
@@ -131,10 +101,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRegisterHook()
 	{
-		App::registerHook('test', array());
-
-		$hooks = App::getHooks();
-
-		$this->assertContains('test', $hooks);
+		$this->app->registerHook('test', array());
 	}
 }

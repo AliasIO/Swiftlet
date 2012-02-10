@@ -4,14 +4,33 @@ namespace Swiftlet;
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
+	protected
+		$app,
+		$view
+		;
+
+	public function setUp()
+	{
+		$this->app = new App;
+
+		$this->view = $this->app->view;
+	}
+
+	public function testView()
+	{
+		$this->assertInternalType('object', $this->view);
+
+		$this->assertInstanceOf('Swiftlet\View', $this->view);
+	}
+
 	/**
 	 * @covers Swiftlet\View::getTitle
 	 */
-	public function testGetTitle()
+	public function testGetName()
 	{
-		$title = View::getTitle();
+		$viewName = $this->view->getName();
 
-		$this->assertEquals('Home', $title);
+		$this->assertEquals('index', $viewName);
 	}
 
 	/**
@@ -19,7 +38,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGet()
 	{
-		$test = View::get('test');
+		$test = $this->view->get('test');
 
 		$this->assertEmpty($test);
 	}
@@ -29,9 +48,9 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSet()
 	{
-		View::set('test', 'test');
+		$this->view->set('test', 'test');
 
-		$test = View::get('test');
+		$test = $this->view->get('test');
 
 		$this->assertEquals('test', $test);
 	}
@@ -41,7 +60,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHtmlEncode()
 	{
-		$value = View::htmlEncode('&');
+		$value = $this->view->htmlEncode('&');
 
 		$this->assertEquals('&amp;', $value);
 	}
@@ -51,7 +70,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHtmlDecode()
 	{
-		$value = View::htmlDecode('&amp;');
+		$value = $this->view->htmlDecode('&amp;');
 
 		$this->assertEquals('&', $value);
 	}

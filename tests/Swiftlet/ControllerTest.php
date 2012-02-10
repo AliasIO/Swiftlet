@@ -4,13 +4,26 @@ namespace Swiftlet;
 
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @covers Swiftlet\Controller::getTitle
-	 */
-	public function testGetTitle()
-	{
-		$title = App::getController()->getTitle();
+	protected
+		$app,
+		$controller
+		;
 
-		$this->assertEquals('Home', $title);
+	public function setUp()
+	{
+		$this->app = new App;
+
+		$this->controller = $this->app->controller;
+	}
+
+	public function testController()
+	{
+		$this->assertInternalType('object', $this->controller);
+
+		$this->assertInstanceOf('Swiftlet\Controller', $this->controller);
+
+		$controllerName = get_class($this->controller);
+
+		$this->assertEquals('Swiftlet\Controllers\Index', $controllerName);
 	}
 }

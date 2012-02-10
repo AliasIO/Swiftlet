@@ -2,11 +2,6 @@
 
 namespace Swiftlet\Controllers;
 
-use
-	Swiftlet\App,
-	Swiftlet\View
-	;
-
 class Index extends \Swiftlet\Controller
 {
 	protected

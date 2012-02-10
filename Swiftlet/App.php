@@ -2,18 +2,21 @@
 
 namespace Swiftlet;
 
-final class App implements Interfaces\App
+class App implements Interfaces\App
 {
-	private
-		$_action     = 'index',
-		$_args       = array(),
-		$_config     = array(),
-		$_controller,
-		$_hooks      = array(),
-		$_plugins    = array(),
-		$_rootPath   = '/',
-		$_singletons = array(),
-		$_view
+	protected
+		$action     = 'index',
+		$args       = array(),
+		$config     = array(),
+		$hooks      = array(),
+		$plugins    = array(),
+		$rootPath   = '/',
+		$singletons = array()
+		;
+
+	public
+		$controller,
+		$view
 		;
 
 	/**
@@ -27,10 +30,10 @@ final class App implements Interfaces\App
 
 		// Determine the client-side path to root
 		if ( !empty($_SERVER['REQUEST_URI']) ) {
-			$this->_rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
+			$this->rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
 
 			if ( !empty($_GET['q']) ) {
-				$this->_rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $this->_rootPath);
+				$this->rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $this->rootPath);
 			}
 		}
 
@@ -38,14 +41,14 @@ final class App implements Interfaces\App
 		$controllerName = 'Index';
 
 		if ( !empty($_GET['q']) ) {
-			$this->_args = explode('/', $_GET['q']);
+			$this->args = explode('/', $_GET['q']);
 
-			if ( $this->_args ) {
-				$controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', array_shift($this->_args))));
+			if ( $this->args ) {
+				$controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', array_shift($this->args))));
 			}
 
-			if ( $action = $this->_args ? array_shift($this->_args) : '' ) {
-				$this->_action = $action;
+			if ( $action = $this->args ? array_shift($this->args) : '' ) {
+				$this->action = $action;
 			}
 		}
 
@@ -55,12 +58,12 @@ final class App implements Interfaces\App
 
 		$viewName = strtolower($controllerName);
 
-		$this->_view = new View($this, $viewName);
+		$this->view = new View($this, $viewName);
 
 		// Instantiate the controller
 		$controllerName = 'Swiftlet\Controllers\\' . basename($controllerName);
 
-		$this->_controller = new $controllerName($this, $this->_view);
+		$this->controller = new $controllerName($this, $this->view);
 
 		// Load plugins
 		if ( $handle = opendir('Swiftlet/Plugins') ) {
@@ -68,19 +71,19 @@ final class App implements Interfaces\App
 				if ( is_file('Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
 					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
 
-					$this->_plugins[$pluginName] = array();
+					$this->plugins[$pluginName] = array();
 
 					foreach ( get_class_methods($pluginName) as $methodName ) {
 						$method = new \ReflectionMethod($pluginName, $methodName);
 
 						if ( $method->isPublic() && !$method->isFinal() ) {
-							$this->_plugins[$pluginName][] = $methodName;
+							$this->plugins[$pluginName][] = $methodName;
 						}
 					}
 				}
 			}
 
-			ksort($this->_plugins);
+			ksort($this->plugins);
 
 			closedir($handle);
 		}
@@ -88,16 +91,16 @@ final class App implements Interfaces\App
 		// Call the controller action
 		$this->registerHook('actionBefore');
 
-		if ( method_exists($this->_controller, $this->_action) ) {
-			$method = new \ReflectionMethod($this->_controller, $this->_action);
+		if ( method_exists($this->controller, $this->action) ) {
+			$method = new \ReflectionMethod($this->controller, $this->action);
 
 			if ( $method->isPublic() && !$method->isFinal() ) {
-				$this->_controller->{$this->_action}();
+				$this->controller->{$this->action}();
 			} else {
-				$this->_controller->notImplemented();
+				$this->controller->notImplemented();
 			}
 		} else {
-			$this->_controller->notImplemented();
+			$this->controller->notImplemented();
 		}
 
 		$this->registerHook('actionAfter');
@@ -108,7 +111,7 @@ final class App implements Interfaces\App
 	 */
 	public function serve()
 	{
-		$this->_view->render();
+		$this->view->render();
 	}
 
 	/**
@@ -118,7 +121,7 @@ final class App implements Interfaces\App
 	 */
 	public function setConfig($variable, $value)
    	{
-		$this->_config[$variable] = $value;
+		$this->config[$variable] = $value;
 	}
 
 	/**
@@ -128,8 +131,8 @@ final class App implements Interfaces\App
 	 */
 	public function getConfig($variable)
    	{
-		if ( isset($this->_config[$variable]) ) {
-			return $this->_config[$variable];
+		if ( isset($this->config[$variable]) ) {
+			return $this->config[$variable];
 		}
 	}
 
@@ -139,7 +142,7 @@ final class App implements Interfaces\App
 	 */
 	public function getAction()
    	{
-		return $this->_action;
+		return $this->action;
 	}
 
 	/**
@@ -148,7 +151,7 @@ final class App implements Interfaces\App
 	 */
 	public function getArgs()
    	{
-		return $this->_args;
+		return $this->args;
 	}
 
 	/**
@@ -161,7 +164,7 @@ final class App implements Interfaces\App
 		$modelName = 'Swiftlet\Models\\' . ucfirst($modelName);
 
 		// Instantiate the model
-		return new $modelName();
+		return new $modelName($this, $this->view, $this->controller);
 	}
 
 	/**
@@ -171,13 +174,13 @@ final class App implements Interfaces\App
 	 */
 	public function getSingleton($modelName)
 	{
-		if ( isset($this->_singletons[$modelName]) ) {
-			return $this->_singletons[$modelName];
+		if ( isset($this->singletons[$modelName]) ) {
+			return $this->singletons[$modelName];
 		}
 
 		$model = $this->getModel($modelName);
 
-		$this->_singletons[$modelName] = $model;
+		$this->singletons[$modelName] = $model;
 
 		return $model;
 	}
@@ -188,7 +191,7 @@ final class App implements Interfaces\App
 	 */
 	public function getRootPath()
 	{
-		return $this->_rootPath;
+		return $this->rootPath;
 	}
 
 	/**
@@ -198,11 +201,11 @@ final class App implements Interfaces\App
 	 */
 	public function registerHook($hookName, array $params = array())
 	{
-		$this->_hooks[] = $hookName;
+		$this->hooks[] = $hookName;
 
-		foreach ( $this->_plugins as $pluginName => $hooks ) {
+		foreach ( $this->plugins as $pluginName => $hooks ) {
 			if ( in_array($hookName, $hooks) ) {
-				$plugin = new $pluginName($this, $this->_view, $this->_controller);
+				$plugin = new $pluginName($this, $this->view, $this->controller);
 
 				$plugin->{$hookName}($params);
 

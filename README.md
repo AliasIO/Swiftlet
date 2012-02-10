@@ -1,10 +1,6 @@
 Swiftlet
 ========
 
-*Note: this README is slightly out of date and will be updated in the next hours.*
-
-
-
 [Swiftlet](http://swiftlet.org/) is quite possibly the smallest 
 [MVC](http://en.wikipedia.org/wiki/Model-view-controller) framework you'll ever 
 use. And it's swift.
@@ -70,18 +66,16 @@ Important: class names are written in
 **View `views/foo.html.php`**
 
 ```php
-<?php namespace Swiftlet ?>
-
-<h1><?php echo self::get('pageTitle') ?></h1>
+<h1><?php echo $this->get('pageTitle') ?></h1>
 
 <p>
-	<?php echo self::get('helloWorld') ?>
+	<?php echo $this->get('helloWorld') ?>
 </p>
 ```
 
-Variables can be passed from controller to view using `$this->view->set()` and 
-`self::get()`. Values are automatically made safe for use in HTML, use
-`self::htmlDecode()` on values that should be treated as code.
+Variables can be passed from controller to view using the views `set` and 
+`get` methods. Values are automatically made safe for use in HTML, use
+`$this->htmlDecode()` on values that should be treated as code.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
@@ -184,7 +178,7 @@ Plugins and hooks
 Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Hooks are entry
 points for code that extends the application. Swiftlet has a few core hooks but 
 they can be registered pretty much anywhere using
-`App::registerHook($hookName)`.  
+`$this->app->registerHook($hookName)`.  
 
 **Plugin `lib/Swiftlet/Plugins/Foo.php`**
 
@@ -196,7 +190,7 @@ class Foo extends \Swiftlet\Plugin
 {
 	public function actionAfter()
 	{
-		// Overwrite our previously set "hello world" variable
+		// Overwrite our previously set "helloWorld" variable
 		if ( get_class($this->controller) === 'Swiftlet\Controllers\Foo' ) {
 			$this->view->set('helloWorld', 'Hi world!');
 		}
@@ -225,13 +219,13 @@ Configuration
 
 No configuration is needed to run Swiftlet. If you're writing a model that
 does require configuration, e.g. credentials to establish a database connection,
-you may use the Config class:
+you may use the applications `setConfig` and `getConfig` methods:
 
 ```php
 <?php
-Config::set('variable', 'value');
+$this->app->setConfig('variable', 'value');
 
-$value = Config::get('variable');
+$value = $this->app->getConfig('variable');
 ```
 
 Values can be set in `config.php` or a custom file.
@@ -248,6 +242,15 @@ All application and view methods can be called statically, e.g.
 
 
 **Application `Swiftlet\App`**
+
+* `serve()`  
+Render the view
+
+* `setConfig(string $variable, mixed $value)`
+Set a configuration value
+
+* `mixed getConfig(string $variable)`
+Get a configuration value
 
 * `string getAction()`  
 Name of the action
@@ -296,12 +299,3 @@ Default action
 
 * `notImplemented()`  
 Fallback action if action doesn't exist
-
-
-**Config `Swiftlet\Config`**
-
-* `mixed get(string $variable)`  
-Get a config variable, encoded for safe use in HTML by default
-
-* `set(string $variable [, mixed $value ])`  
-Set a config variable

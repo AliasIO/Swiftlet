@@ -8,6 +8,10 @@ interface App
 
 	public function serve();
 
+	public function setConfig($variable, $value);
+
+	public function getConfig($variable);
+
 	public function getAction();
 
 	public function getArgs();
