@@ -2,12 +2,12 @@
 
 namespace Swiftlet;
 
-final class View implements Interfaces\View
+class View implements Interfaces\View
 {
-	private
-		$_app,
-		$_name,
-		$_variables = array()
+	protected
+		$app,
+		$name,
+		$variables = array()
 		;
 
 	/**
@@ -17,8 +17,8 @@ final class View implements Interfaces\View
 	 */
 	public function __construct(App $app, $name)
    	{
-		$this->_app  = $app;
-		$this->_name = $name;
+		$this->app  = $app;
+		$this->name = $name;
 	}
 
 	/**
@@ -27,7 +27,7 @@ final class View implements Interfaces\View
 	 */
 	public function getName()
 	{
-		return $this->_name;
+		return $this->name;
 	}
 
 	/**
@@ -36,7 +36,7 @@ final class View implements Interfaces\View
 	 */
 	public function setName($name)
 	{
-		$this->_name = $name;
+		$this->name = $name;
 	}
 
 	/**
@@ -47,11 +47,11 @@ final class View implements Interfaces\View
 	 */
 	public function get($variable, $htmlEncode = true)
    	{
-		if ( isset($this->_variables[$variable]) ) {
+		if ( isset($this->variables[$variable]) ) {
 			if ( $htmlEncode ) {
-				return $this->htmlEncode($this->_variables[$variable]);
+				return $this->htmlEncode($this->variables[$variable]);
 			} else {
-				return $this->_variables[$variable];
+				return $this->variables[$variable];
 			}
 		}
 	}
@@ -63,7 +63,7 @@ final class View implements Interfaces\View
 	 */
 	public function set($variable, $value = null)
 	{
-		$this->_variables[$variable] = $value;
+		$this->variables[$variable] = $value;
 	}
 
 	/**
@@ -127,7 +127,7 @@ final class View implements Interfaces\View
 	 */
 	public function render()
    	{
-		if ( is_file($file = 'views/' . $this->_name . '.html.php') ) {
+		if ( is_file($file = 'views/' . $this->name . '.html.php') ) {
 			header('X-Generator: Swiftlet');
 
 			require $file;
