@@ -4,23 +4,23 @@ namespace Swiftlet\Interfaces;
 
 interface App
 {
-	public static function run();
+	public function __construct();
 
-	public static function serve();
+	public function serve();
 
-	public static function getAction();
+	public function getAction();
 
-	public static function getArgs();
+	public function getArgs();
 
-	public static function getModel($modelName);
+	public function getModel($modelName);
 
-	public static function getSingleton($modelName);
+	public function getSingleton($modelName);
 
-	public static function getRootPath();
+	public function getRootPath();
 
-	public static function registerHook($hookName, array $params = array());
+	public function registerHook($hookName, array $params = array());
 
-	public static function autoload($className);
+	public function autoload($className);
 
-	public static function error($number, $string, $file, $line);
+	public function error($number, $string, $file, $line);
 }

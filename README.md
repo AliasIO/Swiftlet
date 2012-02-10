@@ -1,6 +1,10 @@
 Swiftlet
 ========
 
+*Note: this README is slightly out of date and will be updated in the next hours.*
+
+
+
 [Swiftlet](http://swiftlet.org/) is quite possibly the smallest 
 [MVC](http://en.wikipedia.org/wiki/Model-view-controller) framework you'll ever 
 use. And it's swift.

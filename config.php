@@ -1,7 +1,5 @@
 <?php
 
-namespace Swiftlet;
-
-Config::set('siteName', 'Swiftlet');
+$app->setConfig('siteName', 'Swiftlet');
 
 // Add your own configuration values here!

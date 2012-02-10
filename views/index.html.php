@@ -1,9 +1,9 @@
 <?php require 'views/header.html.php' ?>
 
-<h1><?php echo self::get('pageTitle') ?></h1>
+<h1><?php echo $this->get('pageTitle') ?></h1>
 
 <p>
-	<?php echo self::get('helloWorld') ?>
+	<?php echo $this->get('helloWorld') ?>
 </p>
 
 <?php require 'views/footer.html.php' ?>

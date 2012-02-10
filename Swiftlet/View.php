@@ -4,7 +4,7 @@ namespace Swiftlet;
 
 final class View implements Interfaces\View
 {
-	private static
+	private
 		$_app,
 		$_name,
 		$_variables = array()
@@ -17,26 +17,26 @@ final class View implements Interfaces\View
 	 */
 	public function __construct(App $app, $name)
    	{
-		self::$_app  = $app;
-		self::$_name = $name;
+		$this->_app  = $app;
+		$this->_name = $name;
 	}
 
 	/**
 	 * Get the view name
 	 * @return string
 	 */
-	public static function getName()
+	public function getName()
 	{
-		return self::$_name;
+		return $this->_name;
 	}
 
 	/**
 	 * Set the view name
 	 * @paran string $view
 	 */
-	public static function setName($name)
+	public function setName($name)
 	{
-		self::$_name = $name;
+		$this->_name = $name;
 	}
 
 	/**
@@ -45,13 +45,13 @@ final class View implements Interfaces\View
 	 * @params bool $htmlEncode
 	 * @return mixed
 	 */
-	public static function get($variable, $htmlEncode = true)
+	public function get($variable, $htmlEncode = true)
    	{
-		if ( isset(self::$_variables[$variable]) ) {
+		if ( isset($this->_variables[$variable]) ) {
 			if ( $htmlEncode ) {
-				return self::htmlEncode(self::$_variables[$variable]);
+				return $this->htmlEncode($this->_variables[$variable]);
 			} else {
-				return self::$_variables[$variable];
+				return $this->_variables[$variable];
 			}
 		}
 	}
@@ -61,9 +61,9 @@ final class View implements Interfaces\View
 	 * @param string $variable
 	 * @param mixed $value
 	 */
-	public static function set($variable, $value = null)
+	public function set($variable, $value = null)
 	{
-		self::$_variables[$variable] = $value;
+		$this->_variables[$variable] = $value;
 	}
 
 	/**
@@ -71,18 +71,18 @@ final class View implements Interfaces\View
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public static function htmlEncode($value)
+	public function htmlEncode($value)
    	{
 		switch ( gettype($value) ) {
 			case 'array':
 				foreach ( $value as $k => $v ) {
-					$value[$k] = self::htmlEncode($v);
+					$value[$k] = $this->htmlEncode($v);
 				}
 
 				break;
 			case 'object':
 				foreach ( $value as $k => $v ) {
-					$value->$k = self::htmlEncode($v);
+					$value->$k = $this->htmlEncode($v);
 				}
 
 				break;
@@ -98,18 +98,18 @@ final class View implements Interfaces\View
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public static function htmlDecode($value)
+	public function htmlDecode($value)
    	{
 		switch ( gettype($value) ) {
 			case 'array':
 				foreach ( $value as $k => $v ) {
-					$value[$k] = self::htmlDecode($v);
+					$value[$k] = $this->htmlDecode($v);
 				}
 
 				break;
 			case 'object':
 				foreach ( $value as $k => $v ) {
-					$value->$k = self::htmlDecode($v);
+					$value->$k = $this->htmlDecode($v);
 				}
 
 				break;
@@ -125,9 +125,9 @@ final class View implements Interfaces\View
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public static function render()
+	public function render()
    	{
-		if ( is_file($file = 'views/' . self::$_name . '.html.php') ) {
+		if ( is_file($file = 'views/' . $this->_name . '.html.php') ) {
 			header('X-Generator: Swiftlet');
 
 			require $file;
