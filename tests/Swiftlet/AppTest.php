@@ -117,36 +117,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Swiftlet\App::getPlugins
-	 */
-	public function testGetPlugins()
-	{
-		$plugins = App::getPlugins();
-
-		$this->assertInternalType('array', $plugins);
-
-		$this->assertCount(1, $plugins);
-
-		$this->assertArrayHasKey('Swiftlet\Plugins\Example', $plugins);
-
-		$this->assertInternalType('array', $plugins['Swiftlet\Plugins\Example']);
-	}
-
-	/**
-	 * @covers Swiftlet\App::getHooks
-	 */
-	public function testGetHooks()
-	{
-		$hooks = App::getHooks();
-
-		$this->assertInternalType('array', $hooks);
-
-		$this->assertNotEmpty($hooks);
-
-		$this->assertInternalType('string', $hooks[0]);
-	}
-
-	/**
 	 * @covers Swiftlet\App::getRootPath
 	 */
 	public function testGetRootPath()

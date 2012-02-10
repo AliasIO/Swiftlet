@@ -167,24 +167,6 @@ final class App implements Interfaces\App
 	}
 
 	/**
-	 * Get all plugin instances
-	 * @return array
-	 */
-	public static function getPlugins()
-   	{
-		return self::$_plugins;
-	}
-
-	/**
-	 * Get all registered hooks
-	 * @return array
-	 */
-	public static function getHooks()
-   	{
-		return self::$_hooks;
-	}
-
-	/**
 	 * Get the client-side path to root
 	 * @return string
 	 */

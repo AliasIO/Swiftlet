@@ -16,10 +16,6 @@ interface App
 
 	public static function getSingleton($modelName);
 
-	public static function getPlugins();
-
-	public static function getHooks();
-
 	public static function getRootPath();
 
 	public static function registerHook($hookName, array $params = array());
