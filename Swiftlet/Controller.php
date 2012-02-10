@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-abstract class Controller
+abstract class Controller implements Interfaces\Controller
 {
 	protected
 		$app,

@@ -1,6 +1,7 @@
 <?php
 
 try {
+	require 'Swiftlet/Interfaces/App.php';
 	require 'Swiftlet/App.php';
 
 	spl_autoload_register('Swiftlet\App::autoload');

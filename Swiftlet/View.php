@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-final class View
+final class View implements Interfaces\View
 {
 	private static
 		$_app,

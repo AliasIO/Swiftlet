@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-abstract class Plugin
+abstract class Plugin implements Interfaces\Plugin
 {
 	protected
 		$app,

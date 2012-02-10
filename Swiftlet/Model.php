@@ -2,6 +2,6 @@
 
 namespace Swiftlet;
 
-abstract class Model
+abstract class Model implements Interfaces\Model
 {
 }

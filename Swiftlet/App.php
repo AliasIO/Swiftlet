@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-final class App
+final class App implements Interfaces\App
 {
 	const
 		VERSION = '3.0'
@@ -198,7 +198,8 @@ final class App
 	 * @param string $hookName
 	 * @param array $params
 	 */
-	public static function registerHook($hookName, array $params = array()) {
+	public static function registerHook($hookName, array $params = array())
+	{
 		self::$_hooks[] = $hookName;
 
 		foreach ( self::$_plugins as $pluginName => $hooks ) {
