@@ -244,10 +244,10 @@ Abstract Public methods
 * `serve()`  
 Render the view
 
-* `mixed getConfig(string $variable)`
+* `mixed getConfig(string $variable)`  
 Get a configuration value
 
-* `setConfig(string $variable, mixed $value)`
+* `setConfig(string $variable, mixed $value)`  
 Set a configuration value
 
 * `string getAction()`  
@@ -277,10 +277,10 @@ Get a view variable, encoded for safe use in HTML by default
 * `set(string $variable [, mixed $value ])`  
 Set a view variable
 
-* `htmlEncode(mixed $value)` 
+* `htmlEncode(mixed $value)`  
 Recursively make a value safe for HTML
 
-* `htmlDecode(mixed $value)` 
+* `htmlDecode(mixed $value)`  
 Recursively decode a previously encoded value to be rendered as HTML
 
 
@@ -290,4 +290,4 @@ Recursively decode a previously encoded value to be rendered as HTML
 Default action
 
 * `notImplemented()`  
-Fallback action if action doesn't exist
+Fallback action in case the called action doesn't exist
