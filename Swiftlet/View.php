@@ -16,7 +16,7 @@ class View implements Interfaces\View
 	/**
 	 * Constructor
 	 * @param object $app
-	 * @param object $view
+	 * @param string $name
 	 */
 	public function __construct(App $app, $name)
    	{
@@ -107,8 +107,6 @@ class View implements Interfaces\View
 
 	/**
 	 * Render the view
-	 * @param mixed $value
-	 * @return mixed
 	 */
 	public function render()
    	{

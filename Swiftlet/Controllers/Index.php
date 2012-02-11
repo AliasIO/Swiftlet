@@ -15,7 +15,7 @@ class Index extends \Swiftlet\Controller
 	{
 		// Some example code to get you started
 
-		// Create a model instance, see /models/ExampleModel.php
+		// Create a model instance, see /Swiftlet/Models/Example.php
 		$exampleModel = $this->app->getModel('example');
 
 		// Get some data from the model

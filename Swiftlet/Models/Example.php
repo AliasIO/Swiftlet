@@ -2,10 +2,6 @@
 
 namespace Swiftlet\Models;
 
-use
-	Swiftlet\App
-	;
-
 class Example extends \Swiftlet\Model
 {
 	/**

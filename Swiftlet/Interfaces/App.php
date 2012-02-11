@@ -8,9 +8,11 @@ interface App
 
 	public function serve();
 
+	public function getConfig($variable);
+
 	public function setConfig($variable, $value);
 
-	public function getConfig($variable);
+	public function getRootPath();
 
 	public function getAction();
 
@@ -19,8 +21,6 @@ interface App
 	public function getModel($modelName);
 
 	public function getSingleton($modelName);
-
-	public function getRootPath();
 
 	public function registerHook($hookName, array $params = array());
 

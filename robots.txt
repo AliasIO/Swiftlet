@@ -1,5 +1,5 @@
 User-agent: *
-Disallow: /lib/
+Disallow: /Swiftlet/
 Disallow: /tests/
 Disallow: /views/
 Disallow: /config.php

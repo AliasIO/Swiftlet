@@ -3,6 +3,7 @@
 namespace Swiftlet;
 
 try {
+	// Bootstrap the application
 	require 'Swiftlet/Interfaces/App.php';
 	require 'Swiftlet/App.php';
 

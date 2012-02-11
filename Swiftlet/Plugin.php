@@ -14,6 +14,7 @@ abstract class Plugin implements Interfaces\Plugin
 	 * Constructor
 	 * @param object $app
 	 * @param object $view
+	 * @param object $controller
 	 */
 	public function __construct(App $app, View $view, Controller $controller)
    	{

@@ -22,6 +22,6 @@ class Error404 extends \Swiftlet\Controller
 	 */
 	public function notImplemented()
    	{
-		$this->indexAction();
+		$this->index();
 	}
 }

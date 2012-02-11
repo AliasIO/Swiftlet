@@ -20,7 +20,7 @@ class App implements Interfaces\App
 		;
 
 	/**
-	 * Initialize the application
+	 * Constructor
 	 */
 	public function __construct()
 	{
@@ -115,6 +115,18 @@ class App implements Interfaces\App
 	}
 
 	/**
+	 * Get a configuration value
+	 * @param string $variabl
+	 * @return mixed
+	 */
+	public function getConfig($variable)
+   	{
+		if ( isset($this->config[$variable]) ) {
+			return $this->config[$variable];
+		}
+	}
+
+	/**
 	 * Set a configuration value
 	 * @param string $variable
 	 * @param mixed $value
@@ -125,15 +137,12 @@ class App implements Interfaces\App
 	}
 
 	/**
-	 * Get a configuration value
-	 * @param string $variabl
-	 * @return mixed
+	 * Get the client-side path to root
+	 * @return string
 	 */
-	public function getConfig($variable)
-   	{
-		if ( isset($this->config[$variable]) ) {
-			return $this->config[$variable];
-		}
+	public function getRootPath()
+	{
+		return $this->rootPath;
 	}
 
 	/**
@@ -186,16 +195,7 @@ class App implements Interfaces\App
 	}
 
 	/**
-	 * Get the client-side path to root
-	 * @return string
-	 */
-	public function getRootPath()
-	{
-		return $this->rootPath;
-	}
-
-	/**
-	 * Register a new hook for plugins to implement
+	 * Register a hook for plugins to implement
 	 * @param string $hookName
 	 * @param array $params
 	 */
@@ -216,6 +216,7 @@ class App implements Interfaces\App
 
 	/**
 	 * Class autoloader
+	 * @param $className
 	 * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
 	 */
 	public function autoload($className)

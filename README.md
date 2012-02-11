@@ -12,7 +12,7 @@ Buzzword compliance
 -------------------
 
 ✔ Micro-Framework  
-✔ Loosely coupled
+✔ Loosely coupled  
 ✔ Namespaced  
 ✔ Unit tested  
 ✔ Pluggable  
@@ -42,7 +42,7 @@ Controllers house the
 [business logic](http://en.wikipedia.org/wiki/Business_logic) of the page while 
 views should be limited to simple UI logic (loops and switches).
 
-**Controller `lib/Swiftlet/Controllers/Foo.php`**
+**Controller `Swiftlet/Controllers/Foo.php`**
 
 ```php
 <?php
@@ -97,7 +97,7 @@ missing from the URL they will default to `index` (`/` will call `index()` on
 `Swiftlet\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
-`/foo_bar` will point to `lib/Swiftlet/Controllers/Foo/Bar.php`.
+`/foo_bar` will point to `Swiftlet/Controllers/Foo/Bar.php`.
 
 
 Actions and arguments
@@ -117,8 +117,9 @@ will throw an exception by default but can be overridden.
 The action name and arguments can be accessed through 
 `$this->app->getAction()` and `$this->app->getArgs()` respectively.
 
-Note: if you want to use a different view for each action you can change the 
-value of `$this->view->name`.
+Note: to use a different view for each action you may change the value of 
+`$this->view->name`. The view name is a filename relative to the `view` 
+directory, without the `.html.php` suffix.
 
 
 Models
@@ -126,7 +127,7 @@ Models
 
 Let's throw a model into the mix and update the controller.
 
-**Model `lib/Swiftlet/Models/Foo.php`**
+**Model `Swiftlet/Models/Foo.php`**
 
 ```php
 <?php
@@ -141,7 +142,7 @@ class Foo extends \Swiftlet\Model
 }
 ```
 
-**Controller `lib/Swiftlet/Controllers/Foo.php`**
+**Controller `Swiftlet/Controllers/Foo.php`**
 
 ```php
 <?php
@@ -153,7 +154,7 @@ class Foo extends \Swiftlet\Controller
 
 	public function index()
 	{
-		// Get an instance of the Example class (lib/Swiftlet/Models/Example.php)
+		// Get an instance of the Example class (Swiftlet/Models/Example.php)
 		$exampleModel = $this->app->getModel('example');
 
 		$helloWorld = $exampleModel->getHelloWorld();
@@ -181,7 +182,7 @@ points for code that extends the application. Swiftlet has a few core hooks but
 they can be registered pretty much anywhere using
 `$this->app->registerHook($hookName)`.  
 
-**Plugin `lib/Swiftlet/Plugins/Foo.php`**
+**Plugin `Swiftlet/Plugins/Foo.php`**
 
 ```php
 <?php
@@ -200,10 +201,10 @@ class Foo extends \Swiftlet\Plugin
 ```
 
 This plugin implements the core `actionAfter` hook and changes the view 
-variable `hello world` from our previous example to `Hi world!`.
+variable `helloWorld` from our previous example to `Hi world!`.
 
 Plugins don't need to be installed or activated, all files in the
-`/lib/Swiftlet/Plugins/` directory are automatically included and their classes 
+`Swiftlet/Plugins/` directory are automatically included and their classes 
 instantiated. They are hooked in alphabetical order.
 
 The core hooks are:
@@ -235,23 +236,19 @@ Values can be set in `config.php` or a custom file.
 --------------------------------------------------------------------------------
 
 
-Public abstract methods
+Abstract Public methods
 -----------------------
-
-All application and view methods can be called statically, e.g.
-`App::getAction()` and `View::getTitle()`.
-
 
 **Application `Swiftlet\App`**
 
 * `serve()`  
 Render the view
 
-* `setConfig(string $variable, mixed $value)`
-Set a configuration value
-
 * `mixed getConfig(string $variable)`
 Get a configuration value
+
+* `setConfig(string $variable, mixed $value)`
+Set a configuration value
 
 * `string getAction()`  
 Name of the action
