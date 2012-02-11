@@ -12,6 +12,7 @@ Buzzword compliance
 -------------------
 
 ✔ Micro-Framework  
+✔ Loosely coupled
 ✔ Namespaced  
 ✔ Unit tested  
 ✔ Pluggable  

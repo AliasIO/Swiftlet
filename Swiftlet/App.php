@@ -76,7 +76,7 @@ class App implements Interfaces\App
 					foreach ( get_class_methods($pluginName) as $methodName ) {
 						$method = new \ReflectionMethod($pluginName, $methodName);
 
-						if ( $method->isPublic() && !$method->isFinal() ) {
+						if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() ) {
 							$this->plugins[$pluginName][] = $methodName;
 						}
 					}
@@ -94,7 +94,7 @@ class App implements Interfaces\App
 		if ( method_exists($this->controller, $this->action) ) {
 			$method = new \ReflectionMethod($this->controller, $this->action);
 
-			if ( $method->isPublic() && !$method->isFinal() ) {
+			if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() ) {
 				$this->controller->{$this->action}();
 			} else {
 				$this->controller->notImplemented();
