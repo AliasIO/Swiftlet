@@ -6,8 +6,11 @@ class View implements Interfaces\View
 {
 	protected
 		$app,
-		$name,
 		$variables = array()
+		;
+
+	public
+		$name
 		;
 
 	/**
@@ -18,24 +21,6 @@ class View implements Interfaces\View
 	public function __construct(App $app, $name)
    	{
 		$this->app  = $app;
-		$this->name = $name;
-	}
-
-	/**
-	 * Get the view name
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
-
-	/**
-	 * Set the view name
-	 * @paran string $view
-	 */
-	public function setName($name)
-	{
 		$this->name = $name;
 	}
 

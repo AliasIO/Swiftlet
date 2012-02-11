@@ -24,16 +24,6 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Swiftlet\View::getTitle
-	 */
-	public function testGetName()
-	{
-		$viewName = $this->view->getName();
-
-		$this->assertEquals('index', $viewName);
-	}
-
-	/**
 	 * @covers Swiftlet\View::get
 	 */
 	public function testGet()

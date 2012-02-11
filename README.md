@@ -117,8 +117,8 @@ will throw an exception by default but can be overridden.
 The action name and arguments can be accessed through 
 `$this->app->getAction()` and `$this->app->getArgs()` respectively.
 
-Note: if you want to use different HTML files for each action you can change 
-the view with `$this->view->setName($viewName)`.
+Note: if you want to use a different view for each action you can change the 
+value of `$this->view->name`.
 
 
 Models
@@ -273,12 +273,6 @@ Register a hook
 
 
 **View `Swiftlet\View`**
-
-* `string getName()`  
-Get the name of the view
-
-* `string setName()`  
-Change the view
 
 * `mixed get(string $variable [, bool $htmlEncode = true ])`  
 Get a view variable, encoded for safe use in HTML by default
