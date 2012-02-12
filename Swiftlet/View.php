@@ -18,7 +18,7 @@ class View implements Interfaces\View
 	 * @param object $app
 	 * @param string $name
 	 */
-	public function __construct(App $app, $name)
+	public function __construct(Interfaces\App $app, $name)
    	{
 		$this->app  = $app;
 		$this->name = $name;

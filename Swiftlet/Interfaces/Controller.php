@@ -4,7 +4,7 @@ namespace Swiftlet\Interfaces;
 
 interface Controller
 {
-	public function __construct(\Swiftlet\App $app, \Swiftlet\View $view);
+	public function __construct(App $app, View $view);
 
 	public function index();
 

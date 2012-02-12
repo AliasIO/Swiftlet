@@ -15,7 +15,7 @@ abstract class Controller implements Interfaces\Controller
 	 * @param object $app
 	 * @param object $view
 	 */
-	public function __construct(App $app, View $view)
+	public function __construct(Interfaces\App $app, Interfaces\View $view)
    	{
 		$this->app  = $app;
 		$this->view = $view;

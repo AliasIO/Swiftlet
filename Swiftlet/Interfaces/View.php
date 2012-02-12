@@ -4,7 +4,7 @@ namespace Swiftlet\Interfaces;
 
 interface View
 {
-	public function __construct(\Swiftlet\App $app, $name);
+	public function __construct(App $app, $name);
 
 	public function get($variable, $htmlEncode = true);
 

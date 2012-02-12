@@ -208,8 +208,6 @@ class App implements Interfaces\App
 				$plugin = new $pluginName($this, $this->view, $this->controller);
 
 				$plugin->{$hookName}($params);
-
-				unset($plugin);
 			}
 		}
 	}

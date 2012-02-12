@@ -1,4 +1,4 @@
-<?php require 'views/header.html.php' ?>
+<?php require 'header.html.php' ?>
 
 <h1><?php echo $this->get('pageTitle') ?></h1>
 
@@ -6,4 +6,4 @@
 	<?php echo $this->get('helloWorld') ?>
 </p>
 
-<?php require 'views/footer.html.php' ?>
+<?php require 'footer.html.php' ?>
