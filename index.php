@@ -9,8 +9,13 @@ try {
 
 	$app = new App;
 
+	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
+
+	spl_autoload_register(array($app, 'autoload'));
+
 	require 'config.php';
 
+	$app->run();
 	$app->serve();
 } catch ( \Exception $e ) {
 	header('HTTP/1.1 503 Service Temporarily Unavailable');

@@ -4,7 +4,7 @@ namespace Swiftlet\Interfaces;
 
 interface App
 {
-	public function __construct();
+	public function run();
 
 	public function serve();
 

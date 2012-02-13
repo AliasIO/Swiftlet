@@ -14,6 +14,24 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->app = new App;
+
+		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
+
+		spl_autoload_register(array($this->app, 'autoload'));
+	}
+
+	/**
+	 * @covers Swiftlet\App::run
+	 */
+	public function testRun()
+	{
+		list($view, $controller) = $this->app->run();
+
+		$this->assertInternalType('object', $view);
+		$this->assertInternalType('object', $controller);
+
+		$this->assertInstanceOf('Swiftlet\Interfaces\View',       $view);
+		$this->assertInstanceOf('Swiftlet\Interfaces\Controller', $controller);
 	}
 
 	/**

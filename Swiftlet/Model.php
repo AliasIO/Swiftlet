@@ -5,9 +5,7 @@ namespace Swiftlet;
 abstract class Model implements Interfaces\Model
 {
 	protected
-		$app,
-		$controller,
-		$view
+		$app
 		;
 
 	/**
@@ -16,10 +14,8 @@ abstract class Model implements Interfaces\Model
 	 * @param object $view
 	 * @param object $controller
 	 */
-	public function __construct(Interfaces\App $app, Interfaces\View $view, Interfaces\Controller $controller)
+	public function __construct(Interfaces\App $app)
    	{
-		$this->app        = $app;
-		$this->view       = $view;
-		$this->controller = $controller;
+		$this->app = $app;
 	}
 }

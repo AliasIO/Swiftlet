@@ -13,7 +13,11 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->app = new App;
 
-		$this->view = $this->app->view;
+		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
+
+		spl_autoload_register(array($this->app, 'autoload'));
+
+		list($this->view) = $this->app->run();
 	}
 
 	public function testView()

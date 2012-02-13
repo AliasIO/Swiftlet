@@ -13,7 +13,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->app = new App;
 
-		$this->controller = $this->app->controller;
+		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
+
+		spl_autoload_register(array($this->app, 'autoload'));
+
+		list(, $this->controller) = $this->app->run();
 	}
 
 	public function testController()

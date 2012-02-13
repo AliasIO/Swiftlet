@@ -8,26 +8,19 @@ class App implements Interfaces\App
 		$action     = 'index',
 		$args       = array(),
 		$config     = array(),
+		$controller,
 		$hooks      = array(),
 		$plugins    = array(),
 		$rootPath   = '/',
-		$singletons = array()
-		;
-
-	public
-		$controller,
+		$singletons = array(),
 		$view
 		;
 
 	/**
-	 * Constructor
+	 * Run the application
 	 */
-	public function __construct()
+	public function run()
 	{
-		set_error_handler(array($this, 'error'), E_ALL | E_STRICT);
-
-		spl_autoload_register(array($this, 'autoload'));
-
 		// Determine the client-side path to root
 		if ( !empty($_SERVER['REQUEST_URI']) ) {
 			$this->rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
@@ -56,9 +49,7 @@ class App implements Interfaces\App
 			$controllerName = 'Error404';
 		}
 
-		$viewName = strtolower($controllerName);
-
-		$this->view = new View($this, $viewName);
+		$this->view = new View($this, strtolower($controllerName));
 
 		// Instantiate the controller
 		$controllerName = 'Swiftlet\Controllers\\' . basename($controllerName);
@@ -104,6 +95,8 @@ class App implements Interfaces\App
 		}
 
 		$this->registerHook('actionAfter');
+
+		return array($this->view, $this->controller);
 	}
 
 	/**
