@@ -166,7 +166,7 @@ class App implements Interfaces\App
 		$modelName = 'Swiftlet\Models\\' . ucfirst($modelName);
 
 		// Instantiate the model
-		return new $modelName($this, $this->view, $this->controller);
+		return new $modelName($this);
 	}
 
 	/**
