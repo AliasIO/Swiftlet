@@ -109,11 +109,11 @@ class App implements Interfaces\App
 
 	/**
 	 * Get a configuration value
-	 * @param string $variabl
+	 * @param string $variable
 	 * @return mixed
 	 */
 	public function getConfig($variable)
-   	{
+	{
 		if ( isset($this->config[$variable]) ) {
 			return $this->config[$variable];
 		}
@@ -125,7 +125,7 @@ class App implements Interfaces\App
 	 * @param mixed $value
 	 */
 	public function setConfig($variable, $value)
-   	{
+	{
 		$this->config[$variable] = $value;
 	}
 
@@ -143,7 +143,7 @@ class App implements Interfaces\App
 	 * @return string
 	 */
 	public function getAction()
-   	{
+	{
 		return $this->action;
 	}
 
@@ -152,7 +152,7 @@ class App implements Interfaces\App
 	 * @return array
 	 */
 	public function getArgs()
-   	{
+	{
 		return $this->args;
 	}
 
@@ -162,7 +162,7 @@ class App implements Interfaces\App
 	 * @return object
 	 */
 	public function getModel($modelName)
-   	{
+	{
 		$modelName = 'Swiftlet\Models\\' . ucfirst($modelName);
 
 		// Instantiate the model

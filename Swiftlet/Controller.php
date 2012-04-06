@@ -16,7 +16,7 @@ abstract class Controller implements Interfaces\Controller
 	 * @param object $view
 	 */
 	public function __construct(Interfaces\App $app, Interfaces\View $view)
-   	{
+	{
 		$this->app  = $app;
 		$this->view = $view;
 
@@ -27,14 +27,14 @@ abstract class Controller implements Interfaces\Controller
 	 * Default action
 	 */
 	public function index()
-   	{
+	{
 	}
 
 	/**
 	 * Fallback in case action doesn't exist
 	 */
 	public function notImplemented()
-   	{
+	{
 		throw new \Exception('Action ' . $this->view->htmlEncode($this->app->getAction()) . ' not implemented in ' . get_called_class());
 	}
 }

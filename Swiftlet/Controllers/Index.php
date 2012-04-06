@@ -25,4 +25,3 @@ class Index extends \Swiftlet\Controller
 		$this->view->set('helloWorld', $helloWorld);
 	}
 }
-

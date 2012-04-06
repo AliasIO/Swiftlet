@@ -13,7 +13,7 @@ abstract class Model implements Interfaces\Model
 	 * @param object $app
 	 */
 	public function __construct(Interfaces\App $app)
-   	{
+	{
 		$this->app = $app;
 	}
 }

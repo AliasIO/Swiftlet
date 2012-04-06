@@ -19,7 +19,7 @@ class View implements Interfaces\View
 	 * @param string $name
 	 */
 	public function __construct(Interfaces\App $app, $name)
-   	{
+	{
 		$this->app  = $app;
 		$this->name = $name;
 	}
@@ -31,7 +31,7 @@ class View implements Interfaces\View
 	 * @return mixed
 	 */
 	public function get($variable, $htmlEncode = true)
-   	{
+	{
 		if ( isset($this->variables[$variable]) ) {
 			if ( $htmlEncode ) {
 				return $this->htmlEncode($this->variables[$variable]);
@@ -57,7 +57,7 @@ class View implements Interfaces\View
 	 * @return mixed
 	 */
 	public function htmlEncode($value)
-   	{
+	{
 		switch ( gettype($value) ) {
 			case 'array':
 				foreach ( $value as $k => $v ) {
@@ -84,7 +84,7 @@ class View implements Interfaces\View
 	 * @return mixed
 	 */
 	public function htmlDecode($value)
-   	{
+	{
 		switch ( gettype($value) ) {
 			case 'array':
 				foreach ( $value as $k => $v ) {
@@ -109,7 +109,7 @@ class View implements Interfaces\View
 	 * Render the view
 	 */
 	public function render()
-   	{
+	{
 		if ( is_file($file = 'views/' . $this->name . '.html.php') ) {
 			header('X-Generator: Swiftlet');
 
