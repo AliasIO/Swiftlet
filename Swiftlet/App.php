@@ -37,11 +37,11 @@ class App implements Interfaces\App
 			$this->args = explode('/', $_GET['q']);
 
 			if ( $this->args ) {
-				$controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', array_shift($this->args))));
+				$controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($this->args)))));
 			}
 
 			if ( $action = $this->args ? array_shift($this->args) : '' ) {
-				$this->action = $action;
+				$this->action = str_replace('-', '', $action);
 			}
 		}
 
