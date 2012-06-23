@@ -13,8 +13,10 @@ class Error404 extends \Swiftlet\Controller
 	 */
 	public function index()
 	{
-		header('HTTP/1.1 404 Not Found');
-		header('Status: 404 Not Found');
+		if ( !headers_sent() ) {
+			header('HTTP/1.1 404 Not Found');
+			header('Status: 404 Not Found');
+		}
 	}
 
 	/**

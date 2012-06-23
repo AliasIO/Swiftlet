@@ -18,8 +18,10 @@ try {
 	$app->run();
 	$app->serve();
 } catch ( \Exception $e ) {
-	header('HTTP/1.1 503 Service Temporarily Unavailable');
-	header('Status: 503 Service Temporarily Unavailable');
+	if ( !headers_sent() ) {
+		header('HTTP/1.1 503 Service Temporarily Unavailable');
+		header('Status: 503 Service Temporarily Unavailable');
+	}
 
 	exit('Swiftlet Exception: ' . $e->getMessage());
 }
