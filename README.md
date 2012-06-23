@@ -99,6 +99,9 @@ missing from the URL they will default to `index` (`/` will call `index()` on
 Underscores in the controller name are translated to directory separators, so
 `/foo_bar` will point to `Swiftlet/Controllers/Foo/Bar.php`.
 
+Dashes in routes are ignored; `/foo-bar/baz-qux` calls `bazqux()` in 
+`Swiftlet/Controllers/Foobar.php`.
+
 
 Actions and arguments
 ---------------------
