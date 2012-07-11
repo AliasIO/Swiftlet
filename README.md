@@ -181,8 +181,8 @@ Plugins and hooks
 -----------------
 
 Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Hooks are entry
-points for code that extends the application. Swiftlet has a few core hooks but 
-they can be registered pretty much anywhere using
+points for code that extends the application. Swiftlet has a few core hooks and 
+additiontal ones can be registered pretty much anywhere using
 `$this->app->registerHook($hookName)`.  
 
 **Plugin `Swiftlet/Plugins/Foo.php`**
@@ -208,7 +208,7 @@ variable `helloWorld` from our previous example to `Hi world!`.
 
 Plugins don't need to be installed or activated, all files in the
 `Swiftlet/Plugins/` directory are automatically included and their classes 
-instantiated. They are hooked in alphabetical order.
+instantiated. Plugins are hooked in alphabetical order.
 
 The core hooks are:
 
@@ -224,7 +224,7 @@ Configuration
 
 No configuration is needed to run Swiftlet. If you're writing a model that
 does require configuration, e.g. credentials to establish a database connection,
-you may use the applications `setConfig` and `getConfig` methods:
+you may use the application's `setConfig` and `getConfig` methods:
 
 ```php
 <?php
@@ -266,7 +266,7 @@ Create a new model instance
 Create or return an existing model instance
 
 * `string getRootPath()`  
-Absolute client-side path to website root
+Absolute client-side path to the website root
 
 * `registerHook(string $hookName, array $params)`  
 Register a hook
