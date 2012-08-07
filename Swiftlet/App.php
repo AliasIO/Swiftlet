@@ -46,13 +46,17 @@ class App implements Interfaces\App
 		}
 
 		if ( !is_file('Swiftlet/Controllers/' . $controllerName . '.php') ) {
-			$controllerName = 'Error404';
+			$controllerName .= '/Index';
+
+			if ( !is_file('Swiftlet/Controllers/' . $controllerName . '.php') ) {
+				$controllerName = 'Error404';
+			}
 		}
 
 		$this->view = new View($this, strtolower($controllerName));
 
 		// Instantiate the controller
-		$controllerName = 'Swiftlet\Controllers\\' . basename($controllerName);
+		$controllerName = 'Swiftlet\Controllers\\' . str_replace('/', '\\', $controllerName);
 
 		$this->controller = new $controllerName($this, $this->view);
 
