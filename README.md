@@ -81,8 +81,8 @@ Variables can be passed from controller to view using the views `set` and
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
 
-*If you're running Apache and get a "404 Not Found" you will need to enable
-rewrites. Alternatively you can navigate to `http://<swiftlet>?q=foo` instead.*
+If you're running Apache and see "404 Not Found" you will need to enable
+rewrites. Alternatively you can navigate to `http://<swiftlet>?q=foo`.
 
 
 Routing
