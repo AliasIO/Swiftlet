@@ -174,7 +174,7 @@ Controllers get their data from models. Code for querying a database,
 reading/writing files and parsing data all belongs in a model. You can create as
 many models as you like; they aren't tied to specific controllers.
 
-A model can instantiated using `$this->app->getModel($modelName)`. To allow 
+A model can be instantiated using `$this->app->getModel($modelName)`. To allow 
 re-use, use `$this->app->getSingleton($modelName)` instead as this will only
 create a single instance when called multiple times (useful for database 
 connections and session management).
