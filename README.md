@@ -297,3 +297,11 @@ Default action
 
 * `notImplemented()`  
 Fallback action in case the called action doesn't exist
+
+
+User contributed packages
+-------------------------
+
+Community created plugins, controllers and models are available at 
+[github.com/ElbertF/Swiftlet-Packages](https://github.com/ElbertF/Swiftlet-Packages).
+Feel free to submit your own.
