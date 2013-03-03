@@ -26,7 +26,7 @@ class App implements Interfaces\App
 			$this->rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
 
 			if ( !empty($_GET['q']) ) {
-				$this->rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $this->rootPath);
+				$this->rootPath = preg_replace('/' . preg_quote(rawurlencode($_GET['q']), '/') . '$/', '', $this->rootPath);
 			}
 		}
 
@@ -126,7 +126,7 @@ class App implements Interfaces\App
 	/**
 	 * Set a configuration value
 	 * @param string $variable
-	 * @param mixed $value
+	 * @param mixed
 	 */
 	public function setConfig($variable, $value)
 	{
