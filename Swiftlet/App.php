@@ -24,10 +24,17 @@ class App implements Interfaces\App
 		// Determine the client-side path to root
 		if ( !empty($_SERVER['REQUEST_URI']) ) {
 			$this->rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', $_SERVER['REQUEST_URI']);
+		}
 
-			if ( !empty($_GET['q']) ) {
-				$this->rootPath = preg_replace('/' . preg_quote(rawurlencode($_GET['q']), '/') . '$/', '', $this->rootPath);
-			}
+		// Run from command line, e.g. "php index.php -q index"
+		$opt = getopt('q:');
+
+		if ( isset($opt['q']) ) {
+			$_GET['q'] = $opt['q'];
+		}
+
+		if ( !empty($_GET['q']) ) {
+			$this->rootPath = preg_replace('/' . preg_quote(rawurlencode($_GET['q']), '/') . '$/', '', $this->rootPath);
 		}
 
 		// Extract controller name, view name, action name and arguments from URL
