@@ -5,14 +5,15 @@ namespace Swiftlet;
 class App implements Interfaces\App
 {
 	protected
-		$action     = 'index',
-		$args       = array(),
-		$config     = array(),
+		$action         = 'index',
+		$args           = array(),
+		$config         = array(),
 		$controller,
-		$hooks      = array(),
-		$plugins    = array(),
-		$rootPath   = '/',
-		$singletons = array(),
+		$controllerName = 'index',
+		$hooks          = array(),
+		$plugins        = array(),
+		$rootPath       = '/',
+		$singletons     = array(),
 		$view
 		;
 
@@ -38,13 +39,11 @@ class App implements Interfaces\App
 		}
 
 		// Extract controller name, view name, action name and arguments from URL
-		$controllerName = 'Index';
-
 		if ( !empty($_GET['q']) ) {
 			$this->args = explode('/', $_GET['q']);
 
 			if ( $this->args ) {
-				$controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($this->args)))));
+				$this->controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($this->args)))));
 			}
 
 			if ( $action = $this->args ? array_shift($this->args) : '' ) {
@@ -52,20 +51,20 @@ class App implements Interfaces\App
 			}
 		}
 
-		if ( !is_file('Swiftlet/Controllers/' . $controllerName . '.php') ) {
-			$controllerName .= '/Index';
+		if ( !is_file('Swiftlet/Controllers/' . $this->controllerName . '.php') ) {
+			$this->controllerName .= '/Index';
 
-			if ( !is_file('Swiftlet/Controllers/' . $controllerName . '.php') ) {
-				$controllerName = 'Error404';
+			if ( !is_file('Swiftlet/Controllers/' . $this->controllerName . '.php') ) {
+				$this->controllerName = 'Error404';
 			}
 		}
 
-		$this->view = new View($this, strtolower($controllerName));
+		$this->view = new View($this, strtolower($this->controllerName));
 
 		// Instantiate the controller
-		$controllerName = 'Swiftlet\Controllers\\' . str_replace('/', '\\', $controllerName);
+		$controller = 'Swiftlet\Controllers\\' . str_replace('/', '\\', $this->controllerName);
 
-		$this->controller = new $controllerName($this, $this->view);
+		$this->controller = new $controller($this, $this->view);
 
 		// Load plugins
 		if ( $handle = opendir('Swiftlet/Plugins') ) {
@@ -147,6 +146,15 @@ class App implements Interfaces\App
 	public function getRootPath()
 	{
 		return $this->rootPath;
+	}
+
+	/**
+	 * Get the controller name
+	 * @return string
+	 */
+	public function getControllerName()
+	{
+		return $this->controllerName;
 	}
 
 	/**

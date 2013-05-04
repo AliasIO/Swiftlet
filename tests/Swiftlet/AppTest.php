@@ -35,6 +35,16 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @covers Swiftlet\App::getControllerName
+	 */
+	public function testGetControllerName()
+	{
+		$controllerName = $this->app->getControllerName();
+
+		$this->assertEquals($controllerName, 'Index');
+	}
+
+	/**
 	 * @covers Swiftlet\App::getAction
 	 */
 	public function testGetAction()
