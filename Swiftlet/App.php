@@ -9,7 +9,7 @@ class App implements Interfaces\App
 		$args           = array(),
 		$config         = array(),
 		$controller,
-		$controllerName = 'index',
+		$controllerName = 'Index',
 		$hooks          = array(),
 		$plugins        = array(),
 		$rootPath       = '/',
