@@ -235,7 +235,9 @@ class App implements Interfaces\App
 
 		$file = str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
 
-		require $file;
+		if ( file_exists($file) ) {
+			require $file;
+		}
 	}
 
 	/**
