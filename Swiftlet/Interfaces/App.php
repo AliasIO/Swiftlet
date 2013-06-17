@@ -14,6 +14,8 @@ interface App
 
 	public function getRootPath();
 
+	public function getControllerName();
+
 	public function getAction();
 
 	public function getArgs();

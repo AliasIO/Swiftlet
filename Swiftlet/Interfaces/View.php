@@ -8,7 +8,11 @@ interface View
 
 	public function get($variable, $htmlEncode = true);
 
+	public function __get($variable);
+
 	public function set($variable, $value = null);
+
+	public function __set($variable, $value = null);
 
 	public function htmlEncode($value);
 

@@ -55,7 +55,7 @@ class Foo extends \Swiftlet\Controller
 	public function index()
 	{
 		// Pass a variable to the view
-		$this->view->set('helloWorld', 'Hello world!');
+		$this->view->helloWorld = 'Hello world!';
 	}
 }
 ```
@@ -64,13 +64,13 @@ Important: class names are written in
 [CamelCase](http://en.wikipedia.org/wiki/CamelCase) and match their filename.
 
 
-**View `views/foo.html.php`**
+**View `views/foo.php`**
 
 ```php
-<h1><?php echo $this->get('pageTitle') ?></h1>
+<h1><?php echo $this->pageTitle ?></h1>
 
 <p>
-	<?php echo $this->get('helloWorld') ?>
+	<?php echo $this->helloWorld ?>
 </p>
 ```
 
@@ -125,7 +125,7 @@ The action name and arguments can be accessed through
 
 Note: to use a different view for each action you may change the value of 
 `$this->view->name`. The view name is a filename relative to the `view` 
-directory, without the `.html.php` suffix.
+directory, without the `.php` suffix.
 
 
 Models
@@ -165,7 +165,7 @@ class Foo extends \Swiftlet\Controller
 
 		$helloWorld = $exampleModel->getHelloWorld();
 
-		$this->view->set('helloWorld', $helloWorld);
+		$this->view->helloWorld = $helloWorld;
 	}
 }
 ```
@@ -200,7 +200,7 @@ class Foo extends \Swiftlet\Plugin
 	{
 		// Overwrite our previously set "helloWorld" variable
 		if ( get_class($this->controller) === 'Swiftlet\Controllers\Foo' ) {
-			$this->view->set('helloWorld', 'Hi world!');
+			$this->view->helloWorld = 'Hi world!';
 		}
 	}
 }
@@ -236,7 +236,7 @@ $this->app->setConfig('variable', 'value');
 $value = $this->app->getConfig('variable');
 ```
 
-Values can be set in `config.php` or a custom file.
+Values can be set in `config/main.php` or a custom file.
 
 
 --------------------------------------------------------------------------------
@@ -267,6 +267,9 @@ Create a new model instance
 
 * `object getSingleton(string $modelName)`  
 Create or return an existing model instance
+
+* `string getControllerName()`  
+Name of the controller
 
 * `string getRootPath()`  
 Absolute client-side path to the website root

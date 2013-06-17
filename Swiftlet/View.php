@@ -39,6 +39,18 @@ class View implements Interfaces\View
 				return $this->variables[$variable];
 			}
 		}
+
+		return null;
+	}
+
+	/**
+	 * Magic method to get a view variable, forwards to $this->get()
+	 * @param string $variable
+	 * @return mixed
+	 */
+	public function __get($variable)
+	{
+		return $this->get($variable);
 	}
 
 	/**
@@ -49,6 +61,16 @@ class View implements Interfaces\View
 	public function set($variable, $value = null)
 	{
 		$this->variables[$variable] = $value;
+	}
+
+	/**
+	 * Magic method to set a view variable, forwards to $this->set()
+	 * @param string $variable
+	 * @param mixed $value
+	 */
+	public function __set($variable, $value = null)
+	{
+		$this->set($variable, $value);
 	}
 
 	/**

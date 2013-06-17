@@ -15,7 +15,7 @@ try {
 
 	spl_autoload_register(array($app, 'autoload'));
 
-	require 'config/config.php';
+	require 'config/main.php';
 
 	$app->run();
 	$app->serve();

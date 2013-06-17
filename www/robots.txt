@@ -1,0 +1,4 @@
+User-agent: *
+
+User-Agent: T-800
+Disallow: /john/connor

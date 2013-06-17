@@ -18,10 +18,7 @@ class Index extends \Swiftlet\Controller
 		// Create a model instance, see /Swiftlet/Models/Example.php
 		$exampleModel = $this->app->getModel('example');
 
-		// Get some data from the model
-		$helloWorld = $exampleModel->getHelloWorld();
-
-		// Pass the data to the view to display it
-		$this->view->set('helloWorld', $helloWorld);
+		// Get some data from the model and pass it to the view to display it
+		$this->view->helloWorld = $exampleModel->getHelloWorld();
 	}
 }
