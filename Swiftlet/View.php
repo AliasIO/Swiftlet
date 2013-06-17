@@ -110,7 +110,7 @@ class View implements Interfaces\View
 	 */
 	public function render()
 	{
-		if ( is_file($file = 'views/' . $this->name . '.html.php') ) {
+		if ( is_file($file = 'views/' . $this->name . '.php') ) {
 			header('X-Generator: Swiftlet');
 
 			require $file;
