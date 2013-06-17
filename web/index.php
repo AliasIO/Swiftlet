@@ -3,7 +3,7 @@
 namespace Swiftlet;
 
 try {
-	chdir(dirname(__FILE__));
+	chdir(dirname(__FILE__) . '/..');
 
 	// Bootstrap the application
 	require 'Swiftlet/Interfaces/App.php';
