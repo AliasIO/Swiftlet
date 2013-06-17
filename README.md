@@ -67,10 +67,10 @@ Important: class names are written in
 **View `views/foo.php`**
 
 ```php
-<h1><?php echo $this->pageTitle ?></h1>
+<h1><?= $this->pageTitle ?></h1>
 
 <p>
-	<?php echo $this->helloWorld ?>
+	<?= $this->helloWorld ?>
 </p>
 ```
 

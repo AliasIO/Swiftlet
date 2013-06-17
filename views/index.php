@@ -1,9 +1,9 @@
 <?php require 'header.php' ?>
 
-<h1><?php echo $this->pageTitle ?></h1>
+<h1><?= $this->pageTitle ?></h1>
 
 <p>
-	<?php echo $this->helloWorld ?>
+	<?= $this->helloWorld ?>
 </p>
 
 <?php require 'footer.php' ?>
