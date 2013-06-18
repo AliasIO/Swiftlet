@@ -114,7 +114,9 @@ class App implements Interfaces\App
 	 */
 	public function serve()
 	{
+		ob_start();
 		$this->view->render();
+		ob_end_flush();
 	}
 
 	/**
