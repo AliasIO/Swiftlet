@@ -15,7 +15,7 @@ class View implements Interfaces\View
 
 	/**
 	 * Constructor
-	 * @param object $app
+	 * @param Interfaces\App $app
 	 * @param string $name
 	 */
 	public function __construct(Interfaces\App $app, $name)
@@ -26,11 +26,11 @@ class View implements Interfaces\View
 
 	/**
 	 * Get a view variable
-	 * @params string $variable
-	 * @params bool $htmlEncode
-	 * @return mixed
+	 * @param string $variable
+	 * @param bool $htmlEncode
+	 * @return mixed|null
 	 */
-	public function get($variable, $htmlEncode = true)
+    public function get($variable, $htmlEncode = true)
 	{
 		if ( isset($this->variables[$variable]) ) {
 			if ( $htmlEncode ) {
@@ -129,6 +129,8 @@ class View implements Interfaces\View
 
 	/**
 	 * Render the view
+	 *
+	 * @throws \Exception
 	 */
 	public function render()
 	{
