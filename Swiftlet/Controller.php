@@ -12,8 +12,8 @@ abstract class Controller implements Interfaces\Controller
 
 	/**
 	 * Constructor
-	 * @param object $app
-	 * @param object $view
+	 * @param Interfaces\App $app
+	 * @param Interfaces\View $view
 	 */
 	public function __construct(Interfaces\App $app, Interfaces\View $view)
 	{
@@ -32,6 +32,8 @@ abstract class Controller implements Interfaces\Controller
 
 	/**
 	 * Fallback in case action doesn't exist
+	 *
+	 * @throws \Exception
 	 */
 	public function notImplemented()
 	{
