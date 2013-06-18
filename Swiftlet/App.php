@@ -120,13 +120,14 @@ class App implements Interfaces\App
 	/**
 	 * Get a configuration value
 	 * @param string $variable
-	 * @return mixed
+	 * @return mixed|null
 	 */
 	public function getConfig($variable)
 	{
 		if ( isset($this->config[$variable]) ) {
 			return $this->config[$variable];
 		}
+        return null;
 	}
 
 	/**
