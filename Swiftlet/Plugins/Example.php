@@ -9,7 +9,7 @@ class Example extends \Swiftlet\Plugin
 	 */
 	public function actionAfter()
 	{
-		if ( get_class($this->controller) === 'Swiftlet\Controllers\Index' ) {
+		if ( $this->app->getControllerName() === 'Index' ) {
 			$this->view->helloWorld .= ' This string was altered by ' . __CLASS__ . '.';
 		}
 	}

@@ -115,7 +115,9 @@ class App implements Interfaces\App
 	public function serve()
 	{
 		ob_start();
+
 		$this->view->render();
+
 		ob_end_flush();
 	}
 
@@ -129,7 +131,8 @@ class App implements Interfaces\App
 		if ( isset($this->config[$variable]) ) {
 			return $this->config[$variable];
 		}
-        return null;
+
+		return null;
 	}
 
 	/**

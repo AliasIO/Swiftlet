@@ -30,7 +30,7 @@ class View implements Interfaces\View
 	 * @param bool $htmlEncode
 	 * @return mixed|null
 	 */
-    public function get($variable, $htmlEncode = true)
+	public function get($variable, $htmlEncode = true)
 	{
 		if ( isset($this->variables[$variable]) ) {
 			if ( $htmlEncode ) {

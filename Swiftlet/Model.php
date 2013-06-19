@@ -10,7 +10,7 @@ abstract class Model implements Interfaces\Model
 
 	/**
 	 * Constructor
-	 * @param object $app
+	 * @param Interfaces\App $app
 	 */
 	public function __construct(Interfaces\App $app)
 	{

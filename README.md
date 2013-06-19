@@ -163,9 +163,7 @@ class Foo extends \Swiftlet\Controller
 		// Get an instance of the Example class (Swiftlet/Models/Example.php)
 		$exampleModel = $this->app->getModel('example');
 
-		$helloWorld = $exampleModel->getHelloWorld();
-
-		$this->view->helloWorld = $helloWorld;
+		$this->view->helloWorld = $exampleModel->getHelloWorld();
 	}
 }
 ```
