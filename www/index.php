@@ -19,7 +19,7 @@ try {
 
 	$app->run();
 	$app->serve();
-} catch ( \Exception $e ) {
+} catch ( Exception $e ) {
 	if ( !headers_sent() ) {
 		header('HTTP/1.1 503 Service Temporarily Unavailable');
 		header('Status: 503 Service Temporarily Unavailable');

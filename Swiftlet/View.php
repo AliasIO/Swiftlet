@@ -130,7 +130,7 @@ class View implements Interfaces\View
 	/**
 	 * Render the view
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function render()
 	{
@@ -139,7 +139,7 @@ class View implements Interfaces\View
 
 			require $file;
 		} else {
-			throw new \Exception('View not found');
+			throw new Exception('View not found');
 		}
 	}
 }

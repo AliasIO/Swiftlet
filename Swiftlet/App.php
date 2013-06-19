@@ -252,11 +252,11 @@ class App implements Interfaces\App
 	 * @param string $string
 	 * @param string $file
 	 * @param int $line
-     *
-     * @throws \Exception
+	 *
+	 * @throws Exception
 	 */
 	public function error($number, $string, $file, $line)
 	{
-		throw new \Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
+		throw new Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
 	}
 }

@@ -55,16 +55,25 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Swiftlet\App::setConfig
 	 * @covers Swiftlet\App::getConfig
 	 */
-	public function testConfig()
+	public function testGetConfig()
+	{
+		$test = $this->app->getConfig('test');
+
+		$this->assertNull($test, 'test');
+	}
+
+	/**
+	 * @covers Swiftlet\App::setConfig
+	 */
+	public function testSetConfig()
 	{
 		$this->app->setConfig('test', 'test');
 
 		$test = $this->app->getConfig('test');
 
-		$this->assertEquals('test', $test);
+		$this->assertEquals($test, 'test');
 	}
 
 	/**

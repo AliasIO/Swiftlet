@@ -34,7 +34,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	{
 		$test = $this->view->get('test');
 
-		$this->assertEmpty($test);
+		$this->assertNull($test);
 	}
 
 	/**
