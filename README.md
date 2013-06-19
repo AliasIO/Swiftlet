@@ -84,6 +84,9 @@ browser!
 If you're running Apache and see "404 Not Found" you will need to enable
 rewrites. Alternatively you can navigate to `http://<swiftlet>?q=foo`.
 
+*Swiftlet can be invoked from the command line (e.g. to run cron jobs). Simply
+run `php index.php -q foo`.*
+
 
 Routing
 -------
@@ -123,8 +126,8 @@ will throw an exception by default but can be overridden.
 The action name and arguments can be accessed through 
 `$this->app->getAction()` and `$this->app->getArgs()` respectively.
 
-Note: to use a different view for each action you may change the value of 
-`$this->view->name`. The view name is a filename relative to the `view` 
+To use a different view for a specific action you may change the value of 
+`$this->view->name`. The view name is a filename relative to the `views` 
 directory, without the `.php` suffix.
 
 
@@ -197,7 +200,7 @@ class Foo extends \Swiftlet\Plugin
 	public function actionAfter()
 	{
 		// Overwrite our previously set "helloWorld" variable
-		if ( get_class($this->controller) === 'Swiftlet\Controllers\Foo' ) {
+		if ( $this->app->getControllerName() === 'Index' ) {
 			$this->view->helloWorld = 'Hi world!';
 		}
 	}
@@ -283,6 +286,16 @@ Get a view variable, encoded for safe use in HTML by default
 
 * `set(string $variable [, mixed $value ])`  
 Set a view variable
+
+* `__set(string $variable [, mixed $value ])`  
+Magic method to set a view variable
+
+* `get(string $variable [, bool $htmlEncode ])`  
+Get a view variable, pass `false` as the second parameter to prevent values from
+being HTML encoded.
+
+* `__get(string $variable)`  
+Magic method to get a view variable
 
 * `htmlEncode(mixed $value)`  
 Recursively make a value safe for HTML

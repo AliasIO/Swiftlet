@@ -17,6 +17,8 @@ try {
 
 	require 'config/main.php';
 
+	date_default_timezone_set('UTC');
+
 	$app->run();
 	$app->serve();
 } catch ( Exception $e ) {
