@@ -2,6 +2,9 @@
 
 namespace Swiftlet\Plugins;
 
+/**
+ * Example plugin
+ */
 class Example extends \Swiftlet\Plugin
 {
 	/**

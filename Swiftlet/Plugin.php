@@ -2,6 +2,14 @@
 
 namespace Swiftlet;
 
+/**
+ * Plugin class
+ *
+ * @abstract
+ * @property Interfaces\App $app
+ * @property Interfaces\Controller $controller
+ * @property Interfaces\View $view
+ */
 abstract class Plugin implements Interfaces\Plugin
 {
 	protected

@@ -2,6 +2,9 @@
 
 namespace Swiftlet\Interfaces;
 
+/**
+ * Application interface
+ */
 interface App
 {
 	public function run();

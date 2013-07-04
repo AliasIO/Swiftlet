@@ -2,6 +2,11 @@
 
 namespace Swiftlet\Controllers;
 
+/**
+ * Index controller
+ *
+ * @property $title
+ */
 class Index extends \Swiftlet\Controller
 {
 	protected

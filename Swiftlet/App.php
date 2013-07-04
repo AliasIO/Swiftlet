@@ -2,6 +2,20 @@
 
 namespace Swiftlet;
 
+/**
+ * Application class
+ *
+ * @property string $action
+ * @property array $args
+ * @property array $config
+ * @property Interfaces\Controller $controller
+ * @property string $controllerName
+ * @property array $hooks
+ * @property array $plugins
+ * @property string $rootPath
+ * @property array $singletons
+ * @property Interfaces\View $view
+ */
 class App implements Interfaces\App
 {
 	protected

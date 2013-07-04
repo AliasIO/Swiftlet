@@ -2,6 +2,13 @@
 
 namespace Swiftlet;
 
+/**
+ * View class
+ *
+ * @property Interfaces\App $app
+ * @property array $variables
+ * @name array $name
+ */
 class View implements Interfaces\View
 {
 	protected

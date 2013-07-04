@@ -2,6 +2,9 @@
 
 namespace Swiftlet\Interfaces;
 
+/**
+ * View interface
+ */
 interface View
 {
 	public function __construct(App $app, $name);

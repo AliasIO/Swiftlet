@@ -2,6 +2,11 @@
 
 namespace Swiftlet\Controllers;
 
+/**
+ * Error 404 controller
+ *
+ * @property $title
+ */
 class Error404 extends \Swiftlet\Controller
 {
 	protected

@@ -2,6 +2,14 @@
 
 namespace Swiftlet;
 
+/**
+ * Controller class
+ *
+ * @abstract
+ * @property Interfaces\App $app
+ * @property Interfaces\View $view
+ * @property string $title
+ */
 abstract class Controller implements Interfaces\Controller
 {
 	protected
@@ -12,6 +20,7 @@ abstract class Controller implements Interfaces\Controller
 
 	/**
 	 * Constructor
+	 *
 	 * @param Interfaces\App $app
 	 * @param Interfaces\View $view
 	 */
