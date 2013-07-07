@@ -85,7 +85,7 @@ If you're running Apache and see "404 Not Found" you will need to enable
 rewrites. Alternatively you can navigate to `http://<swiftlet>?q=foo`.
 
 *Swiftlet can be invoked from the command line (e.g. to run cron jobs). Simply
-run `php index.php -q foo`.*
+run `php public/index.php -q foo`.*
 
 
 Routing

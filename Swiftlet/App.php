@@ -54,7 +54,7 @@ class App implements Interfaces\App
 
 		// Extract controller name, view name, action name and arguments from URL
 		if ( !empty($_GET['q']) ) {
-			$this->args = explode('/', $_GET['q']);
+			$this->args = explode('/', preg_replace('/^public\//', '', $_GET['q']));
 
 			if ( $this->args ) {
 				$this->controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($this->args)))));

@@ -11,5 +11,5 @@ Options All -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 
-	RewriteRule (.*) ?q=$1&%1 [L,QSA]
+	RewriteRule (.*) public/?q=$1&%1 [L,QSA]
 </IfModule>
