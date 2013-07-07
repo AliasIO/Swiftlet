@@ -4,21 +4,26 @@ namespace Swiftlet;
 
 /**
  * View class
- *
- * @property Interfaces\App $app
- * @property array $variables
- * @name array $name
  */
 class View implements Interfaces\View
 {
-	protected
-		$app,
-		$variables = array()
-		;
+	/**
+	 * Application instance
+	 * @var Interfaces\App
+	 */
+	protected $app;
 
-	public
-		$name
-		;
+	/**
+	 * View variables
+	 * @var array
+	 */
+	protected $variables = array();
+
+	/**
+	 * View name
+	 * @var string
+	 */
+	public $name;
 
 	/**
 	 * Constructor
@@ -136,7 +141,6 @@ class View implements Interfaces\View
 
 	/**
 	 * Render the view
-	 *
 	 * @throws Exception
 	 */
 	public function render()

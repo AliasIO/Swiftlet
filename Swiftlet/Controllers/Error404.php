@@ -4,14 +4,14 @@ namespace Swiftlet\Controllers;
 
 /**
  * Error 404 controller
- *
- * @property $title
  */
 class Error404 extends \Swiftlet\Controller
 {
-	protected
-		$title = 'Error 404'
-		;
+	/**
+	 * Page title
+	 * @var string
+	 */
+	protected $title = 'Error 404';
 
 	/**
 	 * Default action

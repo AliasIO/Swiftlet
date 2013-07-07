@@ -4,32 +4,68 @@ namespace Swiftlet;
 
 /**
  * Application class
- *
- * @property string $action
- * @property array $args
- * @property array $config
- * @property Interfaces\Controller $controller
- * @property string $controllerName
- * @property array $hooks
- * @property array $plugins
- * @property string $rootPath
- * @property array $singletons
- * @property Interfaces\View $view
  */
 class App implements Interfaces\App
 {
-	protected
-		$action         = 'index',
-		$args           = array(),
-		$config         = array(),
-		$controller,
-		$controllerName = 'Index',
-		$hooks          = array(),
-		$plugins        = array(),
-		$rootPath       = '/',
-		$singletons     = array(),
-		$view
-		;
+	/**
+	 * Action name
+	 * @var string
+	 */
+	protected $action = 'index';
+
+	/**
+	 * Arguments
+	 * @var array
+	 */
+	protected $args = array();
+
+	/**
+	 * Configuration values
+	 * @var array
+	 */
+	protected $config = array();
+
+	/**
+	 * Controller intance
+	 * @var Interfaces/Controller
+	 */
+	protected $controller;
+
+	/**
+	 * Controller name
+	 * @var string
+	 */
+	protected $controllerName = 'Index';
+
+	/**
+	 * Hooks
+	 * @var array
+	 */
+	protected $hooks = array();
+
+	/**
+	 * Plugins
+	 * @var array
+	 */
+	protected $plugins = array();
+
+	/**
+	 * Root path
+	 * @var string
+	 */
+	protected $rootPath = '/';
+
+	/**
+	 * Re-usable model instances
+	 * @var array
+	 */
+	protected $singletons = array();
+
+	/**
+	 * View instance
+	 * @var Interfaces/View
+	 */
+	protected $view;
 
 	/**
 	 * Run the application
@@ -266,7 +302,6 @@ class App implements Interfaces\App
 	 * @param string $string
 	 * @param string $file
 	 * @param int $line
-	 *
 	 * @throws Exception
 	 */
 	public function error($number, $string, $file, $line)

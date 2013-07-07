@@ -4,7 +4,6 @@ namespace Swiftlet;
 
 /**
  * Controller class
- *
  * @abstract
  * @property Interfaces\App $app
  * @property Interfaces\View $view
@@ -12,15 +11,26 @@ namespace Swiftlet;
  */
 abstract class Controller implements Interfaces\Controller
 {
-	protected
-		$app,
-		$view,
-		$title
-		;
+	/**
+	 * Application instance
+	 * @var Interfaces\App
+	 */
+	protected $app;
+
+	/**
+	 * View instance
+	 * @var Interfaces\View
+	 */
+	protected $view;
+
+	/**
+	 * Page title
+	 * @var string
+	 */
+	protected $title;
 
 	/**
 	 * Constructor
-	 *
 	 * @param Interfaces\App $app
 	 * @param Interfaces\View $view
 	 */
@@ -41,7 +51,6 @@ abstract class Controller implements Interfaces\Controller
 
 	/**
 	 * Fallback in case action doesn't exist
-	 *
 	 * @throws Exception
 	 */
 	public function notImplemented()

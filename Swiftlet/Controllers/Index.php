@@ -4,14 +4,14 @@ namespace Swiftlet\Controllers;
 
 /**
  * Index controller
- *
- * @property $title
  */
 class Index extends \Swiftlet\Controller
 {
-	protected
-		$title = 'Home'
-		;
+	/**
+	 * Page title
+	 * @var string
+	 */
+	protected $title = 'Home';
 
 	/**
 	 * Default action
