@@ -27,5 +27,9 @@ try {
 		header('Status: 503 Service Temporarily Unavailable');
 	}
 
-	exit('Swiftlet Exception: ' . $e->getMessage());
+	$errorCode = substr(sha1(uniqid(mt_rand(), true)), 0, 5);
+
+	file_put_contents('log/exceptions.log', $errorCode . date(' r ') . $e->getMessage() . "\n", FILE_APPEND);
+
+	exit('Exception: ' . $errorCode . '<br><br><small>The issue has been logged. Please contact the website administrator.</small>');
 }
