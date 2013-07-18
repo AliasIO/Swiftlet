@@ -148,10 +148,18 @@ class App implements Interfaces\App
 			if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() ) {
 				$this->controller->{$this->action}();
 			} else {
-				$this->controller->notImplemented();
+				$this->controller = new Controllers\Error404($this, $this->view);
+
+				$this->view->name = 'error404';
+
+				$this->controller->index();
 			}
 		} else {
-			$this->controller->notImplemented();
+			$this->controller = new Controllers\Error404($this, $this->view);
+
+			$this->view->name = 'error404';
+
+			$this->controller->index();
 		}
 
 		$this->registerHook('actionAfter');

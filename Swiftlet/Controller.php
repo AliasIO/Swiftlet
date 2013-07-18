@@ -48,13 +48,4 @@ abstract class Controller implements Interfaces\Controller
 	public function index()
 	{
 	}
-
-	/**
-	 * Fallback in case action doesn't exist
-	 * @throws Exception
-	 */
-	public function notImplemented()
-	{
-		throw new Exception('Action ' . $this->view->htmlEncode($this->app->getAction()) . ' not implemented in ' . get_called_class());
-	}
 }

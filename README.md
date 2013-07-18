@@ -120,9 +120,6 @@ Actions are methods of the controller. A common example might be `edit` or
 This will call the function `edit()` on `Blog` with `1` as the argument (the 
 id of the blog post to edit).
 
-If the action doesn't exist `notImplemented()` will be called instead.  This 
-will throw an exception by default but can be overridden.
-
 The action name and arguments can be accessed through 
 `$this->app->getAction()` and `$this->app->getArgs()` respectively.
 
@@ -308,9 +305,6 @@ Recursively decode a previously encoded value to be rendered as HTML
 
 * `index()`  
 Default action
-
-* `notImplemented()`  
-Fallback action in case the called action doesn't exist
 
 
 User contributed packages

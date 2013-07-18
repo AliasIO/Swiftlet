@@ -18,10 +18,4 @@ interface Controller
 	 * Default action
 	 */
 	public function index();
-
-	/**
-	 * Fallback in case action doesn't exist
-	 * @throws Exception
-	 */
-	public function notImplemented();
 }
