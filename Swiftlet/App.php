@@ -8,6 +8,12 @@ namespace Swiftlet;
 class App implements Interfaces\App
 {
 	/**
+	 * Namespace
+	 * @var string
+	 */
+	public $namespace = 'Swiftlet';
+
+	/**
 	 * Action name
 	 * @var string
 	 */
@@ -69,6 +75,7 @@ class App implements Interfaces\App
 
 	/**
 	 * Run the application
+	 * @
 	 */
 	public function run()
 	{
@@ -101,10 +108,10 @@ class App implements Interfaces\App
 			}
 		}
 
-		if ( !is_file('Swiftlet/Controllers/' . $this->controllerName . '.php') ) {
+		if ( !is_file($this->namespace . '/Controllers/' . $this->controllerName . '.php') ) {
 			$this->controllerName .= '/Index';
 
-			if ( !is_file('Swiftlet/Controllers/' . $this->controllerName . '.php') ) {
+			if ( !is_file($this->namespace . '/Controllers/' . $this->controllerName . '.php') ) {
 				$this->controllerName = 'Error404';
 			}
 		}
@@ -112,15 +119,15 @@ class App implements Interfaces\App
 		$this->view = new View($this, strtolower($this->controllerName));
 
 		// Instantiate the controller
-		$controller = 'Swiftlet\Controllers\\' . str_replace('/', '\\', $this->controllerName);
+		$controller = $this->namespace . '\Controllers\\' . str_replace('/', '\\', $this->controllerName);
 
 		$this->controller = new $controller($this, $this->view);
 
 		// Load plugins
-		if ( $handle = opendir('Swiftlet/Plugins') ) {
+		if ( $handle = opendir($this->namespace . '/Plugins') ) {
 			while ( ( $file = readdir($handle) ) !== FALSE ) {
-				if ( is_file('Swiftlet/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
-					$pluginName = 'Swiftlet\Plugins\\' . $match[1];
+				if ( is_file($this->namespace . '/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
+					$pluginName = $this->namespace . '\Plugins\\' . $match[1];
 
 					$this->plugins[$pluginName] = array();
 
@@ -246,7 +253,7 @@ class App implements Interfaces\App
 	 */
 	public function getModel($modelName)
 	{
-		$modelName = 'Swiftlet\Models\\' . ucfirst($modelName);
+		$modelName = $this->namespace . '\Models\\' . ucfirst($modelName);
 
 		// Instantiate the model
 		return new $modelName($this);
@@ -290,7 +297,7 @@ class App implements Interfaces\App
 
 	/**
 	 * Class autoloader
-	 * @param $className
+	 * @param string $className
 	 * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
 	 */
 	public function autoload($className)
