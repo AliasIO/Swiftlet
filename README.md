@@ -220,6 +220,23 @@ Called before each action
 Called after each action
 
 
+Libraries
+---------
+
+Reusable components such as code to send an email or generate a thumbnail image
+should go in a separate library class. A library can be instantiated using
+`$this->app->getLibrary($libraryName)`.
+
+```php
+<?php
+$email = $this->app->getLibrary('email');
+
+$email->send($to, $subject, $message);
+```
+
+--------------------------------------------------------------------------------
+
+
 Configuration
 -------------
 
@@ -265,6 +282,9 @@ Create a new model instance
 
 * `object getSingleton(string $modelName)`  
 Create or return an existing model instance
+
+* `object getLibrary(string $libraryName)`  
+Create a new library instance
 
 * `string getControllerName()`  
 Name of the controller

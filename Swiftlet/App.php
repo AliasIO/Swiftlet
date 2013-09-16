@@ -278,6 +278,19 @@ class App implements Interfaces\App
 	}
 
 	/**
+	 * Get a library
+	 * @param string $libraryName
+	 * @return object
+	 */
+	public function getLibrary($libraryName)
+	{
+		$libraryName = $this->namespace . '\Libraries\\' . ucfirst($libraryName);
+
+		// Instantiate the library
+		return new $libraryName($this);
+	}
+
+	/**
 	 * Register a hook for plugins to implement
 	 * @param string $hookName
 	 * @param array $params
