@@ -171,7 +171,7 @@ class Foo extends \Swiftlet\Controller
 A model typically represents data. This can be an entry in a database or an
 object such as a user.
 
-```
+```php
 <?php
 $user = $this->app->getModel('user');
 
