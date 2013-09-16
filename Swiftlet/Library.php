@@ -3,11 +3,11 @@
 namespace Swiftlet;
 
 /**
- * Model class
+ * Library class
  * @abstract
- * @property Interfaces\Model $app
+ * @property Interfaces\Library $app
  */
-abstract class Model implements Interfaces\Model
+abstract class Library implements Interfaces\Library
 {
 	/**
 	 * Application instance

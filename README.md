@@ -168,9 +168,20 @@ class Foo extends \Swiftlet\Controller
 }
 ```
 
-Controllers get their data from models. Code for querying a database,
-reading/writing files and parsing data all belongs in a model. You can create as
-many models as you like; they aren't tied to specific controllers.
+A model typically represents data. This can be an entry in a database or an
+object such as a user.
+
+```
+<?php
+$user = $this->app->getModel('user');
+
+$user->setEmail('example@example.com');
+
+$user->save();
+```
+
+Loading and saving data should almost always happen in a model. You can create 
+as many models as you like; they aren't tied to specific controllers or views.
 
 A model can be instantiated using `$this->app->getModel($modelName)`. To allow 
 re-use, use `$this->app->getSingleton($modelName)` instead as this will only
