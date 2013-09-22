@@ -7,7 +7,7 @@ namespace Swiftlet;
  * @abstract
  * @property Interfaces\Model $app
  */
-abstract class Model implements Interfaces\Model
+abstract class Model extends SwiftletObject implements Interfaces\Model
 {
 	/**
 	 * Application instance

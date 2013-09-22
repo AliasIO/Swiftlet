@@ -285,8 +285,8 @@ Set a configuration value
 * `string getAction()`  
 Name of the action
 
-* `array getArgs()`  
-List of arguments passed in the URL
+* `array getArgs([ integer $index ])`  
+List of arguments passed in the URL, or a specific argument if `$index` is specified
 
 * `object getModel(string $modelName)`  
 Create a new model instance

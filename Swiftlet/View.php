@@ -5,7 +5,7 @@ namespace Swiftlet;
 /**
  * View class
  */
-class View implements Interfaces\View
+class View extends SwiftletObject implements Interfaces\View
 {
 	/**
 	 * Application instance

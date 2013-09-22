@@ -2,10 +2,12 @@
 
 namespace Swiftlet\Interfaces;
 
+require('Swiftlet/Interfaces/SwiftletObject.php');
+
 /**
  * Application interface
  */
-interface App
+interface App extends SwiftletObject
 {
 	/**
 	 * Run the application
@@ -51,9 +53,10 @@ interface App
 
 	/**
 	 * Get the arguments
-	 * @return array
+	 * @param integer $index
+	 * @return mixed
 	 */
-	public function getArgs();
+	public function getArgs($index);
 
 	/**
 	 * Get a model

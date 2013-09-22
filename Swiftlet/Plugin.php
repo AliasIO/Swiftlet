@@ -9,7 +9,7 @@ namespace Swiftlet;
  * @property Interfaces\Controller $controller
  * @property Interfaces\View $view
  */
-abstract class Plugin implements Interfaces\Plugin
+abstract class Plugin extends SwiftletObject implements Interfaces\Plugin
 {
 	/**
 	 * Application instance

@@ -9,7 +9,7 @@ namespace Swiftlet;
  * @property Interfaces\View $view
  * @property string $title
  */
-abstract class Controller implements Interfaces\Controller
+abstract class Controller extends SwiftletObject implements Interfaces\Controller
 {
 	/**
 	 * Application instance

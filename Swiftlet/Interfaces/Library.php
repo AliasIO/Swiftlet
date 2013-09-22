@@ -5,7 +5,7 @@ namespace Swiftlet\Interfaces;
 /**
  * Library interface
  */
-interface Library
+interface Library extends SwiftletObject
 {
 	/**
 	 * Constructor

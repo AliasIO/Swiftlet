@@ -5,7 +5,7 @@ namespace Swiftlet\Interfaces;
 /**
  * Controller interface
  */
-interface Controller
+interface Controller extends SwiftletObject
 {
 	/**
 	 * Constructor

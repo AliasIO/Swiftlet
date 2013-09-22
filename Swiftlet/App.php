@@ -2,10 +2,12 @@
 
 namespace Swiftlet;
 
+require('Swiftlet/SwiftletObject.php');
+
 /**
  * Application class
  */
-class App implements Interfaces\App
+class App extends SwiftletObject implements Interfaces\App
 {
 	/**
 	 * Namespace
@@ -239,10 +241,15 @@ class App implements Interfaces\App
 
 	/**
 	 * Get the arguments
-	 * @return array
+	 * @param integer $index
+	 * @return mixed
 	 */
-	public function getArgs()
+	public function getArgs($index = null)
 	{
+		if ( $index ) {
+			return isset($this->args[$index]) ? $this->args[$index] : null;
+		}
+
 		return $this->args;
 	}
 
