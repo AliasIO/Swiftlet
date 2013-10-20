@@ -3,13 +3,17 @@
 namespace Swiftlet;
 
 /**
- * SwiftletObject class
+ * Common class
  * @abstract
  */
-abstract class SwiftletObject implements Interfaces\SwiftletObject
+abstract class Common implements Interfaces\Common
 {
 	/**
+	 * TODO
 	 *
+	 * @param string $property
+	 * @param mixed $arguments
+	 * @throws Exception
 	 */
 	public function __call($property, $arguments)
 	{
@@ -33,6 +37,6 @@ abstract class SwiftletObject implements Interfaces\SwiftletObject
 			}
 		}
 
-		throw new \Swiftlet\Exception('Not implemented: ' . get_called_class() . '::' . $property);
+		throw new Exception('Not implemented: ' . get_called_class() . '::' . $property);
 	}
 }

@@ -5,7 +5,7 @@ namespace Swiftlet\Interfaces;
 /**
  * Model interface
  */
-interface Model extends SwiftletObject
+interface Model extends Common
 {
 	/**
 	 * Constructor

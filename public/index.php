@@ -21,7 +21,7 @@ try {
 
 	$app->run();
 	$app->serve();
-} catch ( Exception $e ) {
+} catch ( \Exception $e ) {
 	if ( !headers_sent() ) {
 		header('HTTP/1.1 503 Service Temporarily Unavailable');
 		header('Status: 503 Service Temporarily Unavailable');
@@ -29,7 +29,7 @@ try {
 
 	$errorCode = substr(sha1(uniqid(mt_rand(), true)), 0, 5);
 
-	file_put_contents('log/exceptions.log', $errorCode . date(' r ') . $e->getMessage() . "\n", FILE_APPEND);
+	file_put_contents('log/exceptions.log', $errorCode . date(' r ') . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine() . "\n", FILE_APPEND);
 
 	exit('Exception: ' . $errorCode . '<br><br><small>The issue has been logged. Please contact the website administrator.</small>');
 }

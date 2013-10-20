@@ -2,18 +2,18 @@
 
 namespace Swiftlet;
 
-require('Swiftlet/SwiftletObject.php');
+require 'Swiftlet/Common.php';
 
 /**
  * Application class
  */
-class App extends SwiftletObject implements Interfaces\App
+class App extends Common implements Interfaces\App
 {
 	/**
 	 * Namespace
 	 * @var string
 	 */
-	public $namespace = 'Swiftlet';
+	protected $namespace;
 
 	/**
 	 * Action name
@@ -76,8 +76,18 @@ class App extends SwiftletObject implements Interfaces\App
 	protected $view;
 
 	/**
+	 * Constructor
+	 * @param string $namespace
+	 */
+	public function __construct($namespace = 'Swiftlet')
+	{
+		$this->namespace = $namespace;
+	}
+
+	/**
 	 * Run the application
-	 * @
+	 * @param string $namesapce
+	 * @return array
 	 */
 	public function run()
 	{
@@ -246,7 +256,7 @@ class App extends SwiftletObject implements Interfaces\App
 	 */
 	public function getArgs($index = null)
 	{
-		if ( $index ) {
+		if ( $index !== null ) {
 			return isset($this->args[$index]) ? $this->args[$index] : null;
 		}
 
@@ -327,7 +337,7 @@ class App extends SwiftletObject implements Interfaces\App
 		$file = str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
 
 		if ( file_exists($file) ) {
-			require $file;
+			include $file;
 		}
 	}
 
@@ -337,10 +347,10 @@ class App extends SwiftletObject implements Interfaces\App
 	 * @param string $string
 	 * @param string $file
 	 * @param int $line
-	 * @throws Exception
+	 * @throws \ErrorException
 	 */
 	public function error($number, $string, $file, $line)
 	{
-		throw new Exception('Error #' . $number . ': ' . $string . ' in ' . $file . ' on line ' . $line);
+		throw new \ErrorException($string, 0, $number, $file, $line);
 	}
 }

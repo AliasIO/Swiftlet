@@ -1,4 +1,4 @@
-<?php require('header.php') ?>
+<?php include 'header.php' ?>
 
 <h1><?= $this->pageTitle ?></h1>
 
@@ -6,4 +6,4 @@
 	Page not found.
 </p>
 
-<?php require('footer.php') ?>
+<?php include 'footer.php' ?>

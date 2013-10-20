@@ -5,7 +5,7 @@ namespace Swiftlet;
 /**
  * View class
  */
-class View extends SwiftletObject implements Interfaces\View
+class View extends Common implements Interfaces\View
 {
 	/**
 	 * Application instance
@@ -105,7 +105,7 @@ class View extends SwiftletObject implements Interfaces\View
 				}
 
 				break;
-			default:
+			case 'string':
 				$value = htmlentities($value, ENT_QUOTES, 'UTF-8');
 		}
 
@@ -148,7 +148,7 @@ class View extends SwiftletObject implements Interfaces\View
 		if ( is_file($file = 'views/' . $this->name . '.php') ) {
 			header('X-Generator: Swiftlet');
 
-			require $file;
+			include $file;
 		} else {
 			throw new Exception('View not found');
 		}

@@ -5,7 +5,7 @@ namespace Swiftlet\Interfaces;
 /**
  * Plugin interface
  */
-interface Plugin extends SwiftletObject
+interface Plugin extends Common
 {
 	/**
 	 * Constructor

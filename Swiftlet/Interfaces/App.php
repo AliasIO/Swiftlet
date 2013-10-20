@@ -2,13 +2,19 @@
 
 namespace Swiftlet\Interfaces;
 
-require('Swiftlet/Interfaces/SwiftletObject.php');
+require 'Swiftlet/Interfaces/Common.php';
 
 /**
  * Application interface
  */
-interface App extends SwiftletObject
+interface App extends Common
 {
+	/**
+	 * Constructor
+	 * @param string $namespace
+	 */
+	public function __construct($namespace = 'Swiftlet');
+
 	/**
 	 * Run the application
 	 */
