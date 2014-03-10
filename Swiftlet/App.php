@@ -304,7 +304,7 @@ class App extends Common implements Interfaces\App
 		$libraryName = $this->namespace . '\Libraries\\' . ucfirst($libraryName);
 
 		// Instantiate the library
-		return new $libraryName($this);
+		return new $libraryName($this, $this->view, $this->controller);
 	}
 
 	/**

@@ -11,5 +11,5 @@ interface Library extends Common
 	 * Constructor
 	 * @param App $app
 	 */
-	public function __construct(App $app);
+	public function __construct(App $app, View $view, Controller $controller);
 }

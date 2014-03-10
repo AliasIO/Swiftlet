@@ -19,8 +19,10 @@ abstract class Library extends Common implements Interfaces\Library
 	 * Constructor
 	 * @param Interfaces\App $app
 	 */
-	public function __construct(Interfaces\App $app)
+	public function __construct(Interfaces\App $app, Interfaces\View $view, Interfaces\Controller $controller)
 	{
-		$this->app = $app;
+		$this->app        = $app;
+		$this->view       = $view;
+		$this->controller = $controller;
 	}
 }

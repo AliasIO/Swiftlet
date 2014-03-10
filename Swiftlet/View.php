@@ -44,15 +44,13 @@ class View extends Common implements Interfaces\View
 	 */
 	public function get($variable, $htmlEncode = true)
 	{
+		$value = null;
+
 		if ( isset($this->variables[$variable]) ) {
-			if ( $htmlEncode ) {
-				return $this->htmlEncode($this->variables[$variable]);
-			} else {
-				return $this->variables[$variable];
-			}
+			$value = $this->variables[$variable][$htmlEncode ? 'safe' : 'unsafe'];
 		}
 
-		return null;
+		return $value;
 	}
 
 	/**
@@ -72,7 +70,10 @@ class View extends Common implements Interfaces\View
 	 */
 	public function set($variable, $value = null)
 	{
-		$this->variables[$variable] = $value;
+		$this->variables[$variable] = array(
+			'safe'   => $this->htmlEncode($value),
+			'unsafe' => $value
+			);
 	}
 
 	/**

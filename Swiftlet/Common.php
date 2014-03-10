@@ -29,9 +29,9 @@ abstract class Common implements Interfaces\Common
 					if ( $action == 'get' ) {
 						return $this->{$property};
 					} else {
-						$this->{$property} = $arguments ? $arguments[1] : null;
+						$this->{$property} = $arguments ? $arguments[0] : null;
 
-						return;
+						return $this;
 					}
 				}
 			}
