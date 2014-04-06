@@ -2,48 +2,19 @@
 
 namespace Swiftlet;
 
-require 'Swiftlet/Common.php';
+require 'Swiftlet/Interfaces/App.php';
+require 'Swiftlet/AbstractCommon.php';
 
 /**
  * Application class
  */
-class App extends Common implements Interfaces\App
+class App extends AbstractCommon implements Interfaces\App
 {
-	/**
-	 * Namespace
-	 * @var string
-	 */
-	protected $namespace;
-
-	/**
-	 * Action name
-	 * @var string
-	 */
-	protected $action = 'index';
-
-	/**
-	 * Arguments
-	 * @var array
-	 */
-	protected $args = array();
-
 	/**
 	 * Configuration values
 	 * @var array
 	 */
 	protected $config = array();
-
-	/**
-	 * Controller intance
-	 * @var Interfaces/Controller
-	 */
-	protected $controller;
-
-	/**
-	 * Controller name
-	 * @var string
-	 */
-	protected $controllerName = 'Index';
 
 	/**
 	 * Hooks
@@ -58,96 +29,47 @@ class App extends Common implements Interfaces\App
 	protected $plugins = array();
 
 	/**
-	 * Root path
-	 * @var string
-	 */
-	protected $rootPath = '/';
-
-	/**
-	 * Re-usable model instances
-	 * @var array
-	 */
-	protected $singletons = array();
-
-	/**
-	 * View instance
-	 * @var Interfaces/View
-	 */
-	protected $view;
-
-	/**
-	 * Constructor
-	 * @param string $namespace
-	 */
-	public function __construct($namespace = 'Swiftlet')
-	{
-		$this->namespace = $namespace;
-	}
-
-	/**
 	 * Run the application
-	 * @param string $namesapce
+	 * @param string $controllerNamesapce
+	 * @param string $pluginNamesapce
 	 * @return array
 	 */
-	public function run()
+	public function run(Interfaces\View $view, $controllerNamespace, $pluginNamespace)
 	{
-		// Determine the client-side path to root
-		if ( !empty($_SERVER['REQUEST_URI']) ) {
-			$this->rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
-		}
+		$controllerClass = $controllerNamespace . '\Index';
+		$action          = 'index';
 
-		// Run from command line, e.g. "php index.php -q index"
-		$opt = getopt('q:');
+		$args = $this->getArgs();
 
-		if ( isset($opt['q']) ) {
-			$_GET['q'] = $opt['q'];
-		}
+		// Get the controller and action name from the URL
+		if ( $args ) {
+			$controllerClass = $controllerNamespace . '\\' . str_replace(' ', '\\', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($args)))));
 
-		if ( !empty($_GET['q']) ) {
-			$this->rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $this->rootPath);
-		}
-
-		// Extract controller name, view name, action name and arguments from URL
-		if ( !empty($_GET['q']) ) {
-			$this->args = explode('/', preg_replace('/^public\//', '', $_GET['q']));
-
-			if ( $this->args ) {
-				$this->controllerName = str_replace(' ', '/', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($this->args)))));
-			}
-
-			if ( $action = $this->args ? array_shift($this->args) : '' ) {
-				$this->action = str_replace('-', '', $action);
+			if ( $args ) {
+				$action = str_replace('-', '', array_shift($args));
 			}
 		}
 
-		if ( !is_file($this->namespace . '/Controllers/' . $this->controllerName . '.php') ) {
-			$this->controllerName .= '/Index';
-
-			if ( !is_file($this->namespace . '/Controllers/' . $this->controllerName . '.php') ) {
-				$this->controllerName = 'Error404';
-			}
+		if ( !is_file('.' . str_replace('\\', '/', $controllerClass) . '.php') ) {
+			$controllerClass = $controllerNamespace . '\Error404';
 		}
-
-		$this->view = new View($this, strtolower($this->controllerName));
 
 		// Instantiate the controller
-		$controller = $this->namespace . '\Controllers\\' . str_replace('/', '\\', $this->controllerName);
-
-		$this->controller = new $controller($this, $this->view);
+		$controller = new $controllerClass();
 
 		// Load plugins
-		if ( $handle = opendir($this->namespace . '/Plugins') ) {
-			while ( ( $file = readdir($handle) ) !== FALSE ) {
-				if ( is_file($this->namespace . '/Plugins/' . $file) && preg_match('/^(.+)\.php$/', $file, $match) ) {
-					$pluginName = $this->namespace . '\Plugins\\' . $match[1];
+		if ( $handle = opendir('.' . str_replace('\\', '/', $pluginNamespace)) ) {
+			while ( ( $file = readdir($handle) ) !== false ) {
+				$pluginClass = $pluginNamespace . '\\' . preg_replace('/\.php$/', '', $file);
 
-					$this->plugins[$pluginName] = array();
+				if ( is_file('.' . str_replace('\\', '/', $pluginClass) . '.php') ) {
+					$this->plugins[$pluginClass] = array();
 
-					foreach ( get_class_methods($pluginName) as $methodName ) {
-						$method = new \ReflectionMethod($pluginName, $methodName);
+					foreach ( get_class_methods($pluginClass) as $methodName ) {
+						$method = new \ReflectionMethod($pluginClass, $methodName);
 
 						if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() ) {
-							$this->plugins[$pluginName][] = $methodName;
+							$this->plugins[$pluginClass][] = $methodName;
 						}
 					}
 				}
@@ -159,43 +81,34 @@ class App extends Common implements Interfaces\App
 		}
 
 		// Call the controller action
-		$this->registerHook('actionBefore');
+		$this->registerHook('actionBefore', $controller, $view);
 
-		if ( method_exists($this->controller, $this->action) ) {
-			$method = new \ReflectionMethod($this->controller, $this->action);
+		$actionExists = false;
+
+		if ( method_exists($controller, $action) ) {
+			$method = new \ReflectionMethod($controller, $action);
 
 			if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() ) {
-				$this->controller->{$this->action}();
-			} else {
-				$this->controller = new Controllers\Error404($this, $this->view);
-
-				$this->view->name = 'error404';
-
-				$this->controller->index();
+				$actionExists = true;
 			}
-		} else {
-			$this->controller = new Controllers\Error404($this, $this->view);
-
-			$this->view->name = 'error404';
-
-			$this->controller->index();
 		}
 
-		$this->registerHook('actionAfter');
+		if ( !$actionExists ) {
+			$controllerName = $controllerNamespace . '\Error404';
+			$action         = 'index';
 
-		return array($this->view, $this->controller);
-	}
+			$controller = new $controllerName;
+		}
 
-	/**
-	 * Serve the page
-	 */
-	public function serve()
-	{
-		ob_start();
+		$controller->setView($view);
 
-		$this->view->render();
+		$view->setApp($this);
 
-		ob_end_flush();
+		$controller->{$action}();
+
+		$this->registerHook('actionAfter', $controller, $view);
+
+		return $this;
 	}
 
 	/**
@@ -216,10 +129,13 @@ class App extends Common implements Interfaces\App
 	 * Set a configuration value
 	 * @param string $variable
 	 * @param mixed $value
+	 * @return Interfaces\App
 	 */
 	public function setConfig($variable, $value)
 	{
 		$this->config[$variable] = $value;
+
+		return $this;
 	}
 
 	/**
@@ -228,25 +144,25 @@ class App extends Common implements Interfaces\App
 	 */
 	public function getRootPath()
 	{
-		return $this->rootPath;
-	}
+		$rootPath = '';
 
-	/**
-	 * Get the controller name
-	 * @return string
-	 */
-	public function getControllerName()
-	{
-		return $this->controllerName;
-	}
+		// Determine the client-side path to root
+		if ( !empty($_SERVER['REQUEST_URI']) ) {
+			$rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
+		}
 
-	/**
-	 * Get the action name
-	 * @return string
-	 */
-	public function getAction()
-	{
-		return $this->action;
+		// Run from command line, e.g. "php index.php -q index"
+		$opt = getopt('q:');
+
+		if ( isset($opt['q']) ) {
+			$_GET['q'] = $opt['q'];
+		}
+
+		if ( !empty($_GET['q']) ) {
+			$rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $rootPath);
+		}
+
+		return $rootPath;
 	}
 
 	/**
@@ -256,73 +172,44 @@ class App extends Common implements Interfaces\App
 	 */
 	public function getArgs($index = null)
 	{
-		if ( $index !== null ) {
-			return isset($this->args[$index]) ? $this->args[$index] : null;
+		$args = array();
+
+		if ( !empty($_GET['q']) ) {
+			$args = explode('/', preg_replace('/^public\//', '', $_GET['q']));
+
+			if ( $index !== null ) {
+				return isset($args[$index]) ? $args[$index] : null;
+			}
 		}
 
-		return $this->args;
-	}
-
-	/**
-	 * Get a model
-	 * @param string $modelName
-	 * @return object
-	 */
-	public function getModel($modelName)
-	{
-		$modelName = $this->namespace . '\Models\\' . ucfirst($modelName);
-
-		// Instantiate the model
-		return new $modelName($this);
-	}
-
-	/**
-	 * Get a model singleton
-	 * @param string $modelName
-	 * @return object
-	 */
-	public function getSingleton($modelName)
-	{
-		if ( isset($this->singletons[$modelName]) ) {
-			return $this->singletons[$modelName];
-		}
-
-		$model = $this->getModel($modelName);
-
-		$this->singletons[$modelName] = $model;
-
-		return $model;
-	}
-
-	/**
-	 * Get a library
-	 * @param string $libraryName
-	 * @return object
-	 */
-	public function getLibrary($libraryName)
-	{
-		$libraryName = $this->namespace . '\Libraries\\' . ucfirst($libraryName);
-
-		// Instantiate the library
-		return new $libraryName($this, $this->view, $this->controller);
+		return $args;
 	}
 
 	/**
 	 * Register a hook for plugins to implement
 	 * @param string $hookName
+	 * @param Interfaces\Controller $controller
+	 * @param Interfaces\View $view
 	 * @param array $params
 	 */
-	public function registerHook($hookName, array $params = array())
+	public function registerHook($hookName, Interfaces\Controller $controller, Interfaces\View $view, array $params = array())
 	{
 		$this->hooks[] = $hookName;
 
 		foreach ( $this->plugins as $pluginName => $hooks ) {
 			if ( in_array($hookName, $hooks) ) {
-				$plugin = new $pluginName($this, $this->view, $this->controller);
+				$plugin = new $pluginName();
+
+				$plugin
+					->setApp($this)
+					->setController($controller)
+					->setView($view);
 
 				$plugin->{$hookName}($params);
 			}
 		}
+
+		return $this;
 	}
 
 	/**

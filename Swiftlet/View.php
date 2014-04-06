@@ -2,10 +2,13 @@
 
 namespace Swiftlet;
 
+require_once 'Swiftlet/Interfaces/View.php';
+require_once 'Swiftlet/AbstractCommon.php';
+
 /**
  * View class
  */
-class View extends Common implements Interfaces\View
+class View extends AbstractCommon implements Interfaces\View
 {
 	/**
 	 * Application instance
@@ -26,14 +29,15 @@ class View extends Common implements Interfaces\View
 	public $name;
 
 	/**
-	 * Constructor
+	 * Set application instance
 	 * @param Interfaces\App $app
-	 * @param string $name
+	 * @return Interfaces\View
 	 */
-	public function __construct(Interfaces\App $app, $name)
+	public function setApp(Interfaces\App $app)
 	{
-		$this->app  = $app;
-		$this->name = $name;
+		$this->app = $app;
+
+		return $this;
 	}
 
 	/**
@@ -67,6 +71,7 @@ class View extends Common implements Interfaces\View
 	 * Set a view variable
 	 * @param string $variable
 	 * @param mixed $value
+	 * @return Interfaces\View
 	 */
 	public function set($variable, $value = null)
 	{
@@ -74,6 +79,8 @@ class View extends Common implements Interfaces\View
 			'safe'   => $this->htmlEncode($value),
 			'unsafe' => $value
 			);
+
+		return $this;
 	}
 
 	/**
@@ -142,6 +149,7 @@ class View extends Common implements Interfaces\View
 
 	/**
 	 * Render the view
+	 * @return Interfaces\View
 	 * @throws Exception
 	 */
 	public function render()
@@ -153,5 +161,7 @@ class View extends Common implements Interfaces\View
 		} else {
 			throw new Exception('View not found');
 		}
+
+		return $this;
 	}
 }

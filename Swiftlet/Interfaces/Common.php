@@ -8,7 +8,7 @@ namespace Swiftlet\Interfaces;
 interface Common
 {
 	/**
-	 * TODO
+	 * Getters and setters
 	 *
 	 * @param string $property
 	 * @param mixed $arguments

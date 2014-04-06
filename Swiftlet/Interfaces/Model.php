@@ -8,8 +8,9 @@ namespace Swiftlet\Interfaces;
 interface Model extends Common
 {
 	/**
-	 * Constructor
-	 * @param App $app
+	 * Set application instance
+	 * @param Interfaces\App $app
+	 * @return Interfaces\Model
 	 */
-	public function __construct(App $app);
+	public function setApp(App $app);
 }

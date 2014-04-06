@@ -2,11 +2,13 @@
 
 namespace Swiftlet;
 
+require 'Swiftlet/Exception.php';
+
 /**
  * Common class
  * @abstract
  */
-abstract class Common implements Interfaces\Common
+abstract class AbstractCommon implements Interfaces\Common
 {
 	/**
 	 * TODO

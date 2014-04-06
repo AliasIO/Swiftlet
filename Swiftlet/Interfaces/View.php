@@ -8,11 +8,11 @@ namespace Swiftlet\Interfaces;
 interface View extends Common
 {
 	/**
-	 * Constructor
+	 * Set application instance
 	 * @param App $app
-	 * @param string $name
+	 * @return View
 	 */
-	public function __construct(App $app, $name);
+	public function setApp(App $app);
 
 	/**
 	 * Get a view variable
@@ -40,6 +40,7 @@ interface View extends Common
 	 * Magic method to set a view variable, forwards to $this->set()
 	 * @param string $variable
 	 * @param mixed $value
+	 * @return Interfaces\View
 	 */
 	public function set($variable, $value = null);
 
@@ -59,6 +60,7 @@ interface View extends Common
 
 	/**
 	 * Render the view
+	 * @return Interfaces\View
 	 * @throws Exception
 	 */
 	public function render();

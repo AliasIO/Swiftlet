@@ -10,20 +10,13 @@ require 'Swiftlet/Interfaces/Common.php';
 interface App extends Common
 {
 	/**
-	 * Constructor
-	 * @param string $namespace
-	 */
-	public function __construct($namespace = 'Swiftlet');
-
-	/**
 	 * Run the application
+	 * @param View $view
+	 * @param string $controllerNamespace
+	 * @param string $pluginNamespace
+	 * @return App
 	 */
-	public function run();
-
-	/**
-	 * Serve the page
-	 */
-	public function serve();
+	public function run(View $view, $controllerNamespace, $pluginNamespace);
 
 	/**
 	 * Get a configuration value
@@ -36,8 +29,16 @@ interface App extends Common
 	 * Set a configuration value
 	 * @param string $variable
 	 * @param mixed $value
+	 * @return App
 	 */
 	public function setConfig($variable, $value);
+
+	/**
+	 * Get the arguments
+	 * @param integer $index
+	 * @return mixed
+	 */
+	public function getArgs($index = null);
 
 	/**
 	 * Get the client-side path to root
@@ -46,44 +47,14 @@ interface App extends Common
 	public function getRootPath();
 
 	/**
-	 * Get the controller name
-	 * @return string
-	 */
-	public function getControllerName();
-
-	/**
-	 * Get the action name
-	 * @return string
-	 */
-	public function getAction();
-
-	/**
-	 * Get the arguments
-	 * @param integer $index
-	 * @return mixed
-	 */
-	public function getArgs($index);
-
-	/**
-	 * Get a model
-	 * @param string $modelName
-	 * @return object
-	 */
-	public function getModel($modelName);
-
-	/**
-	 * Get a model singleton
-	 * @param string $modelName
-	 * @return object
-	 */
-	public function getSingleton($modelName);
-
-	/**
 	 * Register a hook for plugins to implement
 	 * @param string $hookName
+	 * @param Interfaces\Controller $controller
+	 * @param Interfaces\View $view
 	 * @param array $params
+	 * @return App
 	 */
-	public function registerHook($hookName, array $params = array());
+	public function registerHook($hookName, Controller $controller, View $view, array $params = array());
 
 	/**
 	 * Class autoloader

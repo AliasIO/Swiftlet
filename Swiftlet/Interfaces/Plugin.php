@@ -8,10 +8,23 @@ namespace Swiftlet\Interfaces;
 interface Plugin extends Common
 {
 	/**
-	 * Constructor
+	 * Set application instance
 	 * @param App $app
-	 * @param View $view
-	 * @param Controller $controller
+	 * @return Plugin
 	 */
-	public function __construct(App $app, View $view, Controller $controller);
+	public function setApp(App $app);
+
+	/**
+	 * Set controller instance
+	 * @param Controller $controller
+	 * @return Plugin
+	 */
+	public function setController(Controller $controller);
+
+	/**
+	 * Set view instance
+	 * @param View $view
+	 * @return Plugin
+	 */
+	public function setView(View $view);
 }

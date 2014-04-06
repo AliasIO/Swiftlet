@@ -5,9 +5,8 @@ namespace Swiftlet;
 /**
  * Model class
  * @abstract
- * @property Interfaces\Model $app
  */
-abstract class Model extends Common implements Interfaces\Model
+abstract class AbstractModel extends AbstractCommon implements Interfaces\Model
 {
 	/**
 	 * Application instance
@@ -16,11 +15,14 @@ abstract class Model extends Common implements Interfaces\Model
 	protected $app;
 
 	/**
-	 * Constructor
+	 * Set application instance
 	 * @param Interfaces\App $app
+	 * @return Interfaces\Model
 	 */
-	public function __construct(Interfaces\App $app)
+	public function setApp(Interfaces\App $app)
 	{
 		$this->app = $app;
+
+		return $this;
 	}
 }

@@ -6,10 +6,11 @@ try {
 	chdir(dirname(__FILE__) . '/..');
 
 	// Bootstrap the application
-	require 'Swiftlet/Interfaces/App.php';
 	require 'Swiftlet/App.php';
+	require 'Swiftlet/View.php';
 
-	$app = new App;
+	$app  = new App;
+	$view = new View;
 
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
 
@@ -19,8 +20,13 @@ try {
 
 	date_default_timezone_set('UTC');
 
-	$app->run();
-	$app->serve();
+	$app->run($view, '\Swiftlet\Controllers', '\Swiftlet\Plugins');
+
+	ob_start();
+
+	$view->render();
+
+	ob_end_flush();
 } catch ( \Exception $e ) {
 	if ( !headers_sent() ) {
 		header('HTTP/1.1 503 Service Temporarily Unavailable');

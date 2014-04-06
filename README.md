@@ -16,6 +16,7 @@ Buzzword compliance
 ✔ Namespaced  
 ✔ Unit tested  
 ✔ Pluggable  
+✔ Testable
 ✔ [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)  
 ✔ PHP5  
 ✔ MVC  
@@ -38,9 +39,8 @@ Getting started: controllers and views
 
 Let's create a page. Each page consists of a controller and at least one view.
 
-Controllers house the 
-[business logic](http://en.wikipedia.org/wiki/Business_logic) of the page while 
-views should be limited to simple UI logic (loops and switches).
+The controller does most of the work; views should be limited to simple 
+presentation logic (loops and switches).
 
 **Controller `Swiftlet/Controllers/Foo.php`**
 
@@ -48,7 +48,7 @@ views should be limited to simple UI logic (loops and switches).
 <?php
 namespace Swiftlet\Controllers;
 
-class Foo extends \Swiftlet\Controller
+class Foo extends \Swiftlet\AbstractController
 {
 	protected $title = 'Foo'; // Optional but usually desired 
 
@@ -74,15 +74,15 @@ Important: class names are written in
 </p>
 ```
 
-Variables can be passed from controller to view using the views `set` and 
-`get` methods. Values are automatically made safe for use in HTML, use
-`$this->htmlDecode()` on values that should be treated as code.
+The controller can set variables directly on the view. Values are automatically 
+made safe for use in HTML, use `$this->get('variable', false)` on values that 
+should be treated as code.
 
 You can now view the page by navigating to `http://<swiftlet>/foo` in your web
 browser!
 
-If you're running Apache and see "404 Not Found" you will need to enable
-rewrites. Alternatively you can navigate to `http://<swiftlet>?q=foo`.
+If you get a "404 Not Found" you will need to enable rewrites in the web server
+configuration. Alternatively you can navigate to `http://<swiftlet>?q=foo`.
 
 *Swiftlet can be invoked from the command line (e.g. to run cron jobs). Simply
 run `php public/index.php -q foo`.*
@@ -91,16 +91,15 @@ run `php public/index.php -q foo`.*
 Routing
 -------
 
-Notice how we can access the page at `/foo` by simply creating a controller 
-named `Foo`. The application (Swiftlet) maps URLs to controllers, actions and
-arguments.
+Notice how you can access the page at `/foo` by simply creating a controller 
+named `Foo`. The application maps URLs to controllers, actions and arguments.
 
 Consider this URL: `/foo/bar/baz/qux`
 
 In this case `foo` is the name of the controller and view, `bar` the name of 
-the action and `baz` and `qux` are arguments. If the controller or action is 
-missing from the URL they will default to `index` (`/` will call `index()` on 
-`Swiftlet\Controller\Index`).
+the action and `baz` and `qux` are additional arguments. If the controller or
+action is missing from the URL they will default to `index` (`/` will call 
+`index()` on `Swiftlet\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
 `/foo_bar` will point to `Swiftlet/Controllers/Foo/Bar.php`.
@@ -117,11 +116,10 @@ Actions are methods of the controller. A common example might be `edit` or
 
 `/blog/edit/1`
 
-This will call the function `edit()` on `Blog` with `1` as the argument (the 
+This will call the function `edit()` on `Blog` with `1` as an argument (the 
 id of the blog post to edit).
 
-The action name and arguments can be accessed through 
-`$this->app->getAction()` and `$this->app->getArgs()` respectively.
+Arguments can be accessed through `$this->app->getArgs()`.
 
 To use a different view for a specific action you may change the value of 
 `$this->view->name`. The view name is a filename relative to the `views` 
@@ -139,7 +137,7 @@ Let's throw a model into the mix and update the controller.
 <?php
 namespace Swiftlet\Models;
 
-class Foo extends \Swiftlet\Model
+class Foo extends \Swiftlet\AbstractModel
 {
 	public function getHelloWorld()
 	{
@@ -161,9 +159,9 @@ class Foo extends \Swiftlet\Controller
 	public function index()
 	{
 		// Get an instance of the Example class (Swiftlet/Models/Example.php)
-		$exampleModel = $this->app->getModel('example');
+		$example = new \Swiftlet\Models\Example;
 
-		$this->view->helloWorld = $exampleModel->getHelloWorld();
+		$this->view->helloWorld = $example->getHelloWorld();
 	}
 }
 ```
@@ -173,7 +171,7 @@ object such as a user.
 
 ```php
 <?php
-$user = $this->app->getModel('user');
+$user = new \Swiftlet\Models\User;
 
 $user->setEmail('example@example.com');
 
@@ -183,11 +181,6 @@ $user->save();
 Loading and saving data should almost always happen in a model. You can create 
 as many models as you like; they aren't tied to specific controllers or views.
 
-A model can be instantiated using `$this->app->getModel($modelName)`. To allow 
-re-use, use `$this->app->getSingleton($modelName)` instead as this will only
-create a single instance when called multiple times (useful for database 
-connections and session management).
-
 
 Plugins and hooks
 -----------------
@@ -195,7 +188,7 @@ Plugins and hooks
 Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Hooks are entry
 points for code that extends the application. Swiftlet has a few core hooks and 
 additiontal ones can be registered pretty much anywhere using
-`$this->app->registerHook($hookName)`.  
+`$this->app->registerHook($hookName, $controller, $view)`.  
 
 **Plugin `Swiftlet/Plugins/Foo.php`**
 
@@ -208,9 +201,7 @@ class Foo extends \Swiftlet\Plugin
 	public function actionAfter()
 	{
 		// Overwrite our previously set "helloWorld" variable
-		if ( $this->app->getControllerName() === 'Index' ) {
-			$this->view->helloWorld = 'Hi world!';
-		}
+		$this->view->helloWorld = 'Hi world!';
 	}
 }
 ```
@@ -235,17 +226,14 @@ Libraries
 ---------
 
 Reusable components such as code to send an email or generate a thumbnail image
-should go in a separate library class. A library can be instantiated using
-`$this->app->getLibrary($libraryName)`.
+should go in a separate library class.
 
 ```php
 <?php
-$email = $this->app->getLibrary('email');
+$email = new \Swiftlet\Libraries\Email
 
 $email->send($to, $subject, $message);
 ```
-
---------------------------------------------------------------------------------
 
 
 Configuration
@@ -265,48 +253,27 @@ $value = $this->app->getConfig('variable');
 Values can be set in `config/main.php` or a custom file.
 
 
---------------------------------------------------------------------------------
-
-
-Abstract Public methods
------------------------
+Public methods
+--------------
 
 **Application `Swiftlet\App`**
 
-* `run()`  
+* `App run()`  
 Run the application
-
-* `serve()`  
-Render the view
 
 * `mixed getConfig(string $variable)`  
 Get a configuration value
 
-* `setConfig(string $variable, mixed $value)`  
+* `App setConfig(string $variable, mixed $value)`  
 Set a configuration value
-
-* `string getAction()`  
-Name of the action
 
 * `array getArgs([ integer $index ])`  
 List of arguments passed in the URL, or a specific argument if `$index` is specified
 
-* `object getModel(string $modelName)`  
-Create a new model instance
-
-* `object getSingleton(string $modelName)`  
-Create or return an existing model instance
-
-* `object getLibrary(string $libraryName)`  
-Create a new library instance
-
-* `string getControllerName()`  
-Name of the controller
-
 * `string getRootPath()`  
 Absolute client-side path to the website root
 
-* `registerHook(string $hookName, array $params)`  
+* `App registerHook(string $hookName, array $params)`  
 Register a hook
 
 
@@ -315,7 +282,7 @@ Register a hook
 * `mixed get(string $variable [, bool $htmlEncode = true ])`  
 Get a view variable, encoded for safe use in HTML by default
 
-* `set(string $variable [, mixed $value ])`  
+* `View set(string $variable [, mixed $value ])`  
 Set a view variable
 
 * `__set(string $variable [, mixed $value ])`  
@@ -328,23 +295,8 @@ being HTML encoded.
 * `__get(string $variable)`  
 Magic method to get a view variable
 
-* `htmlEncode(mixed $value)`  
+* `mixed htmlEncode(mixed $value)`  
 Recursively make a value safe for HTML
 
-* `htmlDecode(mixed $value)`  
+* `mixed htmlDecode(mixed $value)`  
 Recursively decode a previously encoded value to be rendered as HTML
-
-
-**Controller `Swiftlet\Controller`**
-
-* `index()`  
-Default action
-
-
-User contributed packages
--------------------------
-
-Community created plugins, controllers and models are available at 
-[github.com/ElbertF/Swiftlet-Packages](https://github.com/ElbertF/Swiftlet-Packages).
-Feel free to submit your own.
-
