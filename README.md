@@ -151,7 +151,7 @@ class Foo extends \Swiftlet\AbstractModel
 <?php
 namespace Swiftlet\Controllers;
 
-class Foo extends \Swiftlet\Controller
+class Foo extends \Swiftlet\AbstractController
 {
 	protected $title = 'Foo';
 
@@ -195,7 +195,7 @@ additiontal ones can be registered pretty much anywhere using
 <?php
 namespace Swiftlet\Plugins;
 
-class Foo extends \Swiftlet\Plugin
+class Foo extends \Swiftlet\AbstractPlugin
 {
 	public function actionAfter()
 	{
