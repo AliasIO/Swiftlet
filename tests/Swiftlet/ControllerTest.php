@@ -2,32 +2,35 @@
 
 namespace Swiftlet;
 
+require 'AppMock.php';
+require 'ControllerMock.php';
+require 'ViewMock.php';
+
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
-	protected
-		$app,
-		$controller
-		;
-
-	public function setUp()
+	public function testSetApp()
 	{
-		$this->app = new App;
+		$app        = new AppMock;
+		$controller = new ControllerMock;
 
-		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
-
-		spl_autoload_register(array($this->app, 'autoload'));
-
-		list(, $this->controller) = $this->app->run();
+		$this->assertEquals($controller->setApp($app), $controller);
 	}
 
-	public function testController()
+	public function testSetView()
 	{
-		$this->assertInternalType('object', $this->controller);
+		$view       = new ViewMock;
+		$controller = new ControllerMock;
 
-		$this->assertInstanceOf('Swiftlet\Controller', $this->controller);
+		$this->assertEquals($controller->setView($view), $controller);
+	}
 
-		$controllerName = get_class($this->controller);
+	public function testSetTitle()
+	{
+		$view       = new ViewMock;
+		$controller = new ControllerMock;
 
-		$this->assertEquals('Swiftlet\Controllers\Index', $controllerName);
+		$controller->setView($view);
+
+		$this->assertEquals($controller->setTitle('title'), $controller);
 	}
 }

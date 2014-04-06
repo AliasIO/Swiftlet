@@ -1,21 +1,22 @@
 <?php
 
-namespace Swiftlet;
+namespace Swiftlet\Abstracts;
 
-require 'Swiftlet/Exception.php';
+require_once 'Swiftlet/Interfaces/Common.php';
+require_once 'Swiftlet/Exception.php';
 
 /**
  * Common class
  * @abstract
  */
-abstract class AbstractCommon implements Interfaces\Common
+abstract class Common implements \Swiftlet\Interfaces\Common
 {
 	/**
-	 * TODO
+	 * Common setters and getters
 	 *
 	 * @param string $property
 	 * @param mixed $arguments
-	 * @throws Exception
+	 * @throws \Swiftlet\Exception
 	 */
 	public function __call($property, $arguments)
 	{
@@ -39,6 +40,6 @@ abstract class AbstractCommon implements Interfaces\Common
 			}
 		}
 
-		throw new Exception('Not implemented: ' . get_called_class() . '::' . $property);
+		throw new \Swiftlet\Exception('Not implemented: ' . get_called_class() . '::' . $property);
 	}
 }

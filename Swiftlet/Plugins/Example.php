@@ -5,7 +5,7 @@ namespace Swiftlet\Plugins;
 /**
  * Example plugin
  */
-class Example extends \Swiftlet\AbstractPlugin
+class Example extends \Swiftlet\Abstracts\Plugin
 {
 	/**
 	 * Implementation of the actionAfter hook

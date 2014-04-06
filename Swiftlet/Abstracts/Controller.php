@@ -1,22 +1,25 @@
 <?php
 
-namespace Swiftlet;
+namespace Swiftlet\Abstracts;
+
+require_once 'Swiftlet/Interfaces/Controller.php';
+require_once 'Swiftlet/Abstracts/Common.php';
 
 /**
  * Controller class
  * @abstract
  */
-abstract class AbstractController extends AbstractCommon implements Interfaces\Controller
+abstract class Controller extends Common implements \Swiftlet\Interfaces\Controller
 {
 	/**
 	 * Application instance
-	 * @var Interfaces\App
+	 * @var \Swiftlet\Interfaces\App
 	 */
 	protected $app;
 
 	/**
 	 * View instance
-	 * @var Interfaces\View
+	 * @var \Swiftlet\Interfaces\View
 	 */
 	protected $view;
 
@@ -28,10 +31,10 @@ abstract class AbstractController extends AbstractCommon implements Interfaces\C
 
 	/**
 	 * Set application instance
-	 * @param Interfaces\App $app
-	 * @return Interfaces\Controller
+	 * @param \Swiftlet\Interfaces\App $app
+	 * @return \Swiftlet\Interfaces\Controller
 	 */
-	public function setApp(Interfaces\App $app)
+	public function setApp(\Swiftlet\Interfaces\App $app)
 	{
 		$this->app = $app;
 
@@ -40,10 +43,10 @@ abstract class AbstractController extends AbstractCommon implements Interfaces\C
 
 	/**
 	 * Set view instance
-	 * @param Interfaces\App $app
-	 * @return Interfaces\Controller
+	 * @param \Swiftlet\Interfaces\App $app
+	 * @return \Swiftlet\Interfaces\Controller
 	 */
-	public function setView(Interfaces\View $view)
+	public function setView(\Swiftlet\Interfaces\View $view)
 	{
 		$this->view = $view;
 
@@ -59,7 +62,7 @@ abstract class AbstractController extends AbstractCommon implements Interfaces\C
 	/**
 	 * Set page title
 	 * @param string $app
-	 * @return Interfaces\Controller
+	 * @return \Swiftlet\Interfaces\Controller
 	 */
 	public function setTitle($title)
 	{
@@ -74,6 +77,5 @@ abstract class AbstractController extends AbstractCommon implements Interfaces\C
 	 * Default action
 	 */
 	public function index()
-	{
-	}
+	{ }
 }

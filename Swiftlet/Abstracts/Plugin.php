@@ -1,28 +1,31 @@
 <?php
 
-namespace Swiftlet;
+namespace Swiftlet\Abstracts;
+
+require_once 'Swiftlet/Interfaces/Plugin.php';
+require_once 'Swiftlet/Abstracts/Common.php';
 
 /**
  * Plugin class
  * @abstract
  */
-abstract class AbstractPlugin extends AbstractCommon implements Interfaces\Plugin
+abstract class Plugin extends Common implements \Swiftlet\Interfaces\Plugin
 {
 	/**
 	 * Application instance
-	 * @var Interfaces\App
+	 * @var \Swiftlet\Interfaces\App
 	 */
 	protected $app;
 
 	/**
 	 * Controller instance
-	 * @var Interfaces\Controller
+	 * @var \Swiftlet\Interfaces\Controller
 	 */
 	protected $controller;
 
 	/**
 	 * View instance
-	 * @var Interfaces\View
+	 * @var \Swiftlet\Interfaces\View
 	 */
 	protected $view;
 
@@ -31,7 +34,7 @@ abstract class AbstractPlugin extends AbstractCommon implements Interfaces\Plugi
 	 * @param App $app
 	 * @return View
 	 */
-	public function setApp(Interfaces\App $app)
+	public function setApp(\Swiftlet\Interfaces\App $app)
 	{
 		$this->app = $app;
 
@@ -43,7 +46,7 @@ abstract class AbstractPlugin extends AbstractCommon implements Interfaces\Plugi
 	 * @param Controller $controller
 	 * @return Plugin
 	 */
-	public function setController(Interfaces\Controller $controller)
+	public function setController(\Swiftlet\Interfaces\Controller $controller)
 	{
 		$this->controller = $controller;
 
@@ -55,7 +58,7 @@ abstract class AbstractPlugin extends AbstractCommon implements Interfaces\Plugi
 	 * @param View $view
 	 * @return Plugin
 	 */
-	public function setView(Interfaces\View $view)
+	public function setView(\Swiftlet\Interfaces\View $view)
 	{
 		$this->view = $view;
 

@@ -2,70 +2,41 @@
 
 namespace Swiftlet;
 
+require 'AppMock.php';
+require 'ControllerMock.php';
+require 'ViewMock.php';
+
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
-	protected
-		$app,
-		$view
-		;
-
-	public function setUp()
+	function testSetApp()
 	{
-		$this->app = new App;
-
-		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
-
-		spl_autoload_register(array($this->app, 'autoload'));
-
-		list($this->view) = $this->app->run();
 	}
 
-	public function testView()
+	function testGet()
 	{
-		$this->assertInternalType('object', $this->view);
-
-		$this->assertInstanceOf('Swiftlet\View', $this->view);
 	}
 
-	/**
-	 * @covers Swiftlet\View::get
-	 */
-	public function testGet()
+	function test__get()
 	{
-		$test = $this->view->get('test');
-
-		$this->assertNull($test);
 	}
 
-	/**
-	 * @covers Swiftlet\View::set
-	 */
-	public function testSet()
+	function test__set()
 	{
-		$this->view->set('test', 'test');
-
-		$test = $this->view->get('test');
-
-		$this->assertEquals('test', $test);
 	}
 
-	/**
-	 * @covers Swiftlet\View::htmlEncode
-	 */
-	public function testHtmlEncode()
+	function testSet()
 	{
-		$value = $this->view->htmlEncode('&');
-
-		$this->assertEquals('&amp;', $value);
 	}
 
-	/**
-	 * @covers Swiftlet\View::htmlDecode
-	 */
-	public function testHtmlDecode()
+	function testHtmlEncode()
 	{
-		$value = $this->view->htmlDecode('&amp;');
+	}
 
-		$this->assertEquals('&', $value);
+	function testHtmlDecode()
+	{
+	}
+
+	function testRender()
+	{
 	}
 }

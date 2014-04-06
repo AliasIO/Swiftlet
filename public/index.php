@@ -9,8 +9,7 @@ try {
 	require 'Swiftlet/App.php';
 	require 'Swiftlet/View.php';
 
-	$app  = new App;
-	$view = new View;
+	$app = new App;
 
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
 
@@ -20,7 +19,9 @@ try {
 
 	date_default_timezone_set('UTC');
 
-	$app->run($view, '\Swiftlet\Controllers', '\Swiftlet\Plugins');
+	$view = new View;
+
+	$app->run($view);
 
 	ob_start();
 

@@ -5,7 +5,7 @@ namespace Swiftlet\Controllers;
 /**
  * Index controller
  */
-class Index extends \Swiftlet\AbstractController
+class Index extends \Swiftlet\Abstracts\Controller
 {
 	/**
 	 * Page title
@@ -16,7 +16,7 @@ class Index extends \Swiftlet\AbstractController
 	/**
 	 * Default action
 	 */
-	public function index()
+	public function index(array $args = array())
 	{
 		// Some example code to get you started
 

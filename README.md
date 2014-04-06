@@ -47,7 +47,7 @@ presentation logic (loops and switches).
 <?php
 namespace Swiftlet\Controllers;
 
-class Foo extends \Swiftlet\AbstractController
+class Foo extends \Swiftlet\Abstracts\Controller
 {
 	protected $title = 'Foo'; // Optional but usually desired 
 
@@ -136,7 +136,7 @@ Let's throw a model into the mix and update the controller.
 <?php
 namespace Swiftlet\Models;
 
-class Foo extends \Swiftlet\AbstractModel
+class Foo extends \Swiftlet\Abstracts\Model
 {
 	public function getHelloWorld()
 	{
@@ -151,7 +151,7 @@ class Foo extends \Swiftlet\AbstractModel
 <?php
 namespace Swiftlet\Controllers;
 
-class Foo extends \Swiftlet\AbstractController
+class Foo extends \Swiftlet\Abstracts\Controller
 {
 	protected $title = 'Foo';
 
@@ -195,7 +195,7 @@ additiontal ones can be registered pretty much anywhere using
 <?php
 namespace Swiftlet\Plugins;
 
-class Foo extends \Swiftlet\AbstractPlugin
+class Foo extends \Swiftlet\Abstracts\Plugin
 {
 	public function actionAfter()
 	{

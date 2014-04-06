@@ -5,7 +5,7 @@ namespace Swiftlet\Models;
 /**
  * Example model
  */
-class Example extends \Swiftlet\AbstractModel
+class Example extends \Swiftlet\Abstracts\Model
 {
 	/**
 	 * Example method. This could be anything, really...

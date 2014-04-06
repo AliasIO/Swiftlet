@@ -5,6 +5,6 @@ namespace Swiftlet\Libraries;
 /**
  * Example library
  */
-class Example extends \Swiftlet\Libraries
+class Example extends \Swiftlet\AbstractLibrary
 {
 }

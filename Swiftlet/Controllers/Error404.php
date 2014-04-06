@@ -5,7 +5,7 @@ namespace Swiftlet\Controllers;
 /**
  * Error 404 controller
  */
-class Error404 extends \Swiftlet\AbstractController
+class Error404 extends \Swiftlet\Abstracts\Controller
 {
 	/**
 	 * Page title
