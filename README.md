@@ -16,7 +16,6 @@ Buzzword compliance
 ✔ Namespaced  
 ✔ Unit tested  
 ✔ Pluggable  
-✔ Testable
 ✔ [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)  
 ✔ PHP5  
 ✔ MVC  
