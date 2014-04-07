@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-$dir = dirname(__FILE__) . '/../../vendor/Swiftlet/';
+$dir = dirname(__FILE__) . '/../';
 
 require_once $dir . 'Interfaces/Common.php';
 require_once $dir . 'Interfaces/App.php';
@@ -17,37 +17,37 @@ require_once 'Mocks/App.php';
 require_once 'Mocks/Controller.php';
 require_once 'Mocks/View.php';
 
-class AppTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends \PHPUnit_Framework_TestCase
 {
-	function testRun()
+	function testSetApp()
 	{
 	}
 
-	function testLoadPlugins()
+	function testGet()
 	{
 	}
 
-	function testGetConfig()
+	function test__get()
 	{
 	}
 
-	function testSetConfig()
+	function test__set()
 	{
 	}
 
-	function testGetArgs()
+	function testSet()
 	{
 	}
 
-	function testGetRootPath()
+	function testHtmlEncode()
 	{
 	}
 
-	function testRegisterHook()
+	function testHtmlDecode()
 	{
 	}
 
-	function testError()
+	function testRender()
 	{
 	}
 }

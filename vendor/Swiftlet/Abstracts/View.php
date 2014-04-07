@@ -147,12 +147,13 @@ class View extends Common implements \Swiftlet\Interfaces\View
 
 	/**
 	 * Render the view
+	 * @param string $path
 	 * @return \Swiftlet\Interfaces\View
 	 * @throws Exception
 	 */
-	public function render()
+	public function render($path)
 	{
-		if ( is_file($file = 'views/' . $this->name . '.php') ) {
+		if ( is_file($file = 'vendor/' . $path . '/views/' . $this->name . '.php') ) {
 			header('X-Generator: Swiftlet');
 
 			include $file;

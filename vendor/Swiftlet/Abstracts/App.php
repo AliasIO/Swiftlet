@@ -37,7 +37,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * @param \Swiftlet\Interfaces\View $view
 	 * @return array
 	 */
-	public function run($controllerNamespace = '\Swiftlet\Controllers', \Swiftlet\Interfaces\View $view)
+	public function dispatchController($controllerNamespace, \Swiftlet\Interfaces\View $view)
 	{
 		$controllerClass = $controllerNamespace . '\Index';
 		$action          = 'index';
@@ -73,10 +73,10 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		}
 
 		if ( !$actionExists ) {
-			$controllerName = $controllerNamespace . '\Error404';
-			$action         = 'index';
+			$controllerClass = $controllerNamespace . '\Error404';
+			$action          = 'index';
 
-			$controller = new $controllerName;
+			$controller = new $controllerClass;
 		}
 
 		$controller
@@ -98,7 +98,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * @param string $namespace
 	 * @return App
 	 */
-	public function loadPlugins($namespace = '\Swiftlet\Plugins')
+	public function loadPlugins($namespace)
 	{
 		// Load plugins
 		if ( $handle = opendir('vendor/' . str_replace('\\', '/', $namespace)) ) {
@@ -244,7 +244,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	}
 
 	/**
-	 * Error handler
+	 * Convert errors to \ErrorException instances
 	 * @param int $number
 	 * @param string $string
 	 * @param string $file

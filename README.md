@@ -260,8 +260,8 @@ Public methods
 
 **Application `Swiftlet\App`**
 
-* `App run()`  
-Run the application
+* `App dispatchController()`  
+Determine which controller to use and run it
 
 * `mixed getConfig(string $variable)`  
 Get a configuration value
@@ -287,18 +287,15 @@ Get a view variable, encoded for safe use in HTML by default
 * `View set(string $variable [, mixed $value ])`  
 Set a view variable
 
-* `__set(string $variable [, mixed $value ])`  
-Magic method to set a view variable
-
-* `get(string $variable [, bool $htmlEncode ])`  
+* `mixed get(string $variable [, bool $htmlEncode ])`  
 Get a view variable, pass `false` as the second parameter to prevent values from
 being HTML encoded.
-
-* `__get(string $variable)`  
-Magic method to get a view variable
 
 * `mixed htmlEncode(mixed $value)`  
 Recursively make a value safe for HTML
 
 * `mixed htmlDecode(mixed $value)`  
 Recursively decode a previously encoded value to be rendered as HTML
+
+* `View render(string $path)`  
+Render the view

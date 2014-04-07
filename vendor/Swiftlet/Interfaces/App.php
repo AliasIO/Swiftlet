@@ -10,12 +10,12 @@ require_once 'vendor/Swiftlet/Interfaces/Common.php';
 interface App extends Common
 {
 	/**
-	 * Run the application
+	 * Dispatch the controller
 	 * @param string $controllerNamesapce
 	 * @param \Swiftlet\Interfaces\View $view
-	 * @return array
+	 * @return App
 	 */
-	public function run($controllerNamespace = '\Swiftlet\Controllers', \Swiftlet\Interfaces\View $view);
+	public function dispatchController($controllerNamespace, \Swiftlet\Interfaces\View $view);
 
 	/**
 	 * Load plugins
@@ -44,7 +44,7 @@ interface App extends Common
 	 * @param integer $index
 	 * @return mixed
 	 */
-	public function getArgs($index = null);
+	public function getArgs($index);
 
 	/**
 	 * Get the client-side path to root
@@ -60,7 +60,7 @@ interface App extends Common
 	 * @param array $params
 	 * @return App
 	 */
-	public function registerHook($hookName, Controller $controller, View $view, array $params = array());
+	public function registerHook($hookName, Controller $controller, View $view, array $params);
 
 	/**
 	 * Class autoloader
@@ -70,7 +70,7 @@ interface App extends Common
 	public function autoload($className);
 
 	/**
-	 * Error handler
+	 * Convert errors to \ErrorException instances
 	 * @param int $number
 	 * @param string $string
 	 * @param string $file

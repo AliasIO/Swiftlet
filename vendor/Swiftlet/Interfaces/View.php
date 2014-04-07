@@ -20,7 +20,7 @@ interface View extends Common
 	 * @param bool $htmlEncode
 	 * @return mixed|null
 	 */
-	public function get($variable, $htmlEncode = true);
+	public function get($variable, $htmlEncode);
 
 	/**
 	 * Magic method to get a view variable, forwards to $this->get()
@@ -34,7 +34,7 @@ interface View extends Common
 	 * @param string $variable
 	 * @param mixed $value
 	 */
-	public function __set($variable, $value = null);
+	public function __set($variable, $value);
 
 	/**
 	 * Magic method to set a view variable, forwards to $this->set()
@@ -42,7 +42,7 @@ interface View extends Common
 	 * @param mixed $value
 	 * @return Interfaces\View
 	 */
-	public function set($variable, $value = null);
+	public function set($variable, $value);
 
 	/**
 	 * Recursively make a value safe for HTML
@@ -60,8 +60,9 @@ interface View extends Common
 
 	/**
 	 * Render the view
+	 * @param string $path
 	 * @return Interfaces\View
 	 * @throws Exception
 	 */
-	public function render();
+	public function render($path);
 }

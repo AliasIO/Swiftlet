@@ -10,6 +10,7 @@ try {
 
 	$app = new App;
 
+	// Convert errors to ErrorException instances
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
 
 	spl_autoload_register(array($app, 'autoload'));
@@ -22,11 +23,11 @@ try {
 
 	$app->loadPlugins('\HelloWorld\Plugins'); // You may comment this out if you're not using plugins
 
-	$app->run('\HelloWorld\Controllers', $view);
+	$app->dispatchController('\HelloWorld\Controllers', $view);
 
 	ob_start();
 
-	$view->render();
+	$view->render('HelloWorld');
 
 	ob_end_flush();
 } catch ( \Exception $e ) {
