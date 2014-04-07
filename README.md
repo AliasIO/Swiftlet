@@ -41,11 +41,11 @@ Let's create a page. Each page consists of a controller and at least one view.
 The controller does most of the work; views should be limited to simple 
 presentation logic (loops and switches).
 
-**Controller `Swiftlet/Controllers/Foo.php`**
+**Controller `vendor/HelloWorld/Controllers/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet\Controllers;
+namespace HelloWorld\Controllers;
 
 class Foo extends \Swiftlet\Abstracts\Controller
 {
@@ -98,13 +98,13 @@ Consider this URL: `/foo/bar/baz/qux`
 In this case `foo` is the name of the controller and view, `bar` the name of 
 the action and `baz` and `qux` are additional arguments. If the controller or
 action is missing from the URL they will default to `index` (`/` will call 
-`index()` on `Swiftlet\Controller\Index`).
+`index()` on `HelloWorld\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
-`/foo_bar` will point to `Swiftlet/Controllers/Foo/Bar.php`.
+`/foo_bar` will point to `vendor/HelloWorld/Controllers/Foo/Bar.php`.
 
 Dashes in routes are ignored; `/foo-bar/baz-qux` calls `bazqux()` in 
-`Swiftlet/Controllers/Foobar.php`.
+`vendor/HelloWorld/Controllers/Foobar.php`.
 
 
 Actions and arguments
@@ -130,11 +130,11 @@ Models
 
 Let's throw a model into the mix and update the controller.
 
-**Model `Swiftlet/Models/Foo.php`**
+**Model `vendor/HelloWorld/Models/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet\Models;
+namespace HelloWorld\Models;
 
 class Foo extends \Swiftlet\Abstracts\Model
 {
@@ -145,11 +145,13 @@ class Foo extends \Swiftlet\Abstracts\Model
 }
 ```
 
-**Controller `Swiftlet/Controllers/Foo.php`**
+**Controller `vendor/HelloWorld/Controllers/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet\Controllers;
+namespace HelloWorld\Controllers;
+
+use HelloWorld\Models\Example as ExampleModel;
 
 class Foo extends \Swiftlet\Abstracts\Controller
 {
@@ -157,8 +159,9 @@ class Foo extends \Swiftlet\Abstracts\Controller
 
 	public function index()
 	{
-		// Get an instance of the Example class (Swiftlet/Models/Example.php)
-		$example = new \Swiftlet\Models\Example;
+		// Get an instance of the Example class 
+		// See vendor/HelloWorld/Models/Example.php
+		$example = new ExampleModel;
 
 		$this->view->helloWorld = $example->getHelloWorld();
 	}
@@ -170,7 +173,7 @@ object such as a user.
 
 ```php
 <?php
-$user = new \Swiftlet\Models\User;
+$user = new \HelloWorld\Models\User;
 
 $user->setEmail('example@example.com');
 
@@ -189,11 +192,11 @@ points for code that extends the application. Swiftlet has a few core hooks and
 additiontal ones can be registered pretty much anywhere using
 `$this->app->registerHook($hookName, $controller, $view)`.  
 
-**Plugin `Swiftlet/Plugins/Foo.php`**
+**Plugin `vendor/HelloWorld/Plugins/Foo.php`**
 
 ```php
 <?php
-namespace Swiftlet\Plugins;
+namespace HelloWorld\Plugins;
 
 class Foo extends \Swiftlet\Abstracts\Plugin
 {
@@ -209,7 +212,7 @@ This plugin implements the core `actionAfter` hook and changes the view
 variable `helloWorld` from our previous example to `Hi world!`.
 
 Plugins don't need to be installed or activated, all files in the
-`Swiftlet/Plugins/` directory are automatically included and their classes 
+`vendor/HelloWorld/Plugins/` directory are automatically included and their classes 
 instantiated. Plugins are hooked in alphabetical order.
 
 The core hooks are:
@@ -229,7 +232,7 @@ should go in a separate library class.
 
 ```php
 <?php
-$email = new \Swiftlet\Libraries\Email
+$email = new \HelloWorld\Libraries\Email
 
 $email->send($to, $subject, $message);
 ```

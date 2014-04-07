@@ -1,6 +1,6 @@
 <?php
 
-namespace Swiftlet\Models;
+namespace HelloWorld\Models;
 
 /**
  * Example model

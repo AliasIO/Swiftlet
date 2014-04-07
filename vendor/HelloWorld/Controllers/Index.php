@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet\Controllers;
+namespace HelloWorld\Controllers;
 
-use \Swiftlet\Models\Example as ExampleModel;
+use \HelloWorld\Models\Example as ExampleModel;
 
 /**
  * Index controller

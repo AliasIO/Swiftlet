@@ -6,7 +6,7 @@ try {
 	chdir(dirname(__FILE__) . '/..');
 
 	// Bootstrap the application
-	require 'Swiftlet/App.php';
+	require 'vendor/Swiftlet/App.php';
 
 	$app = new App;
 
@@ -20,9 +20,9 @@ try {
 
 	$view = new View;
 
-	$app->loadPlugins('\Swiftlet\Plugins'); // You may comment this out if you're not using plugins
+	$app->loadPlugins('\HelloWorld\Plugins'); // You may comment this out if you're not using plugins
 
-	$app->run('\Swiftlet\Controllers', $view);
+	$app->run('\HelloWorld\Controllers', $view);
 
 	ob_start();
 

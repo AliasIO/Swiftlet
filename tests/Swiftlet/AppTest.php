@@ -2,7 +2,7 @@
 
 namespace Swiftlet;
 
-$dir = dirname(__FILE__) . '/../../Swiftlet/';
+$dir = dirname(__FILE__) . '/../../vendor/Swiftlet/';
 
 require_once $dir . 'Interfaces/Common.php';
 require_once $dir . 'Interfaces/App.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Swiftlet\Libraries;
+namespace HelloWorld\Libraries;
 
 /**
  * Example library

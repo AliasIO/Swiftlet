@@ -2,7 +2,7 @@
 
 namespace Swiftlet\Interfaces;
 
-require_once 'Swiftlet/Interfaces/Common.php';
+require_once 'vendor/Swiftlet/Interfaces/Common.php';
 
 /**
  * Application interface

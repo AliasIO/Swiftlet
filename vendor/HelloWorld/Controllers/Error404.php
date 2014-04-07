@@ -1,6 +1,6 @@
 <?php
 
-namespace Swiftlet\Controllers;
+namespace HelloWorld\Controllers;
 
 /**
  * Error 404 controller

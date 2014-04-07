@@ -2,10 +2,10 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/App.php';
-require_once 'Swiftlet/Interfaces/Common.php';
-require_once 'Swiftlet/Abstracts/Common.php';
-require_once 'Swiftlet/Exception.php';
+require_once 'vendor/Swiftlet/Interfaces/App.php';
+require_once 'vendor/Swiftlet/Interfaces/Common.php';
+require_once 'vendor/Swiftlet/Abstracts/Common.php';
+require_once 'vendor/Swiftlet/Exception.php';
 
 /**
  * Application class
@@ -26,7 +26,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	protected $hooks = array();
 
 	/**
-	 * Plugins
+	 * vendor/Plugins
 	 * @var array
 	 */
 	protected $plugins = array();
@@ -53,7 +53,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 			}
 		}
 
-		if ( !is_file('.' . str_replace('\\', '/', $controllerClass) . '.php') ) {
+		if ( !is_file('vendor/' . str_replace('\\', '/', $controllerClass) . '.php') ) {
 			$controllerClass = $controllerNamespace . '\Error404';
 		}
 
@@ -101,11 +101,11 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	public function loadPlugins($namespace = '\Swiftlet\Plugins')
 	{
 		// Load plugins
-		if ( $handle = opendir('.' . str_replace('\\', '/', $namespace)) ) {
+		if ( $handle = opendir('vendor/' . str_replace('\\', '/', $namespace)) ) {
 			while ( ( $file = readdir($handle) ) !== false ) {
 				$pluginClass = $namespace . '\\' . preg_replace('/\.php$/', '', $file);
 
-				if ( is_file('.' . str_replace('\\', '/', $pluginClass) . '.php') ) {
+				if ( is_file('vendor/' . str_replace('\\', '/', $pluginClass) . '.php') ) {
 					$this->plugins[$pluginClass] = array();
 
 					$reflection = new \ReflectionClass($pluginClass);
@@ -236,7 +236,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	{
 		preg_match('/(^.+\\\)?([^\\\]+)$/', ltrim($className, '\\'), $match);
 
-		$file = str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
+		$file = 'vendor/' . str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
 
 		if ( file_exists($file) ) {
 			include $file;
