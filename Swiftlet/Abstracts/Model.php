@@ -2,9 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/Model.php';
-require_once 'Swiftlet/Abstracts/Common.php';
-
 /**
  * Model class
  * @abstract

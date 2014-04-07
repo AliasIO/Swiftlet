@@ -2,9 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/Controller.php';
-require_once 'Swiftlet/Abstracts/Common.php';
-
 /**
  * Controller class
  * @abstract

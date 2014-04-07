@@ -11,12 +11,18 @@ interface App extends Common
 {
 	/**
 	 * Run the application
-	 * @param View $view
-	 * @param string $controllerNamespace
-	 * @param string $pluginNamespace
+	 * @param string $controllerNamesapce
+	 * @param \Swiftlet\Interfaces\View $view
+	 * @return array
+	 */
+	public function run($controllerNamespace = '\Swiftlet\Controllers', \Swiftlet\Interfaces\View $view);
+
+	/**
+	 * Load plugins
+	 * @param string $namespace
 	 * @return App
 	 */
-	public function run(View $view, $controllerNamespace, $pluginNamespace);
+	public function loadPlugins($namespace);
 
 	/**
 	 * Get a configuration value

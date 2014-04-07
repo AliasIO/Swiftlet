@@ -2,9 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/View.php';
-require_once 'Swiftlet/Abstracts/Common.php';
-
 /**
  * View class
  * @abstract

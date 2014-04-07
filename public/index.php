@@ -7,7 +7,6 @@ try {
 
 	// Bootstrap the application
 	require 'Swiftlet/App.php';
-	require 'Swiftlet/View.php';
 
 	$app = new App;
 
@@ -21,7 +20,9 @@ try {
 
 	$view = new View;
 
-	$app->run($view);
+	$app->loadPlugins('\Swiftlet\Plugins'); // You may comment this out if you're not using plugins
+
+	$app->run('\Swiftlet\Controllers', $view);
 
 	ob_start();
 

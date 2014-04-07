@@ -2,6 +2,8 @@
 
 namespace Swiftlet\Controllers;
 
+use \Swiftlet\Models\Example as ExampleModel;
+
 /**
  * Index controller
  */
@@ -21,7 +23,7 @@ class Index extends \Swiftlet\Abstracts\Controller
 		// Some example code to get you started
 
 		// Create a model instance, see /Swiftlet/Models/Example.php
-		$example = new \Swiftlet\Models\Example;
+		$example = new ExampleModel;
 
 		// Get some data from the model and pass it to the view to display it
 		$this->view->helloWorld = $example->getHelloWorld();

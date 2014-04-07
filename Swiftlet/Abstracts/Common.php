@@ -2,9 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/Common.php';
-require_once 'Swiftlet/Exception.php';
-
 /**
  * Common class
  * @abstract

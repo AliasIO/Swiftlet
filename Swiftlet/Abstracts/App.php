@@ -3,7 +3,9 @@
 namespace Swiftlet\Abstracts;
 
 require_once 'Swiftlet/Interfaces/App.php';
+require_once 'Swiftlet/Interfaces/Common.php';
 require_once 'Swiftlet/Abstracts/Common.php';
+require_once 'Swiftlet/Exception.php';
 
 /**
  * Application class
@@ -32,10 +34,10 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	/**
 	 * Run the application
 	 * @param string $controllerNamesapce
-	 * @param string $pluginNamesapce
+	 * @param \Swiftlet\Interfaces\View $view
 	 * @return array
 	 */
-	public function run(\Swiftlet\Interfaces\View $view, $controllerNamespace = '\Swiftlet\Controllers', $pluginNamespace = '\Swiftlet\Plugins')
+	public function run($controllerNamespace = '\Swiftlet\Controllers', \Swiftlet\Interfaces\View $view)
 	{
 		$controllerClass = $controllerNamespace . '\Index';
 		$action          = 'index';
@@ -57,29 +59,6 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 
 		// Instantiate the controller
 		$controller = new $controllerClass();
-
-		// Load plugins
-		if ( $handle = opendir('.' . str_replace('\\', '/', $pluginNamespace)) ) {
-			while ( ( $file = readdir($handle) ) !== false ) {
-				$pluginClass = $pluginNamespace . '\\' . preg_replace('/\.php$/', '', $file);
-
-				if ( is_file('.' . str_replace('\\', '/', $pluginClass) . '.php') ) {
-					$this->plugins[$pluginClass] = array();
-
-					foreach ( get_class_methods($pluginClass) as $methodName ) {
-						$method = new \ReflectionMethod($pluginClass, $methodName);
-
-						if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() ) {
-							$this->plugins[$pluginClass][] = $methodName;
-						}
-					}
-				}
-			}
-
-			ksort($this->plugins);
-
-			closedir($handle);
-		}
 
 		$this->registerHook('actionBefore', $controller, $view);
 
@@ -110,6 +89,43 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		$controller->{$action}(array_slice($this->getArgs(), 2));
 
 		$this->registerHook('actionAfter', $controller, $view);
+
+		return $this;
+	}
+
+	/**
+	 * Load plugins
+	 * @param string $namespace
+	 * @return App
+	 */
+	public function loadPlugins($namespace = '\Swiftlet\Plugins')
+	{
+		// Load plugins
+		if ( $handle = opendir('.' . str_replace('\\', '/', $namespace)) ) {
+			while ( ( $file = readdir($handle) ) !== false ) {
+				$pluginClass = $namespace . '\\' . preg_replace('/\.php$/', '', $file);
+
+				if ( is_file('.' . str_replace('\\', '/', $pluginClass) . '.php') ) {
+					$this->plugins[$pluginClass] = array();
+
+					$reflection = new \ReflectionClass($pluginClass);
+
+					$parentClass = $reflection->getParentClass();
+
+					foreach ( get_class_methods($pluginClass) as $methodName ) {
+						$method = new \ReflectionMethod($pluginClass, $methodName);
+
+						if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() && !$parentClass->hasMethod($methodName) ) {
+							$this->plugins[$pluginClass][] = $methodName;
+						}
+					}
+				}
+			}
+
+			ksort($this->plugins);
+
+			closedir($handle);
+		}
 
 		return $this;
 	}
@@ -166,7 +182,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 
 	/**
 	 * Get the arguments from the URL
-	 * @param integer $index
+	 * @param int $index
 	 * @return mixed
 	 */
 	public function getArgs($index = null)

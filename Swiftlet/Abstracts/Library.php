@@ -2,9 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/Library.php';
-require_once 'Swiftlet/Abstracts/Common.php';
-
 /**
  * Library class
  * @abstract

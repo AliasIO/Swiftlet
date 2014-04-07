@@ -2,9 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'Swiftlet/Interfaces/Plugin.php';
-require_once 'Swiftlet/Abstracts/Common.php';
-
 /**
  * Plugin class
  * @abstract
