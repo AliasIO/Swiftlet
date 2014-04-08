@@ -151,8 +151,6 @@ class Foo extends \Swiftlet\Abstracts\Model
 <?php
 namespace HelloWorld\Controllers;
 
-use HelloWorld\Models\Example as ExampleModel;
-
 class Foo extends \Swiftlet\Abstracts\Controller
 {
 	protected $title = 'Foo';
@@ -161,7 +159,7 @@ class Foo extends \Swiftlet\Abstracts\Controller
 	{
 		// Get an instance of the Example class 
 		// See vendor/HelloWorld/Models/Example.php
-		$example = new ExampleModel;
+		$example = $this->app->getModel('example');
 
 		$this->view->helloWorld = $example->getHelloWorld();
 	}
@@ -173,7 +171,7 @@ object such as a user.
 
 ```php
 <?php
-$user = new \HelloWorld\Models\User;
+$user = $this->app->getModel('user');
 
 $user->setEmail('example@example.com');
 
@@ -232,7 +230,7 @@ should go in a separate library class.
 
 ```php
 <?php
-$email = new \HelloWorld\Libraries\Email
+$email = $this->app->getLibrary('email');
 
 $email->send($to, $subject, $message);
 ```
