@@ -21,7 +21,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 	public function testSetApp()
 	{
-		$app        = new Mocks\App;
+		$app        = new Mocks\App(new Mocks\View);
 		$controller = new Mocks\Controller;
 
 		$this->assertEquals($controller->setApp($app), $controller);

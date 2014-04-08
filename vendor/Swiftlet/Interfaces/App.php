@@ -10,19 +10,24 @@ require_once 'vendor/Swiftlet/Interfaces/Common.php';
 interface App extends Common
 {
 	/**
-	 * Dispatch the controller
-	 * @param string $controllerNamesapce
-	 * @param \Swiftlet\Interfaces\View $view
+	 * Constructor
+	 * @param View $view
+	 * @param string $vendor
 	 * @return App
 	 */
-	public function dispatchController($controllerNamespace, \Swiftlet\Interfaces\View $view);
+	public function __construct(View $view, $vendor);
+
+	/**
+	 * Dispatch the controller
+	 * @return App
+	 */
+	public function dispatchController();
 
 	/**
 	 * Load plugins
-	 * @param string $namespace
 	 * @return App
 	 */
-	public function loadPlugins($namespace);
+	public function loadPlugins();
 
 	/**
 	 * Get a configuration value
@@ -38,6 +43,20 @@ interface App extends Common
 	 * @return App
 	 */
 	public function setConfig($variable, $value);
+
+	/**
+	 * Get a model instance
+	 * @param string $modelName
+	 * @return \Swiftlet\Interfaces\Model
+	 */
+	public function getModel($modelName);
+
+	/**
+	 * Get a library instance
+	 * @param string $libraryName
+	 * @return \Swiftlet\Interfaces\Library
+	 */
+	public function getLibrary($libraryName);
 
 	/**
 	 * Get the arguments

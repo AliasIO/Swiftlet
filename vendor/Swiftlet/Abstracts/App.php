@@ -14,6 +14,18 @@ require_once 'vendor/Swiftlet/Exception.php';
 abstract class App extends Common implements \Swiftlet\Interfaces\App
 {
 	/**
+	 * Vendor
+	 * @var string
+	 */
+	protected $vendor = 'Swiftlet';
+
+	/**
+	 * View instance
+	 * @var \Swiftlet\Interfaces\View
+	 */
+	protected $view;
+
+	/**
 	 * Configuration values
 	 * @var array
 	 */
@@ -32,15 +44,30 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	protected $plugins = array();
 
 	/**
-	 * Run the application
-	 * @param string $controllerNamesapce
-	 * @param \Swiftlet\Interfaces\View $view
-	 * @return array
+	 * Constructor
+	 * @param string $vendor
+	 * @return App
 	 */
-	public function dispatchController($controllerNamespace, \Swiftlet\Interfaces\View $view)
+	public function __construct(\Swiftlet\Interfaces\View $view, $vendor = null)
 	{
-		$controllerClass = $controllerNamespace . '\Index';
-		$action          = 'index';
+		$this->view = $view;
+
+		if ( $vendor ) {
+			$this->vendor = $vendor;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Distpatch the controller
+	 * @return App
+	 */
+	public function dispatchController()
+	{
+		$controllerNamespace = $this->vendor . '\Controllers';
+		$controllerClass     = $controllerNamespace . '\Index';
+		$action              = 'index';
 
 		$args = $this->getArgs();
 
@@ -60,7 +87,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		// Instantiate the controller
 		$controller = new $controllerClass();
 
-		$this->registerHook('actionBefore', $controller, $view);
+		$this->registerHook('actionBefore', $controller, $this->view);
 
 		$actionExists = false;
 
@@ -81,14 +108,26 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 
 		$controller
 			->setApp($this)
-			->setView($view);
-
-		$view->setApp($this);
+			->setView($this->view);
 
 		// Call the controller action
 		$controller->{$action}(array_slice($this->getArgs(), 2));
 
-		$this->registerHook('actionAfter', $controller, $view);
+		$this->registerHook('actionAfter', $controller, $this->view);
+
+		return $this;
+	}
+
+	/**
+	 * Serve the page
+	 * @return App
+	 */
+	public function serve()
+	{
+		$this->view->vendor   = $this->getVendor();
+		$this->view->rootPath = $this->getRootPath();
+
+		$this->view->render();
 
 		return $this;
 	}
@@ -98,12 +137,12 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * @param string $namespace
 	 * @return App
 	 */
-	public function loadPlugins($namespace)
+	public function loadPlugins()
 	{
 		// Load plugins
-		if ( $handle = opendir('vendor/' . str_replace('\\', '/', $namespace)) ) {
+		if ( $handle = opendir('vendor/' . str_replace('\\', '/', $this->getVendor() . '/Plugins')) ) {
 			while ( ( $file = readdir($handle) ) !== false ) {
-				$pluginClass = $namespace . '\\' . preg_replace('/\.php$/', '', $file);
+				$pluginClass = $this->getVendor() . '\Plugins\\' . preg_replace('/\.php$/', '', $file);
 
 				if ( is_file('vendor/' . str_replace('\\', '/', $pluginClass) . '.php') ) {
 					$this->plugins[$pluginClass] = array();
@@ -131,6 +170,15 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	}
 
 	/**
+	 * Get the vendor
+	 * @return string
+	 */
+	public function getVendor()
+	{
+		return $this->vendor;
+	}
+
+	/**
 	 * Get a configuration value
 	 * @param string $variable
 	 * @return mixed
@@ -151,6 +199,30 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		$this->config[$variable] = $value;
 
 		return $this;
+	}
+
+	/**
+	 * Get a model instance
+	 * @param string $modelName
+	 * @return \Swiftlet\Interfaces\Model
+	 */
+	public function getModel($modelName)
+	{
+		$modelClass = '\\' . $this->getVendor() . '\Models\\' . ucfirst($modelName);
+
+		return new $modelClass;
+	}
+
+	/**
+	 * Get a library instance
+	 * @param string $libraryName
+	 * @return \Swiftlet\Interfaces\Library
+	 */
+	public function getLibrary($libraryName)
+	{
+		$libraryClass = '\\' . $this->getVendor() . '\Libraries\\' . ucfirst($modelName);
+
+		return new $libraryClass($this);
 	}
 
 	/**

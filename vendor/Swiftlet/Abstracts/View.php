@@ -6,14 +6,8 @@ namespace Swiftlet\Abstracts;
  * View class
  * @abstract
  */
-class View extends Common implements \Swiftlet\Interfaces\View
+abstract class View extends Common implements \Swiftlet\Interfaces\View
 {
-	/**
-	 * Application instance
-	 * @var \Swiftlet\Interfaces\App
-	 */
-	protected $app;
-
 	/**
 	 * View variables
 	 * @var array
@@ -21,22 +15,16 @@ class View extends Common implements \Swiftlet\Interfaces\View
 	protected $variables = array();
 
 	/**
+	 * Vendor name
+	 * @var string
+	 */
+	public $vendor;
+
+	/**
 	 * View name
 	 * @var string
 	 */
 	public $name;
-
-	/**
-	 * Set application instance
-	 * @param \Swiftlet\Interfaces\App $app
-	 * @return \Swiftlet\Interfaces\View
-	 */
-	public function setApp(\Swiftlet\Interfaces\App $app)
-	{
-		$this->app = $app;
-
-		return $this;
-	}
 
 	/**
 	 * Get a view variable
@@ -147,13 +135,12 @@ class View extends Common implements \Swiftlet\Interfaces\View
 
 	/**
 	 * Render the view
-	 * @param string $path
 	 * @return \Swiftlet\Interfaces\View
 	 * @throws Exception
 	 */
-	public function render($path)
+	public function render()
 	{
-		if ( is_file($file = 'vendor/' . $path . '/views/' . $this->name . '.php') ) {
+		if ( is_file($file = 'vendor/' . $this->vendor . '/views/' . $this->name . '.php') ) {
 			header('X-Generator: Swiftlet');
 
 			include $file;

@@ -19,7 +19,11 @@ require_once 'Mocks/View.php';
 
 class AppTest extends \PHPUnit_Framework_TestCase
 {
-	function testRun()
+	function testDispatchController()
+	{
+	}
+
+	function testServe()
 	{
 	}
 
@@ -32,6 +36,14 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	}
 
 	function testSetConfig()
+	{
+	}
+
+	function testGetModel()
+	{
+	}
+
+	function testGetLibary()
 	{
 	}
 

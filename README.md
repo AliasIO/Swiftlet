@@ -263,11 +263,20 @@ Public methods
 * `App dispatchController()`  
 Determine which controller to use and run it
 
+* `App serve()`  
+Serve the page
+
 * `mixed getConfig(string $variable)`  
 Get a configuration value
 
 * `App setConfig(string $variable, mixed $value)`  
 Set a configuration value
+
+* `Model getModel(string $modelName)`
+Get a model instance
+
+* `Library getLibrary(string $libraryName)`
+Get a library instance
 
 * `array getArgs([ integer $index ])`  
 List of arguments passed in the URL, or a specific argument if `$index` is specified

@@ -19,10 +19,6 @@ require_once 'Mocks/View.php';
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
-	function testSetApp()
-	{
-	}
-
 	function testGet()
 	{
 	}

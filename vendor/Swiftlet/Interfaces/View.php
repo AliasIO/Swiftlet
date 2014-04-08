@@ -8,13 +8,6 @@ namespace Swiftlet\Interfaces;
 interface View extends Common
 {
 	/**
-	 * Set application instance
-	 * @param App $app
-	 * @return View
-	 */
-	public function setApp(App $app);
-
-	/**
 	 * Get a view variable
 	 * @param string $variable
 	 * @param bool $htmlEncode
@@ -60,9 +53,8 @@ interface View extends Common
 
 	/**
 	 * Render the view
-	 * @param string $path
 	 * @return Interfaces\View
 	 * @throws Exception
 	 */
-	public function render($path);
+	public function render();
 }

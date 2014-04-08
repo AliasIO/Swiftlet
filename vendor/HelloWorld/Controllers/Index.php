@@ -2,8 +2,6 @@
 
 namespace HelloWorld\Controllers;
 
-use \HelloWorld\Models\Example as ExampleModel;
-
 /**
  * Index controller
  */
@@ -20,10 +18,8 @@ class Index extends \Swiftlet\Abstracts\Controller
 	 */
 	public function index(array $args = array())
 	{
-		// Some example code to get you started
-
-		// Create a model instance, see /Swiftlet/Models/Example.php
-		$example = new ExampleModel;
+		// Create a model instance, see /HelloWorld/Models/Example.php
+		$example = $this->app->getModel('example');
 
 		// Get some data from the model and pass it to the view to display it
 		$this->view->helloWorld = $example->getHelloWorld();

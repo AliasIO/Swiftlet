@@ -7,8 +7,9 @@ try {
 
 	// Bootstrap the application
 	require 'vendor/Swiftlet/App.php';
+	require 'vendor/Swiftlet/View.php';
 
-	$app = new App;
+	$app = new App(new View, 'HelloWorld');
 
 	// Convert errors to ErrorException instances
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
@@ -19,15 +20,13 @@ try {
 
 	date_default_timezone_set('UTC');
 
-	$view = new View;
+	$app->loadPlugins(); // You may comment this out if you're not using plugins
 
-	$app->loadPlugins('\HelloWorld\Plugins'); // You may comment this out if you're not using plugins
-
-	$app->dispatchController('\HelloWorld\Controllers', $view);
+	$app->dispatchController();
 
 	ob_start();
 
-	$view->render('HelloWorld');
+	$app->serve();
 
 	ob_end_flush();
 } catch ( \Exception $e ) {
