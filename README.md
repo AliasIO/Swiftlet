@@ -51,7 +51,8 @@ class Foo extends \Swiftlet\Abstracts\Controller
 {
 	protected $title = 'Foo'; // Optional but usually desired 
 
-	public function index()
+	// Default action
+	public function index(array $args = $args)
 	{
 		// Pass a variable to the view
 		$this->view->helloWorld = 'Hello world!';
@@ -95,16 +96,60 @@ named `Foo`. The application maps URLs to controllers, actions and arguments.
 
 Consider this URL: `/foo/bar/baz/qux`
 
-In this case `foo` is the name of the controller and view, `bar` the name of 
-the action and `baz` and `qux` are additional arguments. If the controller or
-action is missing from the URL they will default to `index` (`/` will call 
-`index()` on `HelloWorld\Controller\Index`).
+In this case `foo` becomes the name of the controller and view, `bar` the name 
+of the action and `baz` and `qux` are arguments (accessible through the `$args`
+variable in the controller).
+
+If the controller or action is not specified they default to `index` (`/`
+will call `index()` on `HelloWorld\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
 `/foo_bar` will point to `vendor/HelloWorld/Controllers/Foo/Bar.php`.
 
 Dashes in routes are ignored; `/foo-bar/baz-qux` calls `bazqux()` in 
 `vendor/HelloWorld/Controllers/Foobar.php`.
+
+
+**Custom routes**
+
+Automatic routing is convenient but more granular control is often desirable.
+In these cases custom routes can be defined.
+
+A route maps a URL to an action (method).
+
+URL segments can be replaced with a "wildcard" placeholder (a variable name
+prefixed with a colon). This value becomes available for use in the 
+controller.
+
+Consider this route: `bar/:qux`
+
+Navigating to `bar/something` matches this route. The value of `$args['qux']`
+becomes `something`.
+
+
+```php
+<?php
+namespace HelloWorld\Controllers;
+
+class Foo extends \Swiftlet\Abstracts\Controller
+{
+	protected $routes = array(
+		'hello/world' => 'index',
+		'bar/:qux'    => 'bar'
+		);
+
+	public function index(array $args = $args)
+	{
+		// You navigated to hello/world
+	}
+
+	public function bar(array $args = $args)
+	{
+		// You navigated to bar/<something>
+		// $args['qux'] contains the second URL argument
+	}
+}
+```
 
 
 Actions and arguments
@@ -276,12 +321,6 @@ Get a model instance
 * `Library getLibrary(string $libraryName)`
 Get a library instance
 
-* `array getArgs([ integer $index ])`  
-List of arguments passed in the URL, or a specific argument if `$index` is specified
-
-* `string getRootPath()`  
-Absolute client-side path to the website root
-
 * `App registerHook(string $hookName, array $params)`  
 Register a hook
 
@@ -297,6 +336,9 @@ Set a view variable
 * `mixed get(string $variable [, bool $htmlEncode ])`  
 Get a view variable, pass `false` as the second parameter to prevent values from
 being HTML encoded.
+
+* `string getRootPath()`  
+Absolute client-side path to the website root
 
 * `mixed htmlEncode(mixed $value)`  
 Recursively make a value safe for HTML

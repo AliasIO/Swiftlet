@@ -27,6 +27,12 @@ abstract class Controller extends Common implements \Swiftlet\Interfaces\Control
 	protected $title;
 
 	/**
+	 * Routes
+	 * @var array
+	 */
+	protected $routes = array();
+
+	/**
 	 * Set application instance
 	 * @param \Swiftlet\Interfaces\App $app
 	 * @return \Swiftlet\Interfaces\Controller
@@ -68,6 +74,15 @@ abstract class Controller extends Common implements \Swiftlet\Interfaces\Control
 		$this->view->pageTitle = $title;
 
 		return $this;
+	}
+
+	/**
+	 * Get routes
+	 * @return array
+	 */
+	public function getRoutes()
+	{
+		return $this->routes;
 	}
 
 	/**

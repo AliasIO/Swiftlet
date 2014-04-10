@@ -13,6 +13,6 @@ class Example extends \Swiftlet\Abstracts\Model
 	 */
 	public function getHelloWorld()
 	{
-		return 'Hello world!';
+		return 'Hello, world!';
 	}
 }

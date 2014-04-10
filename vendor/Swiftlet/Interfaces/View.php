@@ -38,6 +38,12 @@ interface View extends Common
 	public function set($variable, $value);
 
 	/**
+	 * Get the client-side path to root
+	 * @return string
+	 */
+	public function getRootPath();
+
+	/**
 	 * Recursively make a value safe for HTML
 	 * @param mixed $value
 	 * @return mixed

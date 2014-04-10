@@ -65,29 +65,70 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 */
 	public function dispatchController()
 	{
-		$controllerNamespace = $this->vendor . '\Controllers';
-		$controllerClass     = $controllerNamespace . '\Index';
-		$action              = 'index';
+		$pageNotFound    = false;
+		$controllerClass = $this->getVendor() . '\Controllers\Index';
+		$action          = 'index';
+		$params          = array();
 
-		$args = $this->getArgs();
+		// Get the controller, action and remaining parameters from the URL
+		$requestUri = !empty($_GET['q']) ? preg_replace('/^public\//', '', rtrim($_GET['q'], '/')) : '';
 
-		// Get the controller and action name from the URL
+		$args = $requestUri ? explode('/', $requestUri) : array();
+
+		$params = $args;
+
 		if ( $args ) {
-			$controllerClass = $controllerNamespace . '\\' . str_replace(' ', '\\', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($args)))));
+			$controllerClass = $this->getVendor() . '\Controllers\\' . str_replace(' ', '\\', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($args)))));
 
 			if ( $args ) {
 				$action = str_replace('-', '', array_shift($args));
 			}
-		}
 
-		if ( !is_file('vendor/' . str_replace('\\', '/', $controllerClass) . '.php') ) {
-			$controllerClass = $controllerNamespace . '\Error404';
+			if ( is_file('vendor/' . str_replace('\\', '/', $controllerClass) . '.php') ) {
+				$params[0] = null;
+			} else {
+				$pageNotFound = true;
+
+				$controllerClass = $this->getVendor() . '\Controllers\Index';
+			}
 		}
 
 		// Instantiate the controller
 		$controller = new $controllerClass();
 
-		$this->registerHook('actionBefore', $controller, $this->view);
+		// Get the action and named parameters if custom routes have been specified
+		$routes = $controller->getRoutes();
+
+		foreach ( $routes as $route => $method ) {
+			$segments = explode('/', $route);
+
+			$regex = '/^' . str_replace('/', '\\/', preg_replace('/\(:[^\/]+\)/', '([^/]+)', preg_replace('/([^\/]+)/', '(\\1)', $route))) . '$/';
+
+			preg_match($regex, $requestUri, $matches);
+
+			array_shift($matches);
+
+			if ( $matches ) {
+				$action       = $method;
+				$pageNotFound = false;
+
+				$params = array();
+
+				foreach ( $segments as $i => $segment ) {
+					if ( substr($segment, 0, 1) == ':' ) {
+						$params[ltrim($segment, ':')] = $matches[$i];
+					}
+				}
+
+				$break;
+			}
+		}
+
+		if ( $pageNotFound ) {
+			$controllerClass = $this->getVendor() . '\Controllers\Error404';
+
+			$controller = new $controllerClass();
+		}
 
 		$actionExists = false;
 
@@ -99,11 +140,12 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 			}
 		}
 
-		if ( !$actionExists ) {
-			$controllerClass = $controllerNamespace . '\Error404';
-			$action          = 'index';
+		$this->registerHook('actionBefore', $controller, $this->view);
 
-			$controller = new $controllerClass;
+		if ( $actionExists ) {
+			$params[1] = null;
+		} else {
+			$action = 'index';
 		}
 
 		$controller
@@ -111,7 +153,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 			->setView($this->view);
 
 		// Call the controller action
-		$controller->{$action}(array_slice($this->getArgs(), 2));
+		$controller->{$action}(array_filter($params));
 
 		$this->registerHook('actionAfter', $controller, $this->view);
 
@@ -124,8 +166,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 */
 	public function serve()
 	{
-		$this->view->vendor   = $this->getVendor();
-		$this->view->rootPath = $this->getRootPath();
+		$this->view->vendor = $this->getVendor();
 
 		$this->view->render();
 
@@ -223,53 +264,6 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		$libraryClass = '\\' . $this->getVendor() . '\Libraries\\' . ucfirst($modelName);
 
 		return new $libraryClass($this);
-	}
-
-	/**
-	 * Get the client-side path to root
-	 * @return string
-	 */
-	public function getRootPath()
-	{
-		$rootPath = '';
-
-		// Determine the client-side path to root
-		if ( !empty($_SERVER['REQUEST_URI']) ) {
-			$rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
-		}
-
-		// Run from command line, e.g. "php index.php -q index"
-		$opt = getopt('q:');
-
-		if ( isset($opt['q']) ) {
-			$_GET['q'] = $opt['q'];
-		}
-
-		if ( !empty($_GET['q']) ) {
-			$rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $rootPath);
-		}
-
-		return $rootPath;
-	}
-
-	/**
-	 * Get the arguments from the URL
-	 * @param int $index
-	 * @return mixed
-	 */
-	public function getArgs($index = null)
-	{
-		$args = array();
-
-		if ( !empty($_GET['q']) ) {
-			$args = explode('/', preg_replace('/^public\//', '', rtrim($_GET['q'], '/')));
-
-			if ( is_int($index) ) {
-				$args = isset($args[$index]) ? $args[$index] : null;
-			}
-		}
-
-		return $args;
 	}
 
 	/**

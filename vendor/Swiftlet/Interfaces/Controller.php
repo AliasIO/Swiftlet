@@ -29,6 +29,12 @@ interface Controller extends Common
 	public function setTitle($title);
 
 	/**
+	 * Get routes
+	 * @return array
+	 */
+	public function getRoutes();
+
+	/**
 	 * Default action
 	 */
 	public function index();

@@ -59,19 +59,6 @@ interface App extends Common
 	public function getLibrary($libraryName);
 
 	/**
-	 * Get the arguments
-	 * @param integer $index
-	 * @return mixed
-	 */
-	public function getArgs($index);
-
-	/**
-	 * Get the client-side path to root
-	 * @return string
-	 */
-	public function getRootPath();
-
-	/**
 	 * Register a hook for plugins to implement
 	 * @param string $hookName
 	 * @param Interfaces\Controller $controller
