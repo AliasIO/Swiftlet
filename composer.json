@@ -1,0 +1,28 @@
+{
+	"name": "aliasio/swiftlet",
+	"type": "library",
+	"description": "Quite possibly the smallest MVC framework you'll ever use.",
+	"keywords": ["framework"],
+	"homepage": "http://swiftlet.org",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Elbert Alias",
+			"email": "elbert@alias.io"
+		}
+	],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/ElbertF/Swiftlet"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+	},
+	"autoload": {
+		"psr-0": { 
+			"Swiftlet\\": "vendor/" 
+		},
+	}
+}
