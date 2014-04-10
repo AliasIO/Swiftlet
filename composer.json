@@ -23,6 +23,6 @@
 	"autoload": {
 		"psr-0": { 
 			"Swiftlet\\": "vendor/" 
-		},
+		}
 	}
 }
