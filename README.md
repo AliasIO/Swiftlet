@@ -123,8 +123,8 @@ controller.
 
 Consider this route: `bar/:qux`
 
-Navigating to `bar/something` matches this route. The value of `$args['qux']`
-becomes `something`.
+Navigating to `<controller>/bar/something` matches this route. The value of 
+`$args['qux']` becomes `something`.
 
 
 ```php
@@ -140,12 +140,12 @@ class Foo extends \Swiftlet\Abstracts\Controller
 
 	public function index(array $args = $args)
 	{
-		// You navigated to hello/world
+		// You navigated to foo/hello/world
 	}
 
 	public function bar(array $args = $args)
 	{
-		// You navigated to bar/<something>
+		// You navigated to foo/bar/<something>
 		// $args['qux'] contains the second URL argument
 	}
 }
