@@ -6,8 +6,4 @@
 	<?= $this->helloWorld ?>
 </p>
 
-<p>
-	<a href="<?= $this->getRootPath() ?>hello/world">Custom route example</a>
-</p>
-
 <?php include 'footer.php' ?>

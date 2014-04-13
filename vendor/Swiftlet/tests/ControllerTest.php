@@ -1,47 +1,38 @@
 <?php
 
-namespace Swiftlet;
+namespace Mock;
 
-$dir = dirname(__FILE__) . '/../';
-
-require_once $dir . 'Interfaces/Common.php';
-require_once $dir . 'Interfaces/App.php';
-require_once $dir . 'Interfaces/Controller.php';
-require_once $dir . 'Interfaces/View.php';
-require_once $dir . 'Abstracts/Common.php';
-require_once $dir . 'Abstracts/App.php';
-require_once $dir . 'Abstracts/Controller.php';
-require_once $dir . 'Abstracts/View.php';
-
-require_once 'Mocks/App.php';
-require_once 'Mocks/Controller.php';
-require_once 'Mocks/View.php';
+require_once 'vendor/Mock/App.php';
+require_once 'vendor/Mock/View.php';
 
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
+	protected $controller;
+
+	protected $view;
+
+	protected function setUp()
+	{
+		$this->view       = new View;
+		$this->controller = new Controllers\Index;
+	}
+
 	public function testSetApp()
 	{
-		$app        = new Mocks\App(new Mocks\View);
-		$controller = new Mocks\Controller;
+		$app = new App($this->view, 'Mock');
 
-		$this->assertEquals($controller->setApp($app), $controller);
+		$this->assertEquals($this->controller->setApp($app), $this->controller);
 	}
 
 	public function testSetView()
 	{
-		$view       = new Mocks\View;
-		$controller = new Mocks\Controller;
-
-		$this->assertEquals($controller->setView($view), $controller);
+		$this->assertEquals($this->controller->setView($this->view), $this->controller);
 	}
 
 	public function testSetTitle()
 	{
-		$view       = new Mocks\View;
-		$controller = new Mocks\Controller;
+		$this->controller->setView($this->view);
 
-		$controller->setView($view);
-
-		$this->assertEquals($controller->setTitle('title'), $controller);
+		$this->assertEquals($this->controller->setTitle('title'), $this->controller);
 	}
 }

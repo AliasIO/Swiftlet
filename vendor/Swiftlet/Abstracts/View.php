@@ -9,16 +9,22 @@ namespace Swiftlet\Abstracts;
 abstract class View extends Common implements \Swiftlet\Interfaces\View
 {
 	/**
+	 * Vendor name
+	 * @var string
+	 */
+	public $vendor = 'Swiftlet';
+
+	/**
+	 * Vendor path
+	 * @var string
+	 */
+	public $vendorPath = 'vendor/';
+
+	/**
 	 * View variables
 	 * @var array
 	 */
 	protected $variables = array();
-
-	/**
-	 * Vendor name
-	 * @var string
-	 */
-	public $vendor;
 
 	/**
 	 * View name
@@ -163,16 +169,18 @@ abstract class View extends Common implements \Swiftlet\Interfaces\View
 	/**
 	 * Render the view
 	 * @return \Swiftlet\Interfaces\View
-	 * @throws Exception
+	 * @throws \Swiftlet\Exception
 	 */
 	public function render()
 	{
-		if ( is_file($file = 'vendor/' . $this->vendor . '/views/' . $this->name . '.php') ) {
-			header('X-Generator: Swiftlet');
+		if ( is_file($file = $this->vendorPath . $this->vendor . '/views/' . $this->name . '.php') ) {
+			if ( !headers_sent() ) {
+				header('X-Generator: Swiftlet');
+			}
 
 			include $file;
 		} else {
-			throw new Exception('View not found');
+			throw new \Swiftlet\Exception('View not found');
 		}
 
 		return $this;

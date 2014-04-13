@@ -20,6 +20,12 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	protected $vendor = 'Swiftlet';
 
 	/**
+	 * Vendor path
+	 * @var string
+	 */
+	protected $vendorPath = 'vendor/';
+
+	/**
 	 * View instance
 	 * @var \Swiftlet\Interfaces\View
 	 */
@@ -45,15 +51,21 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 
 	/**
 	 * Constructor
+	 * @param \Swiftlet\Interfaces\View $view
 	 * @param string $vendor
+	 * @param string $vendorPath
 	 * @return App
 	 */
-	public function __construct(\Swiftlet\Interfaces\View $view, $vendor = null)
+	public function __construct(\Swiftlet\Interfaces\View $view, $vendor = null, $vendorPath = 'vendor/')
 	{
 		$this->view = $view;
 
-		if ( $vendor ) {
+		if ( isset($vendor) ) {
 			$this->vendor = $vendor;
+		}
+
+		if ( isset($vendorPath) ) {
+			$this->vendorPath = rtrim($vendorPath, '/') . '/';
 		}
 
 		return $this;
@@ -66,7 +78,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	public function dispatchController()
 	{
 		$pageNotFound    = false;
-		$controllerClass = $this->getVendor() . '\Controllers\Index';
+		$controllerClass = '\\' . $this->vendor . '\Controllers\Index';
 		$action          = 'index';
 		$params          = array();
 
@@ -78,18 +90,18 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		$params = $args;
 
 		if ( $args ) {
-			$controllerClass = $this->getVendor() . '\Controllers\\' . str_replace(' ', '\\', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($args)))));
+			$controllerClass = '\\' . $this->vendor . '\Controllers\\' . str_replace(' ', '\\', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($args)))));
 
 			if ( $args ) {
 				$action = str_replace('-', '', array_shift($args));
 			}
 
-			if ( is_file('vendor/' . str_replace('\\', '/', $controllerClass) . '.php') ) {
+			if ( is_file($this->vendorPath . str_replace('\\', '/', $controllerClass) . '.php') ) {
 				$params[0] = null;
 			} else {
 				$pageNotFound = true;
 
-				$controllerClass = $this->getVendor() . '\Controllers\Index';
+				$controllerClass = '\\' . $this->vendor . '\Controllers\Index';
 			}
 		}
 
@@ -125,7 +137,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		}
 
 		if ( $pageNotFound ) {
-			$controllerClass = $this->getVendor() . '\Controllers\Error404';
+			$controllerClass = '\\' . $this->vendor . '\Controllers\Error404';
 
 			$controller = new $controllerClass();
 		}
@@ -166,7 +178,8 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 */
 	public function serve()
 	{
-		$this->view->vendor = $this->getVendor();
+		$this->view->vendor     = $this->vendor;
+		$this->view->vendorPath = $this->vendorPath;
 
 		$this->view->render();
 
@@ -181,11 +194,11 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	public function loadPlugins()
 	{
 		// Load plugins
-		if ( $handle = opendir('vendor/' . str_replace('\\', '/', $this->getVendor() . '/Plugins')) ) {
+		if ( $handle = opendir($this->vendorPath . str_replace('\\', '/', $this->vendor . '/Plugins')) ) {
 			while ( ( $file = readdir($handle) ) !== false ) {
-				$pluginClass = $this->getVendor() . '\Plugins\\' . preg_replace('/\.php$/', '', $file);
+				$pluginClass = $this->vendor . '\Plugins\\' . preg_replace('/\.php$/', '', $file);
 
-				if ( is_file('vendor/' . str_replace('\\', '/', $pluginClass) . '.php') ) {
+				if ( is_file($this->vendorPath . str_replace('\\', '/', $pluginClass) . '.php') ) {
 					$this->plugins[$pluginClass] = array();
 
 					$reflection = new \ReflectionClass($pluginClass);
@@ -208,15 +221,6 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Get the vendor
-	 * @return string
-	 */
-	public function getVendor()
-	{
-		return $this->vendor;
 	}
 
 	/**
@@ -249,7 +253,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 */
 	public function getModel($modelName)
 	{
-		$modelClass = '\\' . $this->getVendor() . '\Models\\' . ucfirst($modelName);
+		$modelClass = '\\' . $this->vendor . '\Models\\' . ucfirst($modelName);
 
 		return new $modelClass;
 	}
@@ -261,7 +265,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 */
 	public function getLibrary($libraryName)
 	{
-		$libraryClass = '\\' . $this->getVendor() . '\Libraries\\' . ucfirst($modelName);
+		$libraryClass = '\\' . $this->vendor . '\Libraries\\' . ucfirst($libraryName);
 
 		return new $libraryClass($this);
 	}
@@ -302,7 +306,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	{
 		preg_match('/(^.+\\\)?([^\\\]+)$/', ltrim($className, '\\'), $match);
 
-		$file = 'vendor/' . str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
+		$file = $this->vendorPath . str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
 
 		if ( file_exists($file) ) {
 			include $file;

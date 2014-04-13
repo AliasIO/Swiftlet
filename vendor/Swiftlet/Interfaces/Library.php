@@ -5,11 +5,12 @@ namespace Swiftlet\Interfaces;
 /**
  * Library interface
  */
-interface Library extends AbstractCommon
+interface Library extends Common
 {
 	/**
-	 * Constructor
+	 * Set application instance
 	 * @param App $app
+	 * @return Library
 	 */
-	public function __construct(App $app);
+	public function setApp(App $app);
 }
