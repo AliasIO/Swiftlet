@@ -127,6 +127,8 @@ abstract class View extends Common implements \Swiftlet\Interfaces\View
 
 				break;
 			case 'object':
+				$value = clone $value;
+
 				foreach ( $value as $k => $v ) {
 					$value->$k = $this->htmlEncode($v);
 				}
@@ -154,6 +156,8 @@ abstract class View extends Common implements \Swiftlet\Interfaces\View
 
 				break;
 			case 'object':
+				$value = clone $value;
+
 				foreach ( $value as $k => $v ) {
 					$value->$k = $this->htmlDecode($v);
 				}
