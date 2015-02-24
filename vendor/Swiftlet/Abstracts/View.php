@@ -175,9 +175,14 @@ abstract class View extends Common implements \Swiftlet\Interfaces\View
 	 * @return \Swiftlet\Interfaces\View
 	 * @throws \Swiftlet\Exception
 	 */
-	public function render()
+	public function render($dir = '')
 	{
-		if ( is_file($file = $this->vendorPath . $this->vendor . '/views/' . $this->name . '.php') ) {
+		if ( $dir ) {
+			$path = '/views/' . rtrim($dir, '/') . '/';
+		} else {
+			$path = '/views/';
+		}
+		if ( is_file($file = $this->vendorPath . $this->vendor . $path . $this->name . '.php') ) {
 			if ( !headers_sent() ) {
 				header('X-Generator: Swiftlet');
 			}

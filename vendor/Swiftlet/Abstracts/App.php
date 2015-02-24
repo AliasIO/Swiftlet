@@ -176,12 +176,12 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * Serve the page
 	 * @return App
 	 */
-	public function serve()
+	public function serve($dir = '')
 	{
 		$this->view->vendor     = $this->vendor;
 		$this->view->vendorPath = $this->vendorPath;
 
-		$this->view->render();
+		$this->view->render($dir);
 
 		return $this;
 	}
