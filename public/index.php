@@ -26,6 +26,7 @@ try {
 
 	ob_start();
 
+	// To specify a directory, add it as an argument. For a demo, enter 'demo'.
 	$app->serve();
 
 	ob_end_flush();
