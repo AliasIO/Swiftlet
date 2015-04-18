@@ -1,4 +1,9 @@
-log/exceptions.log
+composer.lock
+composer.phar
+log/*.log
 tags
+vendor/*
 .DS_Store
 .idea/
+
+!.gitkeep

@@ -5,16 +5,12 @@ namespace Swiftlet;
 try {
 	chdir(dirname(__FILE__) . '/..');
 
-	// Bootstrap the application
-	require 'vendor/Swiftlet/App.php';
-	require 'vendor/Swiftlet/View.php';
+	require 'vendor/autoload.php';
 
 	$app = new App(new View, 'HelloWorld');
 
 	// Convert errors to ErrorException instances
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
-
-	spl_autoload_register(array($app, 'autoload'));
 
 	require 'config/main.php';
 
@@ -37,7 +33,9 @@ try {
 
 	$errorCode = substr(sha1(uniqid(mt_rand(), true)), 0, 5);
 
-	file_put_contents('log/exceptions.log', $errorCode . date(' r ') . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine() . "\n", FILE_APPEND);
+	$errorMessage = $errorCode . date(' r ') . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
+
+	file_put_contents('log/exceptions.log', "\n" . $errorMessage . "\n" . $e->getTraceAsString() . "\n", FILE_APPEND);
 
 	exit('Exception: ' . $errorCode . '<br><br><small>The issue has been logged. Please contact the website administrator.</small>');
 }

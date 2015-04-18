@@ -1,5 +1,5 @@
 <testsuites>
 	<testsuite name="Swiftlet">
-		<directory>vendor/*/tests</directory>
+		<directory>src/*/tests</directory>
 	</testsuite>
 </testsuites>

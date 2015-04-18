@@ -18,7 +18,7 @@ abstract class View extends Common implements \Swiftlet\Interfaces\View
 	 * Vendor path
 	 * @var string
 	 */
-	public $vendorPath = 'vendor/';
+	public $vendorPath = 'src/';
 
 	/**
 	 * View variables

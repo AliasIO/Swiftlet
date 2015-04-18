@@ -2,8 +2,6 @@
 
 namespace Swiftlet;
 
-require_once 'vendor/Swiftlet/Abstracts/App.php';
-
 /**
  * Application class
  */

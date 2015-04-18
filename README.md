@@ -13,10 +13,11 @@ Buzzword compliance
 
 ✔ Micro-Framework  
 ✔ Loosely coupled  
-✔ Namespaced  
 ✔ Unit tested  
+✔ Namespaced  
 ✔ Pluggable  
-✔ [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)  
+✔ [Composer](https://getcomposer.org)
+✔ [PSR-4](http://www.php-fig.org/psr/psr-4)
 ✔ PHP5  
 ✔ MVC  
 ✔ OOP  
@@ -24,13 +25,12 @@ Buzzword compliance
 ✘ ORM  
 
 
-Installation in three easy steps
---------------------------------
+Installation
+------------
 
-* Step 1: Clone (or download and extract) Swiftlet into a directory on your PHP
+* Clone (or download and extract) Swiftlet into a directory on your PHP
   supported web server.
-* Step 2: Congratulations, Swiftlet is now up and running.
-* Step 3: There is no step 3.
+* Having [Composer](https://getcomposer.org) installed, run `composer dump-autoload`.
 
 
 Getting started: controllers and views
@@ -41,7 +41,7 @@ Let's create a page. Each page consists of a controller and at least one view.
 The controller does most of the work; views should be limited to simple 
 presentation logic (loops and switches).
 
-**Controller `vendor/HelloWorld/Controllers/Foo.php`**
+**Controller `src/HelloWorld/Controllers/Foo.php`**
 
 ```php
 <?php
@@ -104,10 +104,10 @@ If the controller or action is not specified they default to `index` (`/`
 will call `index()` on `HelloWorld\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
-`/foo_bar` will point to `vendor/HelloWorld/Controllers/Foo/Bar.php`.
+`/foo_bar` will point to `src/HelloWorld/Controllers/Foo/Bar.php`.
 
 Dashes in routes are ignored; `/foo-bar/baz-qux` calls `bazqux()` in 
-`vendor/HelloWorld/Controllers/Foobar.php`.
+`src/HelloWorld/Controllers/Foobar.php`.
 
 
 **Custom routes**
@@ -175,7 +175,7 @@ Models
 
 Let's throw a model into the mix and update the controller.
 
-**Model `vendor/HelloWorld/Models/Foo.php`**
+**Model `src/HelloWorld/Models/Foo.php`**
 
 ```php
 <?php
@@ -190,7 +190,7 @@ class Foo extends \Swiftlet\Abstracts\Model
 }
 ```
 
-**Controller `vendor/HelloWorld/Controllers/Foo.php`**
+**Controller `src/HelloWorld/Controllers/Foo.php`**
 
 ```php
 <?php
@@ -203,8 +203,8 @@ class Foo extends \Swiftlet\Abstracts\Controller
 	public function index()
 	{
 		// Get an instance of the Example class 
-		// See vendor/HelloWorld/Models/Example.php
-		$example = $this->app->getModel('example');
+		// See src/HelloWorld/Models/Example.php
+		$example = \HelloWorld\Models\Example;
 
 		$this->view->helloWorld = $example->getHelloWorld();
 	}
@@ -216,7 +216,7 @@ object such as a user.
 
 ```php
 <?php
-$user = $this->app->getModel('user');
+$user = \HelloWorld\Models\User;
 
 $user->setEmail('example@example.com');
 
@@ -235,7 +235,7 @@ points for code that extends the application. Swiftlet has a few core hooks and
 additiontal ones can be registered pretty much anywhere using
 `$this->app->registerHook($hookName, $controller, $view)`.  
 
-**Plugin `vendor/HelloWorld/Plugins/Foo.php`**
+**Plugin `src/HelloWorld/Plugins/Foo.php`**
 
 ```php
 <?php
@@ -255,7 +255,7 @@ This plugin implements the core `actionAfter` hook and changes the view
 variable `helloWorld` from our previous example to `Hi world!`.
 
 Plugins don't need to be installed or activated, all files in the
-`vendor/HelloWorld/Plugins/` directory are automatically included and their classes 
+`src/HelloWorld/Plugins/` directory are automatically included and their classes 
 instantiated. Plugins are hooked in alphabetical order.
 
 The core hooks are:
@@ -275,7 +275,7 @@ should go in a separate library class.
 
 ```php
 <?php
-$email = $this->app->getLibrary('email');
+$email = \HelloWorld\Libraries\Email
 
 $email->send($to, $subject, $message);
 ```
@@ -314,12 +314,6 @@ Get a configuration value
 
 * `App setConfig(string $variable, mixed $value)`  
 Set a configuration value
-
-* `Model getModel(string $modelName)`
-Get a model instance
-
-* `Library getLibrary(string $libraryName)`
-Get a library instance
 
 * `App registerHook(string $hookName, array $params)`  
 Register a hook

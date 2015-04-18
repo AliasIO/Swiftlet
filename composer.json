@@ -14,15 +14,17 @@
 	"repositories": [
 		{
 			"type": "vcs",
-			"url": "https://github.com/ElbertF/Swiftlet"
+			"url": "https://github.com/AliasIO/Swiftlet"
 		}
 	],
 	"require": {
 		"php": ">=5.3.3"
 	},
 	"autoload": {
-		"psr-0": { 
-			"Swiftlet\\": "vendor/" 
+		"psr-4": { 
+			"HelloWorld\\": "src/HelloWorld",
+			"Mock\\": "src/Mock",
+			"Swiftlet\\": "src/Swiftlet"
 		}
 	}
 }

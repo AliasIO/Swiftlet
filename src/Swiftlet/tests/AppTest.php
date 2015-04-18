@@ -2,8 +2,7 @@
 
 namespace Mock;
 
-require_once 'vendor/Mock/App.php';
-require_once 'vendor/Mock/View.php';
+require_once 'vendor/autoload.php';
 
 class AppTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,8 +17,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
 		$this->app = new App($this->view, 'Mock');
 
 		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
-
-		spl_autoload_register(array($this->app, 'autoload'));
 
 		date_default_timezone_set('UTC');
 	}
@@ -45,16 +42,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals($this->app->setConfig('key', 'value'), $this->app);
 		$this->assertEquals($this->app->getConfig('key'), 'value');
-	}
-
-	function testGetModel()
-	{
-		$this->assertTrue($this->app->getModel('mock') instanceof \Swiftlet\Interfaces\Model);
-	}
-
-	function testGetLibary()
-	{
-		$this->assertTrue($this->app->getLibrary('mock') instanceof \Swiftlet\Interfaces\Library);
 	}
 
 	function testRegisterHook()

@@ -2,11 +2,6 @@
 
 namespace Swiftlet\Abstracts;
 
-require_once 'vendor/Swiftlet/Interfaces/App.php';
-require_once 'vendor/Swiftlet/Interfaces/Common.php';
-require_once 'vendor/Swiftlet/Abstracts/Common.php';
-require_once 'vendor/Swiftlet/Exception.php';
-
 /**
  * Application class
  * @abstract
@@ -44,7 +39,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	protected $hooks = array();
 
 	/**
-	 * vendor/Plugins
+	 * Plugins
 	 * @var array
 	 */
 	protected $plugins = array();
@@ -56,7 +51,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * @param string $vendorPath
 	 * @return App
 	 */
-	public function __construct(\Swiftlet\Interfaces\View $view, $vendor = null, $vendorPath = 'vendor/')
+	public function __construct(\Swiftlet\Interfaces\View $view, $vendor = null, $vendorPath = 'src/')
 	{
 		$this->view = $view;
 
@@ -201,6 +196,8 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 				if ( is_file($this->vendorPath . str_replace('\\', '/', $pluginClass) . '.php') ) {
 					$this->plugins[$pluginClass] = array();
 
+					$x = new \HelloWorld\Plugins\Example;
+
 					$reflection = new \ReflectionClass($pluginClass);
 
 					$parentClass = $reflection->getParentClass();
@@ -247,30 +244,6 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	}
 
 	/**
-	 * Get a model instance
-	 * @param string $modelName
-	 * @return \Swiftlet\Interfaces\Model
-	 */
-	public function getModel($modelName)
-	{
-		$modelClass = '\\' . $this->vendor . '\Models\\' . ucfirst($modelName);
-
-		return new $modelClass;
-	}
-
-	/**
-	 * Get a library instance
-	 * @param string $libraryName
-	 * @return \Swiftlet\Interfaces\Library
-	 */
-	public function getLibrary($libraryName)
-	{
-		$libraryClass = '\\' . $this->vendor . '\Libraries\\' . ucfirst($libraryName);
-
-		return new $libraryClass($this);
-	}
-
-	/**
 	 * Register a hook for plugins to implement
 	 * @param string $hookName
 	 * @param \Swiftlet\Interfaces\Controller $controller
@@ -295,22 +268,6 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Class autoloader
-	 * @param string $className
-	 * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
-	 */
-	public function autoload($className)
-	{
-		preg_match('/(^.+\\\)?([^\\\]+)$/', ltrim($className, '\\'), $match);
-
-		$file = $this->vendorPath . str_replace('\\', '/', $match[1]) . str_replace('_', '/', $match[2]) . '.php';
-
-		if ( file_exists($file) ) {
-			include $file;
-		}
 	}
 
 	/**

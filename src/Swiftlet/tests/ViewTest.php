@@ -2,8 +2,7 @@
 
 namespace Swiftlet;
 
-require_once 'vendor/Mock/App.php';
-require_once 'vendor/Mock/View.php';
+require_once 'vendor/autoload.php';
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {

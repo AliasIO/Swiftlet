@@ -15,12 +15,12 @@ abstract class Common implements \Swiftlet\Interfaces\Common
 	 * @param mixed $arguments
 	 * @throws \Swiftlet\Exception
 	 */
-	public function __call($property, $arguments)
+	public function __call($name, $arguments)
 	{
-		$action = substr($property, 0, 3);
+		$action = substr($name, 0, 3);
 
 		if ( $action == 'get' || $action == 'set' ) {
-			$property = lcfirst(substr($property, 3));
+			$property = lcfirst(substr($name, 3));
 
 			if ( property_exists($this, $property) ) {
 				$reflection = new \ReflectionObject($this);
@@ -37,6 +37,6 @@ abstract class Common implements \Swiftlet\Interfaces\Common
 			}
 		}
 
-		throw new \Swiftlet\Exception('Not implemented: ' . get_called_class() . '::' . $property);
+		throw new \Swiftlet\Exception('Not implemented: ' . get_called_class() . '::' . $name);
 	}
 }
