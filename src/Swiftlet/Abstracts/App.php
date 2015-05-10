@@ -196,8 +196,6 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 				if ( is_file($this->vendorPath . str_replace('\\', '/', $pluginClass) . '.php') ) {
 					$this->plugins[$pluginClass] = array();
 
-					$x = new \HelloWorld\Plugins\Example;
-
 					$reflection = new \ReflectionClass($pluginClass);
 
 					$parentClass = $reflection->getParentClass();
