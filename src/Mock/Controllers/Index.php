@@ -2,8 +2,10 @@
 
 namespace Mock\Controllers;
 
+use \Swiftlet\Abstracts\Controller as ControllerAbstract;
+
 /**
  * Index controller
  */
-class Index extends \Swiftlet\Abstracts\Controller
+class Index extends ControllerAbstract
 { }

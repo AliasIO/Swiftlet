@@ -4,6 +4,8 @@ namespace Mock;
 
 require_once 'vendor/autoload.php';
 
+use \Mock\Controllers\Index as IndexController;
+
 class AppTest extends \PHPUnit_Framework_TestCase
 {
 	protected $app;
@@ -46,7 +48,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 	function testRegisterHook()
 	{
-		$this->assertEquals($this->app->registerHook('test', new Controllers\Index, new View), $this->app);
+		$this->assertEquals($this->app->registerHook('test', new IndexController, new View), $this->app);
 	}
 
 	/**

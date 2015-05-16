@@ -2,8 +2,10 @@
 
 namespace Mock\Plugins;
 
+use \Swiftlet\Abstracts\Plugin as PluginAbstract;
+
 /**
  * Mock plugin
  */
-class Mock extends \Swiftlet\Abstracts\Plugin
+class Mock extends PluginAbstract
 { }

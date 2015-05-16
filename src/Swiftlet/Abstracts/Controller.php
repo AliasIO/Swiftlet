@@ -2,11 +2,15 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\App as AppInterface;
+use \Swiftlet\Interfaces\Controller as ControllerInterface;
+use \Swiftlet\Interfaces\View as ViewInterface;
+
 /**
  * Controller class
  * @abstract
  */
-abstract class Controller extends Common implements \Swiftlet\Interfaces\Controller
+abstract class Controller extends Common implements ControllerInterface
 {
 	/**
 	 * Application instance
@@ -37,7 +41,7 @@ abstract class Controller extends Common implements \Swiftlet\Interfaces\Control
 	 * @param \Swiftlet\Interfaces\App $app
 	 * @return \Swiftlet\Interfaces\Controller
 	 */
-	public function setApp(\Swiftlet\Interfaces\App $app)
+	public function setApp(AppInterface $app)
 	{
 		$this->app = $app;
 
@@ -49,7 +53,7 @@ abstract class Controller extends Common implements \Swiftlet\Interfaces\Control
 	 * @param \Swiftlet\Interfaces\App $app
 	 * @return \Swiftlet\Interfaces\Controller
 	 */
-	public function setView(\Swiftlet\Interfaces\View $view)
+	public function setView(ViewInterface $view)
 	{
 		$this->view = $view;
 

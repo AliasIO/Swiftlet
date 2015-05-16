@@ -2,11 +2,13 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\View as ViewInterface;
+
 /**
  * View class
  * @abstract
  */
-abstract class View extends Common implements \Swiftlet\Interfaces\View
+abstract class View extends Common implements ViewInterface
 {
 	/**
 	 * Vendor name

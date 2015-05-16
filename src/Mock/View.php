@@ -2,8 +2,7 @@
 
 namespace Mock;
 
-require_once 'src/Swiftlet/Interfaces/View.php';
-require_once 'src/Swiftlet/Abstracts/View.php';
+use \Swiftlet\Abstracts\View as ViewAbstract;
 
-class View extends \Swiftlet\Abstracts\View
+class View extends ViewAbstract
 { }

@@ -2,11 +2,15 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\App as AppInterface;
+use \Swiftlet\Interfaces\Controller as ControllerInterface;
+use \Swiftlet\Interfaces\View as ViewInterface;
+
 /**
  * Application class
  * @abstract
  */
-abstract class App extends Common implements \Swiftlet\Interfaces\App
+abstract class App extends Common implements AppInterface
 {
 	/**
 	 * Vendor
@@ -51,7 +55,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * @param string $vendorPath
 	 * @return App
 	 */
-	public function __construct(\Swiftlet\Interfaces\View $view, $vendor = null, $vendorPath = 'src/')
+	public function __construct(ViewInterface $view, $vendor = null, $vendorPath = 'src/')
 	{
 		$this->view = $view;
 
@@ -258,7 +262,7 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 	 * @param \Swiftlet\Interfaces\View $view
 	 * @param array $params
 	 */
-	public function registerHook($hookName, \Swiftlet\Interfaces\Controller $controller, \Swiftlet\Interfaces\View $view, array $params = array())
+	public function registerHook($hookName, ControllerInterface $controller, ViewInterface $view, array $params = array())
 	{
 		$this->hooks[] = $hookName;
 

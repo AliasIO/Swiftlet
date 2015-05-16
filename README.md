@@ -47,7 +47,9 @@ presentation logic (loops and switches).
 <?php
 namespace HelloWorld\Controllers;
 
-class Foo extends \Swiftlet\Abstracts\Controller
+use \Swiftlet\Abstracts\Controller as ControllerAbstract;
+
+class Foo extends ControllerAbstract
 {
 	protected $title = 'Foo'; // Optional but usually desired 
 
@@ -100,8 +102,8 @@ In this case `foo` becomes the name of the controller and view and `bar` the
 name of the action. Actions are public methods on the controller class.
 
 You can specify a different view for an action using `$this->view->setName()`. 
-The view name is a filename relative to the `views` directory, without the `.php` 
-suffix.
+The view name is a filename relative to the `src\<namespace>\views` directory, 
+without the `.php` suffix.
 
 If the controller or action is not specified they default to `index` (`/`
 will call `index()` on `\HelloWorld\Controller\Index`).
@@ -109,8 +111,8 @@ will call `index()` on `\HelloWorld\Controller\Index`).
 Underscores in the controller name are translated to directory separators, so
 `/foo_bar` will point to `src/HelloWorld/Controllers/Foo/Bar.php`.
 
-Dashes in routes are ignored; `/foo-bar/baz-qux` calls `bazqux()` in 
-`src/HelloWorld/Controllers/Foobar.php`.
+Dashes in routes are ignored; `/foo-bar/baz-qux` calls `bazqux()` on 
+`\HelloWorld\Controllers\Foobar`.
 
 
 **Custom routes**
@@ -134,7 +136,9 @@ Navigating to `<controller>/bar/something` matches this route. The value of
 <?php
 namespace HelloWorld\Controllers;
 
-class Foo extends \Swiftlet\Abstracts\Controller
+use \Swiftlet\Abstracts\Controller as ControllerAbstract;
+
+class Foo extends ControllerAbstract
 {
 	protected $routes = array(
 		'hello/world' => 'index',
@@ -166,7 +170,9 @@ Let's throw a model into the mix and update the controller.
 <?php
 namespace HelloWorld\Models;
 
-class Foo extends \Swiftlet\Abstracts\Model
+use \Swiftlet\Abstracts\Model as ModelAbstract;
+
+class Foo extends ModelAbstract
 {
 	public function getHelloWorld()
 	{
@@ -181,7 +187,10 @@ class Foo extends \Swiftlet\Abstracts\Model
 <?php
 namespace HelloWorld\Controllers;
 
-class Foo extends \Swiftlet\Abstracts\Controller
+use \Swiftlet\Abstracts\Controller as ControllerAbstract;
+use \HelloWorld\Models\Example as ExampleModel;
+
+class Foo extends ControllerAbstract;
 {
 	protected $title = 'Foo';
 
@@ -189,7 +198,7 @@ class Foo extends \Swiftlet\Abstracts\Controller
 	{
 		// Get an instance of the Example class 
 		// See src/HelloWorld/Models/Example.php
-		$example = new \HelloWorld\Models\Example;
+		$example = new ExampleModel;
 
 		$this->view->helloWorld = $example->getHelloWorld();
 	}
@@ -201,7 +210,9 @@ object such as a user.
 
 ```php
 <?php
-$user = new \HelloWorld\Models\User;
+use \HelloWorld\Models\User as UserModel;
+
+$user = new UserModel;
 
 $user->setEmail('example@example.com');
 
@@ -209,7 +220,7 @@ $user->save();
 ```
 
 Loading and saving data should almost always happen in a model. You can create 
-as many models as you like; they aren't tied to specific controllers or views.
+as many models as you like; they aren't tied to controllers or views.
 
 
 Plugins and hooks
@@ -226,7 +237,9 @@ additiontal ones can be registered pretty much anywhere using
 <?php
 namespace HelloWorld\Plugins;
 
-class Foo extends \Swiftlet\Abstracts\Plugin
+use \Swiftlet\Abstracts\Plugin as PluginAbstract;
+
+class Foo extends PluginAbstract
 {
 	public function actionAfter()
 	{
@@ -260,7 +273,9 @@ should go in a separate library class.
 
 ```php
 <?php
-$email = new \HelloWorld\Libraries\Email
+use \HelloWorld\Libraries\Email as EmailLibrary;
+
+$email = new EmailLibrary;
 
 $email->send($to, $subject, $message);
 ```

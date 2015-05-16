@@ -2,11 +2,16 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\App as AppInterface;
+use \Swiftlet\Interfaces\Controller as ControllerInterface;
+use \Swiftlet\Interfaces\Plugin as PluginInterface;
+use \Swiftlet\Interfaces\View as ViewInterface;
+
 /**
  * Plugin class
  * @abstract
  */
-abstract class Plugin extends Common implements \Swiftlet\Interfaces\Plugin
+abstract class Plugin extends Common implements PluginInterface
 {
 	/**
 	 * Application instance
@@ -31,7 +36,7 @@ abstract class Plugin extends Common implements \Swiftlet\Interfaces\Plugin
 	 * @param App $app
 	 * @return View
 	 */
-	public function setApp(\Swiftlet\Interfaces\App $app)
+	public function setApp(AppInterface $app)
 	{
 		$this->app = $app;
 
@@ -43,7 +48,7 @@ abstract class Plugin extends Common implements \Swiftlet\Interfaces\Plugin
 	 * @param Controller $controller
 	 * @return Plugin
 	 */
-	public function setController(\Swiftlet\Interfaces\Controller $controller)
+	public function setController(ControllerInterface $controller)
 	{
 		$this->controller = $controller;
 
@@ -55,7 +60,7 @@ abstract class Plugin extends Common implements \Swiftlet\Interfaces\Plugin
 	 * @param View $view
 	 * @return Plugin
 	 */
-	public function setView(\Swiftlet\Interfaces\View $view)
+	public function setView(ViewInterface $view)
 	{
 		$this->view = $view;
 

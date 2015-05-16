@@ -2,10 +2,12 @@
 
 namespace HelloWorld\Models;
 
+use \Swiftlet\Abstracts\Model as ModelAbstract;
+
 /**
  * Example model
  */
-class Example extends \Swiftlet\Abstracts\Model
+class Example extends ModelAbstract
 {
 	/**
 	 * Example method. This could be anything, really...

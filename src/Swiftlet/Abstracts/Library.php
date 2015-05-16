@@ -2,11 +2,14 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\App as AppInterface;
+use \Swiftlet\Interfaces\Library as LibraryInterface;
+
 /**
  * Library class
  * @abstract
  */
-abstract class Library extends Common implements \Swiftlet\Interfaces\Library
+abstract class Library extends Common implements LibraryInterface
 {
 	/**
 	 * Application instance
@@ -19,7 +22,7 @@ abstract class Library extends Common implements \Swiftlet\Interfaces\Library
 	 * @param \Swiftlet\Interfaces\App $app
 	 * @return \Swiftlet\Interfaces\Library
 	 */
-	public function setApp(\Swiftlet\Interfaces\App $app)
+	public function setApp(AppInterface $app)
 	{
 		$this->app = $app;
 

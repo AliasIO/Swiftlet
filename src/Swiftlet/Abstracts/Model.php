@@ -2,9 +2,11 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\Model as ModelInterface;
+
 /**
  * Model class
  * @abstract
  */
-abstract class Model extends Common implements \Swiftlet\Interfaces\Model
+abstract class Model extends Common implements ModelInterface
 { }

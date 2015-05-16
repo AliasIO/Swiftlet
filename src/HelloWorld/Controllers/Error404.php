@@ -2,10 +2,12 @@
 
 namespace HelloWorld\Controllers;
 
+use \Swiftlet\Abstracts\Controller as ControllerAbstract;
+
 /**
  * Error 404 controller
  */
-class Error404 extends \Swiftlet\Abstracts\Controller
+class Error404 extends ControllerAbstract
 {
 	/**
 	 * Page title

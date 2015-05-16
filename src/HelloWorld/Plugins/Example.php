@@ -2,10 +2,12 @@
 
 namespace HelloWorld\Plugins;
 
+use \Swiftlet\Abstracts\Plugin as PluginAbstract;
+
 /**
  * Example plugin
  */
-class Example extends \Swiftlet\Abstracts\Plugin
+class Example extends PluginAbstract
 {
 	/**
 	 * Implementation of the actionAfter hook

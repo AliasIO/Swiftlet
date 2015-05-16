@@ -2,8 +2,10 @@
 
 namespace Swiftlet;
 
+use \Swiftlet\Abstracts\View as ViewAbstract;
+
 /**
  * View class
  */
-class View extends Abstracts\View
+class View extends ViewAbstract
 { }

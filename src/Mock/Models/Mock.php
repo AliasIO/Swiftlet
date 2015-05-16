@@ -2,8 +2,10 @@
 
 namespace Mock\Models;
 
+use \Swiftlet\Abstracts\Model as ModelAbstract;
+
 /**
  * Mock model
  */
-class Mock extends \Swiftlet\Abstracts\Model
+class Mock extends ModelAbstract
 { }

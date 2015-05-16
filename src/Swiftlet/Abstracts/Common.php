@@ -2,11 +2,13 @@
 
 namespace Swiftlet\Abstracts;
 
+use \Swiftlet\Interfaces\Common as CommonInterface;
+
 /**
  * Common class
  * @abstract
  */
-abstract class Common implements \Swiftlet\Interfaces\Common
+abstract class Common implements CommonInterface
 {
 	/**
 	 * Common setters and getters

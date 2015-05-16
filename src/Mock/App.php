@@ -2,7 +2,7 @@
 
 namespace Mock;
 
-require_once 'src/Swiftlet/Abstracts/App.php';
+use \Swiftlet\Abstracts\App as AppAbstract;
 
-class App extends \Swiftlet\Abstracts\App
+class App extends AppAbstract
 { }
