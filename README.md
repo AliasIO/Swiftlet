@@ -94,14 +94,17 @@ Routing
 Notice how you can access the page at `/foo` by simply creating a controller 
 named `Foo`. The application maps URLs to controllers, actions and arguments.
 
-Consider this URL: `/foo/bar/baz/qux`
+Consider this URL: `/foo/bar`
 
-In this case `foo` becomes the name of the controller and view, `bar` the name 
-of the action and `baz` and `qux` are arguments (accessible through the `$args`
-variable in the controller).
+In this case `foo` becomes the name of the controller and view and `bar` the 
+name of the action. Actions are public methods on the controller class.
+
+You can specify a different view for an action using `$this->view->setName()`. 
+The view name is a filename relative to the `views` directory, without the `.php` 
+suffix.
 
 If the controller or action is not specified they default to `index` (`/`
-will call `index()` on `HelloWorld\Controller\Index`).
+will call `index()` on `\HelloWorld\Controller\Index`).
 
 Underscores in the controller name are translated to directory separators, so
 `/foo_bar` will point to `src/HelloWorld/Controllers/Foo/Bar.php`.
@@ -152,24 +155,6 @@ class Foo extends \Swiftlet\Abstracts\Controller
 ```
 
 
-Actions and arguments
----------------------
-
-Actions are methods of the controller. A common example might be `edit` or
-`delete`:
-
-`/blog/edit/1`
-
-This will call the function `edit()` on `Blog` with `1` as an argument (the 
-id of the blog post to edit).
-
-Arguments can be accessed through `$this->app->getArgs()`.
-
-To use a different view for a specific action you may change the value of 
-`$this->view->name`. The view name is a filename relative to the `views` 
-directory, without the `.php` suffix.
-
-
 Models
 ------
 
@@ -204,7 +189,7 @@ class Foo extends \Swiftlet\Abstracts\Controller
 	{
 		// Get an instance of the Example class 
 		// See src/HelloWorld/Models/Example.php
-		$example = \HelloWorld\Models\Example;
+		$example = new \HelloWorld\Models\Example;
 
 		$this->view->helloWorld = $example->getHelloWorld();
 	}
@@ -216,7 +201,7 @@ object such as a user.
 
 ```php
 <?php
-$user = \HelloWorld\Models\User;
+$user = new \HelloWorld\Models\User;
 
 $user->setEmail('example@example.com');
 
@@ -275,7 +260,7 @@ should go in a separate library class.
 
 ```php
 <?php
-$email = \HelloWorld\Libraries\Email
+$email = new \HelloWorld\Libraries\Email
 
 $email->send($to, $subject, $message);
 ```
