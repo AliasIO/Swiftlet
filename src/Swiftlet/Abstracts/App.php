@@ -78,7 +78,17 @@ abstract class App extends Common implements \Swiftlet\Interfaces\App
 		$params          = array();
 
 		// Get the controller, action and remaining parameters from the URL
-		$requestUri = !empty($_GET['q']) ? preg_replace('/^public\//', '', rtrim($_GET['q'], '/')) : '';
+		$requestUri = '';
+
+		$options = getopt('q:');
+
+		if ( isset($options['q']) ) {
+			$requestUri = $options['q'];
+		}
+
+		if ( isset($_GET['q']) ) {
+			$requestUri = preg_replace('/^public\//', '', rtrim($_GET['q'], '/'));
+		}
 
 		$args = $requestUri ? explode('/', $requestUri) : array();
 
