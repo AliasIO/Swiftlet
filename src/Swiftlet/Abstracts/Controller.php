@@ -37,13 +37,16 @@ abstract class Controller extends Common implements ControllerInterface
 	protected $routes = array();
 
 	/**
-	 * Set application instance
-	 * @param \Swiftlet\Interfaces\App $app
-	 * @return \Swiftlet\Interfaces\Controller
+	 * Constructor
+	 * @param \Swiftlet\Interfaces\App $App
+	 * @param \Swiftlet\Interfaces\View $view
+	 * @return Controller
 	 */
-	public function setApp(AppInterface $app)
+	public function __construct(AppInterface $app, ViewInterface $view)
 	{
 		$this->app = $app;
+
+		$this->setView($view);
 
 		return $this;
 	}
@@ -68,7 +71,7 @@ abstract class Controller extends Common implements ControllerInterface
 
 	/**
 	 * Set page title
-	 * @param string $app
+	 * @param string $title
 	 * @return \Swiftlet\Interfaces\Controller
 	 */
 	public function setTitle($title)

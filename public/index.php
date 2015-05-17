@@ -2,12 +2,15 @@
 
 namespace Swiftlet;
 
+chdir(dirname(__FILE__) . '/..');
+
+require 'vendor/autoload.php';
+
+use \Swiftlet\Factories\App as AppFactory;
+use \Swiftlet\Factories\View as ViewFactory;
+
 try {
-	chdir(dirname(__FILE__) . '/..');
-
-	require 'vendor/autoload.php';
-
-	$app = new App(new View, 'HelloWorld');
+	$app = AppFactory::build(ViewFactory::build(), 'HelloWorld');
 
 	// Convert errors to ErrorException instances
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);

@@ -8,11 +8,12 @@ namespace Swiftlet\Interfaces;
 interface Controller extends Common
 {
 	/**
-	 * Set application instance
-	 * @param Interfaces\App $app
-	 * @return Interfaces\Controller
+	 * Constructor
+	 * @param App $app
+	 * @param View $view
+	 * @return Controller
 	 */
-	public function setApp(App $app);
+	public function __construct(App $app, View $view);
 
 	/**
 	 * Set view instance

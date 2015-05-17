@@ -5,6 +5,7 @@ namespace Swiftlet\Abstracts;
 use \Swiftlet\Interfaces\App as AppInterface;
 use \Swiftlet\Interfaces\Controller as ControllerInterface;
 use \Swiftlet\Interfaces\View as ViewInterface;
+use \Swiftlet\Factories\Controller as ControllerFactory;
 
 /**
  * Application class
@@ -22,7 +23,7 @@ abstract class App extends Common implements AppInterface
 	 * Vendor path
 	 * @var string
 	 */
-	protected $vendorPath = 'vendor/';
+	protected $vendorPath = 'src/';
 
 	/**
 	 * View instance
@@ -76,11 +77,6 @@ abstract class App extends Common implements AppInterface
 	 */
 	public function dispatchController()
 	{
-		$pageNotFound    = false;
-		$controllerClass = '\\' . $this->vendor . '\Controllers\Index';
-		$action          = 'index';
-		$params          = array();
-
 		// Get the controller, action and remaining parameters from the URL
 		$requestUri = '';
 
@@ -91,31 +87,16 @@ abstract class App extends Common implements AppInterface
 		}
 
 		if ( isset($_GET['q']) ) {
-			$requestUri = preg_replace('/^public\//', '', rtrim($_GET['q'], '/'));
+			$requestUri = preg_replace('/^public\//', '', trim($_GET['q'], '/'));
 		}
 
 		$args = $requestUri ? explode('/', $requestUri) : array();
 
-		$params = $args;
-
-		if ( $args ) {
-			$controllerClass = '\\' . $this->vendor . '\Controllers\\' . str_replace(' ', '\\', ucwords(str_replace('_', ' ', str_replace('-', '', array_shift($args)))));
-
-			if ( $args ) {
-				$action = str_replace('-', '', array_shift($args));
-			}
-
-			if ( is_file($this->vendorPath . str_replace('\\', '/', $controllerClass) . '.php') ) {
-				$params[0] = null;
-			} else {
-				$pageNotFound = true;
-
-				$controllerClass = '\\' . $this->vendor . '\Controllers\Index';
-			}
-		}
+		$controllerName = array_shift($args) ?: 'Index';
+		$action         = array_shift($args) ?: 'index';
 
 		// Instantiate the controller
-		$controller = new $controllerClass();
+		$controller = ControllerFactory::build($controllerName, $this, $this->view);
 
 		// Get the action and named parameters if custom routes have been specified
 		$routes = $controller->getRoutes();
@@ -123,32 +104,25 @@ abstract class App extends Common implements AppInterface
 		foreach ( $routes as $route => $method ) {
 			$segments = explode('/', $route);
 
-			$regex = '/^' . str_replace('/', '\\/', preg_replace('/\(:[^\/]+\)/', '([^/]+)', preg_replace('/([^\/]+)/', '(\\1)', $route))) . '$/';
+			$regex = '/^' . strtolower($controllerName) . '\\/' . str_replace('/', '\\/', preg_replace('/\(:[^\/]+\)/', '([^/]+)', preg_replace('/([^\/]+)/', '(\\1)', $route))) . '$/';
 
 			preg_match($regex, $requestUri, $matches);
 
 			array_shift($matches);
 
 			if ( $matches ) {
-				$action       = $method;
-				$pageNotFound = false;
+				$action = $method;
 
-				$params = array();
+				$args = array();
 
 				foreach ( $segments as $i => $segment ) {
 					if ( substr($segment, 0, 1) == ':' ) {
-						$params[ltrim($segment, ':')] = $matches[$i];
+						$args[ltrim($segment, ':')] = $matches[$i];
 					}
 				}
 
 				$break;
 			}
-		}
-
-		if ( $pageNotFound ) {
-			$controllerClass = '\\' . $this->vendor . '\Controllers\Error404';
-
-			$controller = new $controllerClass();
 		}
 
 		$actionExists = false;
@@ -161,20 +135,16 @@ abstract class App extends Common implements AppInterface
 			}
 		}
 
-		$this->registerHook('actionBefore', $controller, $this->view);
+		if ( !$actionExists ) {
+			$controller = ControllerFactory::build('Error404', $this, $this->view);
 
-		if ( $actionExists ) {
-			$params[1] = null;
-		} else {
 			$action = 'index';
 		}
 
-		$controller
-			->setApp($this)
-			->setView($this->view);
+		$this->registerHook('actionBefore', $controller, $this->view);
 
 		// Call the controller action
-		$controller->{$action}(array_filter($params));
+		$controller->{$action}(array_filter($args));
 
 		$this->registerHook('actionAfter', $controller, $this->view);
 
@@ -253,6 +223,24 @@ abstract class App extends Common implements AppInterface
 		$this->config[$variable] = $value;
 
 		return $this;
+	}
+
+	/**
+	 * Vendor name
+	 * @return string
+	 */
+	public function getVendor()
+	{
+		return $this->vendor;
+	}
+
+	/**
+	 * Vendor path
+	 * @return string
+	 */
+	public function getVendorPath()
+	{
+		return $this->vendorPath;
 	}
 
 	/**
