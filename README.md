@@ -238,7 +238,9 @@ anywhere using `$this->app->trigger($event)`.
 <?php
 namespace HelloWorld\Listeners;
 
+use \Swiftlet\Abstracts\Controller as ControllerAbstract;
 use \Swiftlet\Abstracts\Listener as ListenerAbstract;
+use \Swiftlet\Abstracts\View as ViewAbstract;
 
 class Foo extends ListernerAbstract
 {
