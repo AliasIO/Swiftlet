@@ -223,40 +223,41 @@ Loading and saving data should almost always happen in a model. You can create
 as many models as you like; they aren't tied to controllers or views.
 
 
-Plugins and hooks
------------------
+Events and listeners
+--------------------
 
-Plugins implement [hooks](http://en.wikipedia.org/wiki/Hooking). Hooks are entry
-points for code that extends the application. Swiftlet has a few core hooks and 
-additiontal ones can be registered pretty much anywhere using
-`$this->app->registerHook($hookName, $controller, $view)`.  
+Listeners listen for events. When an event is triggered all relevant listeners 
+are called and can be used to extend functionality.
 
-**Plugin `src/HelloWorld/Plugins/Foo.php`**
+Swiftlet has a few core events and additiontal ones can be triggered pretty much 
+anywhere using `$this->app->trigger($event)`.  
+
+**Listener `src/HelloWorld/Listerners/Foo.php`**
 
 ```php
 <?php
-namespace HelloWorld\Plugins;
+namespace HelloWorld\Listeners;
 
-use \Swiftlet\Abstracts\Plugin as PluginAbstract;
+use \Swiftlet\Abstracts\Listener as ListenerAbstract;
 
-class Foo extends PluginAbstract
+class Foo extends ListernerAbstract
 {
-	public function actionAfter()
+	public function actionAfter(ControllerAbstract $controller, ViewAbstract $view)
 	{
 		// Overwrite our previously set "helloWorld" variable
-		$this->view->helloWorld = 'Hi world!';
+		$view->helloWorld = 'Hi world!';
 	}
 }
 ```
 
-This plugin implements the core `actionAfter` hook and changes the view 
+This listener listens for the core `actionAfter` event and changes the view 
 variable `helloWorld` from our previous example to `Hi world!`.
 
-Plugins don't need to be installed or activated, all files in the
-`src/HelloWorld/Plugins/` directory are automatically included and their classes 
-instantiated. Plugins are hooked in alphabetical order.
+Listeners don't need to be installed or activated, all files in the
+`src/HelloWorld/Listeners/` directory are automatically included and their 
+classes instantiated. Listeners are called in alphabetical order.
 
-The core hooks are:
+The core events are:
 
 * `actionBefore`  
 Called before each action

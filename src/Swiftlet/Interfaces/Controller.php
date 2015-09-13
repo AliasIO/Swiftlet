@@ -16,13 +16,6 @@ interface Controller extends Common
 	public function __construct(App $app, View $view);
 
 	/**
-	 * Set view instance
-	 * @param Interfaces\App $app
-	 * @return Interfaces\Controller
-	 */
-	public function setView(View $view);
-
-	/**
 	 * Set page title
 	 * @param string $app
 	 * @return Interfaces\Controller

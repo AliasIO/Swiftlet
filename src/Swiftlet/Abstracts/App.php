@@ -17,13 +17,13 @@ abstract class App extends Common implements AppInterface
 	 * Vendor
 	 * @var string
 	 */
-	protected $vendor = 'Swiftlet';
+	protected $vendor;
 
 	/**
 	 * Vendor path
 	 * @var string
 	 */
-	protected $vendorPath = 'src/';
+	protected $vendorPath;
 
 	/**
 	 * View instance
@@ -38,16 +38,16 @@ abstract class App extends Common implements AppInterface
 	protected $config = array();
 
 	/**
-	 * Hooks
+	 * Events
 	 * @var array
 	 */
-	protected $hooks = array();
+	protected $events = array();
 
 	/**
-	 * Plugins
+	 * Listener
 	 * @var array
 	 */
-	protected $plugins = array();
+	protected $listeners = array();
 
 	/**
 	 * Constructor
@@ -56,17 +56,16 @@ abstract class App extends Common implements AppInterface
 	 * @param string $vendorPath
 	 * @return App
 	 */
-	public function __construct(ViewInterface $view, $vendor = null, $vendorPath = 'src/')
+	public function __construct(ViewInterface $view, $vendor = 'Swiftlet', $vendorPath = 'src/')
 	{
 		$this->view = $view;
 
-		if ( isset($vendor) ) {
-			$this->vendor = $vendor;
-		}
+		$this->vendor     = $vendor;
+		$this->vendorPath = rtrim($vendorPath, '/') . '/';
 
-		if ( isset($vendorPath) ) {
-			$this->vendorPath = rtrim($vendorPath, '/') . '/';
-		}
+		$this->view->vendor     = $this->vendor;
+		$this->view->vendorPath = $this->vendorPath;
+		$this->view->rootPath   = $this->getRootPath();
 
 		return $this;
 	}
@@ -78,19 +77,7 @@ abstract class App extends Common implements AppInterface
 	public function dispatchController()
 	{
 		// Get the controller, action and remaining parameters from the URL
-		$requestUri = '';
-
-		$options = getopt('q:');
-
-		if ( isset($options['q']) ) {
-			$requestUri = $options['q'];
-		}
-
-		if ( isset($_GET['q']) ) {
-			$requestUri = preg_replace('/^public\//', '', trim($_GET['q'], '/'));
-		}
-
-		$args = $requestUri ? explode('/', $requestUri) : array();
+		$args = $this->getArgs();
 
 		$controllerName = array_shift($args) ?: 'Index';
 		$action         = array_shift($args) ?: 'index';
@@ -116,7 +103,7 @@ abstract class App extends Common implements AppInterface
 				$args = array();
 
 				foreach ( $segments as $i => $segment ) {
-					if ( substr($segment, 0, 1) == ':' ) {
+					if ( substr($segment, 0, 1) === ':' ) {
 						$args[ltrim($segment, ':')] = $matches[$i];
 					}
 				}
@@ -141,60 +128,82 @@ abstract class App extends Common implements AppInterface
 			$action = 'index';
 		}
 
-		$this->registerHook('actionBefore', $controller, $this->view);
+		$this->trigger('actionBefore', $controller, $this->view);
 
 		// Call the controller action
 		$controller->{$action}(array_filter($args));
 
-		$this->registerHook('actionAfter', $controller, $this->view);
+		$this->trigger('actionAfter', $controller, $this->view);
 
 		return $this;
 	}
 
 	/**
-	 * Serve the page
-	 * @return App
+	 * Get request URI
+	 * @return string
 	 */
-	public function serve()
+	public function getArgs()
 	{
-		$this->view->vendor     = $this->vendor;
-		$this->view->vendorPath = $this->vendorPath;
+		$requestUri = '';
 
-		$this->view->render();
+		$options = getopt('q:');
 
-		return $this;
+		if ( isset($options['q']) ) {
+			$requestUri = $options['q'];
+		}
+
+		if ( isset($_GET['q']) ) {
+			$requestUri = preg_replace('/^public\//', '', trim($_GET['q'], '/'));
+		}
+
+		return explode('/', $requestUri) ?: array();
 	}
 
 	/**
-	 * Load plugins
-	 * @param string $namespace
+	 * Get the client-side path to root
+	 * @return string
+	 */
+	public function getRootPath()
+	{
+		$rootPath = '';
+
+		// Determine the client-side path to root
+		if ( isset($_SERVER['REQUEST_URI']) ) {
+			$rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
+		}
+
+		return preg_replace('/' . preg_quote(implode($this->getArgs()), '/') . '$/', '', $rootPath);
+	}
+
+	/**
+	 * Load listeners
 	 * @return App
 	 */
-	public function loadPlugins()
+	public function loadListeners()
 	{
-		// Load plugins
-		if ( $handle = opendir($this->vendorPath . str_replace('\\', '/', $this->vendor . '/Plugins')) ) {
+		// Load listeners
+		if ( $handle = opendir($this->vendorPath . str_replace('\\', '/', $this->vendor . '/Listeners')) ) {
 			while ( ( $file = readdir($handle) ) !== false ) {
-				$pluginClass = $this->vendor . '\Plugins\\' . preg_replace('/\.php$/', '', $file);
+				$listenerClass = $this->vendor . '\Listeners\\' . preg_replace('/\.php$/', '', $file);
 
-				if ( is_file($this->vendorPath . str_replace('\\', '/', $pluginClass) . '.php') ) {
-					$this->plugins[$pluginClass] = array();
+				if ( is_file($this->vendorPath . str_replace('\\', '/', $listenerClass) . '.php') ) {
+					$this->listeners[$listenerClass] = array();
 
-					$reflection = new \ReflectionClass($pluginClass);
+					$reflection = new \ReflectionClass($listenerClass);
 
 					$parentClass = $reflection->getParentClass();
 
-					foreach ( get_class_methods($pluginClass) as $methodName ) {
-						$method = new \ReflectionMethod($pluginClass, $methodName);
+					foreach ( get_class_methods($listenerClass) as $methodName ) {
+						$method = new \ReflectionMethod($listenerClass, $methodName);
 
 						if ( $method->isPublic() && !$method->isFinal() && !$method->isConstructor() && !$parentClass->hasMethod($methodName) ) {
-							$this->plugins[$pluginClass][] = $methodName;
+							$this->listeners[$listenerClass][] = $methodName;
 						}
 					}
 				}
 			}
 
-			ksort($this->plugins);
+			ksort($this->listeners);
 
 			closedir($handle);
 		}
@@ -243,27 +252,26 @@ abstract class App extends Common implements AppInterface
 		return $this->vendorPath;
 	}
 
+
 	/**
-	 * Register a hook for plugins to implement
-	 * @param string $hookName
-	 * @param \Swiftlet\Interfaces\Controller $controller
-	 * @param \Swiftlet\Interfaces\View $view
-	 * @param array $params
+	 * Trigger an event
+	 * @param string $event
 	 */
-	public function registerHook($hookName, ControllerInterface $controller, ViewInterface $view, array $params = array())
+	public function trigger($event)
 	{
-		$this->hooks[] = $hookName;
+		$this->events[] = $event;
 
-		foreach ( $this->plugins as $pluginName => $hooks ) {
-			if ( in_array($hookName, $hooks) ) {
-				$plugin = new $pluginName();
+		foreach ( $this->listeners as $listenerName => $events ) {
+			if ( in_array($event, $events) ) {
+				$listener = new $listenerName();
 
-				$plugin
-					->setApp($this)
-					->setController($controller)
-					->setView($view);
+				$listener->setApp($this);
 
-				$plugin->{$hookName}($params);
+				$args = func_get_args();
+
+				array_shift($args);
+
+				call_user_func_array(array($listener, $event), $args);
 			}
 		}
 

@@ -23,6 +23,12 @@ abstract class View extends Common implements ViewInterface
 	public $vendorPath = 'src/';
 
 	/**
+	 * Client side path to root
+	 * @var string
+	 */
+	public $rootPath = '';
+
+	/**
 	 * View variables
 	 * @var array
 	 */
@@ -85,33 +91,6 @@ abstract class View extends Common implements ViewInterface
 	public function __set($variable, $value = null)
 	{
 		$this->set($variable, $value);
-	}
-
-	/**
-	 * Get the client-side path to root
-	 * @return string
-	 */
-	public function getRootPath()
-	{
-		$rootPath = '';
-
-		// Determine the client-side path to root
-		if ( !empty($_SERVER['REQUEST_URI']) ) {
-			$rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
-		}
-
-		// Run from command line, e.g. "php index.php -q index"
-		$opt = getopt('q:');
-
-		if ( isset($opt['q']) ) {
-			$_GET['q'] = $opt['q'];
-		}
-
-		if ( !empty($_GET['q']) ) {
-			$rootPath = preg_replace('/' . preg_quote($_GET['q'], '/') . '$/', '', $rootPath);
-		}
-
-		return $rootPath;
 	}
 
 	/**

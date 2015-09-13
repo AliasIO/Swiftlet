@@ -6,6 +6,6 @@
 
 		<title><?= $this->pageTitle ?></title>
 
-		<link rel="stylesheet" href="<?= $this->getRootPath() ?>css/layout.css">
+		<link rel="stylesheet" href="<?= $this->rootPath ?>css/layout.css">
 	</head>
 	<body>

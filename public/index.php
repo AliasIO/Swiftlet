@@ -10,7 +10,9 @@ use \Swiftlet\Factories\App as AppFactory;
 use \Swiftlet\Factories\View as ViewFactory;
 
 try {
-	$app = AppFactory::build(ViewFactory::build(), 'HelloWorld');
+	$view = ViewFactory::build();
+
+	$app = AppFactory::build($view, 'HelloWorld');
 
 	// Convert errors to ErrorException instances
 	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
@@ -19,13 +21,13 @@ try {
 
 	date_default_timezone_set('UTC');
 
-	$app->loadPlugins(); // You may comment this out if you're not using plugins
+	$app->loadListeners(); // You may comment this out if you're not using listeners
 
 	$app->dispatchController();
 
 	ob_start();
 
-	$app->serve();
+	$view->render();
 
 	ob_end_flush();
 } catch ( \Exception $e ) {

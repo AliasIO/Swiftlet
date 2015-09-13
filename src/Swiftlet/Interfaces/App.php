@@ -22,10 +22,22 @@ interface App extends Common
 	public function dispatchController();
 
 	/**
-	 * Load plugins
+	 * Get request URI
+	 * @return string
+	 */
+	public function getArgs();
+
+	/**
+	 * Get the client-side path to root
+	 * @return string
+	 */
+	public function getRootPath();
+
+	/**
+	 * Load listeners
 	 * @return App
 	 */
-	public function loadPlugins();
+	public function loadListeners();
 
 	/**
 	 * Get a configuration value
@@ -43,14 +55,11 @@ interface App extends Common
 	public function setConfig($variable, $value);
 
 	/**
-	 * Register a hook for plugins to implement
-	 * @param string $hookName
-	 * @param Interfaces\Controller $controller
-	 * @param Interfaces\View $view
-	 * @param array $params
+	 * Trigger an event
+	 * @param string $event
 	 * @return App
 	 */
-	public function registerHook($hookName, Controller $controller, View $view, array $params);
+	public function trigger($event);
 
 	/**
 	 * Convert errors to \ErrorException instances

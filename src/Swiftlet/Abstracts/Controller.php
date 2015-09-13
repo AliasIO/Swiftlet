@@ -44,26 +44,12 @@ abstract class Controller extends Common implements ControllerInterface
 	 */
 	public function __construct(AppInterface $app, ViewInterface $view)
 	{
-		$this->app = $app;
-
-		$this->setView($view);
-
-		return $this;
-	}
-
-	/**
-	 * Set view instance
-	 * @param \Swiftlet\Interfaces\App $app
-	 * @return \Swiftlet\Interfaces\Controller
-	 */
-	public function setView(ViewInterface $view)
-	{
+		$this->app  = $app;
 		$this->view = $view;
 
 		$reflection = new \ReflectionClass($this);
 
-		$this->view->name = strtolower($reflection->getShortName());
-
+		$this->view->name      = strtolower($reflection->getShortName());
 		$this->view->pageTitle = $this->title;
 
 		return $this;
