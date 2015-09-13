@@ -232,7 +232,7 @@ are called and can be used to extend functionality.
 Swiftlet has a few core events and additiontal ones can be triggered pretty much 
 anywhere using `$this->app->trigger($event)`.  
 
-**Listener `src/HelloWorld/Listerners/Foo.php`**
+**Listener `src/HelloWorld/Listeners/Foo.php`**
 
 ```php
 <?php
