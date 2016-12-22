@@ -1,17 +1,17 @@
 <?php
 
-namespace Swiftlet\Factories;
+namespace Bro\Factories;
 
-use \Swiftlet\Abstracts\Factory as FactoryAbstract;
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Bro\Abstracts\Factory as FactoryAbstract;
+use \Bro\Interfaces\App as AppInterface;
+use \Bro\Interfaces\View as ViewInterface;
 
 /**
  * Controller factory
  */
 class Controller extends FactoryAbstract
 {
-	static public $vendor = 'Swiftlet';
+	static public $vendor = 'Bro';
 
 	static public $vendorPath = 'src/';
 

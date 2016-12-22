@@ -1,6 +1,6 @@
 <?php
 
-namespace Swiftlet;
+namespace Bro;
 
 /**
  * Exception class

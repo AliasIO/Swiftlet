@@ -2,7 +2,7 @@
 
 namespace Mock;
 
-use \Swiftlet\Abstracts\App as AppAbstract;
+use \Bro\Abstracts\App as AppAbstract;
 
 class App extends AppAbstract
 { }

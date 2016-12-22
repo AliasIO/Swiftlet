@@ -1,11 +1,11 @@
 <?php
 
-namespace Swiftlet\Abstracts;
+namespace Bro\Abstracts;
 
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\Controller as ControllerInterface;
-use \Swiftlet\Interfaces\Listener as ListenerInterface;
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Bro\Interfaces\App as AppInterface;
+use \Bro\Interfaces\Controller as ControllerInterface;
+use \Bro\Interfaces\Listener as ListenerInterface;
+use \Bro\Interfaces\View as ViewInterface;
 
 /**
  * Listener class
@@ -15,7 +15,7 @@ abstract class Listener extends Common implements ListenerInterface
 {
 	/**
 	 * Application instance
-	 * @var \Swiftlet\Interfaces\App
+	 * @var \Bro\Interfaces\App
 	 */
 	protected $app;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet\Abstracts;
+namespace Bro\Abstracts;
 
-use \Swiftlet\Interfaces\Model as ModelInterface;
+use \Bro\Interfaces\Model as ModelInterface;
 
 /**
  * Model class

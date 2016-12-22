@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet;
+namespace Bro;
 
-use \Swiftlet\Abstracts\View as ViewAbstract;
+use \Bro\Abstracts\View as ViewAbstract;
 
 /**
  * View class

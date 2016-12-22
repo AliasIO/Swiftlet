@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet\Abstracts;
+namespace Bro\Abstracts;
 
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Bro\Interfaces\View as ViewInterface;
 
 /**
  * View class
@@ -14,7 +14,7 @@ abstract class View extends Common implements ViewInterface
 	 * Vendor name
 	 * @var string
 	 */
-	public $vendor = 'Swiftlet';
+	public $vendor = 'Bro';
 
 	/**
 	 * Vendor path
@@ -71,7 +71,7 @@ abstract class View extends Common implements ViewInterface
 	 * Set a view variable
 	 * @param string $variable
 	 * @param mixed $value
-	 * @return \Swiftlet\Interfaces\View
+	 * @return \Bro\Interfaces\View
 	 */
 	public function set($variable, $value = null)
 	{
@@ -153,19 +153,19 @@ abstract class View extends Common implements ViewInterface
 
 	/**
 	 * Render the view
-	 * @return \Swiftlet\Interfaces\View
-	 * @throws \Swiftlet\Exception
+	 * @return \Bro\Interfaces\View
+	 * @throws \Bro\Exception
 	 */
 	public function render()
 	{
 		if ( is_file($file = $this->vendorPath . $this->vendor . '/views/' . $this->name . '.php') ) {
 			if ( !headers_sent() ) {
-				header('X-Generator: Swiftlet');
+				header('X-Generator: Bro');
 			}
 
 			include $file;
 		} else {
-			throw new \Swiftlet\Exception('View not found');
+			throw new \Bro\Exception('View not found');
 		}
 
 		return $this;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet;
+namespace Bro;
 
-use \Swiftlet\Abstracts\App as AppAbstract;
+use \Bro\Abstracts\App as AppAbstract;
 
 /**
  * Application class

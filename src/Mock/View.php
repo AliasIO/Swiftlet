@@ -2,7 +2,7 @@
 
 namespace Mock;
 
-use \Swiftlet\Abstracts\View as ViewAbstract;
+use \Bro\Abstracts\View as ViewAbstract;
 
 class View extends ViewAbstract
 { }

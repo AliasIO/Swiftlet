@@ -2,7 +2,7 @@
 
 namespace HelloWorld\Models;
 
-use \Swiftlet\Abstracts\Model as ModelAbstract;
+use \Bro\Abstracts\Model as ModelAbstract;
 
 /**
  * Example model

@@ -1,9 +1,9 @@
 <?php
 
-namespace Swiftlet\Abstracts;
+namespace Bro\Abstracts;
 
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\Library as LibraryInterface;
+use \Bro\Interfaces\App as AppInterface;
+use \Bro\Interfaces\Library as LibraryInterface;
 
 /**
  * Library class
@@ -19,8 +19,8 @@ abstract class Library extends Common implements LibraryInterface
 
 	/**
 	 * Set application instance
-	 * @param \Swiftlet\Interfaces\App $app
-	 * @return \Swiftlet\Interfaces\Library
+	 * @param \Bro\Interfaces\App $app
+	 * @return \Bro\Interfaces\Library
 	 */
 	public function setApp(AppInterface $app)
 	{
