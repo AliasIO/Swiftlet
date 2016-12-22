@@ -2,7 +2,7 @@
 
 namespace Mock\Libraries;
 
-use \Swiftlet\Abstracts\Library as LibraryAbstract;
+use \Bro\Abstracts\Library as LibraryAbstract;
 
 /**
  * Mock library

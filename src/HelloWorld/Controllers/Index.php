@@ -3,7 +3,7 @@
 namespace HelloWorld\Controllers;
 
 use \HelloWorld\Models\Example as ExampleModel;
-use \Swiftlet\Abstracts\Controller as ControllerAbstract;
+use \Bro\Abstracts\Controller as ControllerAbstract;
 
 /**
  * Index controller

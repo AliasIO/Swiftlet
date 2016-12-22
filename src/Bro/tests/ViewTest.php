@@ -1,6 +1,6 @@
 <?php
 
-namespace Swiftlet;
+namespace Bro;
 
 require_once 'vendor/autoload.php';
 

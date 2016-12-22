@@ -2,7 +2,7 @@
 
 namespace HelloWorld\Libraries;
 
-use \Swiftlet\Abstracts\Library as LibraryAbstract;
+use \Bro\Abstracts\Library as LibraryAbstract;
 
 /**
  * Example library

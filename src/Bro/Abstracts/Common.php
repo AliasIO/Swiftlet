@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet\Abstracts;
+namespace Bro\Abstracts;
 
-use \Swiftlet\Interfaces\Common as CommonInterface;
+use \Bro\Interfaces\Common as CommonInterface;
 
 /**
  * Common class
@@ -15,7 +15,7 @@ abstract class Common implements CommonInterface
 	 *
 	 * @param string $property
 	 * @param mixed $arguments
-	 * @throws \Swiftlet\Exception
+	 * @throws \Bro\Exception
 	 */
 	public function __call($name, $arguments)
 	{
@@ -39,6 +39,6 @@ abstract class Common implements CommonInterface
 			}
 		}
 
-		throw new \Swiftlet\Exception('Not implemented: ' . get_called_class() . '::' . $name);
+		throw new \Bro\Exception('Not implemented: ' . get_called_class() . '::' . $name);
 	}
 }

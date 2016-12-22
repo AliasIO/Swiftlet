@@ -1,8 +1,8 @@
 <?php
 
-namespace Swiftlet\Abstracts;
+namespace Bro\Abstracts;
 
-use \Swiftlet\Interfaces\Factory as FactoryInterface;
+use \Bro\Interfaces\Factory as FactoryInterface;
 
 /**
  * Factory class

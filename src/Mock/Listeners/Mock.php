@@ -2,7 +2,7 @@
 
 namespace Mock\Listeners;
 
-use \Swiftlet\Abstracts\Listener as ListenerAbstract;
+use \Bro\Abstracts\Listener as ListenerAbstract;
 
 /**
  * Mock plugin

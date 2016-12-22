@@ -2,9 +2,9 @@
 
 namespace HelloWorld\Listeners;
 
-use \Swiftlet\Abstracts\Controller as ControllerAbstract;
-use \Swiftlet\Abstracts\Listener as ListenerAbstract;
-use \Swiftlet\Abstracts\View as ViewAbstract;
+use \Bro\Abstracts\Controller as ControllerAbstract;
+use \Bro\Abstracts\Listener as ListenerAbstract;
+use \Bro\Abstracts\View as ViewAbstract;
 
 /**
  * Example plugin

@@ -1,6 +1,6 @@
 <?php
 
-namespace Swiftlet\Interfaces;
+namespace Bro\Interfaces;
 
 /**
  * Factory interface
