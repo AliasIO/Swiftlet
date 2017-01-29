@@ -26,6 +26,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetRoutes()
 	{
-		$this->assertInternalType('arrya', $this->controller->setGetRoutes());
+		$this->assertInternalType('array', $this->controller->getRoutes());
 	}
 }
