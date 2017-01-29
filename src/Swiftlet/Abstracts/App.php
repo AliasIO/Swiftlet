@@ -89,7 +89,9 @@ abstract class App extends Common implements AppInterface
 		foreach ( $routes as $route => $method ) {
 			$segments = explode('/', $route);
 
-			$regex = '/^' . strtolower($controllerName) . '\\/' . str_replace('/', '\\/', preg_replace('/\(:[^\/]+\)/', '([^/]+)', preg_replace('/([^\/]+)/', '(\\1)', $route))) . '$/';
+			$requestUri = implode('/', $this->getArgs());
+
+			$regex = '/' . str_replace('/', '\\/', preg_replace('/\(:[^\/]+\)/', '([^/]+)', preg_replace('/([^\/]+)/', '(\\1)', $route))) . '$/';
 
 			preg_match($regex, $requestUri, $matches);
 
@@ -170,7 +172,7 @@ abstract class App extends Common implements AppInterface
 			$rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
 		}
 
-		return preg_replace('/' . preg_quote(implode($this->getArgs()), '/') . '$/', '', $rootPath);
+		return preg_replace('/' . preg_quote(implode($this->getArgs(), '/'), '/') . '$/', '', $rootPath);
 	}
 
 	/**
