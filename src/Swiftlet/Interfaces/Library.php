@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Interfaces;
 
 /**
@@ -12,5 +14,5 @@ interface Library extends Common
 	 * @param App $app
 	 * @return Library
 	 */
-	public function setApp(App $app);
+	public function setApp(App $app): Library;
 }

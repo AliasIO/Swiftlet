@@ -18,7 +18,7 @@ Buzzword compliance
 ✔ Pluggable  
 ✔ [Composer](https://getcomposer.org)
 ✔ [PSR-4](http://www.php-fig.org/psr/psr-4)
-✔ PHP5  
+✔ PHP7  
 ✔ MVC  
 ✔ OOP  
 

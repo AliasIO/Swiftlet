@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HelloWorld\Models;
 
 use \Swiftlet\Abstracts\Model as ModelAbstract;

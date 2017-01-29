@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Interfaces;
 
 /**
@@ -12,5 +14,5 @@ interface Listener extends Common
 	 * @param App $app
 	 * @return Listener
 	 */
-	public function setApp(App $app);
+	public function setApp(App $app): Listener;
 }

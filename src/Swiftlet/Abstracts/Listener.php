@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Abstracts;
 
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\Controller as ControllerInterface;
-use \Swiftlet\Interfaces\Listener as ListenerInterface;
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Swiftlet\Interfaces\{App as AppInterface, Controller as ControllerInterface, Listener as ListenerInterface, View as ViewInterface };
 
 /**
  * Listener class
@@ -24,7 +23,7 @@ abstract class Listener extends Common implements ListenerInterface
 	 * @param App $app
 	 * @return View
 	 */
-	public function setApp(AppInterface $app)
+	public function setApp(AppInterface $app): ListenerInterface
 	{
 		$this->app = $app;
 

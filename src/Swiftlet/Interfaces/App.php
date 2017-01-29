@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Interfaces;
 
 /**
@@ -13,38 +15,38 @@ interface App extends Common
 	 * @param string $vendor
 	 * @return App
 	 */
-	public function __construct(View $view, $vendor);
+	public function __construct(View $view, string $vendor, string $vendorPath);
 
 	/**
 	 * Dispatch the controller
 	 * @return App
 	 */
-	public function dispatchController();
+	public function dispatchController(): App;
 
 	/**
 	 * Get request URI
 	 * @return string
 	 */
-	public function getArgs();
+	public function getArgs(): array;
 
 	/**
 	 * Get the client-side path to root
 	 * @return string
 	 */
-	public function getRootPath();
+	public function getRootPath(): string;
 
 	/**
 	 * Load listeners
 	 * @return App
 	 */
-	public function loadListeners();
+	public function loadListeners(): App;
 
 	/**
 	 * Get a configuration value
 	 * @param string $variable
 	 * @return mixed|null
 	 */
-	public function getConfig($variable);
+	public function getConfig(string $variable);
 
 	/**
 	 * Set a configuration value
@@ -52,14 +54,14 @@ interface App extends Common
 	 * @param mixed $value
 	 * @return App
 	 */
-	public function setConfig($variable, $value);
+	public function setConfig(string $variable, $value): App;
 
 	/**
 	 * Trigger an event
 	 * @param string $event
 	 * @return App
 	 */
-	public function trigger($event);
+	public function trigger(string $event): App;
 
 	/**
 	 * Convert errors to \ErrorException instances
@@ -69,5 +71,5 @@ interface App extends Common
 	 * @param int $line
 	 * @throws Exception
 	 */
-	public function error($number, $string, $file, $line);
+	public static function error(int $number, string $string, string $file, int $line);
 }

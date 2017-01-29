@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Factories;
 
 use \Swiftlet\Abstracts\Factory as FactoryAbstract;
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Swiftlet\Interfaces\{App as AppInterface, Controller as ControllerInterface, View as ViewInterface};
 
 /**
  * Controller factory
@@ -15,7 +16,7 @@ class Controller extends FactoryAbstract
 
 	static public $vendorPath = 'src/';
 
-	static public function build($controllerName, AppInterface $app, ViewInterface $view)
+	static public function build(string $controllerName, AppInterface $app, ViewInterface $view): ControllerInterface
 	{
 		$prefix = '\\' . $app->getVendor() . '\\Controllers\\';
 

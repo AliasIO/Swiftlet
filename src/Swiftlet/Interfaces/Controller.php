@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Interfaces;
 
 /**
@@ -20,13 +22,13 @@ interface Controller extends Common
 	 * @param string $app
 	 * @return Interfaces\Controller
 	 */
-	public function setTitle($title);
+	public function setTitle(string $title): Controller;
 
 	/**
 	 * Get routes
 	 * @return array
 	 */
-	public function getRoutes();
+	public function getRoutes(): array;
 
 	/**
 	 * Default action

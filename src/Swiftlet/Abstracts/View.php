@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Abstracts;
 
 use \Swiftlet\Interfaces\View as ViewInterface;
@@ -32,7 +34,7 @@ abstract class View extends Common implements ViewInterface
 	 * View variables
 	 * @var array
 	 */
-	protected $variables = array();
+	protected $variables = [];
 
 	/**
 	 * View name
@@ -46,7 +48,7 @@ abstract class View extends Common implements ViewInterface
 	 * @param bool $htmlEncode
 	 * @return mixed|null
 	 */
-	public function get($variable, $htmlEncode = true)
+	public function get(string $variable, bool $htmlEncode = true)
 	{
 		$value = null;
 
@@ -62,7 +64,7 @@ abstract class View extends Common implements ViewInterface
 	 * @param string $variable
 	 * @return mixed
 	 */
-	public function __get($variable)
+	public function __get(string $variable)
 	{
 		return $this->get($variable);
 	}
@@ -73,7 +75,7 @@ abstract class View extends Common implements ViewInterface
 	 * @param mixed $value
 	 * @return \Swiftlet\Interfaces\View
 	 */
-	public function set($variable, $value = null)
+	public function set(string $variable, $value = null): ViewInterface
 	{
 		$this->variables[$variable] = array(
 			'safe'   => $this->htmlEncode($value),
@@ -88,9 +90,11 @@ abstract class View extends Common implements ViewInterface
 	 * @param string $variable
 	 * @param mixed $value
 	 */
-	public function __set($variable, $value = null)
+	public function __set(string $variable, $value = null): ViewInterface
 	{
 		$this->set($variable, $value);
+
+		return $this;
 	}
 
 	/**
@@ -156,7 +160,7 @@ abstract class View extends Common implements ViewInterface
 	 * @return \Swiftlet\Interfaces\View
 	 * @throws \Swiftlet\Exception
 	 */
-	public function render()
+	public function render(): ViewInterface
 	{
 		if ( is_file($file = $this->vendorPath . $this->vendor . '/views/' . $this->name . '.php') ) {
 			if ( !headers_sent() ) {

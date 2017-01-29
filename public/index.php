@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet;
 
 chdir(dirname(__FILE__) . '/..');
@@ -15,7 +17,7 @@ try {
 	$app = AppFactory::build($view, 'HelloWorld');
 
 	// Convert errors to ErrorException instances
-	set_error_handler(array($app, 'error'), E_ALL | E_STRICT);
+	set_error_handler([ $app, 'error' ], E_ALL | E_STRICT);
 
 	require 'config/main.php';
 
@@ -36,7 +38,7 @@ try {
 		header('Status: 503 Service Temporarily Unavailable');
 	}
 
-	$errorCode = substr(sha1(uniqid(mt_rand(), true)), 0, 5);
+	$errorCode = bin2hex(random_bytes(3));
 
 	$errorMessage = $errorCode . date(' r ') . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine();
 

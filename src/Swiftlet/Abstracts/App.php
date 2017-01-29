@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Abstracts;
 
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\Controller as ControllerInterface;
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Swiftlet\Interfaces\{App as AppInterface, Controller as ControllerInterface, View as ViewInterface};
 use \Swiftlet\Factories\Controller as ControllerFactory;
 
 /**
@@ -35,19 +35,19 @@ abstract class App extends Common implements AppInterface
 	 * Configuration values
 	 * @var array
 	 */
-	protected $config = array();
+	protected $config = [];
 
 	/**
 	 * Events
 	 * @var array
 	 */
-	protected $events = array();
+	protected $events = [];
 
 	/**
 	 * Listener
 	 * @var array
 	 */
-	protected $listeners = array();
+	protected $listeners = [];
 
 	/**
 	 * Constructor
@@ -56,7 +56,7 @@ abstract class App extends Common implements AppInterface
 	 * @param string $vendorPath
 	 * @return App
 	 */
-	public function __construct(ViewInterface $view, $vendor = 'Swiftlet', $vendorPath = 'src/')
+	public function __construct(ViewInterface $view, string $vendor = 'Swiftlet', string $vendorPath = 'src/')
 	{
 		$this->view = $view;
 
@@ -66,15 +66,13 @@ abstract class App extends Common implements AppInterface
 		$this->view->vendor     = $this->vendor;
 		$this->view->vendorPath = $this->vendorPath;
 		$this->view->rootPath   = $this->getRootPath();
-
-		return $this;
 	}
 
 	/**
 	 * Distpatch the controller
 	 * @return App
 	 */
-	public function dispatchController()
+	public function dispatchController(): AppInterface
 	{
 		// Get the controller, action and remaining parameters from the URL
 		$args = $this->getArgs();
@@ -100,7 +98,7 @@ abstract class App extends Common implements AppInterface
 			if ( $matches ) {
 				$action = $method;
 
-				$args = array();
+				$args = [];
 
 				foreach ( $segments as $i => $segment ) {
 					if ( substr($segment, 0, 1) === ':' ) {
@@ -123,7 +121,7 @@ abstract class App extends Common implements AppInterface
 		}
 
 		if ( !$actionExists ) {
-			$controller = ControllerFactory::build('Error404', $this, $this->view);
+			$controller = ControllerFactory::build('7rror404', $this, $this->view);
 
 			$action = 'index';
 		}
@@ -142,7 +140,7 @@ abstract class App extends Common implements AppInterface
 	 * Get request URI
 	 * @return string
 	 */
-	public function getArgs()
+	public function getArgs(): array
 	{
 		$requestUri = '';
 
@@ -156,14 +154,14 @@ abstract class App extends Common implements AppInterface
 			$requestUri = preg_replace('/^public\//', '', trim($_GET['q'], '/'));
 		}
 
-		return explode('/', $requestUri) ?: array();
+		return explode('/', $requestUri) ?: [];
 	}
 
 	/**
 	 * Get the client-side path to root
 	 * @return string
 	 */
-	public function getRootPath()
+	public function getRootPath(): string
 	{
 		$rootPath = '';
 
@@ -179,7 +177,7 @@ abstract class App extends Common implements AppInterface
 	 * Load listeners
 	 * @return App
 	 */
-	public function loadListeners()
+	public function loadListeners(): AppInterface
 	{
 		// Load listeners
 		if ( $handle = opendir($this->vendorPath . str_replace('\\', '/', $this->vendor . '/Listeners')) ) {
@@ -187,7 +185,7 @@ abstract class App extends Common implements AppInterface
 				$listenerClass = $this->vendor . '\Listeners\\' . preg_replace('/\.php$/', '', $file);
 
 				if ( is_file($this->vendorPath . str_replace('\\', '/', $listenerClass) . '.php') ) {
-					$this->listeners[$listenerClass] = array();
+					$this->listeners[$listenerClass] = [];
 
 					$reflection = new \ReflectionClass($listenerClass);
 
@@ -216,7 +214,7 @@ abstract class App extends Common implements AppInterface
 	 * @param string $variable
 	 * @return mixed
 	 */
-	public function getConfig($variable)
+	public function getConfig(string $variable)
 	{
 		return isset($this->config[$variable]) ? $this->config[$variable] : null;
 	}
@@ -227,7 +225,7 @@ abstract class App extends Common implements AppInterface
 	 * @param mixed $value
 	 * @return \Swiftlet\Interfaces\App
 	 */
-	public function setConfig($variable, $value)
+	public function setConfig(string $variable, $value): AppInterface
 	{
 		$this->config[$variable] = $value;
 
@@ -238,7 +236,7 @@ abstract class App extends Common implements AppInterface
 	 * Vendor name
 	 * @return string
 	 */
-	public function getVendor()
+	public function getVendor(): string
 	{
 		return $this->vendor;
 	}
@@ -247,7 +245,7 @@ abstract class App extends Common implements AppInterface
 	 * Vendor path
 	 * @return string
 	 */
-	public function getVendorPath()
+	public function getVendorPath(): string
 	{
 		return $this->vendorPath;
 	}
@@ -257,7 +255,7 @@ abstract class App extends Common implements AppInterface
 	 * Trigger an event
 	 * @param string $event
 	 */
-	public function trigger($event)
+	public function trigger(string $event): AppInterface
 	{
 		$this->events[] = $event;
 
@@ -271,7 +269,7 @@ abstract class App extends Common implements AppInterface
 
 				array_shift($args);
 
-				call_user_func_array(array($listener, $event), $args);
+				call_user_func_array([ $listener, $event ], $args);
 			}
 		}
 
@@ -286,7 +284,7 @@ abstract class App extends Common implements AppInterface
 	 * @param int $line
 	 * @throws \ErrorException
 	 */
-	public function error($number, $string, $file, $line)
+	public static function error(int $number, string $string, string $file, int $line)
 	{
 		throw new \ErrorException($string, 0, $number, $file, $line);
 	}

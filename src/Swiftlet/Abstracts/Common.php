@@ -17,7 +17,7 @@ abstract class Common implements CommonInterface
 	 * @param mixed $arguments
 	 * @throws \Swiftlet\Exception
 	 */
-	public function __call($name, $arguments)
+	public function __call(string $name, array $arguments)
 	{
 		$action = substr($name, 0, 3);
 

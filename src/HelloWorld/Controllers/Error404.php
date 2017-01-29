@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HelloWorld\Controllers;
 
 use \Swiftlet\Abstracts\Controller as ControllerAbstract;

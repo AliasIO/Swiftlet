@@ -2,9 +2,7 @@
 
 namespace Swiftlet\Abstracts;
 
-use \Swiftlet\Interfaces\App as AppInterface;
-use \Swiftlet\Interfaces\Controller as ControllerInterface;
-use \Swiftlet\Interfaces\View as ViewInterface;
+use \Swiftlet\Interfaces\{App as AppInterface, Controller as ControllerInterface, View as ViewInterface};
 
 /**
  * Controller class
@@ -34,7 +32,7 @@ abstract class Controller extends Common implements ControllerInterface
 	 * Routes
 	 * @var array
 	 */
-	protected $routes = array();
+	protected $routes = [];
 
 	/**
 	 * Constructor
@@ -51,8 +49,6 @@ abstract class Controller extends Common implements ControllerInterface
 
 		$this->view->name      = strtolower($reflection->getShortName());
 		$this->view->pageTitle = $this->title;
-
-		return $this;
 	}
 
 	/**
@@ -60,7 +56,7 @@ abstract class Controller extends Common implements ControllerInterface
 	 * @param string $title
 	 * @return \Swiftlet\Interfaces\Controller
 	 */
-	public function setTitle($title)
+	public function setTitle(string $title): ControllerInterface
 	{
 		$this->title = $title;
 
@@ -73,7 +69,7 @@ abstract class Controller extends Common implements ControllerInterface
 	 * Get routes
 	 * @return array
 	 */
-	public function getRoutes()
+	public function getRoutes(): array
 	{
 		return $this->routes;
 	}

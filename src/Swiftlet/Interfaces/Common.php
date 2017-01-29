@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Interfaces;
 
 /**
@@ -14,5 +16,5 @@ interface Common
 	 * @param mixed $arguments
 	 * @throws Exception
 	 */
-	public function __call($property, $arguments);
+	public function __call(string $property, array $arguments);
 }

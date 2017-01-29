@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HelloWorld\Controllers;
 
 use \HelloWorld\Models\Example as ExampleModel;
@@ -20,7 +22,7 @@ class Index extends ControllerAbstract
 	 * Default action
 	 * @param $args array
 	 */
-	public function index(array $args = array())
+	public function index(array $args = [])
 	{
 		// Create a model instance, see /src/HelloWorld/Models/Example.php
 		$example = new ExampleModel;

@@ -18,7 +18,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
 		$this->app = new App($this->view, 'Mock');
 
-		set_error_handler(array($this->app, 'error'), E_ALL | E_STRICT);
+		set_error_handler([ $this->app, 'error' ], E_ALL | E_STRICT);
 
 		date_default_timezone_set('UTC');
 	}
@@ -28,16 +28,14 @@ class AppTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($this->app->dispatchController(), $this->app);
 	}
 
-	function testServe()
+	function testGetArgs()
 	{
-		$this->view->name = 'index';
-
-		$this->assertEquals($this->app->serve(), $this->app);
+		$this->assertInternalType('array', $this->app->getArgs());
 	}
 
-	function testLoadPlugins()
+	function testLoadListeners()
 	{
-		$this->assertEquals($this->app->loadPlugins(), $this->app);
+		$this->assertEquals($this->app->loadListeners(), $this->app);
 	}
 
 	function testSetGetConfig()
@@ -46,9 +44,9 @@ class AppTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($this->app->getConfig('key'), 'value');
 	}
 
-	function testRegisterHook()
+	function testTrigger()
 	{
-		$this->assertEquals($this->app->registerHook('test', new IndexController, new View), $this->app);
+		$this->assertEquals($this->app->trigger('test'), $this->app);
 	}
 
 	/**
@@ -56,6 +54,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
 	 */
 	function testError()
 	{
-		$this->app->error(null, null, null, null);
+		$this->app->error(0, '', '', 0);
 	}
 }

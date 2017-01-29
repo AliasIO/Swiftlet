@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swiftlet\Interfaces;
 
 /**
@@ -13,21 +15,21 @@ interface View extends Common
 	 * @param bool $htmlEncode
 	 * @return mixed|null
 	 */
-	public function get($variable, $htmlEncode);
+	public function get(string $variable, bool $htmlEncode);
 
 	/**
 	 * Magic method to get a view variable, forwards to $this->get()
 	 * @param string $variable
 	 * @return mixed
 	 */
-	public function __get($variable);
+	public function __get(string $variable);
 
 	/**
 	 * Magic method to set a view variable, forwards to $this->set()
 	 * @param string $variable
 	 * @param mixed $value
 	 */
-	public function __set($variable, $value);
+	public function __set(string $variable, $value): View;
 
 	/**
 	 * Magic method to set a view variable, forwards to $this->set()
@@ -35,7 +37,7 @@ interface View extends Common
 	 * @param mixed $value
 	 * @return Interfaces\View
 	 */
-	public function set($variable, $value);
+	public function set(string $variable, $value): View;
 
 	/**
 	 * Recursively make a value safe for HTML
@@ -56,5 +58,5 @@ interface View extends Common
 	 * @return Interfaces\View
 	 * @throws Exception
 	 */
-	public function render();
+	public function render(): View;
 }

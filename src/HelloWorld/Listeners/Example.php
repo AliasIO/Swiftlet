@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace HelloWorld\Listeners;
 
-use \Swiftlet\Abstracts\Controller as ControllerAbstract;
-use \Swiftlet\Abstracts\Listener as ListenerAbstract;
-use \Swiftlet\Abstracts\View as ViewAbstract;
+use \Swiftlet\Abstracts\{Controller as ControllerAbstract, Listener as ListenerAbstract, View as ViewAbstract};
 
 /**
  * Example plugin

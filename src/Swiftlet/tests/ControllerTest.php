@@ -15,25 +15,17 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		$this->view       = new View;
-		$this->controller = new IndexController;
-	}
-
-	public function testSetApp()
-	{
-		$app = new App($this->view, 'Mock');
-
-		$this->assertEquals($this->controller->setApp($app), $this->controller);
-	}
-
-	public function testSetView()
-	{
-		$this->assertEquals($this->controller->setView($this->view), $this->controller);
+		$this->app        = new App($this->view, 'Mock');
+		$this->controller = new IndexController($this->app, $this->view);
 	}
 
 	public function testSetTitle()
 	{
-		$this->controller->setView($this->view);
-
 		$this->assertEquals($this->controller->setTitle('title'), $this->controller);
+	}
+
+	public function testGetRoutes()
+	{
+		$this->assertInternalType('arrya', $this->controller->setGetRoutes());
 	}
 }
