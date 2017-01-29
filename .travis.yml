@@ -3,4 +3,6 @@ language: php
 php:
   - 7.0
 
+before_script: composer install
+
 script: phpunit
