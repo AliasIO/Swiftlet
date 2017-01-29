@@ -54,7 +54,7 @@ class Foo extends ControllerAbstract
 	protected $title = 'Foo'; // Optional but usually desired 
 
 	// Default action
-	public function index(array $args = $args)
+	public function index(array $args = [])
 	{
 		// Pass a variable to the view
 		$this->view->helloWorld = 'Hello world!';
@@ -145,12 +145,12 @@ class Foo extends ControllerAbstract
 		'bar/:qux'    => 'bar'
 		);
 
-	public function index(array $args = $args)
+	public function index(array $args = [])
 	{
 		// You navigated to foo/hello/world
 	}
 
-	public function bar(array $args = $args)
+	public function bar(array $args = [])
 	{
 		// You navigated to foo/bar/<something>
 		// $args['qux'] contains the second URL argument
