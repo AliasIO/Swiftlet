@@ -1,4 +1,4 @@
-Swiftlet
+Swiftlet [![Build Status](https://travis-ci.org/AliasIO/Swiftlet.svg?branch=master)](https://travis-ci.org/AliasIO/Swiftlet)
 ========
 
 [Swiftlet](http://swiftlet.org/) is quite possibly the smallest 
