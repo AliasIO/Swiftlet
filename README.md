@@ -16,8 +16,8 @@ Buzzword compliance
 ✔ Unit tested  
 ✔ Namespaced  
 ✔ Pluggable  
-✔ [Composer](https://getcomposer.org)
-✔ [PSR-4](http://www.php-fig.org/psr/psr-4)
+✔ [Composer](https://getcomposer.org)  
+✔ [PSR-4](http://www.php-fig.org/psr/psr-4)  
 ✔ PHP7  
 ✔ MVC  
 ✔ OOP  
