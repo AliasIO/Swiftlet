@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Swiftlet;
-
 chdir(dirname(__FILE__) . '/..');
 
 require 'vendor/autoload.php';
 
-use \Swiftlet\Factories\App as AppFactory;
-use \Swiftlet\Factories\View as ViewFactory;
+use \Swiftlet\Factories\{App as AppFactory, View as ViewFactory};
 
 try {
 	$view = ViewFactory::build();

@@ -63,9 +63,9 @@ abstract class App extends Common implements AppInterface
 		$this->vendor     = $vendor;
 		$this->vendorPath = rtrim($vendorPath, '/') . '/';
 
-		$this->view->vendor     = $this->vendor;
-		$this->view->vendorPath = $this->vendorPath;
-		$this->view->rootPath   = $this->getRootPath();
+		$this->view->vendor     = $view->htmlEncode($this->vendor);
+		$this->view->vendorPath = $view->htmlEncode($this->vendorPath);
+		$this->view->rootPath   = $view->htmlEncode($this->getRootPath());
 	}
 
 	/**
