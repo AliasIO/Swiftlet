@@ -169,7 +169,7 @@ abstract class App extends Common implements AppInterface
 
 		// Determine the client-side path to root
 		if ( isset($_SERVER['REQUEST_URI']) ) {
-			$rootPath = preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI']));
+			$rootPath = rtrim(preg_replace('/(index\.php)?(\?.*)?$/', '', rawurldecode($_SERVER['REQUEST_URI'])), '/');
 		}
 
 		return preg_replace('/' . preg_quote(implode($this->getArgs(), '/'), '/') . '$/', '', $rootPath);
