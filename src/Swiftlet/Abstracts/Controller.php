@@ -48,7 +48,7 @@ abstract class Controller extends Common implements ControllerInterface
 		$reflection = new \ReflectionClass($this);
 
 		$this->view->name      = $view->htmlEncode(strtolower($reflection->getShortName()));
-		$this->view->pageTitle = $view->htmlEncode($this->title);
+		$this->view->pageTitle = $this->title;
 	}
 
 	/**
