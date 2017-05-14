@@ -5,8 +5,9 @@ namespace Mock;
 require_once 'vendor/autoload.php';
 
 use \Mock\Controllers\Index as IndexController;
+use \PHPUnit\Framework\TestCase;
 
-class AppTest extends \PHPUnit_Framework_TestCase
+class AppTest extends TestCase
 {
 	protected $app;
 

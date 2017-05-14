@@ -2,9 +2,11 @@
 
 namespace Swiftlet;
 
+use \PHPUnit\Framework\TestCase;
+
 require_once 'vendor/autoload.php';
 
-class ViewTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
 	protected $view;
 
