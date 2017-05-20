@@ -2,9 +2,11 @@
 
 namespace Mock;
 
+use \PHPUnit\Framework\TestCase;
+
 require_once 'vendor/autoload.php';
 
-class ListenerTest extends \PHPUnit_Framework_TestCase
+class ListenerTest extends TestCase
 {
 	protected $listener;
 
